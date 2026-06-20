@@ -1,0 +1,339 @@
+/* ===========================
+   SIDEBAR COMPONENT STYLES
+   =========================== */
+
+.aside-leftsidebar {
+  display: flex;
+  flex-direction: column;
+  width: 256px;
+  height: 100vh;
+  align-items: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #002664;
+  z-index: 100;
+}
+
+/* Logo Section */
+.logo-section-updated {
+  display: flex;
+  height: 64px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-color: #e5e7eb;
+  flex-shrink: 0;
+}
+
+.VIAGO-logo {
+  position: relative;
+  width: 80px;
+  height: 40px;
+  background-image: url('/asset/img/admin/logoVIAGO.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Navigation Menu */
+.navigation-menu {
+  justify-content: center;
+  padding: 16px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  width: 100%;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.list-wrapper {
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.list-wrapper::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+/* Active nav item */
+.item-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  background-color: #ffffff1a;
+  border-left-width: 4px;
+  border-left-style: solid;
+  border-color: #f7941e;
+  text-decoration: none;
+}
+
+/* Normal nav items */
+.item-link-2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  text-decoration: none;
+  border-left: 4px solid transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.item-link-2:hover {
+  background-color: #ffffff1a;
+  border-left-color: #f7941e55;
+}
+
+/* Active state applied by routerLinkActive */
+.item-link--active {
+  background-color: #ffffff1a !important;
+  border-left: 4px solid #f7941e !important;
+}
+
+.div-3 {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+/* Inline SVG icon style cho sidebar nav */
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  color: #ffffff;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Logout chevron icon */
+.logout-icon {
+  width: 16px;
+  height: 16px;
+  color: #9ca3af;
+  display: block;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.logout-icon:hover {
+  color: #ffffff;
+}
+
+.icon-2 {
+  position: relative;
+  width: 20px;
+  height: 16px;
+}
+
+.icon-3 {
+  position: relative;
+  width: 16px;
+  height: 19px;
+}
+
+.icon-4 {
+  position: relative;
+  width: 22px;
+  height: 16px;
+}
+
+.icon-5 {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.icon-6 {
+  position: relative;
+  width: 18px;
+  height: 18px;
+}
+
+.icon-7 {
+  position: relative;
+  width: 22px;
+  height: 14px;
+}
+
+.icon-8 {
+  position: relative;
+  width: 20.1px;
+  height: 20px;
+}
+
+.img {
+  position: relative;
+  width: 16px;
+  height: 20px;
+}
+
+.text-wrapper-4 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: -4px;
+  font-family: "Montserrat-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.text-wrapper-5 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Montserrat-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+/* User Profile / Logout */
+.user-profile-logout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 16px 32px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-color: #ffffff1a;
+}
+
+.container-4 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 8px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.div {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.user-avatar {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 1px solid #ffffff33;
+  background-image: url('/asset/img/admin/user_avartar.png');
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.container-wrapper {
+  padding: 0px 0px 0px 12px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.div-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.text-wrapper-6 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Montserrat-SemiBold", Helvetica;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.text-wrapper-7 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Montserrat-Regular", Helvetica;
+  font-weight: 400;
+  color: #9ca3af;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.vector-2 {
+  position: absolute;
+  width: 83.33%;
+  height: 66.67%;
+  top: 33.33%;
+  left: 16.67%;
+}
