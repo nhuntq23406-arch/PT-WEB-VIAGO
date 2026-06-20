@@ -1,0 +1,936 @@
+<!-- Header/Navbar Section -->
+<header class="bg-white sticky top-0 z-40 shadow-sm w-full">
+  <!-- Row 1: Language Selector, Center Logo, Auth Button (Stretched to page edges) -->
+  <div class="max-w-full px-4 md:px-10 lg:px-16 py-1 flex items-center justify-between border-b border-slate-100 mx-auto">
+    <!-- Left Column: Language Selector -->
+    <div class="w-1/3 flex justify-start items-center">
+      <div class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity">
+        <img src="/asset/images/customer/quoc_ky_VN.png" alt="VN Flag" class="w-5 h-3.5 object-cover rounded-sm" />
+        <span class="text-sm font-bold text-gray-800">VI</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+      </div>
+    </div>
+
+
+    <!-- Center Column: Logo -->
+    <div class="w-1/3 flex justify-center items-center">
+      <a href="#" class="flex items-center">
+        <img src="/asset/images/customer/logo_removebg.png" alt="VIAGO Logo" class="h-16 md:h-18 lg:h-20 object-contain" />
+      </a>
+    </div>
+
+
+    <!-- Right Column: Auth Button -->
+    <div class="w-1/3 flex justify-end items-center">
+      <button class="bg-[#00236F] hover:bg-[#001b54] active:bg-[#00133b] text-white px-6 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm cursor-pointer">
+        <img src="/asset/images/customer/icon user.svg" class="w-4 h-4 brightness-0 invert" alt="user icon" />
+        <span>Đăng nhập / Đăng ký</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- Row 2: Complete Navbar Links (Centered) -->
+  <div class="bg-slate-50/75 border-b border-slate-100 py-3 w-full">
+    <div class="max-w-full px-4 md:px-10 lg:px-16 mx-auto">
+      <nav class="flex flex-wrap items-center justify-center gap-6 lg:gap-8">
+        <a href="#" class="text-sm font-bold text-[#1E3A8A] border-b-2 border-[#1E3A8A] pb-1">TRANG CHỦ</a>
+        <a href="#" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">LỊCH TRÌNH</a>
+        <a href="#" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">TRA CỨU VÉ</a>
+        <a href="#" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">TIN TỨC</a>
+        <a href="#" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">HÓA ĐƠN</a>
+        <a href="#" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">ĐÁNH GIÁ</a>
+       
+        <!-- Dropdown Menu Item 1: Dịch vụ -->
+        <div class="relative">
+          <button
+            (click)="toggleServices($event)"
+            class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
+            [class.text-[#1E3A8A]]="isServicesOpen"
+          >
+            <span>DỊCH VỤ</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200" [class.rotate-180]="isServicesOpen" [class.text-[#1E3A8A]]="isServicesOpen">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+         
+          <!-- Submenu Dịch vụ -->
+          <div
+            [class.opacity-100]="isServicesOpen"
+            [class.scale-100]="isServicesOpen"
+            [class.pointer-events-auto]="isServicesOpen"
+            class="absolute top-full left-0 mt-2.5 w-56 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none origin-top-left flex flex-col"
+          >
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Thuê xe hợp đồng</span>
+            </a>
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Tìm đồ thất lạc</span>
+            </a>
+          </div>
+        </div>
+
+
+        <!-- Dropdown Menu Item 2: Giới thiệu -->
+        <div class="relative">
+          <button
+            (click)="toggleAbout($event)"
+            class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
+            [class.text-[#1E3A8A]]="isAboutOpen"
+          >
+            <span>GIỚI THIỆU</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200" [class.rotate-180]="isAboutOpen" [class.text-[#1E3A8A]]="isAboutOpen">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+         
+          <!-- Submenu Giới thiệu -->
+          <div
+            [class.opacity-100]="isAboutOpen"
+            [class.scale-100]="isAboutOpen"
+            [class.pointer-events-auto]="isAboutOpen"
+            class="absolute top-full left-0 mt-2.5 w-60 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none origin-top-left flex flex-col"
+          >
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Về chúng tôi</span>
+            </a>
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Chính sách nhà xe</span>
+            </a>
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Hướng dẫn mua vé</span>
+            </a>
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Câu hỏi thường gặp</span>
+            </a>
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Điều khoản sử dụng</span>
+            </a>
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Tuyển dụng</span>
+            </a>
+            <a href="#" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Liên hệ</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<main class="min-h-screen bg-slate-50 overflow-x-hidden">
+  <!-- Hero Section Wrapper to prevent booking card clipping -->
+  <div class="relative w-full overflow-visible">
+    <!-- Hero Banner -->
+    <section class="relative h-[530px] w-full flex items-center bg-slate-900 overflow-hidden">
+      <!-- Hero Background Image -->
+      <div class="absolute inset-0 z-0">
+        <img src="/asset/images/customer/hero banner.png" alt="VIAGO Limousine Banner" class="w-full h-full object-cover opacity-90" />
+        <div class="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent"></div>
+      </div>
+
+
+      <!-- Hero Content (Centered & aligned to 1200px margin) -->
+      <div class="relative z-10 max-w-[1200px] mx-auto px-4 md:px-8 text-white w-full pb-20">
+        <div class="max-w-2xl">
+          <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+            Hành trình sang trọng,<br />Tiện nghi đẳng cấp
+          </h1>
+          <p class="mt-4 text-base md:text-lg text-slate-200 font-medium leading-relaxed lg:whitespace-nowrap">
+            Trải nghiệm dịch vụ vận chuyển hàng đầu với dòng xe Limousine cao cấp nhất.
+          </p>
+          <p class="text-base md:text-lg text-slate-200 font-medium leading-relaxed lg:whitespace-nowrap">
+            Cam kết an toàn, đúng giờ và chất lượng phục vụ 5 sao.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Booking Form Container (Floating layout, w: 1200 on desktop) -->
+    <div class="absolute bottom-0 left-0 right-0 translate-y-1/2 z-20 px-4 md:px-8 flex justify-center overflow-visible">
+      <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 md:p-8 w-full max-w-[1200px] lg:h-[263px] flex flex-col justify-between overflow-visible">
+        <!-- Radio Ticket Types -->
+        <div class="flex items-center gap-6 mb-4">
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="tripType"
+              value="one-way"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'one-way'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'one-way'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Một chiều</span>
+          </label>
+
+
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="tripType"
+              value="round-trip"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'round-trip'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'round-trip'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Khứ hồi</span>
+          </label>
+        </div>
+
+
+        <!-- Form Fields Grid (Custom Flex layouts, py-3.5 inputs for larger sizing) -->
+        <div class="flex flex-col lg:flex-row items-end gap-3.5 w-full overflow-visible">
+          <!-- Departure Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              id="departure"
+              label="Điểm đi"
+              placeholder="Nhập điểm đi"
+              iconPath="/asset/images/customer/Icon điểm đi.svg"
+              [items]="departureCities"
+              [value]="departure"
+              (valueChange)="onDepartureChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+
+          <!-- Reverse button -->
+          <div class="flex items-center justify-center h-12 pb-1 flex-none self-end">
+            <button
+              type="button"
+              (click)="swapLocations()"
+              class="w-10 h-10 rounded-full border border-slate-200 bg-white hover:border-[#1E3A8A] text-slate-500 hover:text-[#1E3A8A] flex items-center justify-center transition-all duration-300 shadow-sm active:scale-95 cursor-pointer"
+              title="Đảo chiều điểm đi và điểm đến"
+            >
+              <img src="/asset/images/customer/icon nút đảo chiều.svg" class="w-5 h-4 object-contain" alt="swap icon" />
+            </button>
+          </div>
+
+
+          <!-- Destination Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              #destinationDropdown
+              id="destination"
+              label="Điểm đến"
+              placeholder="Nhập điểm đến"
+              iconPath="/asset/images/customer/icon điểm đến.svg"
+              [items]="destinationCities"
+              [value]="destination"
+              (valueChange)="onDestinationChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+
+          <!-- Departure Date (Format dd/mm/yyyy display, click opens calendar) -->
+          <div class="w-full lg:w-[220px] flex-none">
+            <div class="flex items-center gap-2 mb-1">
+              <img src="/asset/images/customer/icon lịch.svg" class="w-4 h-4 object-contain" alt="calendar icon" />
+              <label for="departureDate" class="text-[13px] font-semibold text-[#1E3A8A] uppercase tracking-wider">
+                Ngày đi
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                #dpDep
+                (click)="dpDep.showPicker()"
+                id="departureDate"
+                type="date"
+                [(ngModel)]="departureDate"
+                class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              />
+              <div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center">
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Return Date (Format dd/mm/yyyy display, click opens calendar) -->
+          <div *ngIf="tripType === 'round-trip'" class="w-full lg:w-[220px] flex-none">
+            <div class="flex items-center gap-2 mb-1">
+              <img src="/asset/images/customer/icon lịch.svg" class="w-4 h-4 object-contain" alt="calendar icon" />
+              <label for="returnDate" class="text-[13px] font-semibold text-[#1E3A8A] uppercase tracking-wider">
+                Ngày về
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                #dpRet
+                (click)="dpRet.showPicker()"
+                id="returnDate"
+                type="date"
+                [(ngModel)]="returnDate"
+                class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              />
+            </div>
+          </div>
+
+
+          <!-- Ticket Count Select -->
+          <div class="w-full lg:w-[130px] flex-none">
+            <div class="flex items-center gap-2 mb-1">
+              <img src="/asset/images/customer/icon vé.svg" class="w-4.5 h-4 object-contain" alt="ticket icon" />
+              <label for="ticketCount" class="text-[13px] font-semibold text-[#1E3A8A] uppercase tracking-wider">
+                Số vé
+              </label>
+            </div>
+            <div class="relative flex items-center">
+              <select
+                id="ticketCount"
+                [(ngModel)]="ticketCount"
+                class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-semibold text-base pl-4 pr-10 py-3.5 rounded-lg outline-none appearance-none transition-all duration-200 shadow-sm"
+              >
+                <option [value]="1">1 vé</option>
+                <option [value]="2">2 vé</option>
+                <option [value]="3">3 vé</option>
+                <option [value]="4">4 vé</option>
+                <option [value]="5">5 vé</option>
+              </select>
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Search CTA Button -->
+        <div class="flex justify-center mt-4">
+          <button
+            type="button"
+            (click)="onSubmitSearch()"
+            class="bg-[#FF6A00] hover:bg-[#FF8126] active:bg-[#D95800] text-white font-bold text-base px-16 py-3.5 rounded-lg transition-all shadow-md hover:shadow-lg hover:-translate-y-[1px] active:translate-y-0 tracking-wide cursor-pointer"
+          >
+            TÌM KIẾM
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Spacer to make room for floating booking card -->
+  <div class="h-40 lg:h-24"></div>
+
+
+  <!-- Core Features Section (Aligned to 1200px, tight gap, py-10 lg:py-14 spacing) -->
+  <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 lg:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Feature 1 -->
+      <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center justify-between w-full h-[240px] mx-auto">
+        <div class="w-14 h-14 rounded-full bg-[#00236F]/5 flex items-center justify-center">
+          <img src="/asset/images/customer/icon tiện nghi cao cấp.svg" class="w-6 h-6 object-contain" alt="Icon tiện nghi" />
+        </div>
+        <div>
+          <h3 class="text-[#1A3A8A] text-gray-800 font-bold text-[24px]">Tiện nghi cao cấp</h3>
+          <p class="text-sm text-gray-500 mt-2.5 leading-relaxed">
+            Hệ thống xe Limousine đời mới nhất với ghế massage, wifi tốc độ cao, và cổng sạc riêng biệt.
+          </p>
+        </div>
+      </div>
+
+
+      <!-- Feature 2 -->
+      <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center justify-between w-full h-[240px] mx-auto">
+        <div class="w-14 h-14 rounded-full bg-[#00236F]/5 flex items-center justify-center">
+          <img src="/asset/images/customer/icon clock.svg" class="w-6 h-6 object-contain" alt="Icon clock" />
+        </div>
+        <div>
+          <h3 class="text-[#1A3A8A] text-gray-800 font-bold text-[24px]">Nhanh chóng & Đúng giờ</h3>
+          <p class="text-sm text-gray-500 mt-2.5 leading-relaxed">
+            Tối ưu hóa hành trình, cam kết khởi hành và đến nơi đúng khung giờ đã thông báo cho quý khách.
+          </p>
+        </div>
+      </div>
+
+
+      <!-- Feature 3 -->
+      <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center justify-between w-full h-[240px] mx-auto">
+        <div class="w-14 h-14 rounded-full bg-[#00236F]/5 flex items-center justify-center">
+          <img src="/asset/images/customer/icon an toàn.svg" class="w-6 h-6 object-contain" alt="Icon an toàn" />
+        </div>
+        <div>
+          <h3 class="text-[#1A3A8A] text-gray-800 font-bold text-[24px]">An tâm tuyệt đối</h3>
+          <p class="text-sm text-gray-500 mt-2.5 leading-relaxed">
+            Đội ngũ lái xe kinh nghiệm, nhiệt tình và được đào tạo bài bản về an toàn giao thông đường dài.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Promotions Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="bg-slate-50 border-y border-slate-100 py-12 lg:py-5">
+    <div class="max-w-[1200px] mx-auto px-4 md:px-8">
+      <!-- Title Block -->
+      <div class="flex items-end justify-between mb-10">
+        <div class="flex flex-col gap-2">
+          <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+            Khuyến mãi nổi bật
+          </h2>
+          <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+        </div>
+        <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
+          <span>Xem tất cả</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </a>
+      </div>
+
+
+      <!-- Promotion Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Promo 1 -->
+        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+          <div class="flex flex-col gap-1 z-10">
+            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 20%</h3>
+            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi khách hàng mới</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 31/12/2026</p>
+          </div>
+          <!-- Centered coupon details alignment -->
+          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
+            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
+              VIAGONEW
+            </div>
+            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
+              Lưu
+            </button>
+          </div>
+          <!-- Coupon cutout lines styling -->
+          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
+          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+        </div>
+
+
+        <!-- Promo 2 -->
+        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+          <div class="flex flex-col gap-1 z-10">
+            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 50K</h3>
+            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi tháng sinh nhật</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 15/08/2026</p>
+          </div>
+          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
+            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
+              HBD50K
+            </div>
+            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
+              Lưu
+            </button>
+          </div>
+          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
+          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+        </div>
+
+
+        <!-- Promo 3 -->
+        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+          <div class="flex flex-col gap-1 z-10">
+            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 10%</h3>
+            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi hè rực rỡ</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 30/06/2026</p>
+          </div>
+          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
+            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
+              SUMMER10
+            </div>
+            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
+              Lưu
+            </button>
+          </div>
+          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
+          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Popular Routes Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 lg:py-14">
+    <!-- Title Block -->
+    <div class="flex items-end justify-between mb-10">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+          Tuyến xe phổ biến
+        </h2>
+        <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+      </div>
+      <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
+        <span>Xem tất cả</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    </div>
+
+
+    <!-- Routes Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Route 1 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full mx-auto">
+        <div class="w-full h-[192px] overflow-hidden relative">
+          <img src="/asset/images/customer/quảng trường lâm viên - đà lạt.jpg" alt="TP.HCM -> Đà Lạt" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="flex flex-col">
+            <h3 class="text-[24px] text-[#152C68] font-bold">TP.HCM &rarr; Đà Lạt</h3>
+            <div class="flex items-center gap-3 text-gray-500 text-xs mt-2 font-medium">
+              <span class="flex items-center gap-1">
+                <!-- Location Pin icon before text -->
+                <img src="/asset/images/customer/Icon điểm đi.svg" class="w-3 h-3.5 object-contain" alt="location icon" />
+                310km
+              </span>
+              <span>&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                6 giờ
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <span class="text-[10px] text-gray-500 block font-semibold uppercase">Giá vé</span>
+              <span class="text-lg font-black text-[#FF6A00]">280.000đ</span>
+            </div>
+            <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors active:scale-95 cursor-pointer">
+              Đặt vé ngay
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Route 2 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full mx-auto">
+        <div class="w-full h-[192px] overflow-hidden relative">
+          <img src="/asset/images/customer/chợ nổi.jpg" alt="Cần Thơ -> Rạch Giá" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="flex flex-col">
+            <h3 class="text-[24px] text-[#152C68] font-bold">Cần Thơ &rarr; Rạch Giá</h3>
+            <div class="flex items-center gap-3 text-gray-500 text-xs mt-2 font-medium">
+              <span class="flex items-center gap-1">
+                <!-- Location Pin icon before text -->
+                <img src="/asset/images/customer/Icon điểm đi.svg" class="w-3 h-3.5 object-contain" alt="location icon" />
+                115km
+              </span>
+              <span>&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                2.5 giờ
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <span class="text-[10px] text-gray-500 block font-semibold uppercase">Giá vé</span>
+              <span class="text-lg font-black text-[#FF6A00]">140.000đ</span>
+            </div>
+            <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors active:scale-95 cursor-pointer">
+              Đặt vé ngay
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Route 3 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full mx-auto">
+        <div class="w-full h-[192px] overflow-hidden relative">
+          <img src="/asset/images/customer/đà nẵng.jpg" alt="Nha Trang -> Đà Nẵng" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="flex flex-col">
+            <h3 class="text-[24px] text-[#152C68] font-bold">Nha Trang &rarr; Đà Nẵng</h3>
+            <div class="flex items-center gap-3 text-gray-500 text-xs mt-2 font-medium">
+              <span class="flex items-center gap-1">
+                <!-- Location Pin icon before text -->
+                <img src="/asset/images/customer/Icon điểm đi.svg" class="w-3 h-3.5 object-contain" alt="location icon" />
+                530km
+              </span>
+              <span>&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                10 giờ
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <span class="text-[10px] text-gray-500 block font-semibold uppercase">Giá vé</span>
+              <span class="text-lg font-black text-[#FF6A00]">350.000đ</span>
+            </div>
+            <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors active:scale-95 cursor-pointer">
+              Đặt vé ngay
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Testimonials Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="bg-[#00236F]/5 border-y border-slate-100 py-12 lg:py-14">
+    <div class="max-w-[1200px] mx-auto px-4 md:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left: Image of Bus (Size: 544 x 544) -->
+        <div class="lg:col-span-6 flex justify-center lg:justify-start">
+          <div class="relative rounded-2xl overflow-hidden shadow-lg border-4 border-white w-full max-w-[544px] h-[350px] sm:h-[450px] lg:h-[544px] flex-shrink-0">
+            <img src="/asset/images/customer/xe.jpg" alt="VIAGO Bus Road" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+          </div>
+        </div>
+
+
+        <!-- Right: Testimonial details -->
+        <div class="lg:col-span-6 flex flex-col">
+          <div class="flex flex-col gap-2 mb-8">
+            <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+              Khách hàng nói gì về VIAGO?
+            </h2>
+            <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+          </div>
+
+
+          <div class="flex flex-col gap-6">
+            <!-- Review 1 -->
+            <div class="bg-white border-l-4 border-[#FF6A00] rounded-r-xl p-5 shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
+                  <img src="/asset/images/customer/Customer Avatar 1.png" alt="Customer Avatar 1" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-800">Đỗ Thanh Phương</h4>
+                  <div class="flex text-[#FF8A00] gap-0.5 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 mt-3 italic leading-relaxed">
+                "Nhân viên phục vụ nhiệt tình, hướng dẫn chỗ ngồi chu đáo, 5 sao cho nhà xe. Xe chạy rất êm, tài xế lái xe cẩn thận và đón đúng giờ. Sẽ tiếp tục ủng hộ"
+              </p>
+              <div class="text-[10px] text-[#D95800] font-bold uppercase mt-2.5">
+                Tuyến: TP.HCM - Vũng Tàu
+              </div>
+            </div>
+
+
+            <!-- Review 2 -->
+            <div class="bg-white border-l-4 border-[#FF6A00] rounded-r-xl p-5 shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
+                  <img src="/asset/images/customer/Customer Avatar 2.png" alt="Customer Avatar 2" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-800">Nguyễn Văn An</h4>
+                  <div class="flex text-[#FF8A00] gap-0.5 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 mt-3 italic leading-relaxed">
+                "Dịch vụ chuyên nghiệp, ghế ngồi rất thoải mái. Wifi trên xe mạnh, sạc điện thoại tiện lợi. Một trải nghiệm đi đường dài tuyệt vời."
+              </p>
+              <div class="text-[10px] text-[#D95800] font-bold uppercase mt-2.5">
+                Tuyến: TP.HCM - Nha Trang
+              </div>
+            </div>
+          </div>
+
+
+          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors mt-8 justify-end">
+            <span>Xem tất cả</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- News Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 lg:py-14">
+    <!-- Title Block -->
+    <div class="flex items-end justify-between mb-10">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+          Tin tức nổi bật
+        </h2>
+        <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+      </div>
+      <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
+        <span>Xem tất cả</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    </div>
+
+
+    <!-- News Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- News 1 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between w-full mx-auto">
+        <div>
+          <div class="w-full h-[216px] overflow-hidden">
+            <img src="/asset/images/customer/Nha Trang.jpg" alt="VIAGO News" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="p-6">
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">01/01/2026</span>
+            <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
+              VIAGO mở thêm chuyến Đà Lạt - Nha Trang
+            </h3>
+            <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
+              Nhằm đáp ứng nhu cầu đi lại ngày càng tăng, VIAGO chính thức bổ sung thêm 5 chuyến xe mỗi ngày trên tuyến Đà Lạt - Nha Trang...
+            </p>
+          </div>
+        </div>
+        <div class="px-6 pb-6 pt-2">
+          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+            Chi tiết &rarr;
+          </a>
+        </div>
+      </div>
+
+
+      <!-- News 2 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between w-full mx-auto">
+        <div>
+          <div class="w-full h-[216px] overflow-hidden">
+            <img src="/asset/images/customer/bến xe.jpg" alt="Bến xe Miền Đông mới" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="p-6">
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">20/05/2026</span>
+            <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
+              Cập nhật lịch trình tại BX Miền Đông mới
+            </h3>
+            <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
+              Lịch trình mới nhất áp dụng cho mùa hè 2026 sẽ giúp quý khách dễ dàng sắp xếp thời gian cho các hành trình tại BX Miền Đông mới...
+            </p>
+          </div>
+        </div>
+        <div class="px-6 pb-6 pt-2">
+          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+            Chi tiết &rarr;
+          </a>
+        </div>
+      </div>
+
+
+      <!-- News 3 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between w-full mx-auto">
+        <div>
+          <div class="w-full h-[216px] overflow-hidden">
+            <img src="/asset/images/customer/summer.jpg" alt="Ưu đãi hè" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+          </div>
+          <div class="p-6">
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">01/06/2026</span>
+            <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
+              Ưu đãi hè rực rỡ: Giảm ngay 10% giá vé
+            </h3>
+            <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
+              Đón mùa du lịch hè 2026, VIAGO tung chương trình khuyến mãi cực lớn cho tất cả khách hàng đặt vé trực tuyến qua website...
+            </p>
+          </div>
+        </div>
+        <div class="px-6 pb-6 pt-2">
+          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+            Chi tiết &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+<!-- Floating Chatbot Button (Styled Chat Bubble Icon) -->
+<button
+  type="button"
+  class="fixed bottom-6 right-6 w-14 h-14 bg-[#FF6A00] hover:bg-[#FF8126] active:bg-[#D95800] text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:-translate-y-1 active:translate-y-0 z-50 focus:outline-none cursor-pointer"
+  title="Liên hệ tư vấn"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-7 h-7">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423 3.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+  </svg>
+</button>
+
+
+<!-- Footer Section (Wide container, 4 columns on 1 single row) -->
+<footer class="bg-[#00236F] text-slate-200 flex flex-col justify-between w-full">
+  <div class="max-w-full px-4 md:px-10 lg:px-16 pt-16 pb-12 w-full mx-auto">
+    <!-- Grid configured to keep 4 columns on a single row from md screen size onwards -->
+    <div class="grid grid-cols-1 md:grid-cols-[max-content_1fr_1fr_1fr] gap-8 lg:gap-16 items-start">
+      <!-- Col 1: Left Aligned Brand Info -->
+      <div class="flex flex-col items-start text-left gap-4">
+        <img src="/asset/images/customer/logo_trang.png" alt="VIAGO Logo White" class="h-20 lg:h-30 object-contain ml-12" />
+        <h3 class="text-[24px] font-semibold text-white uppercase tracking-wide ml-10">CÔNG TY TNHH VIAGO</h3>
+        <div class="flex flex-col gap-3 text-sm font-medium text-[#b0b9c6] mt-2">
+          <p class="flex items-start gap-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-400 mt-0.5 flex-shrink-0">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z" />
+            </svg>
+            <span class="whitespace-nowrap">869 Đỗ Mười, khu phố 13, Linh Xuân, TP. HCM</span>
+          </p>
+          <p class="flex items-center gap-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-400 flex-shrink-0">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.47-5.112-3.758-6.582-6.582l1.293-.97c.362-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            </svg>
+            <span>0982 541 160 - 0932 334 448</span>
+          </p>
+          <p class="flex items-center gap-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-400 flex-shrink-0">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+            <span>congtyviago&#64;gmail.com</span>
+          </p>
+        </div>
+      </div>
+
+
+      <!-- Col 2: Support Links -->
+      <div class="flex flex-col gap-4">
+        <h4 class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Hỗ trợ</h4>
+        <div class="flex flex-col gap-2.5 text-sm font-semibold text-[#b0b9c6]">
+          <a href="#" class="hover:text-white transition-colors">Câu hỏi FAQs</a>
+          <a href="#" class="hover:text-white transition-colors">Điều khoản sử dụng</a>
+          <a href="#" class="hover:text-white transition-colors">Chính sách bảo mật</a>
+          <a href="#" class="hover:text-white transition-colors">Liên hệ</a>
+        </div>
+      </div>
+
+
+      <!-- Col 3: Intro Links -->
+      <div class="flex flex-col gap-4">
+        <h4 class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Giới thiệu</h4>
+        <div class="flex flex-col gap-2.5 text-sm font-semibold text-[#b0b9c6]">
+          <a href="#" class="hover:text-white transition-colors">Về chúng tôi</a>
+          <a href="#" class="hover:text-white transition-colors">Tuyển dụng</a>
+          <a href="#" class="hover:text-[#7BD0FF] transition-colors">Tin tức nổi bật</a>
+          <a href="#" class="hover:text-[#7BD0FF] transition-colors">Lịch trình</a>
+        </div>
+      </div>
+
+
+      <!-- Col 4: Hotline & Connect -->
+      <div class="flex flex-col gap-5">
+        <div>
+          <span class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider block">Hotline liên hệ</span>
+          <a href="tel:19001234" class="text-[32px] font-black text-[#FF6A00] block mt-1 hover:opacity-90">1900 1234</a>
+        </div>
+
+
+        <div>
+          <span class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider block mb-2.5 whitespace-nowrap">Kết nối với chúng tôi</span>
+          <!-- Social Icons -->
+          <div class="flex items-center gap-3">
+            <!-- Facebook -->
+            <a href="#" class="w-10 h-10 rounded-full bg-[#1877F2] hover:bg-[#1877F2]/90 text-white flex items-center justify-center transition-all cursor-pointer shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="w-5 h-5 fill-current"> <path d="M80 299.3V256H12v-74.7h68V134c0-67.2 41-104 101.2-104 28.8 0 53.6 2.1 60.8 3v70.5h-41.7c-32.6 0-39 15.5-39 38.3V181.3h78.1L229.3 256h-68v192h-81.3V299.3z"/>
+              </svg>
+            </a>
+            <!-- Tiktok -->
+            <a href="#" class="w-10 h-10 rounded-full bg-black hover:bg-slate-950 text-white flex items-center justify-center transition-all cursor-pointer shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-5 h-5 fill-current"> <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.18,121.18,0,0,0,67,20.14Z"/>
+              </svg>
+            </a>
+            <!-- Instagram -->
+            <a href="#" class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:opacity-90 text-white flex items-center justify-center transition-all cursor-pointer shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-5 h-5 fill-none stroke-current stroke-[2]" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+
+        <div class="mt-2.5">
+          <img src="/asset/images/customer/bocongthuong.png" alt="Đã đăng ký Bộ Công Thương" class="h-20 object-contain" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Bottom border line and Copyright info (styled at bottom, black 20% opacity) -->
+  <div class="bg-black/20 w-full py-4 text-center mt-auto">
+    <p class="text-xs text-slate-300 font-semibold">
+      &copy; 2026 CÔNG TY TNHH VIAGO. Hotline: 1900 1234
+    </p>
+  </div>
+</footer>
