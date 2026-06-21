@@ -1,1 +1,161 @@
-/* services.component.css */
+/* Services component styles (Car Rental & Lost and Found) */
+.service-hero {
+    position: relative;
+    background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    padding: 70px 0;
+    color: white;
+}
+
+.service-tabs-wrapper {
+    position: relative;
+    z-index: 10;
+}
+
+.tab-btn {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #123063;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    outline: none;
+}
+
+.tab-btn:hover {
+    border-color: #123063;
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background-color: #f96d00;
+    border-color: #f96d00;
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(249, 109, 0, 0.3);
+}
+
+.tab-content {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    box-shadow: 0 0 0 3px rgba(18, 48, 99, 0.08);
+}
+
+/* Info card icons */
+.info-item svg {
+    margin-top: 2px;
+}
+
+/* Lost badge status overlay */
+.lost-badge-status {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 992px) {
+    .rental-layout {
+        grid-template-columns: 1fr !important;
+    }
+    .fleet-grid,
+    .lostfound-grid,
+    .workflow-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* --- SUCCESS POPUP MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(10, 31, 68, 0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-card {
+    background: white;
+    width: 440px;
+    border-radius: 16px;
+    padding: 35px 30px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(18, 48, 99, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    animation: modalAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-icon {
+    width: 64px;
+    height: 64px;
+    background-color: #e0f2f1;
+    color: #00796b;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 22px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #123063;
+    margin-bottom: 12px;
+}
+
+.modal-desc {
+    font-size: 14px;
+    color: #666666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.modal-btn {
+    background-color: #1a3c8d;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-btn:hover {
+    background-color: #122c6b;
+}
