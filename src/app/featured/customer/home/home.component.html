@@ -1,0 +1,683 @@
+<main class="min-h-screen bg-slate-50 overflow-x-hidden">
+  <!-- Hero Section Wrapper to prevent booking card clipping -->
+  <div class="relative w-full overflow-visible">
+    <!-- Hero Banner -->
+    <section class="relative h-[530px] w-full flex items-center bg-slate-900 overflow-hidden">
+      <!-- Hero Background Image -->
+      <div class="absolute inset-0 z-0">
+        <img src="/asset/images/customer/hero_banner.png" alt="VIAGO Limousine Banner" class="w-full h-full object-cover opacity-90" />
+        <div class="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent"></div>
+      </div>
+
+
+      <!-- Hero Content (Centered & aligned to 1200px margin) -->
+      <div class="relative z-10 max-w-[1200px] mx-auto px-4 md:px-8 text-white w-full pb-20">
+        <div class="max-w-2xl">
+          <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+            Hành trình sang trọng,<br />Tiện nghi đẳng cấp
+          </h1>
+          <p class="mt-4 text-base md:text-lg text-slate-200 font-medium leading-relaxed lg:whitespace-nowrap">
+            Trải nghiệm dịch vụ vận chuyển hàng đầu với dòng xe Limousine cao cấp nhất.
+          </p>
+          <p class="text-base md:text-lg text-slate-200 font-medium leading-relaxed lg:whitespace-nowrap">
+            Cam kết an toàn, đúng giờ và chất lượng phục vụ 5 sao.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Booking Form Container (Floating layout, w: 1200 on desktop) -->
+    <div class="absolute bottom-0 left-0 right-0 translate-y-1/2 z-20 px-4 md:px-8 flex justify-center overflow-visible">
+      <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 md:p-8 w-full max-w-[1200px] lg:h-[263px] flex flex-col justify-between overflow-visible">
+        <!-- Radio Ticket Types -->
+        <div class="flex items-center gap-6 mb-4">
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="tripType"
+              value="one-way"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'one-way'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'one-way'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Một chiều</span>
+          </label>
+
+
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="tripType"
+              value="round-trip"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'round-trip'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'round-trip'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Khứ hồi</span>
+          </label>
+        </div>
+
+
+        <!-- Form Fields Grid (Custom Flex layouts, py-3.5 inputs for larger sizing) -->
+        <div class="flex flex-col lg:flex-row items-end gap-3.5 w-full overflow-visible">
+          <!-- Departure Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              id="departure"
+              label="Điểm đi"
+              placeholder="Nhập điểm đi"
+              iconPath="/asset/images/customer/icon_diem_di.svg"
+              [items]="departureCities"
+              [value]="departure"
+              (valueChange)="onDepartureChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+
+          <!-- Reverse button -->
+          <div class="flex items-center justify-center h-12 pb-1 flex-none self-end">
+            <button
+              type="button"
+              (click)="swapLocations()"
+              class="w-10 h-10 rounded-full border border-slate-200 bg-white hover:border-[#1E3A8A] text-slate-500 hover:text-[#1E3A8A] flex items-center justify-center transition-all duration-300 shadow-sm active:scale-95 cursor-pointer"
+              title="Đảo chiều điểm đi và điểm đến"
+            >
+              <img src="/asset/images/customer/icon_nut_dao_chieu.svg" class="w-5 h-4 object-contain" alt="swap icon" />
+            </button>
+          </div>
+
+
+          <!-- Destination Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              #destinationDropdown
+              id="destination"
+              label="Điểm đến"
+              placeholder="Nhập điểm đến"
+              iconPath="/asset/images/customer/icon_diem_den.svg"
+              [items]="destinationCities"
+              [value]="destination"
+              (valueChange)="onDestinationChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+
+          <!-- Departure Date (Format dd/mm/yyyy display, click opens calendar) -->
+          <div class="w-full lg:w-[220px] flex-none">
+            <div class="flex items-center gap-2 mb-1">
+              <img src="/asset/images/customer/icon_lich.svg" class="w-4 h-4 object-contain" alt="calendar icon" />
+              <label for="departureDate" class="text-[13px] font-semibold text-[#1E3A8A] uppercase tracking-wider">
+                Ngày đi
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                #dpDep
+                (click)="dpDep.showPicker()"
+                id="departureDate"
+                type="date"
+                [(ngModel)]="departureDate"
+                class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              />
+              <div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center">
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Return Date (Format dd/mm/yyyy display, click opens calendar) -->
+          <div *ngIf="tripType === 'round-trip'" class="w-full lg:w-[220px] flex-none">
+            <div class="flex items-center gap-2 mb-1">
+              <img src="/asset/images/customer/icon_lich.svg" class="w-4 h-4 object-contain" alt="calendar icon" />
+              <label for="returnDate" class="text-[13px] font-semibold text-[#1E3A8A] uppercase tracking-wider">
+                Ngày về
+              </label>
+            </div>
+            <div class="relative">
+              <input
+                #dpRet
+                (click)="dpRet.showPicker()"
+                id="returnDate"
+                type="date"
+                [(ngModel)]="returnDate"
+                class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              />
+            </div>
+          </div>
+
+
+          <!-- Ticket Count Select -->
+          <div class="w-full lg:w-[130px] flex-none">
+            <div class="flex items-center gap-2 mb-1">
+              <img src="/asset/images/customer/icon_ve.svg" class="w-4.5 h-4 object-contain" alt="ticket icon" />
+              <label for="ticketCount" class="text-[13px] font-semibold text-[#1E3A8A] uppercase tracking-wider">
+                Số vé
+              </label>
+            </div>
+            <div class="relative flex items-center">
+              <select
+                id="ticketCount"
+                [(ngModel)]="ticketCount"
+                class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-semibold text-base pl-4 pr-10 py-3.5 rounded-lg outline-none appearance-none transition-all duration-200 shadow-sm"
+              >
+                <option [value]="1">1 vé</option>
+                <option [value]="2">2 vé</option>
+                <option [value]="3">3 vé</option>
+                <option [value]="4">4 vé</option>
+                <option [value]="5">5 vé</option>
+              </select>
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Search CTA Button -->
+        <div class="flex justify-center mt-4">
+          <button
+            type="button"
+            (click)="onSubmitSearch()"
+            class="bg-[#FF6A00] hover:bg-[#FF8126] active:bg-[#D95800] text-white font-bold text-base px-16 py-3.5 rounded-lg transition-all shadow-md hover:shadow-lg hover:-translate-y-[1px] active:translate-y-0 tracking-wide cursor-pointer"
+          >
+            TÌM KIẾM
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Spacer to make room for floating booking card -->
+  <div class="h-40 lg:h-24"></div>
+
+
+  <!-- Core Features Section (Aligned to 1200px, tight gap, py-10 lg:py-14 spacing) -->
+  <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 lg:py-20">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Feature 1 -->
+      <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center justify-between w-full h-[240px] mx-auto">
+        <div class="w-14 h-14 rounded-full bg-[#00236F]/5 flex items-center justify-center">
+          <img src="/asset/images/customer/icon_tien_nghi_cao_cap.svg" class="w-6 h-6 object-contain" alt="Icon tiện nghi" />
+        </div>
+        <div>
+          <h3 class="text-[#1A3A8A] text-gray-800 font-bold text-[24px]">Tiện nghi cao cấp</h3>
+          <p class="text-sm text-gray-500 mt-2.5 leading-relaxed">
+            Hệ thống xe Limousine đời mới nhất với ghế massage, wifi tốc độ cao, và cổng sạc riêng biệt.
+          </p>
+        </div>
+      </div>
+
+
+      <!-- Feature 2 -->
+      <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center justify-between w-full h-[240px] mx-auto">
+        <div class="w-14 h-14 rounded-full bg-[#00236F]/5 flex items-center justify-center">
+          <img src="/asset/images/customer/icon_clock.svg" class="w-6 h-6 object-contain" alt="Icon clock" />
+        </div>
+        <div>
+          <h3 class="text-[#1A3A8A] text-gray-800 font-bold text-[24px]">Nhanh chóng & Đúng giờ</h3>
+          <p class="text-sm text-gray-500 mt-2.5 leading-relaxed">
+            Tối ưu hóa hành trình, cam kết khởi hành và đến nơi đúng khung giờ đã thông báo cho quý khách.
+          </p>
+        </div>
+      </div>
+
+
+      <!-- Feature 3 -->
+      <div class="bg-white border border-slate-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center text-center justify-between w-full h-[240px] mx-auto">
+        <div class="w-14 h-14 rounded-full bg-[#00236F]/5 flex items-center justify-center">
+          <img src="/asset/images/customer/icon_an_toan.svg" class="w-6 h-6 object-contain" alt="Icon an toàn" />
+        </div>
+        <div>
+          <h3 class="text-[#1A3A8A] text-gray-800 font-bold text-[24px]">An tâm tuyệt đối</h3>
+          <p class="text-sm text-gray-500 mt-2.5 leading-relaxed">
+            Đội ngũ lái xe kinh nghiệm, nhiệt tình và được đào tạo bài bản về an toàn giao thông đường dài.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Promotions Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="bg-slate-50 border-y border-slate-100 py-12 lg:py-5">
+    <div class="max-w-[1200px] mx-auto px-4 md:px-8">
+      <!-- Title Block -->
+      <div class="flex items-end justify-between mb-10">
+        <div class="flex flex-col gap-2">
+          <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+            Khuyến mãi nổi bật
+          </h2>
+          <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+        </div>
+        <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
+          <span>Xem tất cả</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </a>
+      </div>
+
+
+      <!-- Promotion Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Promo 1 -->
+        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+          <div class="flex flex-col gap-1 z-10">
+            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 20%</h3>
+            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi khách hàng mới</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 31/12/2026</p>
+          </div>
+          <!-- Centered coupon details alignment -->
+          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
+            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
+              VIAGONEW
+            </div>
+            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
+              Lưu
+            </button>
+          </div>
+          <!-- Coupon cutout lines styling -->
+          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
+          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+        </div>
+
+
+        <!-- Promo 2 -->
+        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+          <div class="flex flex-col gap-1 z-10">
+            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 50K</h3>
+            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi tháng sinh nhật</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 15/08/2026</p>
+          </div>
+          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
+            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
+              HBD50K
+            </div>
+            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
+              Lưu
+            </button>
+          </div>
+          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
+          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+        </div>
+
+
+        <!-- Promo 3 -->
+        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
+          <div class="flex flex-col gap-1 z-10">
+            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 10%</h3>
+            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi hè rực rỡ</p>
+            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 30/06/2026</p>
+          </div>
+          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
+            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
+              SUMMER10
+            </div>
+            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
+              Lưu
+            </button>
+          </div>
+          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
+          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Popular Routes Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 lg:py-14">
+    <!-- Title Block -->
+    <div class="flex items-end justify-between mb-10">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+          Tuyến xe phổ biến
+        </h2>
+        <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+      </div>
+      <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
+        <span>Xem tất cả</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    </div>
+
+
+    <!-- Routes Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Route 1 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full mx-auto">
+        <div class="w-full h-[192px] overflow-hidden relative">
+          <img src="/asset/images/customer/quang_truong_lam_vien_da_lat.jpg" alt="TP.HCM -> Đà Lạt" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="flex flex-col">
+            <h3 class="text-[24px] text-[#152C68] font-bold">TP.HCM &rarr; Đà Lạt</h3>
+            <div class="flex items-center gap-3 text-gray-500 text-xs mt-2 font-medium">
+              <span class="flex items-center gap-1">
+                <!-- Location Pin icon before text -->
+                <img src="/asset/images/customer/icon_diem_di.svg" class="w-3 h-3.5 object-contain" alt="location icon" />
+                310km
+              </span>
+              <span>&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                6 giờ
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <span class="text-[10px] text-gray-500 block font-semibold uppercase">Giá vé</span>
+              <span class="text-lg font-black text-[#FF6A00]">280.000đ</span>
+            </div>
+            <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors active:scale-95 cursor-pointer">
+              Đặt vé ngay
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Route 2 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full mx-auto">
+        <div class="w-full h-[192px] overflow-hidden relative">
+          <img src="/asset/images/customer/cho_noi.jpg" alt="Cần Thơ -> Rạch Giá" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="flex flex-col">
+            <h3 class="text-[24px] text-[#152C68] font-bold">Cần Thơ &rarr; Rạch Giá</h3>
+            <div class="flex items-center gap-3 text-gray-500 text-xs mt-2 font-medium">
+              <span class="flex items-center gap-1">
+                <!-- Location Pin icon before text -->
+                <img src="/asset/images/customer/icon_diem_di.svg" class="w-3 h-3.5 object-contain" alt="location icon" />
+                115km
+              </span>
+              <span>&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                2.5 giờ
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <span class="text-[10px] text-gray-500 block font-semibold uppercase">Giá vé</span>
+              <span class="text-lg font-black text-[#FF6A00]">140.000đ</span>
+            </div>
+            <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors active:scale-95 cursor-pointer">
+              Đặt vé ngay
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Route 3 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full mx-auto">
+        <div class="w-full h-[192px] overflow-hidden relative">
+          <img src="/asset/images/customer/da_nang.jpg" alt="Nha Trang -> Đà Nẵng" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+        </div>
+        <div class="p-6 flex-1 flex flex-col">
+          <div class="flex flex-col">
+            <h3 class="text-[24px] text-[#152C68] font-bold">Nha Trang &rarr; Đà Nẵng</h3>
+            <div class="flex items-center gap-3 text-gray-500 text-xs mt-2 font-medium">
+              <span class="flex items-center gap-1">
+                <!-- Location Pin icon before text -->
+                <img src="/asset/images/customer/icon_diem_di.svg" class="w-3 h-3.5 object-contain" alt="location icon" />
+                530km
+              </span>
+              <span>&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                10 giờ
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <div>
+              <span class="text-[10px] text-gray-500 block font-semibold uppercase">Giá vé</span>
+              <span class="text-lg font-black text-[#FF6A00]">350.000đ</span>
+            </div>
+            <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-4 py-2 rounded-lg transition-colors active:scale-95 cursor-pointer">
+              Đặt vé ngay
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Testimonials Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="bg-[#00236F]/5 border-y border-slate-100 py-12 lg:py-14">
+    <div class="max-w-[1200px] mx-auto px-4 md:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left: Image of Bus (Size: 544 x 544) -->
+        <div class="lg:col-span-6 flex justify-center lg:justify-start">
+          <div class="relative rounded-2xl overflow-hidden shadow-lg border-4 border-white w-full max-w-[544px] h-[350px] sm:h-[450px] lg:h-[544px] flex-shrink-0">
+            <img src="/asset/images/customer/xe.jpg" alt="VIAGO Bus Road" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+          </div>
+        </div>
+
+
+        <!-- Right: Testimonial details -->
+        <div class="lg:col-span-6 flex flex-col">
+          <div class="flex flex-col gap-2 mb-8">
+            <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+              Khách hàng nói gì về VIAGO?
+            </h2>
+            <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+          </div>
+
+
+          <div class="flex flex-col gap-6">
+            <!-- Review 1 -->
+            <div class="bg-white border-l-4 border-[#FF6A00] rounded-r-xl p-5 shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
+                  <img src="/asset/images/customer/Customer_Avatar_1.png" alt="Customer Avatar 1" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-800">Đỗ Thanh Phương</h4>
+                  <div class="flex text-[#FF8A00] gap-0.5 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 mt-3 italic leading-relaxed">
+                "Nhân viên phục vụ nhiệt tình, hướng dẫn chỗ ngồi chu đáo, 5 sao cho nhà xe. Xe chạy rất êm, tài xế lái xe cẩn thận và đón đúng giờ. Sẽ tiếp tục ủng hộ"
+              </p>
+              <div class="text-[10px] text-[#D95800] font-bold uppercase mt-2.5">
+                Tuyến: TP.HCM - Vũng Tàu
+              </div>
+            </div>
+
+
+            <!-- Review 2 -->
+            <div class="bg-white border-l-4 border-[#FF6A00] rounded-r-xl p-5 shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
+                  <img src="/asset/images/customer/Customer_Avatar_2.png" alt="Customer Avatar 2" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-800">Nguyễn Văn An</h4>
+                  <div class="flex text-[#FF8A00] gap-0.5 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.205.803.654 1.428 1.343.996L10 15.426l4.012 2.672c.69.43 1.55-.195 1.343-.996l-1.197-4.683 3.6-3.102c.636-.544.298-1.584-.536-1.65l-4.752-.382-1.83-4.401z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p class="text-sm text-gray-700 mt-3 italic leading-relaxed">
+                "Dịch vụ chuyên nghiệp, ghế ngồi rất thoải mái. Wifi trên xe mạnh, sạc điện thoại tiện lợi. Một trải nghiệm đi đường dài tuyệt vời."
+              </p>
+              <div class="text-[10px] text-[#D95800] font-bold uppercase mt-2.5">
+                Tuyến: TP.HCM - Nha Trang
+              </div>
+            </div>
+          </div>
+
+
+          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors mt-8 justify-end">
+            <span>Xem tất cả</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- News Section (Aligned to 1200px, py-12 lg:py-14 spacing) -->
+  <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 lg:py-14">
+    <!-- Title Block -->
+    <div class="flex items-end justify-between mb-10">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-[32px] font-bold text-[#1A3A8A] leading-tight">
+          Tin tức nổi bật
+        </h2>
+        <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
+      </div>
+      <a routerLink="/tin-tuc" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
+        <span>Xem tất cả</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+    </div>
+
+
+    <!-- News Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- News 1 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between w-full mx-auto">
+        <div>
+          <a [routerLink]="['/tin-tuc/chi-tiet', 1]" class="block w-full h-[216px] overflow-hidden">
+            <img src="/asset/images/customer/xe.jpg" alt="VIAGO News" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+          </a>
+          <div class="p-6">
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">08/05/2026</span>
+            <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
+              <a [routerLink]="['/tin-tuc/chi-tiet', 1]">VIAGO mở thêm chuyến Hà Nội - Quảng Ninh</a>
+            </h3>
+            <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
+              Tăng cường chuyến mới phục vụ nhu cầu đi lại của quý hành khách giữa thủ đô Hà Nội và tỉnh Quảng Ninh bằng dòng xe Limousine giường nằm VIP chất lượng cao...
+            </p>
+          </div>
+        </div>
+        <div class="px-6 pb-6 pt-2">
+          <a [routerLink]="['/tin-tuc/chi-tiet', 1]" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+            Chi tiết &rarr;
+          </a>
+        </div>
+      </div>
+
+
+      <!-- News 2 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between w-full mx-auto">
+        <div>
+          <a [routerLink]="['/tin-tuc/chi-tiet', 2]" class="block w-full h-[216px] overflow-hidden">
+            <img src="/asset/images/customer/ben_xe.jpg" alt="Bến xe Miền Đông mới" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+          </a>
+          <div class="p-6">
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">24/05/2026</span>
+            <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
+              <a [routerLink]="['/tin-tuc/chi-tiet', 2]">Cập Nhật Lịch Trình 6 Chuyến Cố Định Mỗi Ngày Tăng Cường Phục Vụ</a>
+            </h3>
+            <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
+              Nhằm đáp ứng nhu cầu đi lại ngày càng cao của hành khách, nhà xe VIAGO chính thức cập nhật lịch trình chạy mới thông thoáng hơn...
+            </p>
+          </div>
+        </div>
+        <div class="px-6 pb-6 pt-2">
+          <a [routerLink]="['/tin-tuc/chi-tiet', 2]" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+            Chi tiết &rarr;
+          </a>
+        </div>
+      </div>
+
+
+      <!-- News 3 -->
+      <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between w-full mx-auto">
+        <div>
+          <a [routerLink]="['/tin-tuc/chi-tiet', 3]" class="block w-full h-[216px] overflow-hidden">
+            <img src="/asset/images/customer/summer.jpg" alt="Ưu đãi hè" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+          </a>
+          <div class="p-6">
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">24/05/2026</span>
+            <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
+              <a [routerLink]="['/tin-tuc/chi-tiet', 3]">Ưu Đãi Hè Rực Rỡ: Giảm Ngay 10% Giá Vé Phòng Limousine Khứ Hồi</a>
+            </h3>
+            <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
+              Chào mùa du lịch hè 2026, VIAGO hân hạnh mang chương trình ưu đãi cực lớn, giảm thẳng 10% giá vé khi hành khách đặt chỗ khứ hồi...
+            </p>
+          </div>
+        </div>
+        <div class="px-6 pb-6 pt-2">
+          <a [routerLink]="['/tin-tuc/chi-tiet', 3]" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+            Chi tiết &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,5 @@
+/* app.css - dùng chung cho app-root host */
+:host {
+  display: block;
+  min-height: 100vh;
+}

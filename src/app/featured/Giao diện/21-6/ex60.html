@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 60: Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 50px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Menu container */
+        .navbar {
+            background-color: #666666; /* Slate gray background */
+            border: 1px solid #0000ff; /* Blue border matching image */
+            padding: 0;
+            margin: 0;
+            display: flex;
+            list-style: none;
+            width: fit-content;
+        }
+
+        /* Top level items */
+        .menu-item {
+            position: relative;
+            border-right: 1px solid #444444;
+        }
+
+        .menu-item:last-child {
+            border-right: none;
+        }
+
+        .menu-link {
+            display: block;
+            padding: 10px 24px;
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            background-color: #bbbbbb; /* Light gray background matching image */
+            transition: background-color 0.1s ease, color 0.1s ease;
+        }
+
+        /* Dropdown submenu container */
+        .submenu {
+            display: none; /* Controlled by JavaScript */
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #ffffff;
+            border: 1px solid #00aa00; /* Green border for submenu in mockup */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            min-width: 180px;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .submenu li {
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .submenu li:last-child {
+            border-bottom: none;
+        }
+
+        .submenu-link {
+            display: block;
+            padding: 8px 15px;
+            color: #000000;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            transition: background-color 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <ul class="navbar">
+        <li class="menu-item">
+            <a href="#" class="menu-link">Home</a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">HTML</a>
+        </li>
+        <li class="menu-item" id="menu-css">
+            <a href="#" class="menu-link">CSS</a>
+            <!-- CSS Submenu -->
+            <ul class="submenu" id="submenu-css">
+                <li><a href="#" class="submenu-link">CSS Căn Bản</a></li>
+                <li><a href="#" class="submenu-link">Giao Diện Với CSS</a></li>
+                <li><a href="#" class="submenu-link">CSS Nâng Cao</a></li>
+            </ul>
+        </li>
+        <li class="menu-item" id="menu-js">
+            <a href="#" class="menu-link">Javascript</a>
+            <!-- JS Submenu -->
+            <ul class="submenu" id="submenu-js">
+                <li><a href="#" class="submenu-link">Lesson 01</a></li>
+                <li><a href="#" class="submenu-link">Lesson 02</a></li>
+                <li><a href="#" class="submenu-link">Lesson 03</a></li>
+            </ul>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">HTML DOM</a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="menu-link">Ngôn Ngữ ASP</a>
+        </li>
+    </ul>
+
+    <!-- JavaScript Interactive Handlers -->
+    <script>
+        // DOM Elements
+        const menuCSS = document.getElementById('menu-css');
+        const submenuCSS = document.getElementById('submenu-css');
+        const menuJS = document.getElementById('menu-js');
+        const submenuJS = document.getElementById('submenu-js');
+
+        // All menu and submenu links
+        const allLinks = document.querySelectorAll('.menu-link, .submenu-link');
+
+        // 1. JavaScript Show/Hide logic for Submenus
+        // CSS Dropdown
+        menuCSS.addEventListener('mouseover', () => {
+            submenuCSS.style.display = 'block';
+        });
+        menuCSS.addEventListener('mouseout', () => {
+            submenuCSS.style.display = 'none';
+        });
+
+        // Javascript Dropdown
+        menuJS.addEventListener('mouseover', () => {
+            submenuJS.style.display = 'block';
+        });
+        menuJS.addEventListener('mouseout', () => {
+            submenuJS.style.display = 'none';
+        });
+
+        // 2. JavaScript background color hover toggle (Orange Theme)
+        // "Di chuyển tới bất kỳ mục Menu nào đều đổi màu nền thành màu Cam"
+        allLinks.forEach(link => {
+            link.addEventListener('mouseover', function(e) {
+                this.style.backgroundColor = '#ffa500'; // Orange
+                this.style.color = '#ffffff'; // White text for readability
+            });
+
+            link.addEventListener('mouseout', function(e) {
+                // Restore default backgrounds
+                if (this.classList.contains('menu-link')) {
+                    this.style.backgroundColor = '#bbbbbb'; // Default menu link color
+                } else {
+                    this.style.backgroundColor = '#ffffff'; // Default submenu link color
+                }
+                this.style.color = '#000000'; // Default text color
+            });
+        });
+    </script>
+</body>
+</html>

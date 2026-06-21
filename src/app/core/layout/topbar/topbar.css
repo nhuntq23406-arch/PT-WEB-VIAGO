@@ -1,0 +1,126 @@
+/* ===========================
+   TOPBAR COMPONENT STYLES
+   =========================== */
+
+:host {
+  display: block;
+  width: 100%;
+  align-self: stretch;
+}
+
+.top-header-bar {
+  display: flex;
+  height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 12px 0px 24px;
+  position: relative;
+  align-self: stretch;
+  width: 100%;
+  z-index: 2;
+  background-color: #ffffff;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-color: #e5e7eb;
+  flex-shrink: 0;
+}
+
+/* Menu toggle button */
+.button {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  position: relative;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #f3f4f6;
+}
+
+.container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+/* Hamburger SVG */
+.hamburger-icon {
+  width: 18px;
+  height: 12px;
+  display: block;
+}
+
+/* Right side (notification + date) */
+.div {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  flex: 0 0 auto;
+  gap: 24px;
+}
+
+.container-2 {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px 0px 3px;
+  position: relative;
+  flex: 0 0 auto;
+  z-index: 1;
+}
+
+/* Bell SVG icon */
+.bell-icon {
+  width: 18px;
+  height: 20px;
+  display: block;
+}
+
+/* Notification badge */
+.background-border {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #ef4444;
+  border-radius: 9999px;
+  border: 2px solid;
+  border-color: #ffffff;
+}
+
+/* Date label */
+.margin {
+  z-index: 0;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.text-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Montserrat-Medium", Helvetica;
+  font-weight: 500;
+  color: #4b5563;
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: 20px;
+  white-space: nowrap;
+}

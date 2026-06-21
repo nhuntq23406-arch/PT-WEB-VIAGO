@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khuyến mãi - Tin tức - VIAGO</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #123063;
+            --primary-hover: #0a1f44;
+            --secondary-color: #f96d00;
+            --secondary-hover: #e05e00;
+            --text-color: #333333;
+            --text-light: #666666;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #eeeeee;
+            --font-main: 'Inter', sans-serif;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text-color);
+            background-color: var(--bg-white);
+            line-height: 1.6;
+            width: 1280px;
+            margin: 0 auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .lang-switcher img {
+            width: 20px;
+            height: 15px;
+            border-radius: 2px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+        .logo {
+            height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .header-btn {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .header-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation menu */
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 12px 0;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .nav-menu a {
+            font-size: 14px;
+            font-weight: 600;
+            color: #556880;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding: 4px 0;
+            transition: var(--transition);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2.5px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--primary-color);
+        }
+
+        /* --- CATEGORIES & SEARCH BAR --- */
+        .news-filter-bar {
+            background-color: var(--bg-white);
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .category-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-link {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .category-link:hover,
+        .category-link.active {
+            background-color: rgba(18, 48, 99, 0.08);
+            color: var(--primary-hover);
+        }
+
+        .news-search-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #dddddd;
+            border-radius: 50px;
+            padding: 6px 16px;
+            background-color: #fcfcfc;
+            width: 280px;
+            transition: var(--transition);
+        }
+
+        .news-search-box:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(18, 48, 99, 0.08);
+            background-color: var(--bg-white);
+        }
+
+        .news-search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-color);
+            width: 100%;
+            margin-left: 8px;
+        }
+
+        .news-search-box svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-light);
+        }
+
+        /* --- SECTION HEADERS --- */
+        .block-title-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .block-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            padding-left: 12px;
+            border-left: 4px solid var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- SECTION 1: FEATURED & LATEST NEWS LAYOUT --- */
+        .top-news-layout {
+            display: grid;
+            grid-template-columns: 1.8fr 1.2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Featured Large Card */
+        .featured-large-card {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .featured-large-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+            border-color: transparent;
+        }
+
+        .featured-large-img-wrapper {
+            height: 340px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .featured-large-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .featured-large-card:hover .featured-large-img-wrapper img {
+            transform: scale(1.03);
+        }
+
+        .badge-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .featured-large-content {
+            padding: 24px;
+        }
+
+        .article-date {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .article-excerpt {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Latest News Right List */
+        .latest-news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .latest-news-item {
+            display: flex;
+            gap: 15px;
+            background-color: var(--bg-white);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .latest-news-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+            border-color: transparent;
+        }
+
+        .latest-img-wrapper {
+            width: 90px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .latest-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .latest-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .latest-badge {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .latest-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .latest-date {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* --- SECTION 2: ROW OF TWO CARDS --- */
+        .mid-news-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .mid-news-card {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .mid-news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+            border-color: transparent;
+        }
+
+        .mid-img-wrapper {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .mid-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .mid-news-card:hover .mid-img-wrapper img {
+            transform: scale(1.04);
+        }
+
+        .mid-content {
+            padding: 20px;
+        }
+
+        .mid-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.4;
+            margin-top: 8px;
+        }
+
+        /* --- SECTION 3: ALL NEWS --- */
+        .all-news-section {
+            margin-bottom: 70px;
+        }
+
+        .all-news-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .all-news-card {
+            display: flex;
+            gap: 20px;
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .all-news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--box-shadow);
+            border-color: transparent;
+        }
+
+        .all-img-wrapper {
+            width: 140px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .all-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .all-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .all-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1.4;
+            margin: 6px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .all-excerpt {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Pagination style if needed, but we keep exactly the items shown in screenshot */
+
+        /* --- FLOATING ACTION BUTTON --- */
+        .zalo-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 54px;
+            height: 54px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(249, 109, 0, 0.4);
+            color: white;
+            z-index: 999;
+            transition: var(--transition);
+        }
+
+        .zalo-float:hover {
+            transform: scale(1.1) rotate(10deg);
+            background-color: var(--secondary-hover);
+        }
+
+        .zalo-float svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #1a3c8d;
+            color: #ffffff;
+            padding: 50px 0 0px;
+            font-size: 14px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr 0.9fr 1.1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+
+        .footer-logo-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-logo-block img {
+            height: 48px;
+            align-self: flex-start;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .company-name {
+            font-weight: 700;
+            color: var(--bg-white);
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .company-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .company-info-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .company-info-item svg {
+            width: 16px;
+            height: 16px;
+            fill: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .footer-column h4 {
+            color: #8bb2f9;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            opacity: 0.9;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            transform: translateX(4px);
+        }
+
+        .footer-contact-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-hotline {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .social-link {
+            width: 38px;
+            height: 38px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            fill: #ffffff;
+        }
+
+        /* Custom BCT Badge styled precisely as the image */
+        .bct-badge-custom {
+            background-color: #00a49f;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            width: fit-content;
+            gap: 8px;
+            color: white;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+        }
+
+        .bct-circle {
+            width: 22px;
+            height: 22px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00a49f;
+        }
+
+        .bct-circle svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .bct-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+            text-align: left;
+        }
+
+        .bct-sub {
+            font-size: 7px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .bct-main {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-bottom {
+            background-color: #142f70;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 13px;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .top-news-layout {
+                grid-template-columns: 1fr;
+            }
+            .mid-news-grid,
+            .all-news-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .news-search-box {
+                width: 100%;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .featured-large-img-wrapper {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="top-header">
+                <!-- Lang Switcher -->
+                <div class="lang-switcher">
+                    <img src="https://flagcdn.com/w20/vn.png" style="width:22px; height:22px; border-radius:50%; object-fit:cover;" alt="VN Flag">
+                    <span style="font-weight:600; color:#333; font-size:15px; margin-left:2px;">VI</span>
+                    <svg style="width:14px; height:14px; fill:#333; margin-left:2px;" viewBox="0 0 24 24"><path d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+
+                <!-- Logo -->
+                <a href="#" class="logo">
+                    <img src="media/logo.png" onerror="this.src='media/logo đen.png'; this.onerror=null;" alt="VIAGO Logo">
+                </a>
+
+                <!-- Register/Login Link Button -->
+                <a href="#" class="header-btn" onclick="return false;">
+                    <svg style="width:16px; height:16px; fill:currentColor;" viewBox="0 0 24 24">
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                    </svg>
+                    <span>Đăng ký/Đăng nhập</span>
+                </a>
+            </div>
+
+                        <!-- Navigation menu -->
+            <nav class="nav-menu">
+                <a href="#" onclick="return false;">TRANG CHỦ</a>
+                <a href="#" onclick="return false;">LỊCH TRÌNH</a>
+                <a href="#" onclick="return false;" class="active">TRA CỨU VÉ</a>
+                <a href="#" onclick="return false;">TIN TỨC</a>
+                <a href="#" onclick="return false;">HÓA ĐƠN</a>
+                <a href="#" onclick="return false;">ĐÁNH GIÁ</a>
+                <a href="#" onclick="return false;">DỊCH VỤ <svg style="width:10px; height:10px; fill:currentColor; margin-left:3px; vertical-align:middle;" viewBox="0 0 24 24"><path d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6-6-6 1.41-1.41z"/></svg></a>
+                <a href="#" onclick="return false;">GIỚI THIỆU <svg style="width:10px; height:10px; fill:currentColor; margin-left:3px; vertical-align:middle;" viewBox="0 0 24 24"><path d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6-6-6 1.41-1.41z"/></svg></a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- CATEGORIES & SEARCH BAR -->
+    <section class="news-filter-bar">
+        <div class="container filter-container">
+            <div class="category-links">
+                <a href="trangtintuc.html" class="category-link">Thông báo</a>
+                <a href="trangtintuc_Sukien.html" class="category-link">Sự kiện</a>
+                <a href="trangtintuc_Khuyenmai.html" class="category-link active">Khuyến mãi</a>
+                <a href="trangtintuc_Tinhaxe.html" class="category-link">Tin nhà xe</a>
+                <a href="trangtintuc_Camnang.html" class="category-link">Cẩm nang di chuyển</a>
+                <a href="trangtintuc_Tuyendung.html" class="category-link">Tuyển dụng</a>
+            </div>
+            
+            <div class="news-search-box">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                </svg>
+                <input type="text" placeholder="Tìm kiếm tin tức...">
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+        
+        <!-- SECTION 1: TIN TỨC NỔI BẬT & TIN MỚI NHẤT -->
+        <div class="top-news-layout">
+            <!-- Left: Tin tức nổi bật -->
+            <div>
+                <div class="block-title-wrapper">
+                    <h2 class="block-title">Tin tức nổi bật</h2>
+                </div>
+                
+                <article class="featured-large-card">
+                    <div class="featured-large-img-wrapper">
+                        <span class="badge-category">Khuyến mãi</span>
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=800&q=80" alt="Ưu Đãi Hè Rực Rỡ: Giảm Ngay 10% Giá Vé Phòng Limousine Khứ Hồi">
+                    </div>
+                    <div class="featured-large-content">
+                        <div class="article-date">16/06/2026</div>
+                        <h3 class="article-title"><a href="#">Ưu Đãi Hè Rực Rỡ: Giảm Ngay 10% Giá Vé Phòng Limousine Khứ Hồi</a></h3>
+                        <p class="article-excerpt">Đặt vé khứ hồi ngay hôm nay để nhận mã giảm giá 10% cho tất cả các chặng Limousine giường phòng sang trọng suốt mùa hè.</p>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Right: Tin mới nhất -->
+            <div>
+                <div class="block-title-wrapper">
+                    <h2 class="block-title">Tin mới nhất</h2>
+                </div>
+                
+                <div class="latest-news-list">
+                    <div class="latest-news-item">
+                        <div class="latest-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1561361513-2d000a50f0db?auto=format&fit=crop&w=150&q=80" alt="Đồng Giá Vé 199k Ngày Vàng Cho Mọi Chặng Bay Mặt Đất Thứ Tư">
+                        </div>
+                        <div class="latest-content">
+                            <span class="latest-badge">Khuyến mãi</span>
+                            <h4 class="latest-title"><a href="#">Đồng Giá Vé 199k Ngày Vàng Cho Mọi Chặng Bay Mặt Đất Thứ Tư</a></h4>
+                            <div class="latest-date">12/06/2026</div>
+                        </div>
+                    </div>
+                    <div class="latest-news-item">
+                        <div class="latest-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=150&q=80" alt="Giảm Tới 20% Cho Khách Hàng Đặt Vé Trước 10 Ngày Di Chuyển">
+                        </div>
+                        <div class="latest-content">
+                            <span class="latest-badge">Khuyến mãi</span>
+                            <h4 class="latest-title"><a href="#">Giảm Tới 20% Cho Khách Hàng Đặt Vé Trước 10 Ngày Di Chuyển</a></h4>
+                            <div class="latest-date">08/06/2026</div>
+                        </div>
+                    </div>
+                    <div class="latest-news-item">
+                        <div class="latest-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=150&q=80" alt="Tặng Voucher 50k Cho Lần Đặt Vé Limousine Tiếp Theo Qua App">
+                        </div>
+                        <div class="latest-content">
+                            <span class="latest-badge">Khuyến mãi</span>
+                            <h4 class="latest-title"><a href="#">Tặng Voucher 50k Cho Lần Đặt Vé Limousine Tiếp Theo Qua App</a></h4>
+                            <div class="latest-date">04/06/2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+                    <!-- Item 2 -->
+                    <div class="latest-news-item">
+                        <div class="latest-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=150&q=80" alt="Tin 2">
+                        </div>
+                        <div class="latest-content">
+                            <span class="latest-badge">Thông báo</span>
+                            <h4 class="latest-title"><a href="#">Cập Nhật Lịch Trình 6 Chuyến Cố Định Mỗi Ngày Tăng Cường Phục Vụ</a></h4>
+                            <div class="latest-date">24/05/2026</div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="latest-news-item">
+                        <div class="latest-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=150&q=80" alt="Tin 3">
+                        </div>
+                        <div class="latest-content">
+                            <span class="latest-badge">Khuyến mãi</span>
+                            <h4 class="latest-title"><a href="#">Ưu Đãi Hè Rực Rỡ: Giảm Ngay 10% Giá Vé Phòng Limousine Khứ Hồi</a></h4>
+                            <div class="latest-date">24/05/2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: TIN GIỮA TRANG -->
+        <div class="mid-news-grid">
+            <div class="mid-news-card">
+                <div class="mid-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=600&q=80" alt="Ưu Đãi Đặc Biệt Cho Học Sinh - Sinh Viên Nhập Học Đợt Hè 2026">
+                </div>
+                <div class="mid-content">
+                    <div class="article-date">30/05/2026</div>
+                    <h3 class="mid-title"><a href="#">Ưu Đãi Đặc Biệt Cho Học Sinh - Sinh Viên Nhập Học Đợt Hè 2026</a></h3>
+                </div>
+            </div>
+            <div class="mid-news-card">
+                <div class="mid-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80" alt="Đi Nhóm Đông - Nhận Ngay Ưu Đãi Giảm 15% Tổng Hóa Đơn Vé Xe">
+                </div>
+                <div class="mid-content">
+                    <div class="article-date">25/05/2026</div>
+                    <h3 class="mid-title"><a href="#">Đi Nhóm Đông - Nhận Ngay Ưu Đãi Giảm 15% Tổng Hóa Đơn Vé Xe</a></h3>
+                </div>
+            </div>
+        </div>
+
+            <!-- Card 2 -->
+            <div class="mid-news-card">
+                <div class="mid-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=600&q=80" alt="Xe Thaco Mobihome">
+                </div>
+                <div class="mid-content">
+                    <div class="article-date">24/05/2026</div>
+                    <h3 class="mid-title"><a href="#">VIAGO Chính Thức Vận Hành Dòng Xe THACO Mobihome 22 Phòng Premium Cao Cấp</a></h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: TẤT CẢ TIN TỨC -->
+        <div class="all-news-section">
+            <div class="block-title-wrapper">
+                <h2 class="block-title">Tất cả tin tức</h2>
+            </div>
+            
+            <div class="all-news-grid">
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=200&q=80" alt="Khuyến Mãi Khai Trương Tuyến Mới Sài Gòn - Nha Trang: Đồng Giá Vé">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">20/05/2026</div>
+                        <h3 class="all-title"><a href="#">Khuyến Mãi Khai Trương Tuyến Mới Sài Gòn - Nha Trang: Đồng Giá Vé</a></h3>
+                        <p class="all-excerpt">Chỉ với 299k sở hữu ngay vé phòng nằm VIP Limousine đi Nha Trang đầy đủ tiện ích.</p>
+                    </div>
+                </div>
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1561361513-2d000a50f0db?auto=format&fit=crop&w=200&q=80" alt="Tri Ân Khách Hàng Thành Viên: Nhân Đôi Điểm Thưởng Tích Lũy">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">15/05/2026</div>
+                        <h3 class="all-title"><a href="#">Tri Ân Khách Hàng Thành Viên: Nhân Đôi Điểm Thưởng Tích Lũy</a></h3>
+                        <p class="all-excerpt">Tất cả khách hàng VIP sẽ được nhân đôi điểm thưởng khi mua vé trong tháng 6.</p>
+                    </div>
+                </div>
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=200&q=80" alt="Miễn Phí Khăn Lạnh & Nước Suối Cao Cấp Suốt Hành Trình Trải Nghiệm">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">10/05/2026</div>
+                        <h3 class="all-title"><a href="#">Miễn Phí Khăn Lạnh & Nước Suối Cao Cấp Suốt Hành Trình Trải Nghiệm</a></h3>
+                        <p class="all-excerpt">VIAGO nâng cấp tiêu chuẩn phục vụ trên toàn bộ các tuyến chạy Limousine giường nằm.</p>
+                    </div>
+                </div>
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=200&q=80" alt="Tặng Mã Giảm Giá 100k Dành Riêng Cho Đôi Bạn Trải Nghiệm Đà Lạt">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">05/05/2026</div>
+                        <h3 class="all-title"><a href="#">Tặng Mã Giảm Giá 100k Dành Riêng Cho Đôi Bạn Trải Nghiệm Đà Lạt</a></h3>
+                        <p class="all-excerpt">Voucher lãng mạn dành riêng cho kỳ nghỉ ngọt ngào của bạn và người thương.</p>
+                    </div>
+                </div>
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=200&q=80" alt="Chương Trình Đặt Combo Khách Sạn & Vé Xe VIAGO Tiết Kiệm Đến 30%">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">01/05/2026</div>
+                        <h3 class="all-title"><a href="#">Chương Trình Đặt Combo Khách Sạn & Vé Xe VIAGO Tiết Kiệm Đến 30%</a></h3>
+                        <p class="all-excerpt">Gói du lịch siêu ưu đãi kết hợp cùng các resort 4 sao hàng đầu tại Mũi Né.</p>
+                    </div>
+                </div>
+            </div>
+
+                <!-- All News Item 2 -->
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=200&q=80" alt="News 2">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">24/05/2026</div>
+                        <h3 class="all-title"><a href="#">VIAGO Cập Nhật Lịch Trình 6 Chuyến Cố Định Mỗi Ngày Tăng Cường Phục Vụ Hành Khách</a></h3>
+                        <p class="all-excerpt">Nhằm đáp ứng nhu cầu đi lại ngày càng cao của hành khách, nhà xe VIAGO chính thức cập nhật lịch trình chạy mới thông thoáng hơn.</p>
+                    </div>
+                </div>
+
+                <!-- All News Item 3 -->
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=200&q=80" alt="News 3">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">24/05/2026</div>
+                        <h3 class="all-title"><a href="#">Ưu Đãi Hè Rực Rỡ: Giảm Ngay 10% Giá Vé Phòng Limousine Khi Đặt Vé Khứ Hồi</a></h3>
+                        <p class="all-excerpt">Chào mùa du lịch hè 2026, VIAGO hân hạnh mang chương trình ưu đãi cực lớn, giảm thẳng 10% giá vé khi hành khách đặt chỗ khứ hồi.</p>
+                    </div>
+                </div>
+
+                <!-- All News Item 4 -->
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=200&q=80" alt="News 4">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">24/05/2026</div>
+                        <h3 class="all-title"><a href="#">Mở Rộng Lộ Trình Đón Trả Khách Tận Nơi Tại Khu Vực Bến Xe Bến Cát (Bình Dương)</a></h3>
+                        <p class="all-excerpt">Tin vui cho bà con Bình Dương đang sinh sống và làm việc tại khu vực Bến Cát: VIAGO mở rộng dịch vụ xe trung chuyển miễn phí.</p>
+                    </div>
+                </div>
+
+                <!-- All News Item 5 -->
+                <div class="all-news-card">
+                    <div class="all-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=200&q=80" alt="News 5">
+                    </div>
+                    <div class="all-content">
+                        <div class="article-date">24/05/2026</div>
+                        <h3 class="all-title"><a href="#">VIAGO Chính Thức Vận Hành Dòng Xe THACO Mobihome 22 Phòng Premium Cao Cấp</a></h3>
+                        <p class="all-excerpt">Đánh dấu bước chuyển mình, VIAGO tự hào đưa vào phục vụ hành khách dòng xe chuyên cơ mặt đất đẳng cấp và an toàn nhất hiện nay.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FLOATING ACTION BUTTON -->
+    <a href="#" class="zalo-float" onclick="alert('Hỗ trợ Zalo: 1900 1234'); return false;">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16M17 11H15V9H17V11M13 11H11V9H13V11M9 11H7V9H9V11Z"/>
+        </svg>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-grid">
+            <!-- Col 1: Logo & Info -->
+            <div class="footer-logo-block">
+                <img src="media/logo.png" onerror="this.src='media/logo đen.png'; this.onerror=null;" alt="VIAGO Logo">
+                <div class="company-name">CÔNG TY TNHH VIAGO</div>
+                <div class="company-info">
+                    <div class="company-info-item">
+                        <svg viewBox="0 0 24 24"><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/></svg>
+                        <span>669 Đỗ Mười, khu phố 13, Linh Xuân, TPHCM</span>
+                    </div>
+                    <div class="company-info-item">
+                        <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                        <span>0982 541 160 - 0932 334 446</span>
+                    </div>
+                    <div class="company-info-item">
+                        <svg viewBox="0 0 24 24"><path d="M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4M20,8L12,13L4,8V6L12,11L20,6V8Z"/></svg>
+                        <span>congtyviago@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Col 2: Hỗ trợ -->
+            <div class="footer-column">
+                <h4>HỖ TRỢ</h4>
+                <div class="footer-links">
+                    <a href="#">Câu hỏi FAQs</a>
+                    <a href="#">Điều khoản sử dụng</a>
+                    <a href="#">Chính sách</a>
+                    <a href="#">Liên hệ</a>
+                </div>
+            </div>
+
+            <!-- Col 3: Giới thiệu -->
+            <div class="footer-column">
+                <h4>GIỚI THIỆU</h4>
+                <div class="footer-links">
+                    <a href="#">Về chúng tôi</a>
+                    <a href="#">Tuyển dụng</a>
+                    <a href="#">Tin tức nổi bật</a>
+                    <a href="#">Lịch trình</a>
+                </div>
+            </div>
+
+            <!-- Col 4: Hotline & Social -->
+            <div class="footer-column footer-contact-block">
+                <h4>HOTLINE LIÊN HỆ</h4>
+                <div class="footer-hotline">1900 1234</div>
+                <h4 style="font-size:14px; margin-top:10px; margin-bottom:0;">KẾT NỐI VỚI CHÚNG TÔI</h4>
+                <div class="social-links">
+                    <!-- FB -->
+                    <a href="#" class="social-link">
+                        <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-3.5a3 3 0 0 0-3-3H13v6.5h-3v-6.5H8.5V9.3H10v-.8A4.2 4.2 0 0 1 14.2 4.3h3v3h-2.2c-.7 0-1 .4-1 1v1.1h3.1l-.4 3.1h-2.7v6h2.5z"/></svg>
+                    </a>
+                    <!-- TikTok -->
+                    <a href="#" class="social-link">
+                        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.86 1.07 2.07 1.83 3.4 2.18.01 1.34 0 2.68-.01 4.02-.99-.02-1.96-.28-2.83-.77-.88-.5-1.61-1.21-2.11-2.07-.03 2.92.01 5.84-.02 8.76-.05 1.55-.49 3.09-1.29 4.41-.83 1.37-2.07 2.47-3.54 3.14-1.55.72-3.32.96-4.99.71-1.84-.28-3.59-1.22-4.82-2.65C.53 16.32-.15 14.18.04 12.01c.21-2.31 1.48-4.48 3.47-5.69 1.43-.87 3.09-1.26 4.74-1.12.01 1.43-.01 2.86.01 4.29-1.02-.09-2.09.13-2.98.67-.93.57-1.57 1.53-1.78 2.61-.31 1.52.22 3.17 1.35 4.19.98.89 2.33 1.31 3.63 1.14 1.25-.16 2.39-.93 2.99-2.04.38-.72.53-1.54.51-2.36-.02-4.49-.01-8.98-.02-13.47.01 0 .01-.01.01-.01z"/></svg>
+                    </a>
+                    <!-- IG -->
+                    <a href="#" class="social-link">
+                        <svg viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4A3.6,3.6 0 0,0 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6A3.6,3.6 0 0,0 16.4,4H7.6M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5Z"/></svg>
+                    </a>
+                </div>
+
+                <!-- Custom Checkmark Badge (Bộ Công Thương) -->
+                <a href="#" class="bct-badge-custom">
+                    <div class="bct-circle">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="bct-text">
+                        <span class="bct-sub">ĐÃ THÔNG BÁO</span>
+                        <span class="bct-main">BỘ CÔNG THƯƠNG</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2024 CÔNG TY TNHH VIAGO. Hotline: 1900 1234</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch vụ - Form đã điền - VIAGO</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #123063;
+            --primary-hover: #0a1f44;
+            --secondary-color: #f96d00;
+            --secondary-hover: #e05e00;
+            --text-color: #333333;
+            --text-light: #666666;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #eeeeee;
+            --font-main: 'Inter', sans-serif;
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text-color);
+            background-color: var(--bg-white);
+            line-height: 1.6;
+            width: 1280px;
+            margin: 0 auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .lang-switcher img {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logo {
+            height: 50px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .header-btn {
+            background-color: var(--primary-color);
+            color: var(--bg-white);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .header-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation menu */
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 12px 0;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .nav-menu a {
+            font-size: 14px;
+            font-weight: 600;
+            color: #556880;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding: 4px 0;
+            transition: var(--transition);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2.5px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--primary-color);
+        }
+
+        /* --- HERO BANNER --- */
+        .service-hero {
+            position: relative;
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .service-hero-content h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .service-hero-content p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        /* --- TABS --- */
+        .service-tabs-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            font-family: var(--font-main);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-light);
+            padding: 12px 24px;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--secondary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* --- CAR RENTAL CONTENT --- */
+        .rental-layout {
+            display: grid;
+            grid-template-columns: 1.8fr 1.2fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .form-card {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+
+        .form-card h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .form-card p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        .input-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-field label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            padding: 12px;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            font-family: var(--font-main);
+            font-size: 14px;
+            outline: none;
+            background-color: #fafafa;
+            transition: var(--transition);
+        }
+
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(18, 48, 99, 0.08);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Sidebar Rental */
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .info-card {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .info-card h3 {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 10px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .info-item svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--secondary-color);
+            flex-shrink: 0;
+        }
+
+        .stats-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item h4 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--secondary-color);
+        }
+
+        .stat-item p {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .support-card {
+            background-color: #00796b;
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .support-card h4 {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .support-card p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Fleet Grid */
+        .fleet-section {
+            margin-bottom: 60px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 50px;
+        }
+
+        .fleet-section h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .fleet-section p.sub {
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .fleet-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .fleet-card {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .fleet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+            border-color: transparent;
+        }
+
+        .fleet-img {
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .fleet-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fleet-info {
+            padding: 20px;
+        }
+
+        .fleet-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .fleet-info p {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .fleet-link {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fleet-link:hover {
+            color: var(--secondary-color);
+        }
+
+        /* --- LOST & FOUND CONTENT --- */
+        .lostfound-intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .lostfound-intro h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .lostfound-intro p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .lostfound-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .lost-item-card {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 15px;
+            transition: var(--transition);
+        }
+
+        .lost-item-card:hover {
+            box-shadow: var(--box-shadow);
+            transform: translateY(-3px);
+            border-color: transparent;
+        }
+
+        .lost-item-img {
+            height: 140px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .lost-item-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .lost-badge-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .lost-item-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .lost-item-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .btn-claim {
+            width: 100%;
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px;
+            border-radius: 6px;
+            font-family: var(--font-main);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-claim:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Placeholder block to report lost properties */
+        .report-placeholder-card {
+            border: 2px dashed #cccccc;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: #fafafa;
+        }
+
+        .report-placeholder-card:hover {
+            border-color: var(--secondary-color);
+            background-color: rgba(249, 109, 0, 0.02);
+        }
+
+        .report-placeholder-card svg {
+            width: 36px;
+            height: 36px;
+            fill: #999999;
+            margin-bottom: 10px;
+        }
+
+        .report-placeholder-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        /* Sidebar Lost & Found Form */
+        .report-sidebar-form {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .report-sidebar-form h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .report-sidebar-form p {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Lost Properties claiming workflow */
+        .workflow-section {
+            border-top: 1px solid var(--border-color);
+            padding: 50px 0 20px;
+            margin-top: 60px;
+        }
+
+        .workflow-section h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .workflow-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+
+        .workflow-step h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        .workflow-step p {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .workflow-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(18, 48, 99, 0.06);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: var(--primary-color);
+        }
+
+        .workflow-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --- FLOATING ACTION BUTTON --- */
+        .zalo-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 54px;
+            height: 54px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(249, 109, 0, 0.4);
+            color: white;
+            z-index: 999;
+            transition: var(--transition);
+        }
+
+        .zalo-float:hover {
+            transform: scale(1.1) rotate(10deg);
+            background-color: var(--secondary-hover);
+        }
+
+        .zalo-float svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: #1a3c8d;
+            color: #ffffff;
+            padding: 50px 0 0px;
+            font-size: 14px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr 0.9fr 1.1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+
+        .footer-logo-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-logo-block img {
+            height: 48px;
+            align-self: flex-start;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .company-name {
+            font-weight: 700;
+            color: var(--bg-white);
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .company-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .company-info-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .company-info-item svg {
+            width: 16px;
+            height: 16px;
+            fill: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .footer-column h4 {
+            color: #8bb2f9;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            opacity: 0.9;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary-color);
+            transform: translateX(4px);
+        }
+
+        .footer-contact-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-hotline {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .social-link {
+            width: 38px;
+            height: 38px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .social-link svg {
+            width: 18px;
+            height: 18px;
+            fill: #ffffff;
+        }
+
+        /* Custom BCT Badge styled precisely as the image */
+        .bct-badge-custom {
+            background-color: #00a49f;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            width: fit-content;
+            gap: 8px;
+            color: white;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+        }
+
+        .bct-circle {
+            width: 22px;
+            height: 22px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00a49f;
+        }
+
+        .bct-circle svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .bct-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+            text-align: left;
+        }
+
+        .bct-sub {
+            font-size: 7px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .bct-main {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-bottom {
+            background-color: #142f70;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 13px;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .rental-layout {
+                grid-template-columns: 1fr;
+            }
+            .fleet-grid,
+            .lostfound-grid,
+            .workflow-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .service-hero-content h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container">
+            <div class="top-header">
+                <!-- Lang Switcher -->
+                <div class="lang-switcher">
+                    <img src="https://flagcdn.com/w20/vn.png" style="width:22px; height:22px; border-radius:50%; object-fit:cover;" alt="VN Flag">
+                    <span style="font-weight:600; color:#333; font-size:15px; margin-left:2px;">VI</span>
+                    <svg style="width:14px; height:14px; fill:#333; margin-left:2px;" viewBox="0 0 24 24"><path d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+
+                <!-- Logo -->
+                <a href="#" class="logo">
+                    <img src="media/logo.png" onerror="this.src='media/logo đen.png'; this.onerror=null;" alt="VIAGO Logo">
+                </a>
+
+                <!-- Register/Login Link Button -->
+                <a href="#" class="header-btn" onclick="return false;">
+                    <svg style="width:16px; height:16px; fill:currentColor;" viewBox="0 0 24 24">
+                        <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                    </svg>
+                    <span>Đăng ký/Đăng nhập</span>
+                </a>
+            </div>
+
+                        <!-- Navigation menu -->
+            <nav class="nav-menu">
+                <a href="#" onclick="return false;">TRANG CHỦ</a>
+                <a href="#" onclick="return false;">LỊCH TRÌNH</a>
+                <a href="#" onclick="return false;" class="active">TRA CỨU VÉ</a>
+                <a href="#" onclick="return false;">TIN TỨC</a>
+                <a href="#" onclick="return false;">HÓA ĐƠN</a>
+                <a href="#" onclick="return false;">ĐÁNH GIÁ</a>
+                <a href="#" onclick="return false;">DỊCH VỤ <svg style="width:10px; height:10px; fill:currentColor; margin-left:3px; vertical-align:middle;" viewBox="0 0 24 24"><path d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6-6-6 1.41-1.41z"/></svg></a>
+                <a href="#" onclick="return false;">GIỚI THIỆU <svg style="width:10px; height:10px; fill:currentColor; margin-left:3px; vertical-align:middle;" viewBox="0 0 24 24"><path d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6-6-6 1.41-1.41z"/></svg></a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="service-hero">
+        <div class="container">
+            <div class="service-hero-content">
+                <h1>Trải nghiệm Hành Trình Đẳng Cấp<br>Cùng VIAGO</h1>
+                <p>Chúng tôi cung cấp giải pháp vận tải chuyên nghiệp cho mọi nhu cầu: Cho thuê xe Limousine/Ghế giường sang trọng và tìm kiếm tài sản thất lạc nhanh chóng.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICE TABS -->
+    <div class="container">
+        <div class="service-tabs-wrapper">
+            <a href="#" class="tab-btn active">Dịch vụ Thuê xe</a>
+            <a href="DoThatLac.html" class="tab-btn">Thất lạc & Tìm thấy</a>
+        </div>
+    </div>
+
+    <!-- TAB 1: CAR RENTAL CONTENT -->
+    <div id="rental-tab" class="container tab-content active">
+        <div class="rental-layout">
+            <!-- Form Card -->
+            <div class="form-card">
+                <h2>Đăng Ký Thuê Xe</h2>
+                <p>Vui lòng điền thông tin bên dưới để nhận báo giá chi tiết trong vòng 15 phút.</p>
+                
+                <form onsubmit="event.preventDefault(); alert('Đã gửi yêu cầu thuê xe! Chúng tôi sẽ phản hồi lại ngay.');">
+                    <div class="input-grid-2">
+                        <div class="form-field">
+                            <label>Họ và tên</label>
+                            <input type="text" placeholder="Nguyễn Văn A" value="Nguyễn Quỳnh Như" required>
+                        </div>
+                        <div class="form-field">
+                            <label>Số điện thoại</label>
+                            <input type="tel" placeholder="0987 354 567" value="0903 123 456" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="email" placeholder="name@example.com" value="quynhnhu.nguyen@example.com" required>
+                    </div>
+
+                    <div class="input-grid-2">
+                        <div class="form-field">
+                            <label>Điểm đón</label>
+                            <input type="text" placeholder="Nhập địa điểm đón" value="Bến xe Miền Đông, TP.HCM" required>
+                        </div>
+                        <div class="form-field">
+                            <label>Điểm đến</label>
+                            <input type="text" placeholder="Nhập địa điểm đến" value="Thành phố Đà Lạt, Lâm Đồng" required>
+                        </div>
+                    </div>
+
+                    <div class="input-grid-2">
+                        <div class="form-field">
+                            <label>Ngày & Giờ đi</label>
+                            <input type="datetime-local" value="2026-06-25T08:00" required>
+                        </div>
+                        <div class="form-field">
+                            <label>Loại xe</label>
+                            <select required>
+                                <option value="" disabled>Chọn dòng xe</option>
+                                <option value="limo9" selected>Limousine 9 Chỗ</option>
+                                <option value="van16">Xe 16 Chỗ</option>
+                                <option value="coach45">Xe 45 Chỗ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-grid-2">
+                        <div class="form-field">
+                            <label>Số lượng xe muốn thuê</label>
+                            <input type="number" min="1" value="2" placeholder="Nhập số lượng xe" required>
+                        </div>
+                        <div class="form-field"></div>
+                    </div>
+
+                    <div class="form-field">
+                        <label>Yêu cầu đặc biệt</label>
+                        <textarea placeholder="Ghi chú thêm về chuyến đi của bạn..." rows="4">Xe có khoang hành lý rộng, tài xế không hút thuốc và có nước suối lạnh đầy đủ.</textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Đăng ký thuê xe</button>
+                </form>
+            </div>
+
+            <!-- Sidebar Panel -->
+            <div class="sidebar-panel">
+                <div class="info-card">
+                    <h3>Vì sao chọn VIAGO?</h3>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            <div>
+                                <strong>Đội ngũ lái xe tận tâm:</strong>
+                                <p>Được đào tạo bài bản, am hiểu cung đường, thân thiện lịch thiệp.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            <div>
+                                <strong>Hệ thống xe đời mới:</strong>
+                                <p>Các dòng xe Limousine giường nằm được nâng cấp và bảo dưỡng thường xuyên.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            <div>
+                                <strong>Cam kết đúng giờ:</strong>
+                                <p>Đón đúng điểm, trả đúng nơi, đúng lộ trình thỏa thuận.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <h4>500+</h4>
+                        <p>Phương tiện</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>10k+</h4>
+                        <p>Khách hàng</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>63</h4>
+                        <p>Tỉnh thành</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4>4.9/5</h4>
+                        <p>Đánh giá</p>
+                    </div>
+                </div>
+
+                <div class="support-card">
+                    <div>
+                        <h4>Hỗ trợ 24/7</h4>
+                        <p>Hotline: 1900 1234</p>
+                    </div>
+                    <!-- Headset Icon -->
+                    <svg style="width:36px; height:36px; fill:currentColor;" viewBox="0 0 24 24">
+                        <path d="M12,2A10,10 0 0,0 2,12V20A2,2 0 0,0 4,22H7A2,2 0 0,0 9,20V17A2,2 0 0,0 7,15H4V12A8,8 0 0,1 20,12V15H17A2,2 0 0,0 15,17V20A2,2 0 0,0 17,22H20A2,2 0 0,0 22,20V12A10,10 0 0,0 12,2Z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fleet Grid -->
+        <div class="fleet-section">
+            <h2>Hạm Đội Xe Đa Dạng</h2>
+            <p class="sub">Hạng xe VIP trang bị sang trọng tiện nghi bậc nhất, đáp ứng mọi quy mô đoàn hành khách.</p>
+            
+            <div class="fleet-grid">
+                <!-- Fleet 1 -->
+                <div class="fleet-card">
+                    <div class="fleet-img">
+                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=400&q=80" alt="Limousine 9 Chỗ">
+                    </div>
+                    <div class="fleet-info">
+                        <h3>Limousine 9 Chỗ</h3>
+                        <p>Ghế massage xoay 180 độ, wifi tốc độ cao, tủ lạnh mini, cổng sạc USB riêng biệt cho từng hành khách.</p>
+                        <a href="#" class="fleet-link" onclick="alert('Xem chi tiết xe Limousine 9 Chỗ');">Xem chi tiết &rarr;</a>
+                    </div>
+                </div>
+                <!-- Fleet 2 -->
+                <div class="fleet-card">
+                    <div class="fleet-img">
+                        <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=400&q=80" alt="Xe 16 Chỗ">
+                    </div>
+                    <div class="fleet-info">
+                        <h3>Xe 16 Chỗ</h3>
+                        <p>Không gian rộng rãi, thoáng mát, nội thất bọc da êm ái, thích hợp cho các chuyến du lịch gia đình hoặc nhóm nhỏ.</p>
+                        <a href="#" class="fleet-link" onclick="alert('Xem chi tiết xe 16 Chỗ');">Xem chi tiết &rarr;</a>
+                    </div>
+                </div>
+                <!-- Fleet 3 -->
+                <div class="fleet-card">
+                    <div class="fleet-img">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=400&q=80" alt="Xe 45 Chỗ">
+                    </div>
+                    <div class="fleet-info">
+                        <h3>Xe 45 Chỗ</h3>
+                        <p>Động cơ vận hành êm ái, giảm xóc hiện đại, trang bị màn hình tivi lớn cùng dàn âm thanh sống động.</p>
+                        <a href="#" class="fleet-link" onclick="alert('Xem chi tiết xe 45 Chỗ');">Xem chi tiết &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FLOATING ACTION BUTTON -->
+    <a href="#" class="zalo-float" onclick="alert('Hỗ trợ Zalo: 1900 1234'); return false;">
+        <svg viewBox="0 0 24 24">
+            <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16M17 11H15V9H17V11M13 11H11V9H13V11M9 11H7V9H9V11Z"/>
+        </svg>
+    </a>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-grid">
+            <!-- Col 1: Logo & Info -->
+            <div class="footer-logo-block">
+                <img src="media/logo.png" onerror="this.src='media/logo đen.png'; this.onerror=null;" alt="VIAGO Logo">
+                <div class="company-name">CÔNG TY TNHH VIAGO</div>
+                <div class="company-info">
+                    <div class="company-info-item">
+                        <svg viewBox="0 0 24 24"><path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/></svg>
+                        <span>669 Đỗ Mười, khu phố 13, Linh Xuân, TPHCM</span>
+                    </div>
+                    <div class="company-info-item">
+                        <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                        <span>0982 541 160 - 0932 334 446</span>
+                    </div>
+                    <div class="company-info-item">
+                        <svg viewBox="0 0 24 24"><path d="M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4M20,8L12,13L4,8V6L12,11L20,6V8Z"/></svg>
+                        <span>congtyviago@gmail.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Col 2: Hỗ trợ -->
+            <div class="footer-column">
+                <h4>HỖ TRỢ</h4>
+                <div class="footer-links">
+                    <a href="#">Câu hỏi FAQs</a>
+                    <a href="#">Điều khoản sử dụng</a>
+                    <a href="#">Chính sách</a>
+                    <a href="#">Liên hệ</a>
+                </div>
+            </div>
+
+            <!-- Col 3: Giới thiệu -->
+            <div class="footer-column">
+                <h4>GIỚI THIỆU</h4>
+                <div class="footer-links">
+                    <a href="#">Về chúng tôi</a>
+                    <a href="#">Tuyển dụng</a>
+                    <a href="#">Tin tức nổi bật</a>
+                    <a href="#">Lịch trình</a>
+                </div>
+            </div>
+
+            <!-- Col 4: Hotline & Social -->
+            <div class="footer-column footer-contact-block">
+                <h4>HOTLINE LIÊN HỆ</h4>
+                <div class="footer-hotline">1900 1234</div>
+                <h4 style="font-size:14px; margin-top:10px; margin-bottom:0;">KẾT NỐI VỚI CHÚNG TÔI</h4>
+                <div class="social-links">
+                    <!-- FB -->
+                    <a href="#" class="social-link">
+                        <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-3.5a3 3 0 0 0-3-3H13v6.5h-3v-6.5H8.5V9.3H10v-.8A4.2 4.2 0 0 1 14.2 4.3h3v3h-2.2c-.7 0-1 .4-1 1v1.1h3.1l-.4 3.1h-2.7v6h2.5z"/></svg>
+                    </a>
+                    <!-- TikTok -->
+                    <a href="#" class="social-link">
+                        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.59 4.23.86 1.07 2.07 1.83 3.4 2.18.01 1.34 0 2.68-.01 4.02-.99-.02-1.96-.28-2.83-.77-.88-.5-1.61-1.21-2.11-2.07-.03 2.92.01 5.84-.02 8.76-.05 1.55-.49 3.09-1.29 4.41-.83 1.37-2.07 2.47-3.54 3.14-1.55.72-3.32.96-4.99.71-1.84-.28-3.59-1.22-4.82-2.65C.53 16.32-.15 14.18.04 12.01c.21-2.31 1.48-4.48 3.47-5.69 1.43-.87 3.09-1.26 4.74-1.12.01 1.43-.01 2.86.01 4.29-1.02-.09-2.09.13-2.98.67-.93.57-1.57 1.53-1.78 2.61-.31 1.52.22 3.17 1.35 4.19.98.89 2.33 1.31 3.63 1.14 1.25-.16 2.39-.93 2.99-2.04.38-.72.53-1.54.51-2.36-.02-4.49-.01-8.98-.02-13.47.01 0 .01-.01.01-.01z"/></svg>
+                    </a>
+                    <!-- IG -->
+                    <a href="#" class="social-link">
+                        <svg viewBox="0 0 24 24"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4A3.6,3.6 0 0,0 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6A3.6,3.6 0 0,0 16.4,4H7.6M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5Z"/></svg>
+                    </a>
+                </div>
+
+                <!-- Custom Checkmark Badge (Bộ Công Thương) -->
+                <a href="#" class="bct-badge-custom">
+                    <div class="bct-circle">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="bct-text">
+                        <span class="bct-sub">ĐÃ THÔNG BÁO</span>
+                        <span class="bct-main">BỘ CÔNG THƯƠNG</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2024 CÔNG TY TNHH VIAGO. Hotline: 1900 1234</p>
+        </div>
+    </footer>
+</body>
+</html>
