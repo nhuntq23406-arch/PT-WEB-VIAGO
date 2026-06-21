@@ -1,0 +1,364 @@
+<div class="tx-wrap">
+
+  <!-- ── Header ──────────────────────────────────────────────────── -->
+  <div class="tx-header">
+    <div>
+      <div class="tx-breadcrumb">Quản lý điều hành / <span>Quản lý tuyến xe</span></div>
+      <h1 class="tx-title">Quản lý tuyến xe</h1>
+      <p class="tx-subtitle">Quản lý toàn bộ tuyến xe trong hệ thống VIAGO</p>
+    </div>
+    <button class="btn-add" (click)="openFormModal()">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Thêm tuyến xe
+    </button>
+  </div>
+
+  <!-- ── Stats Cards ──────────────────────────────────────────────── -->
+  <div class="tx-stats">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/>
+          <rect x="9" y="11" width="14" height="10" rx="2"/>
+          <circle cx="12" cy="20" r="1"/><circle cx="20" cy="20" r="1"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-num blue">{{ routesList.length }}</div>
+        <div class="stat-label">Tổng tuyến xe</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-num green">{{ activeCount }}</div>
+        <div class="stat-label">Đang hoạt động</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon red">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-num red">{{ lockedCount }}</div>
+        <div class="stat-label">Đã khóa</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon amber">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-num amber">{{ totalTrips }}</div>
+        <div class="stat-label">Chuyến / ngày</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Panel chính ──────────────────────────────────────────────── -->
+  <div class="tx-panel">
+
+    <!-- Toolbar -->
+    <div class="tx-toolbar">
+      <!-- Tabs -->
+      <div class="tx-tabs">
+        <button class="tab-btn" [class.active]="activeTab==='all'" (click)="setTab('all')">
+          Tất cả
+          <span class="tab-badge" [class.primary]="activeTab==='all'" [class.default]="activeTab!=='all'">{{ routesList.length }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab==='active'" (click)="setTab('active')">
+          Đang hoạt động
+          <span class="tab-badge green">{{ activeCount }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab==='locked'" (click)="setTab('locked')">
+          Đã khóa
+          <span class="tab-badge red">{{ lockedCount }}</span>
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="tx-filters">
+        <div class="search-box">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input class="search-input" [(ngModel)]="searchText" placeholder="Tìm tên tuyến, mã tuyến..." />
+        </div>
+
+        <select class="filter-select" [(ngModel)]="filterStart">
+          <option value="">Tất cả điểm đi</option>
+          <option *ngFor="let p of startPoints" [value]="p">{{ p }}</option>
+        </select>
+
+        <select class="filter-select" [(ngModel)]="filterEnd">
+          <option value="">Tất cả điểm đến</option>
+          <option *ngFor="let p of endPoints" [value]="p">{{ p }}</option>
+        </select>
+
+        <!-- Button Tìm kiếm (Primary) -->
+        <button class="btn-search-trigger" (click)="applyFilters()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Tìm kiếm
+        </button>
+
+        <button *ngIf="filterStart || filterEnd || searchText || activeTab !== 'all'" class="btn-reset" (click)="resetFilters()">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Xóa bộ lọc
+        </button>
+
+        <span class="filter-count">{{ filteredRoutes.length }} tuyến</span>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="tx-table-wrap">
+      <table class="tx-table">
+        <thead>
+          <tr>
+            <th class="center" style="width: 60px;">STT</th>
+            <th>Tuyến</th>
+            <th>Điểm đầu</th>
+            <th>Điểm cuối</th>
+            <th class="center">Khoảng cách</th>
+            <th class="center">Thời gian</th>
+            <th class="center">Trạng thái</th>
+            <th class="center" style="width: 120px;">Chức năng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of filteredRoutes; let i = index">
+            <td class="center font-semibold">{{ i + 1 }}</td>
+            <td>
+              <div class="route-display">
+                <!-- Chỉ báo trạng thái hình tròn trước tên bản ghi -->
+                <span class="indicator-dot" [class.active]="r.status==='active'" [class.locked]="r.status==='locked'"
+                      [title]="r.status === 'active' ? 'Đang hoạt động' : 'Không hoạt động'"></span>
+                <span class="route-code" style="margin-right: 6px;">{{ r.code }}</span>
+                <span class="route-name-text">{{ r.name }}</span>
+              </div>
+              <div class="route-meta" style="padding-left: 20px;">{{ r.tripsPerDay }} chuyến/ngày · {{ (r.price | number) }}đ</div>
+            </td>
+            <td><strong>{{ r.startPoint }}</strong></td>
+            <td><strong>{{ r.endPoint }}</strong></td>
+            <td class="center">{{ r.distance }} km</td>
+            <td class="center">{{ r.duration }}</td>
+            <td class="center">
+              <span class="badge" [class.active]="r.status==='active'" [class.locked]="r.status==='locked'">
+                <span class="badge-dot"></span>
+                {{ r.status === 'active' ? 'Đang hoạt động' : 'Đã khóa' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-action-trigger" (click)="openFormModal(r)" title="Chỉnh sửa / Khóa tuyến">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M4 6h16M4 12h10M4 18h6"/>
+                  <path d="M16 16l3-3 1.5 1.5-3 3H16v-1.5z"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="filteredRoutes.length === 0">
+            <td colspan="8">
+              <div class="empty-state">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <p>Không tìm thấy tuyến xe nào</p>
+                <small>Thử thay đổi điều kiện lọc hoặc <a (click)="resetFilters()" style="color:#00a49f;cursor:pointer;">xóa bộ lọc</a></small>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="tx-footer">
+      <span>Hiển thị <strong>{{ filteredRoutes.length }}</strong> / {{ routesList.length }} tuyến xe</span>
+      <span>Tổng km mạng lưới: <strong>{{ totalDistance }} km</strong></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODAL: XEM CHI TIẾT
+     ══════════════════════════════════════════════ -->
+<div *ngIf="showDetailModal && selectedRoute" class="modal-overlay" (click)="closeDetail()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <h3>
+          <span style="font-family:monospace;font-size:12px;background:#eff6ff;color:#002664;padding:3px 8px;border-radius:6px;margin-right:8px;border:1px solid #dbeafe">{{ selectedRoute.code }}</span>
+          Chi tiết tuyến xe
+        </h3>
+      </div>
+      <button class="btn-close" (click)="closeDetail()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Status -->
+      <div class="detail-status-row">
+        <span>Trạng thái hiện tại</span>
+        <span class="badge" [class.active]="selectedRoute.status==='active'" [class.locked]="selectedRoute.status==='locked'">
+          <span class="badge-dot"></span>
+          {{ selectedRoute.status === 'active' ? 'Đang hoạt động' : 'Đã khóa' }}
+        </span>
+      </div>
+
+      <!-- Journey visual -->
+      <div class="journey-visual">
+        <div class="jv-point">
+          <div class="jv-dot start"></div>
+          <div class="jv-city">{{ selectedRoute.startPoint }}</div>
+          <div class="jv-label">Điểm đầu</div>
+        </div>
+        <div class="jv-line">
+          <div class="jv-dash"></div>
+          <div class="jv-info">{{ selectedRoute.distance }} km · {{ selectedRoute.duration }}</div>
+        </div>
+        <div class="jv-point">
+          <div class="jv-dot end"></div>
+          <div class="jv-city">{{ selectedRoute.endPoint }}</div>
+          <div class="jv-label">Điểm cuối</div>
+        </div>
+      </div>
+
+      <!-- Detail grid -->
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="d-label">Chuyến / ngày</div>
+          <div class="d-value">{{ selectedRoute.tripsPerDay }}</div>
+        </div>
+        <div class="detail-item">
+          <div class="d-label">Giá vé từ</div>
+          <div class="d-value blue">{{ (selectedRoute.price | number) }}đ</div>
+        </div>
+        <div class="detail-item">
+          <div class="d-label">Thời gian di chuyển</div>
+          <div class="d-value">{{ selectedRoute.duration }}</div>
+        </div>
+        <div class="detail-item">
+          <div class="d-label">Khoảng cách</div>
+          <div class="d-value">{{ selectedRoute.distance }} km</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="modal-actions" style="justify-content: flex-end;">
+        <button class="btn-primary" (click)="closeDetail()">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODAL: THÊM MỚI / CHỈNH SỬA TUYẾN XE
+     ══════════════════════════════════════════════ -->
+<div *ngIf="showFormModal" class="modal-overlay" (click)="closeFormModal()">
+  <div class="modal-box wide" (click)="$event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <h3>{{ isEditing ? 'Chỉnh sửa tuyến xe' : 'Thêm tuyến xe mới' }}</h3>
+        <p>{{ isEditing ? 'Cập nhật lại các thông tin của tuyến xe đã chọn' : 'Điền thông tin tuyến xe cần thêm vào hệ thống' }}</p>
+      </div>
+      <!-- Nút đóng X ở góc trên bên phải -->
+      <button class="btn-close" (click)="closeFormModal()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <form (submit)="submitForm($event)" class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Mã tuyến</label>
+          <input class="form-input" type="text" [(ngModel)]="newRoute.code" name="code" placeholder="T009" [disabled]="isEditing" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tên tuyến <span class="req">*</span></label>
+          <input class="form-input" type="text" [(ngModel)]="newRoute.name" name="name" placeholder="A ↔ B" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Điểm đầu <span class="req">*</span></label>
+          <input class="form-input" type="text" [(ngModel)]="newRoute.startPoint" name="start" placeholder="TP.HCM" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Điểm cuối <span class="req">*</span></label>
+          <input class="form-input" type="text" [(ngModel)]="newRoute.endPoint" name="end" placeholder="Đà Lạt" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Khoảng cách (km)</label>
+          <input class="form-input" type="number" [(ngModel)]="newRoute.distance" name="dist" min="0" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Thời gian di chuyển</label>
+          <input class="form-input" type="text" [(ngModel)]="newRoute.duration" name="dur" placeholder="6h 30p" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Số chuyến / ngày</label>
+          <input class="form-input" type="number" [(ngModel)]="newRoute.tripsPerDay" name="trips" min="1" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Giá vé (đồng)</label>
+          <input class="form-input" type="number" [(ngModel)]="newRoute.price" name="price" min="0" />
+        </div>
+
+        <!-- Trạng thái (chỉ hiện khi thêm mới, hoặc hiển thị radio) -->
+        <div class="form-group full" *ngIf="!isEditing">
+          <label class="form-label">Trạng thái</label>
+          <div class="status-group">
+            <label class="status-radio" [class.sel-active]="newRoute.status==='active'">
+              <input type="radio" [(ngModel)]="newRoute.status" name="status" value="active" />
+              <div class="status-radio-label">✓ Hoạt động</div>
+            </label>
+            <label class="status-radio" [class.sel-locked]="newRoute.status==='locked'">
+              <input type="radio" [(ngModel)]="newRoute.status" name="status" value="locked" />
+              <div class="status-radio-label">🔒 Tạm khóa</div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer flex-footer">
+        <!-- Nút Khóa / Mở khóa (Warning) ở góc dưới bên trái khi chỉnh sửa -->
+        <div class="footer-left">
+          <button type="button" class="btn-warning" *ngIf="isEditing && selectedRoute" (click)="toggleStatus(selectedRoute); closeFormModal()">
+            {{ selectedRoute.status === 'active' ? '🔒 Khóa tuyến' : '🔓 Mở khóa' }}
+          </button>
+        </div>
+        
+        <!-- Các nút bên phải -->
+        <div class="footer-right">
+          <button type="button" class="btn-cancel" (click)="closeFormModal()">Hủy</button>
+          <button type="submit" class="btn-submit">Lưu</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

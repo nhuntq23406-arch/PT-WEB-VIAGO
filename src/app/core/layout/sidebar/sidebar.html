@@ -41,8 +41,8 @@
           </svg>
         </a>
         <div class="submenu-list" *ngIf="showBookingMenu">
-          <a class="submenu-item" routerLink="/admin/datve/moi" routerLinkActive="submenu-item--active">Đặt vé mới</a>
-          <a class="submenu-item" routerLink="/admin/datve/danhsach" routerLinkActive="submenu-item--active">Quản lý đã đặt</a>
+          <a class="submenu-item" routerLink="/admin/dat-ve/moi" routerLinkActive="submenu-item--active">Đặt vé mới</a>
+          <a class="submenu-item" routerLink="/admin/dat-ve/quan-ly" routerLinkActive="submenu-item--active">Quản lý đã đặt</a>
         </div>
 
         <!-- Quản lý điều phối -->
@@ -56,16 +56,17 @@
               <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
           </div>
-          <div class="text-wrapper-5">Quản lý điều phối</div>
+          <div class="text-wrapper-5">Quản lý điều hành</div>
           <svg class="chevron-icon" [class.chevron-icon--rotated]="showDispatchMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </a>
         <div class="submenu-list" *ngIf="showDispatchMenu">
-          <a class="submenu-item" routerLink="/admin/dieuphoi/tuyen" routerLinkActive="submenu-item--active">Tuyến xe</a>
-          <a class="submenu-item" routerLink="/admin/dieuphoi/lich-trinh" routerLinkActive="submenu-item--active">Lịch trình</a>
-          <a class="submenu-item" routerLink="/admin/dieuphoi/don-tra" routerLinkActive="submenu-item--active">Đón trả</a>
-          <a class="submenu-item" routerLink="/admin/dieuphoi/phuong-tien" routerLinkActive="submenu-item--active">Phương tiện</a>
+          <a class="submenu-item" routerLink="/admin/dieu-hanh/tuyen-xe" routerLinkActive="submenu-item--active">Quản lý tuyến xe</a>
+          <a class="submenu-item" routerLink="/admin/dieu-hanh/lich-trinh" routerLinkActive="submenu-item--active">Quản lý lịch trình</a>
+          <a class="submenu-item" routerLink="/admin/dieu-hanh/phuong-tien" routerLinkActive="submenu-item--active">Quản lý phương tiện</a>
+          <a class="submenu-item" routerLink="/admin/dieu-hanh/tai-xe-phu-xe" routerLinkActive="submenu-item--active">Tài xế &amp; phụ xe</a>
+          <a class="submenu-item" routerLink="/admin/dieu-hanh/diem-don-tra" routerLinkActive="submenu-item--active">Điểm đón trả dừng</a>
         </div>
 
         <!-- Khách hàng -->
@@ -94,6 +95,18 @@
             </svg>
           </div>
           <div class="text-wrapper-5">Nội dung</div>
+        </a>
+
+        <!-- Khuyến mãi -->
+        <a class="item-link-2" routerLink="/admin/khuyen-mai" routerLinkActive="item-link--active">
+          <div class="div-3">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+              <line x1="7" y1="7" x2="7.01" y2="7" />
+            </svg>
+          </div>
+          <div class="text-wrapper-5">Khuyến mãi</div>
         </a>
 
         <!-- Thuê xe hợp đồng -->
