@@ -1,0 +1,544 @@
+<div class="lt-wrap">
+
+  <!-- ── Header ──────────────────────────────────────────────────── -->
+  <div class="lt-header">
+    <div>
+      <div class="lt-breadcrumb">Quản lý điều hành / <span>Quản lý lịch trình</span></div>
+      <h1 class="lt-title">Quản lý lịch trình</h1>
+      <p class="lt-subtitle">Quản lý lịch trình hoạt động, điều phối phương tiện và tài xế phụ xe</p>
+    </div>
+    <button class="btn-add" (click)="openFormModal()">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Thêm lịch trình mới
+    </button>
+  </div>
+
+  <!-- ── Panel chính ──────────────────────────────────────────────── -->
+  <div class="lt-panel">
+
+    <!-- Toolbar: Tabs + Filters -->
+    <div class="lt-toolbar">
+      <!-- Tabs -->
+      <div class="lt-tabs">
+        <button class="tab-btn" [class.active]="activeTab==='all'" (click)="setTab('all')">
+          Tất cả
+          <span class="tab-badge" [class.primary]="activeTab==='all'" [class.default]="activeTab!=='all'">{{ totalCount }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab==='running'" (click)="setTab('running')">
+          Đang chạy
+          <span class="tab-badge orange">{{ runningCount }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab==='waiting'" (click)="setTab('waiting')">
+          Chờ khởi hành
+          <span class="tab-badge blue">{{ waitingCount }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab==='completed'" (click)="setTab('completed')">
+          Hoàn thành
+          <span class="tab-badge green">{{ completedCount }}</span>
+        </button>
+        <button class="tab-btn" [class.active]="activeTab==='locked'" (click)="setTab('locked')">
+          Đã khóa
+          <span class="tab-badge red">{{ lockedCount }}</span>
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="lt-filters">
+        <!-- Route dropdown -->
+        <select class="filter-select" [(ngModel)]="filterRoute">
+          <option value="">Lọc theo tuyến xe</option>
+          <option *ngFor="let r of routesList" [value]="r.code">{{ r.code }} - {{ r.name }}</option>
+        </select>
+
+        <!-- Search input -->
+        <div class="search-box">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input class="search-input" [(ngModel)]="searchText" placeholder="Tìm kiếm phương tiện, tài xế..." />
+        </div>
+
+        <!-- Button Tìm kiếm (Primary) -->
+        <button class="btn-search-trigger" (click)="applyFilters()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Tìm kiếm
+        </button>
+
+        <button *ngIf="filterRoute || searchText || activeTab !== 'all'" class="btn-reset" (click)="resetFilters()">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Xóa bộ lọc
+        </button>
+
+        <span class="filter-count">Hiển thị {{ filteredSchedules.length }} lịch trình</span>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="lt-table-wrap">
+      <table class="lt-table">
+        <thead>
+          <tr>
+            <th class="center" style="width: 60px;">STT</th>
+            <th>Tuyến đường</th>
+            <th class="center" style="width: 150px;">Phương tiện</th>
+            <th>Tài xế & Phụ xe</th>
+            <th style="width: 220px;">Thời gian khởi hành</th>
+            <th class="center" style="width: 160px;">Trạng thái</th>
+            <th class="center" style="width: 140px;">Chức năng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filteredSchedules; let i = index">
+            <td class="center font-semibold">{{ i + 1 }}</td>
+            <td>
+              <div class="route-name">
+                <!-- Chỉ báo trạng thái hình tròn trước tên bản ghi -->
+                <span class="indicator-dot" [class.active]="s.status!=='locked'" [class.locked]="s.status==='locked'"
+                      [title]="s.status !== 'locked' ? 'Đang hoạt động' : 'Không hoạt động'"></span>
+                {{ s.routeName }}
+              </div>
+              <div class="route-code-sub" style="padding-left: 18px;">Mã tuyến: {{ s.routeCode }}</div>
+            </td>
+            <td class="center">
+              <span class="plate-badge">{{ s.vehiclePlate }}</span>
+            </td>
+            <td>
+              <div class="driver-info">
+                <span class="role-lbl">Tài xế:</span> {{ s.driverName }}
+              </div>
+              <div class="assistant-info" *ngIf="s.assistantName">
+                <span class="role-lbl">Phụ xe:</span> {{ s.assistantName }}
+              </div>
+              <div class="assistant-info none" *ngIf="!s.assistantName">
+                <span class="role-lbl">Phụ xe:</span> (Không có phụ xe)
+              </div>
+            </td>
+            <td>
+              <div class="time-cell">
+                <div class="time-row">
+                  <svg class="icon-small" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <span>{{ formatDate(s.departureDate) }}</span>
+                </div>
+                <div class="time-row time">
+                  <svg class="icon-small" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span>{{ s.departureTime }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="center">
+              <!-- Badge vai trò / trạng thái: Chờ khởi hành (xanh nhạt), Hoàn thành (xanh lá) -->
+              <span class="status-badge" [class]="s.status">
+                <span class="status-dot"></span>
+                {{ getStatusText(s.status) }}
+              </span>
+            </td>
+            <td class="center">
+              <button class="btn-action-trigger" (click)="openFormModal(s)" title="Chỉnh sửa / Khóa lịch trình">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M4 6h16M4 12h10M4 18h6"/>
+                  <path d="M16 16l3-3 1.5 1.5-3 3H16v-1.5z"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Empty state -->
+          <tr *ngIf="filteredSchedules.length === 0">
+            <td colspan="7">
+              <div class="empty-state">
+                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <p>Không tìm thấy lịch trình nào</p>
+                <small>Thử thay đổi điều kiện lọc hoặc <a (click)="resetFilters()" style="color:#00a49f;cursor:pointer;font-weight:600;">xóa bộ lọc</a></small>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="lt-footer">
+      <span>Hiển thị <strong>{{ filteredSchedules.length }}</strong> / {{ totalCount }} lịch trình</span>
+      <div class="pagination">
+        <button class="page-btn disabled" disabled>
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="width:12px;height:12px;">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn disabled" disabled>
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="width:12px;height:12px;">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODAL: CHI TIẾT THÔNG TIN LỊCH CHẠY
+     ══════════════════════════════════════════════ -->
+<div *ngIf="showFormModal || showDetailModal" class="modal-overlay" (click)="closeFormModal(); closeDetail()">
+  <div class="modal-box wide premium-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Head -->
+    <div class="modal-head">
+      <div>
+        <h3>Chi tiết thông tin lịch chạy</h3>
+      </div>
+      <button class="btn-close" (click)="closeFormModal(); closeDetail()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Tabs -->
+    <div class="modal-tabs-header">
+      <button class="modal-tab-link" [class.active]="modalActiveTab === 'tuyen-xe'" (click)="setModalTab('tuyen-xe')">
+        Thiết lập tuyến, xe
+      </button>
+      <button class="modal-tab-link" [class.active]="modalActiveTab === 'thoi-gian'" (click)="setModalTab('thoi-gian')">
+        Thiết lập thời gian, điểm đón trả
+      </button>
+    </div>
+
+    <form (submit)="submitForm($event)" class="modal-body scrollable-body">
+      <!-- TAB 1: THIẾT LẬP TUYẾN, XE -->
+      <div *ngIf="modalActiveTab === 'tuyen-xe'" class="tab-content-panel">
+        <div class="form-grid">
+          <!-- Tuyến -->
+          <div class="form-group full">
+            <label class="form-label">Tuyến <span class="req">*</span></label>
+            <select class="form-select" [(ngModel)]="newSchedule.routeCode" name="routeCode" required>
+              <option value="">-- Chọn tuyến xe khởi hành --</option>
+              <option *ngFor="let r of routesList" [value]="r.code">{{ r.code }} - {{ r.name }}</option>
+            </select>
+          </div>
+
+          <!-- Tài xế -->
+          <div class="form-group">
+            <label class="form-label">Tài xế <span class="req">*</span></label>
+            <select class="form-select" [(ngModel)]="newSchedule.driverName" name="driverName" required>
+              <option value="">-- Chọn tài xế --</option>
+              <option *ngFor="let d of driversList" [value]="d">{{ d }}</option>
+            </select>
+          </div>
+
+          <!-- Phụ xe -->
+          <div class="form-group">
+            <label class="form-label">Phụ xe</label>
+            <select class="form-select" [(ngModel)]="newSchedule.assistantName" name="assistantName">
+              <option value="">Chọn phụ xe (Không bắt buộc)</option>
+              <option *ngFor="let a of assistantsList" [value]="a">{{ a }}</option>
+            </select>
+          </div>
+
+          <!-- Tên xe -->
+          <div class="form-group">
+            <label class="form-label">Tên xe <span class="req">*</span></label>
+            <select class="form-select" name="vehicleName" required>
+              <option *ngFor="let vn of vehicleNamesList" [value]="vn">{{ vn }}</option>
+            </select>
+          </div>
+
+          <!-- Biển số xe -->
+          <div class="form-group">
+            <label class="form-label">Biển số xe <span class="req">*</span></label>
+            <select class="form-select" [(ngModel)]="newSchedule.vehiclePlate" name="vehiclePlate" required>
+              <option value="">-- Chọn biển số xe --</option>
+              <option *ngFor="let p of platesList" [value]="p">{{ p }}</option>
+            </select>
+          </div>
+
+          <!-- Số chỗ -->
+          <div class="form-group">
+            <label class="form-label">Số chỗ <span class="req">*</span></label>
+            <input class="form-input" type="number" value="22" name="totalSeats" required />
+          </div>
+
+          <!-- Trạng thái lịch trình -->
+          <div class="form-group">
+            <label class="form-label">Trạng thái lịch trình <span class="req">*</span></label>
+            <select class="form-select" [(ngModel)]="newSchedule.status" name="status" required>
+              <option value="waiting">Chờ khởi hành</option>
+              <option value="running">Đang chạy</option>
+              <option value="completed">Hoàn thành</option>
+              <option value="locked">Đã khóa</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sơ đồ ghế -->
+        <div class="seat-map-section">
+          <label class="form-label">Sơ đồ ghế</label>
+          <div class="seat-map-container">
+            <!-- Tầng dưới -->
+            <div class="seat-deck">
+              <h4 class="deck-title">TẦNG DƯỚI</h4>
+              <div class="deck-grid">
+                <div *ngFor="let seat of lowerSeats" class="seat-node" 
+                     [class.selected]="selectedSeatsForGroup.includes(seat)"
+                     (click)="toggleSeatSelection(seat)">
+                  {{ seat }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Tầng trên -->
+            <div class="seat-deck">
+              <h4 class="deck-title">TẦNG TRÊN</h4>
+              <div class="deck-grid">
+                <div *ngFor="let seat of upperSeats" class="seat-node"
+                     [class.selected]="selectedSeatsForGroup.includes(seat)"
+                     (click)="toggleSeatSelection(seat)">
+                  {{ seat }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Giá vé -->
+        <div class="price-setup-section">
+          <div class="price-group-card">
+            <div class="price-card-body">
+              <div class="price-input-row">
+                <div>
+                  <label class="form-label font-bold">Giá vé chung (Mặc định) <span class="req">*</span></label>
+                  <p class="form-desc">Áp dụng cho tất cả các ghế không nằm trong nhóm giá riêng biệt</p>
+                </div>
+                <div class="currency-input-wrap">
+                  <input type="number" [(ngModel)]="generalPrice" name="generalPrice" class="form-input price" />
+                  <span class="currency-label">VND</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nhóm ghế & Giá vé riêng -->
+          <div class="custom-groups-card">
+            <div class="cg-head">
+              <span class="font-semibold">Nhóm ghế & Giá vé riêng</span>
+              <button type="button" class="btn-outline-teal btn-sm" (click)="showAddGroupForm = !showAddGroupForm">
+                <span style="font-size:16px; font-weight:bold; margin-right:4px;">+</span> Thêm nhóm ghế
+              </button>
+            </div>
+            
+            <!-- Add Group Form -->
+            <div *ngIf="showAddGroupForm" class="add-group-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Tên nhóm</label>
+                  <input type="text" [(ngModel)]="newGroupName" name="newGroupName" class="form-input" placeholder="Ví dụ: Ghế VIP" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Giá vé (VND)</label>
+                  <input type="number" [(ngModel)]="newGroupPrice" name="newGroupPrice" class="form-input" />
+                </div>
+              </div>
+              <div style="margin-top:10px; font-size:12px; color:#64748b;">
+                * Nhấp chọn các ghế ở sơ đồ phía trên để gán vào nhóm này (Đang chọn: {{ selectedSeatsForGroup.join(', ') || 'Chưa chọn' }})
+              </div>
+              <div class="add-group-actions">
+                <button type="button" class="btn-cancel btn-sm" (click)="showAddGroupForm = false">Hủy</button>
+                <button type="button" class="btn-submit btn-sm" (click)="addSeatGroup()">Xác nhận</button>
+              </div>
+            </div>
+
+            <div class="cg-body">
+              <div *ngIf="seatGroups.length === 0" class="empty-group-text">
+                Nhấp vào "Thêm nhóm ghế" để bắt đầu chia phân khu ghế.
+              </div>
+              <div *ngFor="let g of seatGroups; let idx = index" class="seat-group-item">
+                <div>
+                  <strong>{{ g.name }}</strong>: {{ g.price | number }} VND
+                  <div class="group-seats-list">Ghế: {{ g.seats.join(', ') }}</div>
+                </div>
+                <button type="button" class="btn-delete-group" (click)="removeSeatGroup(idx)">✕</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: THIẾT LẬP THỜI GIAN, ĐIỂM ĐÓN TRẢ -->
+      <div *ngIf="modalActiveTab === 'thoi-gian'" class="tab-content-panel">
+        <div class="form-grid">
+          <!-- Ngày khởi hành -->
+          <div class="form-group">
+            <label class="form-label">Ngày khởi hành <span class="req">*</span></label>
+            <input class="form-input" type="date" [(ngModel)]="newSchedule.departureDate" name="departureDate" required />
+          </div>
+
+          <!-- Giờ khởi hành -->
+          <div class="form-group">
+            <label class="form-label">Giờ khởi hành <span class="req">*</span></label>
+            <div class="time-spinners">
+              <input type="number" [(ngModel)]="departureHour" name="depHour" min="0" max="23" class="form-input inline-time" />
+              <span>giờ</span>
+              <span class="sep">:</span>
+              <input type="number" [(ngModel)]="departureMinute" name="depMinute" min="0" max="59" class="form-input inline-time" />
+              <span>phút</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual flow card -->
+        <div class="journey-flow-card">
+          <div class="flow-side">
+            <span class="flow-lbl">GIỜ KHỞI HÀNH</span>
+            <span class="flow-time">{{ departureHour < 10 ? '0' + departureHour : departureHour }}:{{ departureMinute < 10 ? '0' + departureMinute : departureMinute }}</span>
+            <span class="flow-date">ngày {{ formatDate(newSchedule.departureDate || '') }}</span>
+          </div>
+          <div class="flow-center">
+            <span class="duration-badge">{{ totalDurationHours }}h {{ totalDurationMinutes }}p</span>
+            <div class="flow-progress-bar">
+              <div class="progress-dot start"></div>
+              <div class="progress-line"></div>
+              <div class="progress-dot end"></div>
+            </div>
+            <span class="progress-sub">TỔNG THỜI GIAN ĐI</span>
+          </div>
+          <div class="flow-side text-right">
+            <span class="flow-lbl">GIỜ TỚI</span>
+            <span class="flow-time">12:15</span>
+            <span class="flow-date">ngày 24/06/2026</span>
+          </div>
+        </div>
+
+        <!-- Booking settings -->
+        <div class="form-grid-three">
+          <div class="form-group">
+            <label class="form-label">Mở chuyến trước <span class="req">*</span></label>
+            <div class="booking-limit-input">
+              <input type="number" [(ngModel)]="openBeforeDays" name="openBeforeDays" class="form-input" />
+              <select class="form-select limit-unit"><option>Ngày</option><option>Giờ</option></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Đóng chuyến trước <span class="req">*</span></label>
+            <div class="booking-limit-input">
+              <input type="number" [(ngModel)]="closeBeforeMinutes" name="closeBeforeMinutes" class="form-input" />
+              <select class="form-select limit-unit"><option>Phút</option><option>Giờ</option></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Thời gian giữ chỗ <span class="req">*</span></label>
+            <div class="booking-limit-input">
+              <input type="number" [(ngModel)]="holdMinutes" name="holdMinutes" class="form-input" />
+              <select class="form-select limit-unit"><option>Phút</option></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danh sách điểm đón trả -->
+        <div class="points-management-section">
+          <div class="pm-head">
+            <span class="font-semibold text-uppercase">Điểm đón trả <span class="req">*</span></span>
+          </div>
+          <div class="points-list">
+            <div *ngFor="let p of pickupPoints; let idx = index" class="point-item-row">
+              <div class="pi-field select-f">
+                <label class="form-label mini">ĐIỂM ĐÓN TRẢ *</label>
+                <select class="form-select" [(ngModel)]="p.name" name="pickupName_{{idx}}">
+                  <option *ngFor="let opt of pickupPointsList" [value]="opt">{{ opt }}</option>
+                </select>
+              </div>
+              <div class="pi-field addr-f">
+                <label class="form-label mini">ĐỊA ĐIỂM</label>
+                <input type="text" class="form-input" [(ngModel)]="p.address" name="pickupAddr_{{idx}}" />
+              </div>
+              <div class="pi-field time-f">
+                <label class="form-label mini">THỜI GIAN ĐẾN DỰ KIẾN</label>
+                <div class="spinner-mini">
+                  <input type="number" [(ngModel)]="p.timeHour" name="pickupHour_{{idx}}" class="form-input inline-time" />
+                  <span>giờ</span>
+                  <span class="sep">:</span>
+                  <input type="number" [(ngModel)]="p.timeMinute" name="pickupMin_{{idx}}" class="form-input inline-time" />
+                  <span>phút</span>
+                </div>
+              </div>
+              <div class="pi-field date-f">
+                <label class="form-label mini">NGÀY</label>
+                <input type="date" class="form-input" [(ngModel)]="p.date" name="pickupDate_{{idx}}" />
+              </div>
+              <button type="button" class="btn-remove-point" (click)="removePickupPoint(idx)">✕</button>
+            </div>
+          </div>
+          <button type="button" class="btn-outline-teal btn-sm" (click)="addPickupPoint()">+ Thêm điểm đón trả</button>
+        </div>
+
+        <!-- Danh sách điểm dừng -->
+        <div class="points-management-section" style="margin-top: 20px;">
+          <div class="pm-head">
+            <span class="font-semibold text-uppercase">Điểm dừng <span class="req">*</span></span>
+          </div>
+          <div class="points-list">
+            <div *ngFor="let s of stopPoints; let idx = index" class="point-item-row">
+              <div class="pi-field select-f">
+                <label class="form-label mini">ĐIỂM DỪNG *</label>
+                <select class="form-select" [(ngModel)]="s.name" name="stopName_{{idx}}">
+                  <option *ngFor="let opt of stopPointsList" [value]="opt">{{ opt }}</option>
+                </select>
+              </div>
+              <div class="pi-field addr-f">
+                <label class="form-label mini">ĐỊA ĐIỂM</label>
+                <input type="text" class="form-input" [(ngModel)]="s.address" name="stopAddr_{{idx}}" />
+              </div>
+              <div class="pi-field time-f">
+                <label class="form-label mini">THỜI GIAN ĐẾN DỰ KIẾN</label>
+                <div class="spinner-mini">
+                  <input type="number" [(ngModel)]="s.timeHour" name="stopHour_{{idx}}" class="form-input inline-time" />
+                  <span>giờ</span>
+                  <span class="sep">:</span>
+                  <input type="number" [(ngModel)]="s.timeMinute" name="stopMin_{{idx}}" class="form-input inline-time" />
+                  <span>phút</span>
+                </div>
+              </div>
+              <div class="pi-field date-f">
+                <label class="form-label mini">NGÀY</label>
+                <input type="date" class="form-input" [(ngModel)]="s.date" name="stopDate_{{idx}}" />
+              </div>
+              <button type="button" class="btn-remove-point" (click)="removeStopPoint(idx)">✕</button>
+            </div>
+          </div>
+          <button type="button" class="btn-outline-teal btn-sm" (click)="addStopPoint()">+ Thêm điểm dừng</button>
+        </div>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="form-footer flex-footer">
+        <div class="footer-left">
+          <button type="button" class="btn-warning-lock" *ngIf="selectedSchedule" (click)="toggleStatus(selectedSchedule); closeFormModal(); closeDetail()">
+            <span class="lock-icon">🔒</span>
+            {{ selectedSchedule.status === 'locked' ? 'Mở khóa' : 'Khóa lịch trình' }}
+          </button>
+        </div>
+        <div class="footer-right">
+          <button type="button" class="btn-cancel" (click)="closeFormModal(); closeDetail()">Hủy</button>
+          
+          <button type="button" class="btn-submit" *ngIf="modalActiveTab === 'tuyen-xe'" (click)="setModalTab('thoi-gian')">
+            Tiếp tục
+          </button>
+          <button type="submit" class="btn-submit" *ngIf="modalActiveTab === 'thoi-gian'">
+            Lưu thông tin
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
