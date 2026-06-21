@@ -1,0 +1,126 @@
+<header class="bg-white sticky top-0 z-40 shadow-sm w-full">
+  <!-- Row 1: Language Selector, Center Logo, Auth Button (Stretched to page edges) -->
+  <div class="max-w-full px-4 md:px-10 lg:px-16 py-1 flex items-center justify-between border-b border-slate-100 mx-auto">
+    <!-- Left Column: Language Selector -->
+    <div class="w-1/3 flex justify-start items-center">
+      <div class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity">
+        <img src="/asset/images/customer/quoc_ky_VN.png" alt="VN Flag" class="w-5 h-3.5 object-cover rounded-sm" />
+        <span class="text-sm font-bold text-gray-800">VI</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Center Column: Logo -->
+    <div class="w-1/3 flex justify-center items-center">
+      <a routerLink="/" class="flex items-center">
+        <img src="/asset/images/customer/logo_removebg.png" alt="VIAGO Logo" class="h-16 md:h-18 lg:h-20 object-contain" />
+      </a>
+    </div>
+
+    <!-- Right Column: Auth Button -->
+    <div class="w-1/3 flex justify-end items-center">
+      <button class="bg-[#00236F] hover:bg-[#001b54] active:bg-[#00133b] text-white px-6 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm cursor-pointer">
+        <img src="/asset/images/customer/icon user.svg" class="w-4 h-4 brightness-0 invert" alt="user icon" />
+        <span>Đăng nhập / Đăng ký</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Row 2: Complete Navbar Links (Centered) -->
+  <div class="bg-slate-50/75 border-b border-slate-100 py-3 w-full">
+    <div class="max-w-full px-4 md:px-10 lg:px-16 mx-auto">
+      <nav class="flex flex-wrap items-center justify-center gap-6 lg:gap-8">
+        <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] !font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">TRANG CHỦ</a>
+        <a routerLink="/schedule" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] !font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">LỊCH TRÌNH</a>
+        <a routerLink="/tra-cuu-ve" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] !font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">TRA CỨU VÉ</a>
+        <a routerLink="/news" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] !font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">TIN TỨC</a>
+        <a routerLink="/invoice" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] !font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">HÓA ĐƠN</a>
+        <a routerLink="/reviews" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] !font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">ĐÁNH GIÁ</a>
+       
+        <!-- Dropdown Menu Item 1: Dịch vụ -->
+        <div class="relative">
+          <button
+            (click)="toggleServices($event)"
+            class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
+            [class.text-[#1E3A8A]]="isServicesOpen"
+          >
+            <span>DỊCH VỤ</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200" [class.rotate-180]="isServicesOpen" [class.text-[#1E3A8A]]="isServicesOpen">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+         
+          <!-- Submenu Dịch vụ -->
+          <div
+            [class.opacity-100]="isServicesOpen"
+            [class.scale-100]="isServicesOpen"
+            [class.pointer-events-auto]="isServicesOpen"
+            class="absolute top-full left-0 mt-2.5 w-56 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none origin-top-left flex flex-col"
+          >
+            <a routerLink="/services/contract" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Thuê xe hợp đồng</span>
+            </a>
+            <a routerLink="/services/lost-found" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Tìm đồ thất lạc</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Dropdown Menu Item 2: Giới thiệu -->
+        <div class="relative">
+          <button
+            (click)="toggleAbout($event)"
+            class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
+            [class.text-[#1E3A8A]]="isAboutOpen"
+          >
+            <span>GIỚI THIỆU</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200" [class.rotate-180]="isAboutOpen" [class.text-[#1E3A8A]]="isAboutOpen">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+         
+          <!-- Submenu Giới thiệu -->
+          <div
+            [class.opacity-100]="isAboutOpen"
+            [class.scale-100]="isAboutOpen"
+            [class.pointer-events-auto]="isAboutOpen"
+            class="absolute top-full left-0 mt-2.5 w-60 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none origin-top-left flex flex-col"
+          >
+            <a routerLink="/about/us" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Về chúng tôi</span>
+            </a>
+            <a routerLink="/about/policy" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Chính sách nhà xe</span>
+            </a>
+            <a routerLink="/about/guide" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Hướng dẫn mua vé</span>
+            </a>
+            <a routerLink="/about/faq" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Câu hỏi thường gặp</span>
+            </a>
+            <a routerLink="/about/terms" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Điều khoản sử dụng</span>
+            </a>
+            <a routerLink="/about/jobs" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Tuyển dụng</span>
+            </a>
+            <a routerLink="/about/contact" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+              <span>Liên hệ</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>

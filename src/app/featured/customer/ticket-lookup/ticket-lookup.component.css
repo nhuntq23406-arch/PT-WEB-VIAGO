@@ -1,0 +1,177 @@
+/* Transition Animations and Custom Overrides for Tra Cuu Ve */
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.fill-icon {
+  font-variation-settings: 'FILL' 1;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom micro-adjustments for QR code and layout spacing */
+.backdrop-blur-xs {
+  backdrop-filter: blur(2px);
+}
+
+/* Material Symbols alignment inside headers */
+.material-symbols-outlined {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Adjusted form size for review form */
+.review-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Button disabled state is handled via Tailwind's disabled: utilities in HTML templates */
+
+/* Adjusted QR code display */
+.ticket-info img {
+  max-width: 100px;
+  height: auto;
+  margin-top: 10px;
+}
+
+.custom-shadow {
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Explicit modal backdrop stylings for Figma and browsers */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+@media print {
+  @page {
+    margin: 0 !important;
+  }
+  html, body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  ::ng-deep body * {
+    visibility: hidden !important;
+  }
+
+  ::ng-deep .print-modal-overlay,
+  ::ng-deep .print-modal-overlay *,
+  ::ng-deep .print-modal-card,
+  ::ng-deep .print-modal-card *,
+  ::ng-deep .print-modal-body,
+  ::ng-deep .print-modal-body *,
+  ::ng-deep #print-ticket-content,
+  ::ng-deep #print-ticket-content * {
+    visibility: visible !important;
+  }
+
+  ::ng-deep .print-modal-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  ::ng-deep .print-modal-card {
+    position: absolute !important;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 380px !important;
+    max-width: 380px !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  ::ng-deep .print-modal-body {
+    padding: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  ::ng-deep #print-ticket-content {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 20px !important;
+    margin: 0 auto !important;
+    background: white !important;
+    display: block !important;
+  }
+
+  ::ng-deep .no-print {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+

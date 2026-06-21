@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1E3A8A;
+  --color-primary-hover: #3053B3;
+  --color-primary-active: #152C6B;
+  --color-secondary: #FF6A00;
+  --color-secondary-hover: #FF8126;
+  --color-secondary-active: #D95800;
+  --color-text-strong: #1F2937;
+  --color-text-primary: #374151;
+  --color-text-secondary: #6B7280;
+  --color-border-divider: #E5E7EB;
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+}
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8FAFC;
+    color: #374151;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.custom-shadow {
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
