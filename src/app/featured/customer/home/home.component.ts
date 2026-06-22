@@ -14,9 +14,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('destinationDropdown') destinationDropdown!: SearchableDropdownComponent;
 
   heroImages = [
-    '/asset/images/customer/hero banner.png',
-    '/asset/images/customer/hero banner km hè.png',
-    '/asset/images/customer/hero banner 3.png'
+    '/asset/images/customer/hero_banner_1.png',
+    '/asset/images/customer/hero_banner_2.png',
+    '/asset/images/customer/hero_banner_3.png'
   ];
   currentHeroIndex = signal(0);
   private heroIntervalId: any;
