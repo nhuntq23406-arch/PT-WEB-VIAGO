@@ -1,12 +1,13 @@
-import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchableDropdownComponent],
+  imports: [CommonModule, FormsModule, SearchableDropdownComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -28,27 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   returnDate = '';
   ticketCount = 1;
 
-  // Dropdown states for navbar
-  isServicesOpen = false;
-  isAboutOpen = false;
 
-  toggleServices(event: Event) {
-    event.stopPropagation();
-    this.isServicesOpen = !this.isServicesOpen;
-    this.isAboutOpen = false;
-  }
-
-  toggleAbout(event: Event) {
-    event.stopPropagation();
-    this.isAboutOpen = !this.isAboutOpen;
-    this.isServicesOpen = false;
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    this.isServicesOpen = false;
-    this.isAboutOpen = false;
-  }
 
   allCities = [
     'TP. Hồ Chí Minh',
