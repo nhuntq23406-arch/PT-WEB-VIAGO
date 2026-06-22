@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
@@ -10,8 +10,16 @@ import { SearchableDropdownComponent } from '../../../shared/components/searchab
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('destinationDropdown') destinationDropdown!: SearchableDropdownComponent;
+
+  heroImages = [
+    '/asset/images/customer/hero banner.png',
+    '/asset/images/customer/hero banner km hè.png',
+    '/asset/images/customer/hero banner 3.png'
+  ];
+  currentHeroIndex = signal(0);
+  private heroIntervalId: any;
 
   tripType: 'one-way' | 'round-trip' = 'one-way';
   departure = '';
@@ -59,6 +67,41 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
+    this.startHeroTimer();
+  }
+
+  ngOnDestroy() {
+    if (this.heroIntervalId) {
+      clearInterval(this.heroIntervalId);
+    }
+  }
+
+  startHeroTimer() {
+    this.heroIntervalId = setInterval(() => {
+      this.currentHeroIndex.update(idx => (idx + 1) % this.heroImages.length);
+    }, 5000);
+  }
+
+  setHeroIndex(index: number) {
+    this.currentHeroIndex.set(index);
+    this.resetHeroTimer();
+  }
+
+  previousHeroIndex() {
+    this.currentHeroIndex.update(idx => (idx - 1 + this.heroImages.length) % this.heroImages.length);
+    this.resetHeroTimer();
+  }
+
+  nextHeroIndex() {
+    this.currentHeroIndex.update(idx => (idx + 1) % this.heroImages.length);
+    this.resetHeroTimer();
+  }
+
+  private resetHeroTimer() {
+    if (this.heroIntervalId) {
+      clearInterval(this.heroIntervalId);
+    }
+    this.startHeroTimer();
   }
 
   onDepartureChange(val: string) {
