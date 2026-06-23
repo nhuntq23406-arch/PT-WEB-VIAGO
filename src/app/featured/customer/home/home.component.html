@@ -996,14 +996,14 @@
               <!-- Top content -->
               <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <!-- Timeline Info -->
-                <div class="flex items-center gap-6 flex-1 max-w-md">
-                  <div class="flex flex-col text-left">
+                <div class="flex items-center gap-4 flex-1 max-w-[480px]">
+                  <div class="flex flex-col text-left w-[130px] flex-shrink-0">
                     <span class="text-xl font-bold text-[#152C68]">{{trip.depTime}}</span>
                     <span class="text-xs text-gray-500 font-semibold mt-1">{{trip.depLocation}}</span>
                   </div>
 
                   <!-- Connection Line -->
-                  <div class="flex-1 flex flex-col items-center gap-1 min-w-[80px]">
+                  <div class="flex-1 flex flex-col items-center gap-1 min-w-[70px]">
                     <span class="text-[10px] text-gray-400 font-semibold">{{trip.duration}}</span>
                     <div class="relative w-full flex items-center justify-center">
                       <div class="w-full border-t-2 border-dashed border-slate-200"></div>
@@ -1015,7 +1015,7 @@
                     </div>
                   </div>
 
-                  <div class="flex flex-col text-left">
+                  <div class="flex flex-col text-left w-[180px] flex-shrink-0">
                     <span class="text-xl font-bold text-[#152C68]">{{trip.arrTime}}</span>
                     <span class="text-xs text-gray-500 font-semibold mt-1">{{trip.arrLocation}}</span>
                   </div>
@@ -1488,13 +1488,7 @@
             </div>
           </div>
 
-          <!-- Seat Limit Toast Overlay -->
-          <div *ngIf="showSeatLimitToast" class="bg-[#E0533C] text-white px-4 py-3 rounded-lg flex items-center justify-between shadow-sm transition-all duration-300">
-            <span class="text-xs font-bold">Đã chọn đủ số ghế.</span>
-            <button (click)="showSeatLimitToast = false" class="text-white hover:text-gray-200 focus:outline-none cursor-pointer font-bold text-xs">
-              ✕
-            </button>
-          </div>
+
 
           <!-- Price detail widget -->
           <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden text-left text-sm font-semibold">
@@ -1533,6 +1527,15 @@
 
         </aside>
       </div>
+
+      <!-- Seat Limit Toast Alert clinging to right edge of screen, level with selected seats -->
+      <div *ngIf="showSeatLimitToast" class="fixed right-0 top-[35%] z-50 flex items-center justify-between gap-3 bg-[#E0533C] text-white px-5 py-3.5 rounded-l-xl shadow-2xl transition-all duration-300">
+        <span class="text-xs font-bold uppercase tracking-wider">Đã chọn đủ số ghế.</span>
+        <button (click)="showSeatLimitToast = false" class="text-white hover:text-gray-200 focus:outline-none cursor-pointer font-bold text-xs ml-2">
+          ✕
+        </button>
+      </div>
+
     </ng-container>
   </ng-container>
 </main>
