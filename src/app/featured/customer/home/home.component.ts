@@ -250,65 +250,70 @@ export class HomeComponent implements OnInit, OnDestroy {
         duration: '9 giờ 40 phút',
         arrTime: '05:10',
         type: 'Limousine',
-        availableSeats: 17,
+        availableSeats: 15,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 0),
         arrLocation: this.getDetailedSpot(this.searchDestination, 0),
         floor: 'lower',
         seatGroup: 'front',
-        date: dateStr
+        date: dateStr,
+        soldOutSeats: ['1B', '2B', '5A', '6A', '9B', '1A', '2A']
       },
       {
         depTime: '20:00',
         duration: '9 giờ 30 phút',
         arrTime: '05:30',
         type: 'Limousine',
-        availableSeats: 17,
+        availableSeats: 18,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 1),
         arrLocation: this.getDetailedSpot(this.searchDestination, 1),
         floor: 'upper',
         seatGroup: 'middle',
-        date: dateStr
+        date: dateStr,
+        soldOutSeats: ['1B', '2B', '5A', '6A']
       },
       {
         depTime: '17:15',
         duration: '11 giờ 57 phút',
         arrTime: '05:12',
         type: 'Limousine',
-        availableSeats: 17,
+        availableSeats: 5,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 2),
         arrLocation: this.getDetailedSpot(this.searchDestination, 2),
         floor: 'lower',
         seatGroup: 'front',
-        date: dateStr
+        date: dateStr,
+        soldOutSeats: ['1A', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '10A', '1B', '2B', '3B', '4B', '5B', '6B', '7B']
       },
       {
         depTime: '16:00',
         duration: '13 giờ 10 phút',
         arrTime: '05:10',
         type: 'Limousine',
-        availableSeats: 17,
+        availableSeats: 20,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 3),
         arrLocation: this.getDetailedSpot(this.searchDestination, 3),
         floor: 'upper',
         seatGroup: 'back',
-        date: dateStr
+        date: dateStr,
+        soldOutSeats: ['11A', '12A']
       },
       {
         depTime: '19:05',
         duration: '11 giờ 15 phút',
         arrTime: '06:20',
         type: 'Limousine',
-        availableSeats: 17,
+        availableSeats: 9,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 4),
         arrLocation: this.getDetailedSpot(this.searchDestination, 4),
         floor: 'lower',
         seatGroup: 'middle',
-        date: dateStr
+        date: dateStr,
+        soldOutSeats: ['1B', '2B', '3B', '4B', '5B', '6B', '7B', '8B', '9B', '10B', '1A', '2A', '3A']
       }
     ];
   }
@@ -463,8 +468,10 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
   }
 
   isSeatSoldOut(seatId: string): boolean {
-    const soldOut = ['1B', '2B', '5A', '6A', '9B'];
-    return soldOut.includes(seatId);
+    if (!this.selectedTrip || !this.selectedTrip.soldOutSeats) {
+      return false;
+    }
+    return this.selectedTrip.soldOutSeats.includes(seatId);
   }
 
   isSeatSelected(seatId: string): boolean {
