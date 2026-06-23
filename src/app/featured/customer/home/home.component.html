@@ -1552,14 +1552,9 @@
       <!-- Floating Toast Alert clinging to right edge of screen, level with selected seats -->
       <div *ngIf="showToast" 
            [ngClass]="toastType === 'success' ? 'bg-[#10B981]' : 'bg-[#E0533C]'"
-           class="fixed right-0 top-[35%] z-50 flex items-start justify-between gap-4 text-white px-6 py-4 rounded-l-xl shadow-2xl transition-all duration-300 max-w-sm">
-        <div class="flex flex-col text-left">
-          <span class="text-[10px] font-black uppercase tracking-wider mb-1 opacity-95">
-            {{ toastType === 'success' ? 'Thành công' : 'Thông báo' }}
-          </span>
-          <p class="text-xs font-bold leading-relaxed whitespace-pre-line">{{ toastMessage }}</p>
-        </div>
-        <button (click)="showToast = false" class="text-white hover:text-gray-200 focus:outline-none cursor-pointer font-bold text-sm leading-none mt-0.5">
+           class="fixed right-0 top-[35%] z-50 flex items-center justify-between gap-4 text-white px-6 py-4 rounded-l-xl shadow-2xl transition-all duration-300 max-w-sm">
+        <p class="text-xs font-bold leading-relaxed whitespace-pre-line text-left">{{ toastMessage }}</p>
+        <button (click)="showToast = false" class="text-white hover:text-gray-200 focus:outline-none cursor-pointer font-bold text-sm leading-none">
           ✕
         </button>
       </div>
