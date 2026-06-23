@@ -461,8 +461,8 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
     if (index > -1) {
       this.selectedSeats.splice(index, 1);
     } else {
-      if (this.selectedSeats.length >= this.searchTicketCount) {
-        alert(`Bạn đã đăng ký đặt ${this.searchTicketCount} vé. Vui lòng bỏ chọn bớt ghế nếu muốn đổi ghế.`);
+      if (this.selectedSeats.length >= 5) {
+        alert('Bạn chỉ được chọn tối đa 5 vé');
         return;
       }
       this.selectedSeats.push(seatId);
