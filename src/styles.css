@@ -1,23 +1,25 @@
-/* ============================================
-   GLOBAL STYLES - PT-WEB-VIAGO
-   Chuyển từ mau/global.css
-   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
 
-/* CSS Reset */
-* {
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8FAFC;
+    color: #374151;
+  }
+  
+  /* Nếu các file của Vanh yêu cầu dùng font Montserrat, ta tạo class riêng thay vì ép toàn hệ thống */
+  .font-vanh {
+    font-family: 'Montserrat', sans-serif;
+  }
 }
 
+/* CHỈ RESET CÁC THÀNH PHẦN CẦN THIẾT - KHÔNG DÙNG DẤU * TRIỆT TIÊU MARGIN/PADDING */
 html,
 body {
-  margin: 0px;
   min-height: 100%;
 }
 
-/* Focus style */
 button:focus-visible {
   outline: 2px solid #4a90e2 !important;
   outline: -webkit-focus-ring-color auto 5px !important;
@@ -25,36 +27,4 @@ button:focus-visible {
 
 a {
   text-decoration: none;
-}
-
-/* ============================================
-   FONT FACES - Montserrat (from local system)
-   ============================================ */
-
-@font-face {
-  font-family: "Montserrat-Medium";
-  src: local("Montserrat Medium"), local("Montserrat-Medium");
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Montserrat-Bold";
-  src: local("Montserrat Bold"), local("Montserrat-Bold");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Montserrat-Regular";
-  src: local("Montserrat Regular"), local("Montserrat");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Montserrat-SemiBold";
-  src: local("Montserrat SemiBold"), local("Montserrat-SemiBold");
-  font-weight: 600;
-  font-style: normal;
 }
