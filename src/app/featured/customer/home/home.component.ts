@@ -77,6 +77,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   promoCode = '';
   appliedPromo: any = null;
   showSeatLimitToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'warning' | '' = '';
+  showToast = false;
+  toastTimeout: any = null;
 
   detailedSpots: { [key: string]: string[] } = {
     'TP. Hồ Chí Minh': ['Bến xe Miền Đông', 'Văn phòng Quận 5', 'Bến xe Miền Tây', 'Bến xe An Sương', 'Ngã Tư Ga'],
@@ -406,6 +410,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.promoCode = '';
     this.appliedPromo = null;
     this.showSeatLimitToast = false;
+    this.showToast = false;
+    this.toastMessage = '';
+    this.toastType = '';
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
     window.scrollTo(0, 0);
   }
 
@@ -415,43 +425,42 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   submitBooking() {
     if (this.selectedSeats.length === 0) {
-      alert('Vui lòng chọn ít nhất một ghế.');
+      this.showNotification('Vui lòng chọn ít nhất một ghế.', 'warning');
       return;
     }
     if (!this.passengerName) {
-      alert('Vui lòng nhập họ tên người đi.');
+      this.showNotification('Vui lòng nhập họ tên người đi.', 'warning');
       return;
     }
     if (!this.passengerPhone) {
-      alert('Vui lòng nhập số điện thoại.');
+      this.showNotification('Vui lòng nhập số điện thoại.', 'warning');
       return;
     }
     if (!this.acceptedTerms) {
-      alert('Vui lòng chấp nhận điều khoản và chính sách bảo mật.');
+      this.showNotification('Vui lòng chấp nhận điều khoản và chính sách bảo mật.', 'warning');
       return;
     }
     if (!this.pickupPoint) {
-      alert('Vui lòng chọn điểm đón.');
+      this.showNotification('Vui lòng chọn điểm đón.', 'warning');
       return;
     }
     if (!this.dropoffPoint) {
-      alert('Vui lòng chọn điểm trả.');
+      this.showNotification('Vui lòng chọn điểm trả.', 'warning');
       return;
     }
 
     const total = this.getBookingTotal();
-    alert(`Đặt vé thành công!
-- Chuyến xe: ${this.selectedTrip.depLocation} → ${this.selectedTrip.arrLocation}
-- Nhà xe: VIAGO EXPRESS
-- Danh sách ghế: ${this.selectedSeats.join(', ')}
+    this.showNotification(`Đặt vé thành công!
+- Chuyến: ${this.selectedTrip.depLocation} → ${this.selectedTrip.arrLocation}
+- Ghế: ${this.selectedSeats.join(', ')}
 - Khách hàng: ${this.passengerName} (${this.passengerPhone})
-- Tổng tiền thanh toán: ${total.toLocaleString()}đ
+- Tổng tiền: ${total.toLocaleString()}đ`, 'success');
 
-Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
-
-    // Reset and go back to home page
-    this.showResults = false;
-    this.selectedTrip = null;
+    // Reset and go back to home page after showing success toast
+    setTimeout(() => {
+      this.showResults = false;
+      this.selectedTrip = null;
+    }, 4000);
   }
 
   toggleSeat(seatId: string) {
@@ -462,10 +471,10 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
     const index = this.selectedSeats.indexOf(seatId);
     if (index > -1) {
       this.selectedSeats.splice(index, 1);
-      this.showSeatLimitToast = false;
+      this.showToast = false;
     } else {
       if (this.selectedSeats.length >= 5) {
-        this.showSeatLimitToast = true;
+        this.showNotification('Đã chọn đủ số ghế.', 'warning');
         return;
       }
       this.selectedSeats.push(seatId);
@@ -498,9 +507,24 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
       };
       this.promoCode = 'BANMOI';
     } else {
-      alert('Mã giảm giá không hợp lệ.');
+      this.showNotification('Mã giảm giá không hợp lệ.', 'warning');
       this.appliedPromo = null;
     }
+  }
+
+  showNotification(message: string, type: 'success' | 'warning' = 'warning') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
+
+    const duration = type === 'success' ? 5000 : 3500;
+    this.toastTimeout = setTimeout(() => {
+      this.showToast = false;
+    }, duration);
   }
 
   removePromoCode() {
