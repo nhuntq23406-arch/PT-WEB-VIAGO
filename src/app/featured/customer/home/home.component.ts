@@ -76,6 +76,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   dropoffPoint = '';
   promoCode = '';
   appliedPromo: any = null;
+  showSeatLimitToast = false;
 
   detailedSpots: { [key: string]: string[] } = {
     'TP. Hồ Chí Minh': ['Bến xe Miền Đông', 'Văn phòng Quận 5', 'Bến xe Miền Tây', 'Bến xe An Sương', 'Ngã Tư Ga'],
@@ -404,6 +405,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropoffPoint = '';
     this.promoCode = '';
     this.appliedPromo = null;
+    this.showSeatLimitToast = false;
     window.scrollTo(0, 0);
   }
 
@@ -460,9 +462,10 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
     const index = this.selectedSeats.indexOf(seatId);
     if (index > -1) {
       this.selectedSeats.splice(index, 1);
+      this.showSeatLimitToast = false;
     } else {
       if (this.selectedSeats.length >= 5) {
-        alert('Bạn chỉ được chọn tối đa 5 vé');
+        this.showSeatLimitToast = true;
         return;
       }
       this.selectedSeats.push(seatId);
