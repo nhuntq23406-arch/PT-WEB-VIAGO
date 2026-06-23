@@ -232,6 +232,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     history.pushState({ step: 'results' }, '');
     this.showResults = true;
     this.selectedTrip = null;
+    window.scrollTo(0, 0);
   }
 
   generateTrips() {
@@ -403,6 +404,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dropoffPoint = '';
     this.promoCode = '';
     this.appliedPromo = null;
+    window.scrollTo(0, 0);
   }
 
   cancelBooking() {
@@ -578,6 +580,7 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
     } else if (state.step === 'booking') {
       this.showResults = true;
     }
+    window.scrollTo(0, 0);
   }
 
   private formatDate(date: Date): string {
