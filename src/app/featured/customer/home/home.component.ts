@@ -65,6 +65,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Generated list of trips
   trips: any[] = [];
 
+  // Booking process states
+  selectedTrip: any = null;
+  selectedSeats: string[] = [];
+  passengerName = '';
+  passengerPhone = '';
+  passengerEmail = '';
+  acceptedTerms = false;
+  pickupPoint = '';
+  dropoffPoint = '';
+  promoCode = '';
+  appliedPromo: any = null;
+
   detailedSpots: { [key: string]: string[] } = {
     'TP. Hồ Chí Minh': ['Bến xe Miền Đông', 'Văn phòng Quận 5', 'Bến xe Miền Tây', 'Bến xe An Sương', 'Ngã Tư Ga'],
     'Đà Lạt': ['Bến xe Liên Tỉnh Đà Lạt', 'Văn phòng Đà Lạt', 'Chợ Đà Lạt', 'Hồ Tuyền Lâm', 'Đầu đèo Prenn'],
@@ -372,11 +384,176 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   selectTrip(trip: any) {
-    alert(`Bạn đã chọn chuyến đi lúc ${trip.depTime} (${trip.depLocation} → ${trip.arrLocation}) với giá ${trip.price.toLocaleString()}đ.`);
+    this.selectedTrip = trip;
+    this.selectedSeats = [];
+    this.passengerName = '';
+    this.passengerPhone = '';
+    this.passengerEmail = '';
+    this.acceptedTerms = false;
+    this.pickupPoint = '';
+    this.dropoffPoint = '';
+    this.promoCode = '';
+    this.appliedPromo = null;
+  }
+
+  cancelBooking() {
+    this.selectedTrip = null;
+  }
+
+  submitBooking() {
+    if (this.selectedSeats.length === 0) {
+      alert('Vui lòng chọn ít nhất một ghế.');
+      return;
+    }
+    if (!this.passengerName) {
+      alert('Vui lòng nhập họ tên người đi.');
+      return;
+    }
+    if (!this.passengerPhone) {
+      alert('Vui lòng nhập số điện thoại.');
+      return;
+    }
+    if (!this.acceptedTerms) {
+      alert('Vui lòng chấp nhận điều khoản và chính sách bảo mật.');
+      return;
+    }
+    if (!this.pickupPoint) {
+      alert('Vui lòng chọn điểm đón.');
+      return;
+    }
+    if (!this.dropoffPoint) {
+      alert('Vui lòng chọn điểm trả.');
+      return;
+    }
+
+    const total = this.getBookingTotal();
+    alert(`Đặt vé thành công!
+- Chuyến xe: ${this.selectedTrip.depLocation} → ${this.selectedTrip.arrLocation}
+- Nhà xe: VIAGO EXPRESS
+- Danh sách ghế: ${this.selectedSeats.join(', ')}
+- Khách hàng: ${this.passengerName} (${this.passengerPhone})
+- Tổng tiền thanh toán: ${total.toLocaleString()}đ
+
+Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
+
+    // Reset and go back to home page
+    this.showResults = false;
+    this.selectedTrip = null;
+  }
+
+  toggleSeat(seatId: string) {
+    if (this.isSeatSoldOut(seatId)) {
+      return;
+    }
+
+    const index = this.selectedSeats.indexOf(seatId);
+    if (index > -1) {
+      this.selectedSeats.splice(index, 1);
+    } else {
+      if (this.selectedSeats.length >= this.searchTicketCount) {
+        alert(`Bạn đã đăng ký đặt ${this.searchTicketCount} vé. Vui lòng bỏ chọn bớt ghế nếu muốn đổi ghế.`);
+        return;
+      }
+      this.selectedSeats.push(seatId);
+    }
+  }
+
+  isSeatSoldOut(seatId: string): boolean {
+    const soldOut = ['1B', '2B', '5A', '6A', '9B'];
+    return soldOut.includes(seatId);
+  }
+
+  isSeatSelected(seatId: string): boolean {
+    return this.selectedSeats.includes(seatId);
+  }
+
+  applyPromoCode(code: string) {
+    if (code === 'VIAGO2026') {
+      this.appliedPromo = {
+        code: 'VIAGO2026',
+        discountPercent: 10,
+        maxDiscount: 50000
+      };
+      this.promoCode = 'VIAGO2026';
+    } else if (code === 'BANMOI') {
+      this.appliedPromo = {
+        code: 'BANMOI',
+        discountAmount: 20000
+      };
+      this.promoCode = 'BANMOI';
+    } else {
+      alert('Mã giảm giá không hợp lệ.');
+      this.appliedPromo = null;
+    }
+  }
+
+  getBookingSubtotal(): number {
+    return this.selectedSeats.length * 390000;
+  }
+
+  getDiscountAmount(): number {
+    if (!this.appliedPromo) return 0;
+    const subtotal = this.getBookingSubtotal();
+    if (this.appliedPromo.discountPercent) {
+      const discount = (subtotal * this.appliedPromo.discountPercent) / 100;
+      return Math.min(discount, this.appliedPromo.maxDiscount);
+    }
+    if (this.appliedPromo.discountAmount) {
+      return this.appliedPromo.discountAmount;
+    }
+    return 0;
+  }
+
+  getBookingTotal(): number {
+    const total = this.getBookingSubtotal() - this.getDiscountAmount();
+    return Math.max(0, total);
+  }
+
+  getPickupPoints(): string[] {
+    if (!this.selectedTrip) return [];
+    return [
+      `Văn phòng ${this.searchDeparture}`,
+      `Bến xe trung tâm ${this.searchDeparture}`,
+      `Đón tận nơi nội thành ${this.searchDeparture}`
+    ];
+  }
+
+  getDropoffPoints(): string[] {
+    if (!this.selectedTrip) return [];
+    return [
+      `Văn phòng ${this.searchDestination}`,
+      `Bến xe trung tâm ${this.searchDestination}`,
+      `Trả tận nơi nội thành ${this.searchDestination}`
+    ];
+  }
+
+  getFormattedTripDate(): string {
+    if (!this.searchDepartureDate) return '';
+    const dateObj = new Date(this.searchDepartureDate);
+    const weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const weekday = weekdays[dateObj.getDay()];
+    const parts = this.searchDepartureDate.split('-');
+    if (parts.length === 3) {
+      return `${weekday}, ${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return this.searchDepartureDate;
+  }
+
+  getArrivalDate(): string {
+    if (!this.searchDepartureDate) return '';
+    const dateObj = new Date(this.searchDepartureDate);
+    dateObj.setDate(dateObj.getDate() + 1);
+    const weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const weekday = weekdays[dateObj.getDay()];
+    const yyyy = dateObj.getFullYear();
+    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const dd = String(dateObj.getDate()).padStart(2, '0');
+    return `${weekday}, ${dd}/${mm}/${yyyy}`;
   }
 
   goBackHome() {
     this.showResults = false;
+    this.selectedTrip = null;
   }
 
   private formatDate(date: Date): string {

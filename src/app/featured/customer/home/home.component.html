@@ -671,7 +671,8 @@
 
   <!-- SEARCH RESULTS VIEW (showResults is true) -->
   <ng-container *ngIf="showResults">
-    <!-- Results Banner & Booking Form Wrapper -->
+    <ng-container *ngIf="!selectedTrip">
+      <!-- Results Banner & Booking Form Wrapper -->
     <div class="relative w-full max-w-[1920px] mx-auto bg-slate-900 overflow-visible py-12 lg:py-16 px-4 md:px-8 xl:px-16"
          style="background-image: linear-gradient(to right, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.45)), url('/asset/images/customer/xe.png'); background-size: cover; background-position: center;">
       
@@ -1087,5 +1088,443 @@
         </div>
       </section>
     </div>
+    </ng-container>
+
+    <!-- IF A TRIP IS SELECTED, SHOW SEAT SELECTION & BOOKING SCREEN -->
+    <ng-container *ngIf="selectedTrip">
+      <!-- Header Banner -->
+      <div class="relative w-full max-w-[1920px] mx-auto bg-[#152C68] text-white py-4 px-4 md:px-8 xl:px-16 flex items-center justify-between shadow-md">
+        <button
+          (click)="cancelBooking()"
+          class="bg-transparent hover:bg-white/10 text-white border border-white/20 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer"
+        >
+          Quay lại
+        </button>
+        <div class="text-center flex-1">
+          <h2 class="text-lg md:text-xl font-black uppercase tracking-wide">
+            {{selectedTrip.depLocation}} - {{selectedTrip.arrLocation}}
+          </h2>
+          <p class="text-xs font-semibold text-slate-200 mt-0.5 opacity-90">
+            {{selectedTrip.depTime}} - {{getFormattedTripDate()}}
+          </p>
+        </div>
+        <div class="w-[80px]"></div> <!-- Spacer for balance -->
+      </div>
+
+      <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 flex flex-col lg:flex-row gap-8 text-left">
+        <!-- LEFT COLUMN: SEAT SELECTION & FORM INFO -->
+        <div class="flex-1 flex flex-col gap-6">
+          
+          <!-- BLOCK 1: CHỌN GHẾ -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+            <h3 class="text-base font-extrabold text-[#152C68] mb-6 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-[#FF6A00]">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21m0 0l-.813-5.096m.813 5.096h4.875M12 17.25a6.75 6.75 0 110-13.5 6.75 6.75 0 010 13.5z" />
+              </svg>
+              Chọn ghế
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <!-- Chú thích legend -->
+              <div class="flex flex-col gap-4 text-xs font-semibold text-gray-500 md:border-r border-slate-100 pr-4">
+                <span class="font-bold text-gray-700 text-sm mb-1 uppercase tracking-wide">Chú thích</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-6 h-6 rounded bg-slate-200 border border-slate-300"></div>
+                  <span>Đã bán</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-6 h-6 rounded bg-white border border-[#1A3A8A]"></div>
+                  <span>Còn trống</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-6 h-6 rounded bg-[#FF6A00] border border-[#FF6A00]"></div>
+                  <span>Đang chọn</span>
+                </div>
+                
+                <div class="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2 leading-relaxed text-gray-600">
+                  <p class="font-bold text-gray-700">Phòng đơn 2 (Khách người lớn):</p>
+                  <p class="text-[#FF6A00] font-black text-sm">390.000đ</p>
+                  <p class="font-bold text-gray-700 mt-2">Phòng đôi (2 khách người lớn hoặc 1 người lớn + 1 trẻ em dưới 6 tuổi):</p>
+                  <p class="text-[#FF6A00] font-black text-sm">600.000đ</p>
+                </div>
+              </div>
+
+              <!-- Tầng Dưới Grid -->
+              <div class="text-center">
+                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Dưới</span>
+                <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  <!-- Row 1 to 6 (left: odd, right: even) -->
+                  <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5]">
+                    <!-- Left seat (odd index: 1A, 3A, 5A, etc.) -->
+                    <button
+                      type="button"
+                      (click)="toggleSeat((row * 2 + 1) + 'A')"
+                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
+                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
+                      [class.text-white]="isSeatSelected((row * 2 + 1) + 'A')"
+                      [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                    >
+                      {{(row * 2 + 1)}}A
+                    </button>
+
+                    <!-- Right seat (even index: 2A, 4A, 6A, etc.) -->
+                    <button
+                      type="button"
+                      (click)="toggleSeat((row * 2 + 2) + 'A')"
+                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
+                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
+                      [class.text-white]="isSeatSelected((row * 2 + 2) + 'A')"
+                      [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                    >
+                      {{(row * 2 + 2)}}A
+                    </button>
+                  </ng-container>
+                </div>
+              </div>
+
+              <!-- Tầng Trên Grid -->
+              <div class="text-center">
+                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Trên</span>
+                <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  <!-- Row 1 to 5 (left: odd, right: even) -->
+                  <ng-container *ngFor="let row of [0, 1, 2, 3, 4]">
+                    <!-- Left seat (odd index: 1B, 3B, 5B, etc.) -->
+                    <button
+                      type="button"
+                      (click)="toggleSeat((row * 2 + 1) + 'B')"
+                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
+                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
+                      [class.text-white]="isSeatSelected((row * 2 + 1) + 'B')"
+                      [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                    >
+                      {{(row * 2 + 1)}}B
+                    </button>
+
+                    <!-- Right seat (even index: 2B, 4B, 6B, etc.) -->
+                    <button
+                      type="button"
+                      (click)="toggleSeat((row * 2 + 2) + 'B')"
+                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
+                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
+                      [class.text-white]="isSeatSelected((row * 2 + 2) + 'B')"
+                      [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                    >
+                      {{(row * 2 + 2)}}B
+                    </button>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOCK 2: THÔNG TIN KHÁCH HÀNG -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col md:flex-row gap-6">
+            <div class="flex-1 flex flex-col gap-4">
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-[#152C68] text-base">Thông tin khách hàng</span>
+                <a href="#" class="text-xs font-bold text-[#FF6A00] hover:underline uppercase tracking-wide">Điều khoản & Lưu ý</a>
+              </div>
+              
+              <!-- Họ tên -->
+              <div class="flex flex-col gap-1.5 text-left">
+                <label class="text-xs font-bold text-gray-700">Họ tên người đi *</label>
+                <input
+                  type="text"
+                  [(ngModel)]="passengerName"
+                  placeholder="Nhập họ và tên"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors"
+                />
+              </div>
+
+              <!-- Số điện thoại -->
+              <div class="flex flex-col gap-1.5 text-left">
+                <label class="text-xs font-bold text-gray-700">Số điện thoại *</label>
+                <input
+                  type="tel"
+                  [(ngModel)]="passengerPhone"
+                  placeholder="Nhập số điện thoại"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors"
+                />
+              </div>
+
+              <!-- Email -->
+              <div class="flex flex-col gap-1.5 text-left">
+                <label class="text-xs font-bold text-gray-700">Email</label>
+                <input
+                  type="email"
+                  [(ngModel)]="passengerEmail"
+                  placeholder="Nhập email"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors"
+                />
+              </div>
+
+              <!-- Chấp nhận điều khoản -->
+              <label class="flex items-start gap-2.5 mt-2 cursor-pointer text-xs font-semibold text-gray-500 leading-normal">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="acceptedTerms"
+                  class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00] mt-0.5"
+                />
+                <span>Chấp nhận điều khoản & chính sách bảo mật thông tin của VIAGO</span>
+              </label>
+            </div>
+
+            <!-- Note panel on the right -->
+            <div class="w-full md:w-[280px] bg-[#FFF8F2] border border-[#FFEADA] rounded-xl p-5 text-xs text-[#8A4B1A] leading-relaxed font-medium">
+              <span class="block font-bold text-sm text-[#FF6A00] mb-3">Quý khách vui lòng Đăng ký/Đăng nhập tài khoản để nhận chương trình khuyến mãi.</span>
+              <p class="mb-3">(*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít nhất 30 phút giờ xe khởi hành, mang theo vé điện tử được gửi từ hệ thống VIAGO. Vui lòng liên hệ Tổng đài <strong class="text-[#FF6A00]">19001234</strong> để được hỗ trợ.</p>
+              <p class="mb-3">(*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài trung chuyển <strong class="text-[#FF6A00]">1900565657</strong> trước khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới được.</p>
+              <p>(*) Nếu quý khách có nhu cầu di chuyển chặng đường ngắn hơn so với hành trình, vui lòng gọi Tổng đài <strong class="text-[#FF6A00]">1900565657</strong> để được hướng dẫn chính sách giá vé tốt nhất.</p>
+            </div>
+          </div>
+
+          <!-- BLOCK 3: THÔNG TIN ĐÓN TRẢ -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left">
+            <span class="block font-extrabold text-[#152C68] text-base mb-4">Thông tin đón trả</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm đón</label>
+                <div class="relative">
+                  <select
+                    [(ngModel)]="pickupPoint"
+                    class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled selected>Nhập tên điểm đón</option>
+                    <option *ngFor="let point of getPickupPoints()" [value]="point">{{point}}</option>
+                  </select>
+                  <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1.5">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm trả</label>
+                <div class="relative">
+                  <select
+                    [(ngModel)]="dropoffPoint"
+                    class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled selected>Nhập tên điểm trả</option>
+                    <option *ngFor="let point of getDropoffPoints()" [value]="point">{{point}}</option>
+                  </select>
+                  <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOCK 4: MÃ GIẢM GIÁ -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left">
+            <div class="flex items-center gap-3.5 mb-4 max-w-md">
+              <div class="relative flex-1">
+                <img src="/asset/images/customer/icon_ve.svg" class="w-4 h-4 object-contain absolute left-3 top-1/2 -translate-y-1/2" alt="coupon icon" />
+                <input
+                  type="text"
+                  [(ngModel)]="promoCode"
+                  placeholder="Nhập mã giảm giá"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                />
+              </div>
+              <button
+                (click)="applyPromoCode(promoCode)"
+                class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-6 py-3 rounded-lg transition-colors cursor-pointer"
+              >
+                Áp dụng
+              </button>
+            </div>
+
+            <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Mã giảm giá có sẵn</span>
+            <div class="flex flex-col gap-3">
+              <div class="border border-dashed border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4 bg-slate-50 hover:bg-slate-100/50 transition-colors">
+                <div class="flex items-center gap-3 text-left">
+                  <div class="w-10 h-10 rounded-lg bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] font-black text-sm">
+                    %
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-[#152C68] text-sm">VIAGO2026</h4>
+                    <p class="text-[10px] text-gray-400 font-semibold mt-0.5">Giảm 10% vé tối đa 50k</p>
+                  </div>
+                </div>
+                <button
+                  (click)="applyPromoCode('VIAGO2026')"
+                  class="text-xs font-bold text-[#FF6A00] hover:underline cursor-pointer"
+                >
+                  Dùng ngay
+                </button>
+              </div>
+
+              <div class="border border-dashed border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4 bg-slate-50 hover:bg-slate-100/50 transition-colors">
+                <div class="flex items-center gap-3 text-left">
+                  <div class="w-10 h-10 rounded-lg bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] font-black text-sm">
+                    $
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-[#152C68] text-sm">BANMOI</h4>
+                    <p class="text-[10px] text-gray-400 font-semibold mt-0.5">Giảm 20k cho khách mới</p>
+                  </div>
+                </div>
+                <button
+                  (click)="applyPromoCode('BANMOI')"
+                  class="text-xs font-bold text-[#FF6A00] hover:underline cursor-pointer"
+                >
+                  Dùng ngay
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOCK 5: FOOTER ACTION BLOCK -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span class="text-xl font-bold text-gray-700">
+              TỔNG TIỀN: <span class="text-2xl font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+            </span>
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <button
+                (click)="cancelBooking()"
+                class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 text-gray-700 text-sm font-bold px-8 py-3 rounded-lg transition-colors cursor-pointer"
+              >
+                Hủy
+              </button>
+              <button
+                (click)="submitBooking()"
+                class="flex-1 sm:flex-initial bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-12 py-3 rounded-lg shadow-md transition-colors cursor-pointer"
+              >
+                Thanh toán
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: TRIP INFO SUMMARY -->
+        <aside class="w-full lg:w-[320px] flex-shrink-0 flex flex-col gap-6">
+          <!-- Ticket info widget -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden text-left">
+            <!-- Widget Header -->
+            <div class="bg-[#152C68] text-white px-5 py-4 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" />
+              </svg>
+              <span class="font-extrabold text-sm uppercase tracking-wider">Thông tin chuyến đi</span>
+            </div>
+
+            <div class="p-5 flex flex-col gap-5 text-sm font-semibold">
+              <!-- Timeline details -->
+              <div class="relative flex flex-col gap-6 pl-6 border-l-2 border-dashed border-slate-200">
+                <!-- Point 1 -->
+                <div class="relative">
+                  <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-white border-2 border-[#152C68] flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 rounded-full bg-[#152C68]"></div>
+                  </div>
+                  <h4 class="font-black text-[#152C68] text-sm">{{selectedTrip.depTime}} - {{getFormattedTripDate()}}</h4>
+                  <p class="text-xs text-gray-500 font-semibold mt-0.5">{{selectedTrip.depLocation}}</p>
+                </div>
+
+                <!-- Point 2 -->
+                <div class="relative">
+                  <div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-white border-2 border-[#FF6A00] flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 rounded-full bg-[#FF6A00]"></div>
+                  </div>
+                  <h4 class="font-black text-[#152C68] text-sm">{{selectedTrip.arrTime}} - {{getArrivalDate()}}</h4>
+                  <p class="text-xs text-gray-500 font-semibold mt-0.5">{{selectedTrip.arrLocation}}</p>
+                </div>
+              </div>
+
+              <!-- Route parameters -->
+              <div class="border-t border-slate-100 pt-4 flex flex-col gap-2.5 text-xs font-semibold text-gray-500">
+                <div class="flex justify-between">
+                  <span>Tuyến đường:</span>
+                  <span class="text-[#152C68] font-bold">{{searchDeparture}} - {{searchDestination}}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Nhà xe:</span>
+                  <span class="text-[#152C68] font-bold">VIAGO EXPRESS</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Số lượng ghế:</span>
+                  <span class="text-[#152C68] font-bold">{{selectedSeats.length}}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Số ghế:</span>
+                  <span class="text-[#152C68] font-bold">{{selectedSeats.join(', ') || 'Chưa chọn'}}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Price detail widget -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden text-left text-sm font-semibold">
+            <div class="bg-slate-50 border-b border-slate-100 px-5 py-4">
+              <span class="font-extrabold text-sm text-[#152C68] uppercase tracking-wider">Chi tiết giá</span>
+            </div>
+
+            <div class="p-5 flex flex-col gap-3">
+              <div class="flex justify-between text-xs text-gray-500">
+                <span>Giá vé ({{selectedSeats.length}} ghế):</span>
+                <span class="text-gray-700 font-bold">{{getBookingSubtotal() | number:'1.0-0'}}đ</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-500" *ngIf="getDiscountAmount() > 0">
+                <span>Giảm giá:</span>
+                <span class="text-green-600 font-bold">-{{getDiscountAmount() | number:'1.0-0'}}đ</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-500">
+                <span>Phí thanh toán:</span>
+                <span class="text-gray-700 font-bold">0đ</span>
+              </div>
+              <div class="border-t border-slate-100 pt-3 flex justify-between items-center text-sm font-bold mt-1">
+                <span class="text-gray-700">Tổng cộng</span>
+                <span class="text-lg font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Promo Banner Image widget -->
+          <div class="rounded-xl overflow-hidden shadow-sm relative h-[200px] bg-slate-900">
+            <img src="/asset/images/customer/xe.png" alt="Promo banner" class="w-full h-full object-cover opacity-90" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent p-5 flex flex-col justify-end text-left text-white">
+              <h4 class="text-base font-black tracking-wide leading-tight">HÀNH TRÌNH ÊM ÁI<br>CÙNG VIAGO</h4>
+              <p class="text-[10px] font-semibold text-slate-200 mt-1 opacity-80">Đồng hành trên mọi nẻo đường cùng bạn.</p>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+    </ng-container>
   </ng-container>
 </main>
