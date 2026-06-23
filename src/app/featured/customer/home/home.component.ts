@@ -65,6 +65,31 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Generated list of trips
   trips: any[] = [];
 
+  detailedSpots: { [key: string]: string[] } = {
+    'TP. Hồ Chí Minh': ['Bến xe Miền Đông', 'Văn phòng Quận 5', 'Bến xe Miền Tây', 'Bến xe An Sương', 'Ngã Tư Ga'],
+    'Đà Lạt': ['Bến xe Liên Tỉnh Đà Lạt', 'Văn phòng Đà Lạt', 'Chợ Đà Lạt', 'Hồ Tuyền Lâm', 'Đầu đèo Prenn'],
+    'Nha Trang': ['Bến xe phía Nam Nha Trang', 'Văn phòng Nha Trang', 'Cảng Cầu Đá', 'Ngã 3 Nhà Máy Sợi', 'Bãi Dài Nha Trang'],
+    'Cần Thơ': ['Bến xe Trung tâm Cần Thơ', 'Văn phòng Cần Thơ', 'Đại học Cần Thơ', 'Cầu Hưng Lợi', 'Cái Răng'],
+    'Vũng Tàu': ['Bến xe Vũng Tàu', 'Văn phòng Vũng Tàu', 'Bến đá Vũng Tàu', 'Bãi Sau', 'Bãi Trước'],
+    'Đà Nẵng': ['Bến xe Trung tâm Đà Nẵng', 'Văn phòng Đà Nẵng', 'Cầu Rồng', 'Ngũ Hành Sơn', 'Liên Chiểu'],
+    'Rạch Giá': ['Bến xe Rạch Giá', 'Văn phòng Rạch Giá', 'Cổng chào Rạch Giá', 'Cầu Cái Sắn', 'Rạch Sỏi'],
+    'Buôn Ma Thuột': ['Bến xe phía Nam BMT', 'Văn phòng BMT', 'Ngã sáu BMT', 'Đại học Tây Nguyên', 'Bến xe phía Bắc BMT'],
+    'Bình Định': ['Bến xe Quy Nhơn', 'Văn phòng Quy Nhơn', 'Bến xe Bồng Sơn', 'Ngã ba Phú Tài', 'Tuy Phước'],
+    'Quy Nhơn': ['Bến xe Quy Nhơn', 'Văn phòng Quy Nhơn', 'Ngã ba Phú Tài', 'Ghềnh Ráng', 'Nhơn Hội']
+  };
+
+  getDetailedSpot(city: string, index: number): string {
+    if (!city) return '';
+    const spots = this.detailedSpots[city] || [
+      `Bến xe ${city}`,
+      `Văn phòng ${city}`,
+      `Trạm dừng ${city}`,
+      `Nội thành ${city}`,
+      `Trung tâm ${city}`
+    ];
+    return spots[index % spots.length];
+  }
+
 
 
   allCities = [
@@ -212,8 +237,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         type: 'Limousine',
         availableSeats: 15,
         price: 390000,
-        depLocation: this.searchDeparture,
-        arrLocation: this.searchDestination,
+        depLocation: this.getDetailedSpot(this.searchDeparture, 0),
+        arrLocation: this.getDetailedSpot(this.searchDestination, 0),
         floor: 'lower',
         seatGroup: 'front',
         date: dateStr
@@ -225,8 +250,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         type: 'Limousine',
         availableSeats: 23,
         price: 390000,
-        depLocation: this.searchDeparture,
-        arrLocation: this.searchDestination,
+        depLocation: this.getDetailedSpot(this.searchDeparture, 1),
+        arrLocation: this.getDetailedSpot(this.searchDestination, 1),
         floor: 'upper',
         seatGroup: 'middle',
         date: dateStr
@@ -238,8 +263,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         type: 'Limousine VIP',
         availableSeats: 5,
         price: 390000,
-        depLocation: this.searchDeparture,
-        arrLocation: this.searchDestination,
+        depLocation: this.getDetailedSpot(this.searchDeparture, 2),
+        arrLocation: this.getDetailedSpot(this.searchDestination, 2),
         floor: 'lower',
         seatGroup: 'front',
         date: dateStr
@@ -251,8 +276,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         type: 'Limousine',
         availableSeats: 23,
         price: 390000,
-        depLocation: this.searchDeparture,
-        arrLocation: this.searchDestination,
+        depLocation: this.getDetailedSpot(this.searchDeparture, 3),
+        arrLocation: this.getDetailedSpot(this.searchDestination, 3),
         floor: 'upper',
         seatGroup: 'back',
         date: dateStr
@@ -264,8 +289,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         type: 'Limousine',
         availableSeats: 9,
         price: 390000,
-        depLocation: this.searchDeparture,
-        arrLocation: this.searchDestination,
+        depLocation: this.getDetailedSpot(this.searchDeparture, 4),
+        arrLocation: this.getDetailedSpot(this.searchDestination, 4),
         floor: 'lower',
         seatGroup: 'middle',
         date: dateStr
