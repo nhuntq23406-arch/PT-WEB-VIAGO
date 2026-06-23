@@ -1310,38 +1310,162 @@
           <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left">
             <span class="block font-extrabold text-[#152C68] text-base mb-4">Thông tin đón trả</span>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="flex flex-col gap-1.5">
+              <!-- Điểm đón -->
+              <div class="flex flex-col gap-1.5 relative">
                 <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm đón</label>
-                <div class="relative">
-                  <select
-                    [(ngModel)]="pickupPoint"
-                    class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled selected>Nhập tên điểm đón</option>
-                    <option *ngFor="let point of getPickupPoints()" [value]="point">{{point}}</option>
-                  </select>
-                  <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <div 
+                  (click)="togglePickupDropdown(); $event.stopPropagation()"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                >
+                  <span class="truncate">{{ pickupPoint || 'Nhập tên điểm đón' }}</span>
+                  <div class="text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showPickupDropdown}">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
                   </div>
                 </div>
+
+                <!-- Pickup Dropdown Overlay -->
+                <div *ngIf="showPickupDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                  <!-- Search input inside dropdown -->
+                  <div class="relative" (click)="$event.stopPropagation()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                    </svg>
+                    <input
+                      type="text"
+                      [(ngModel)]="searchPickupText"
+                      placeholder="Tìm kiếm địa điểm đón..."
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                    />
+                  </div>
+                  <!-- Options list -->
+                  <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                    <button
+                      *ngFor="let point of getFilteredPickupPoints()"
+                      (click)="selectPickupPoint(point)"
+                      class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                    >
+                      <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                            [ngClass]="pickupPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                        <span *ngIf="pickupPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                      </span>
+                      <div class="flex flex-col text-left">
+                        <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                        <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                      </div>
+                    </button>
+                    <div *ngIf="getFilteredPickupPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                      Không tìm thấy địa điểm nào
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div class="flex flex-col gap-1.5">
+              <!-- Điểm trả -->
+              <div class="flex flex-col gap-1.5 relative">
                 <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm trả</label>
-                <div class="relative">
-                  <select
-                    [(ngModel)]="dropoffPoint"
-                    class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled selected>Nhập tên điểm trả</option>
-                    <option *ngFor="let point of getDropoffPoints()" [value]="point">{{point}}</option>
-                  </select>
-                  <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                <div 
+                  (click)="toggleDropoffDropdown(); $event.stopPropagation()"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                >
+                  <span class="truncate">{{ dropoffPoint || 'Nhập tên điểm trả' }}</span>
+                  <div class="text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showDropoffDropdown}">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
+                  </div>
+                </div>
+
+                <!-- Dropoff Dropdown Overlay -->
+                <div *ngIf="showDropoffDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                  <!-- Search input inside dropdown -->
+                  <div class="relative" (click)="$event.stopPropagation()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                    </svg>
+                    <input
+                      type="text"
+                      [(ngModel)]="searchDropoffText"
+                      placeholder="Tìm kiếm địa điểm trả..."
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                    />
+                  </div>
+                  <!-- Options list -->
+                  <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                    <button
+                      *ngFor="let point of getFilteredDropoffPoints()"
+                      (click)="selectDropoffPoint(point)"
+                      class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                    >
+                      <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                            [ngClass]="dropoffPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                        <span *ngIf="dropoffPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                      </span>
+                      <div class="flex flex-col text-left">
+                        <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                        <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                      </div>
+                    </button>
+                    <div *ngIf="getFilteredDropoffPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                      Không tìm thấy địa điểm nào
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Selection details panel -->
+            <div *ngIf="pickupPoint || dropoffPoint" class="mt-5 p-4 bg-slate-50 border border-slate-100 rounded-xl flex flex-col gap-4 text-left">
+              <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+                <span class="text-xs font-extrabold text-[#152C68] uppercase tracking-wider">Chi tiết địa điểm đã chọn</span>
+              </div>
+              
+              <div class="flex flex-col gap-3.5">
+                <!-- Pickup spot details -->
+                <div *ngIf="pickupPoint" class="flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 flex items-center justify-between gap-4">
+                    <div class="flex flex-col">
+                      <span class="text-xs font-extrabold text-[#152C68]">Điểm đón:</span>
+                      <span class="text-xs font-semibold text-gray-600 mt-0.5">{{pickupPoint}}</span>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                      Xem bản đồ
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Divider line -->
+                <div *ngIf="pickupPoint && dropoffPoint" class="border-t border-slate-200/50"></div>
+
+                <!-- Dropoff spot details -->
+                <div *ngIf="dropoffPoint" class="flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#152C68]/10 flex items-center justify-center text-[#152C68] flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 flex items-center justify-between gap-4">
+                    <div class="flex flex-col">
+                      <span class="text-xs font-extrabold text-[#152C68]">Điểm trả:</span>
+                      <span class="text-xs font-semibold text-gray-600 mt-0.5">{{dropoffPoint}}</span>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                      Xem bản đồ
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
+                    </a>
                   </div>
                 </div>
               </div>

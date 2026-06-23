@@ -81,6 +81,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   toastType: 'success' | 'warning' | '' = '';
   showToast = false;
   toastTimeout: any = null;
+  showPickupDropdown = false;
+  showDropoffDropdown = false;
+  searchPickupText = '';
+  searchDropoffText = '';
 
   detailedSpots: { [key: string]: string[] } = {
     'TP. Hồ Chí Minh': ['Bến xe Miền Đông', 'Văn phòng Quận 5', 'Bến xe Miền Tây', 'Bến xe An Sương', 'Ngã Tư Ga'],
@@ -413,6 +417,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showToast = false;
     this.toastMessage = '';
     this.toastType = '';
+    this.showPickupDropdown = false;
+    this.showDropoffDropdown = false;
+    this.searchPickupText = '';
+    this.searchDropoffText = '';
     if (this.toastTimeout) {
       clearTimeout(this.toastTimeout);
     }
@@ -554,22 +562,81 @@ export class HomeComponent implements OnInit, OnDestroy {
     return Math.max(0, total);
   }
 
-  getPickupPoints(): string[] {
+  addMinutesToTime(timeStr: string, minsToAdd: number): string {
+    if (!timeStr) return '';
+    const parts = timeStr.split(':');
+    if (parts.length < 2) return timeStr;
+    let hours = parseInt(parts[0], 10);
+    let minutes = parseInt(parts[1], 10);
+    minutes += minsToAdd;
+    hours += Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    hours = hours % 24;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+
+  getPickupPointsList(): { time: string, name: string }[] {
     if (!this.selectedTrip) return [];
-    return [
+    const spots = this.detailedSpots[this.searchDeparture] || [
       `Văn phòng ${this.searchDeparture}`,
       `Bến xe trung tâm ${this.searchDeparture}`,
       `Đón tận nơi nội thành ${this.searchDeparture}`
     ];
+    return spots.map((spot, index) => {
+      return {
+        time: this.addMinutesToTime(this.selectedTrip.depTime, index * 20),
+        name: spot
+      };
+    });
   }
 
-  getDropoffPoints(): string[] {
+  getDropoffPointsList(): { time: string, name: string }[] {
     if (!this.selectedTrip) return [];
-    return [
+    const spots = this.detailedSpots[this.searchDestination] || [
       `Văn phòng ${this.searchDestination}`,
       `Bến xe trung tâm ${this.searchDestination}`,
       `Trả tận nơi nội thành ${this.searchDestination}`
     ];
+    return spots.map((spot, index) => {
+      return {
+        time: this.addMinutesToTime(this.selectedTrip.arrTime, index * 20),
+        name: spot
+      };
+    });
+  }
+
+  getFilteredPickupPoints(): { time: string, name: string }[] {
+    const list = this.getPickupPointsList();
+    if (!this.searchPickupText) return list;
+    const query = this.searchPickupText.toLowerCase();
+    return list.filter(p => p.name.toLowerCase().includes(query) || p.time.includes(query));
+  }
+
+  getFilteredDropoffPoints(): { time: string, name: string }[] {
+    const list = this.getDropoffPointsList();
+    if (!this.searchDropoffText) return list;
+    const query = this.searchDropoffText.toLowerCase();
+    return list.filter(p => p.name.toLowerCase().includes(query) || p.time.includes(query));
+  }
+
+  selectPickupPoint(point: { time: string, name: string }) {
+    this.pickupPoint = `${point.time} - ${point.name}`;
+    this.showPickupDropdown = false;
+  }
+
+  selectDropoffPoint(point: { time: string, name: string }) {
+    this.dropoffPoint = `${point.time} - ${point.name}`;
+    this.showDropoffDropdown = false;
+  }
+
+  togglePickupDropdown() {
+    this.showPickupDropdown = !this.showPickupDropdown;
+    this.showDropoffDropdown = false;
+  }
+
+  toggleDropoffDropdown() {
+    this.showDropoffDropdown = !this.showDropoffDropdown;
+    this.showPickupDropdown = false;
   }
 
   getFormattedTripDate(): string {
@@ -598,6 +665,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   goBackHome() {
     history.back();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    this.showPickupDropdown = false;
+    this.showDropoffDropdown = false;
   }
 
   @HostListener('window:popstate', ['$event'])
