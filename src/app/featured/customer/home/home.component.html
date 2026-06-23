@@ -1368,6 +1368,23 @@
               </button>
             </div>
 
+            <!-- Applied Promo Alert Info -->
+            <div *ngIf="appliedPromo" class="mb-4 p-3 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center justify-between gap-3 text-left">
+              <div class="flex items-center gap-2">
+                <span class="flex-shrink-0 w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-bold text-emerald-800">
+                  Mã giảm giá đã áp dụng: 
+                  <span class="bg-emerald-100 px-1.5 py-0.5 rounded text-emerald-900 font-mono text-[10px]">{{appliedPromo.code}}</span>
+                  <span class="font-medium text-emerald-700 ml-1">
+                    (Giảm {{appliedPromo.discountPercent ? appliedPromo.discountPercent + '%' : (appliedPromo.discountAmount | number:'1.0-0') + 'đ'}})
+                  </span>
+                </span>
+              </div>
+              <button (click)="removePromoCode()" class="text-emerald-600 hover:text-emerald-800 text-xs font-black cursor-pointer bg-transparent border-0">
+                Hủy
+              </button>
+            </div>
+
             <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Mã giảm giá có sẵn</span>
             <div class="flex flex-col gap-3">
               <div class="border border-dashed border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4 bg-slate-50 hover:bg-slate-100/50 transition-colors">
@@ -1410,8 +1427,12 @@
 
           <!-- BLOCK 5: FOOTER ACTION BLOCK -->
           <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span class="text-xl font-bold text-gray-700">
-              TỔNG TIỀN: <span class="text-2xl font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+            <span class="text-xl font-bold text-gray-700 flex items-baseline gap-2">
+              TỔNG TIỀN:
+              <ng-container *ngIf="getDiscountAmount() > 0">
+                <span class="line-through text-sm text-gray-400 font-semibold">{{getBookingSubtotal() | number:'1.0-0'}}đ</span>
+              </ng-container>
+              <span class="text-2xl font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
             </span>
             <div class="flex items-center gap-3 w-full sm:w-auto">
               <button

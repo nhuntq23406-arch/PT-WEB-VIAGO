@@ -503,6 +503,11 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
     }
   }
 
+  removePromoCode() {
+    this.appliedPromo = null;
+    this.promoCode = '';
+  }
+
   getBookingSubtotal(): number {
     return this.selectedSeats.length * 390000;
   }
