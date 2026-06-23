@@ -28,6 +28,43 @@ export class HomeComponent implements OnInit, OnDestroy {
   returnDate = '';
   ticketCount = 1;
 
+  // Search results visibility
+  showResults = false;
+
+  // Search parameters copy for results view
+  searchTripType: 'one-way' | 'round-trip' = 'one-way';
+  searchDeparture = '';
+  searchDestination = '';
+  searchDepartureDate = '';
+  searchReturnDate = '';
+  searchTicketCount = 1;
+
+  // Filter states
+  timeFilters = {
+    early: false,     // 00:00 - 06:00
+    morning: false,   // 06:00 - 12:00
+    afternoon: false, // 12:00 - 18:00
+    night: false      // 18:00 - 24:00
+  };
+
+  selectedFloor: 'lower' | 'upper' | '' = '';
+
+  seatFilters = {
+    front: false,     // 1-4
+    middle: false,    // 5-8
+    back: false       // 9-12
+  };
+
+  priceFilters = {
+    under300: false,  // < 300.000đ
+    over300: false    // >= 300.000đ
+  };
+
+  sortBy: 'earliest' | 'latest' | 'cheapest' = 'earliest';
+
+  // Generated list of trips
+  trips: any[] = [];
+
 
 
   allCities = [
@@ -142,20 +179,179 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const searchParams = {
-      tripType: this.tripType,
-      departure: this.departure,
-      destination: this.destination,
-      departureDate: this.departureDate,
-      returnDate: this.tripType === 'round-trip' ? this.returnDate : null,
-      ticketCount: this.ticketCount
-    };
+    // Save search params
+    this.searchTripType = this.tripType;
+    this.searchDeparture = this.departure;
+    this.searchDestination = this.destination;
+    this.searchDepartureDate = this.departureDate;
+    this.searchReturnDate = this.returnDate;
+    this.searchTicketCount = this.ticketCount;
 
-    alert(`Tìm kiếm vé xe VIAGO:
-- Loại vé: ${this.tripType === 'one-way' ? 'Một chiều' : 'Khứ hồi'}
-- Hành trình: ${searchParams.departure} → ${searchParams.destination}
-- Ngày đi: ${searchParams.departureDate}
-${searchParams.returnDate ? `- Ngày về: ${searchParams.returnDate}\n` : ''}- Số vé: ${searchParams.ticketCount}`);
+    // Generate mock trips
+    this.generateTrips();
+
+    // Show results
+    this.showResults = true;
+  }
+
+  generateTrips() {
+    // Format departure date to display
+    let dateStr = '';
+    if (this.searchDepartureDate) {
+      const parts = this.searchDepartureDate.split('-');
+      if (parts.length === 3) {
+        dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+    }
+
+    this.trips = [
+      {
+        depTime: '19:30',
+        duration: '9 giờ 40 phút',
+        arrTime: '05:10',
+        type: 'Limousine',
+        availableSeats: 15,
+        price: 390000,
+        depLocation: this.searchDeparture,
+        arrLocation: this.searchDestination,
+        floor: 'lower',
+        seatGroup: 'front',
+        date: dateStr
+      },
+      {
+        depTime: '20:00',
+        duration: '9 giờ 30 phút',
+        arrTime: '05:30',
+        type: 'Limousine',
+        availableSeats: 23,
+        price: 390000,
+        depLocation: this.searchDeparture,
+        arrLocation: this.searchDestination,
+        floor: 'upper',
+        seatGroup: 'middle',
+        date: dateStr
+      },
+      {
+        depTime: '17:15',
+        duration: '11 giờ 57 phút',
+        arrTime: '05:12',
+        type: 'Limousine VIP',
+        availableSeats: 5,
+        price: 390000,
+        depLocation: this.searchDeparture,
+        arrLocation: this.searchDestination,
+        floor: 'lower',
+        seatGroup: 'front',
+        date: dateStr
+      },
+      {
+        depTime: '16:00',
+        duration: '13 giờ 10 phút',
+        arrTime: '05:10',
+        type: 'Limousine',
+        availableSeats: 23,
+        price: 390000,
+        depLocation: this.searchDeparture,
+        arrLocation: this.searchDestination,
+        floor: 'upper',
+        seatGroup: 'back',
+        date: dateStr
+      },
+      {
+        depTime: '19:05',
+        duration: '11 giờ 15 phút',
+        arrTime: '06:20',
+        type: 'Limousine',
+        availableSeats: 9,
+        price: 390000,
+        depLocation: this.searchDeparture,
+        arrLocation: this.searchDestination,
+        floor: 'lower',
+        seatGroup: 'middle',
+        date: dateStr
+      }
+    ];
+  }
+
+  getFilteredTrips() {
+    let result = [...this.trips];
+
+    // Filter by Time
+    const hasTimeFilter = this.timeFilters.early || this.timeFilters.morning || this.timeFilters.afternoon || this.timeFilters.night;
+    if (hasTimeFilter) {
+      result = result.filter(trip => {
+        const hour = parseInt(trip.depTime.split(':')[0], 10);
+        if (this.timeFilters.early && hour >= 0 && hour < 6) return true;
+        if (this.timeFilters.morning && hour >= 6 && hour < 12) return true;
+        if (this.timeFilters.afternoon && hour >= 12 && hour < 18) return true;
+        if (this.timeFilters.night && hour >= 18 && hour < 24) return true;
+        return false;
+      });
+    }
+
+    // Filter by Floor
+    if (this.selectedFloor) {
+      result = result.filter(trip => trip.floor === this.selectedFloor);
+    }
+
+    // Filter by Seat Group
+    const hasSeatFilter = this.seatFilters.front || this.seatFilters.middle || this.seatFilters.back;
+    if (hasSeatFilter) {
+      result = result.filter(trip => {
+        if (this.seatFilters.front && trip.seatGroup === 'front') return true;
+        if (this.seatFilters.middle && trip.seatGroup === 'middle') return true;
+        if (this.seatFilters.back && trip.seatGroup === 'back') return true;
+        return false;
+      });
+    }
+
+    // Filter by Price
+    const hasPriceFilter = this.priceFilters.under300 || this.priceFilters.over300;
+    if (hasPriceFilter) {
+      result = result.filter(trip => {
+        if (this.priceFilters.under300 && trip.price < 300000) return true;
+        if (this.priceFilters.over300 && trip.price >= 300000) return true;
+        return false;
+      });
+    }
+
+    // Sorting
+    if (this.sortBy === 'earliest') {
+      result.sort((a, b) => a.depTime.localeCompare(b.depTime));
+    } else if (this.sortBy === 'latest') {
+      result.sort((a, b) => b.depTime.localeCompare(a.depTime));
+    } else if (this.sortBy === 'cheapest') {
+      result.sort((a, b) => a.price - b.price);
+    }
+
+    return result;
+  }
+
+  resetFilters() {
+    this.timeFilters = { early: false, morning: false, afternoon: false, night: false };
+    this.selectedFloor = '';
+    this.seatFilters = { front: false, middle: false, back: false };
+    this.priceFilters = { under300: false, over300: false };
+  }
+
+  selectFloor(floor: 'lower' | 'upper') {
+    if (this.selectedFloor === floor) {
+      this.selectedFloor = ''; // toggle off
+    } else {
+      this.selectedFloor = floor;
+    }
+  }
+
+  setSortBy(sort: 'earliest' | 'latest' | 'cheapest') {
+    this.sortBy = sort;
+  }
+
+  selectTrip(trip: any) {
+    alert(`Bạn đã chọn chuyến đi lúc ${trip.depTime} (${trip.depLocation} → ${trip.arrLocation}) với giá ${trip.price.toLocaleString()}đ.`);
+  }
+
+  goBackHome() {
+    this.showResults = false;
   }
 
   private formatDate(date: Date): string {

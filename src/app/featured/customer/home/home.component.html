@@ -1,5 +1,6 @@
 <main class="min-h-screen bg-slate-50 overflow-x-hidden">
-  <!-- Hero Section Wrapper -->
+  <ng-container *ngIf="!showResults">
+    <!-- Hero Section Wrapper -->
   <div class="relative w-full max-w-[1920px] h-[300px] md:h-[400px] lg:h-[450px] mx-auto overflow-hidden bg-slate-900">
     <div class="relative w-full h-full">
       <!-- Slides -->
@@ -666,4 +667,425 @@
       </div>
     </div>
   </section>
+  </ng-container>
+
+  <!-- SEARCH RESULTS VIEW (showResults is true) -->
+  <ng-container *ngIf="showResults">
+    <!-- Results Banner & Booking Form Wrapper -->
+    <div class="relative w-full max-w-[1920px] mx-auto bg-slate-900 overflow-visible py-12 lg:py-16 px-4 md:px-8 xl:px-16"
+         style="background-image: linear-gradient(to right, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.45)), url('/asset/images/customer/xe.png'); background-size: cover; background-position: center;">
+      
+      <!-- Text content -->
+      <div class="max-w-[1200px] mx-auto w-full text-white mb-8 text-left">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+          Hành trình sang trọng,<br>
+          <span class="text-[#FF6A00]">Tiện nghi đẳng cấp</span>
+        </h1>
+        <p class="text-sm md:text-base text-slate-200 mt-3 max-w-[640px] leading-relaxed font-medium opacity-90">
+          Trải nghiệm dịch vụ vận chuyển hàng đầu với dòng xe Limousine tốt nhất.
+          Cam kết an toàn, đúng giờ và chất lượng phục vụ 5 sao.
+        </p>
+      </div>
+
+      <!-- Booking Form Card (embedded inside results) -->
+      <div class="max-w-[1200px] mx-auto w-full bg-white rounded-xl shadow-lg border border-slate-100 p-6 md:p-8 flex flex-col justify-between overflow-visible relative z-20">
+        <!-- Radio Ticket Types -->
+        <div class="flex items-center gap-6 mb-4">
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="resultTripType"
+              value="one-way"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'one-way'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'one-way'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Một chiều</span>
+          </label>
+
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="resultTripType"
+              value="round-trip"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'round-trip'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'round-trip'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Khứ hồi</span>
+          </label>
+        </div>
+
+        <!-- Form Fields Grid -->
+        <div class="flex flex-col lg:flex-row items-end gap-3.5 w-full overflow-visible">
+          <!-- Departure Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              id="resultDeparture"
+              label="Điểm đi"
+              placeholder="Nhập điểm đi"
+              iconPath="/asset/images/customer/icon_diem_di.svg"
+              [items]="departureCities"
+              [value]="departure"
+              (valueChange)="onDepartureChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+          <!-- Swap Icon -->
+          <div class="flex justify-center items-center py-2 lg:py-0 self-center lg:self-end">
+            <button
+              type="button"
+              (click)="swapLocations()"
+              class="w-10 h-10 rounded-full border border-slate-200 hover:border-[#FF6A00] bg-white hover:bg-slate-50 flex items-center justify-center transition-colors shadow-sm active:scale-95 cursor-pointer"
+            >
+              <img src="/asset/images/customer/icon_dao_chieu.svg" class="w-5 h-5 object-contain" alt="swap icon" />
+            </button>
+          </div>
+
+          <!-- Destination Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              id="resultDestination"
+              label="Điểm đến"
+              placeholder="Nhập điểm đến"
+              iconPath="/asset/images/customer/icon_diem_den.svg"
+              [items]="destinationCities"
+              [value]="destination"
+              (valueChange)="onDestinationChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+          <!-- Departure Date -->
+          <div class="w-full lg:w-[180px] text-left">
+            <label class="block text-xs font-extrabold text-[#00236F] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <img src="/asset/images/customer/icon_lich.svg" class="w-3.5 h-3.5 object-contain" alt="calendar icon" />
+              Ngày đi
+            </label>
+            <div class="relative">
+              <input
+                type="date"
+                [(ngModel)]="departureDate"
+                class="w-full bg-[#F4F6FA] border border-[#E2E8F0] rounded-lg px-3 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors cursor-pointer"
+              />
+            </div>
+          </div>
+
+          <!-- Ticket Count Selector -->
+          <div class="w-full lg:w-[140px] text-left">
+            <label class="block text-xs font-extrabold text-[#00236F] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <img src="/asset/images/customer/icon_ve.svg" class="w-3.5 h-3.5 object-contain" alt="ticket icon" />
+              Số vé
+            </label>
+            <div class="relative">
+              <select
+                [(ngModel)]="ticketCount"
+                class="w-full bg-[#F4F6FA] border border-[#E2E8F0] rounded-lg px-3 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors cursor-pointer appearance-none"
+              >
+                <option [value]="1">1 vé</option>
+                <option [value]="2">2 vé</option>
+                <option [value]="3">3 vé</option>
+                <option [value]="4">4 vé</option>
+                <option [value]="5">5 vé</option>
+              </select>
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Searches tag inside booking form -->
+        <div class="flex flex-wrap items-center gap-3 mt-4 text-sm font-semibold self-start text-left">
+          <span class="text-[#FF6A00] font-bold text-xs">Tìm kiếm gần đây:</span>
+          <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm cursor-pointer hover:bg-slate-200 transition-colors">
+            {{searchDeparture}} &rarr; {{searchDestination}} {{searchDepartureDate | date:'dd/MM/yyyy'}}
+          </span>
+        </div>
+
+        <!-- Search CTA Button -->
+        <div class="flex justify-center mt-4">
+          <button
+            type="button"
+            (click)="onSubmitSearch()"
+            class="bg-[#FF6A00] hover:bg-[#FF8126] active:bg-[#D95800] text-white font-bold text-base px-16 py-3.5 rounded-lg transition-all shadow-md hover:shadow-lg hover:-translate-y-[1px] active:translate-y-0 tracking-wide cursor-pointer w-full md:w-auto"
+          >
+            TÌM KIẾM
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID CONTAINER FOR FILTERS AND RESULTS -->
+    <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 flex flex-col lg:flex-row gap-8">
+      
+      <!-- LEFT COLUMN: SEARCH FILTER -->
+      <aside class="w-full lg:w-[280px] flex-shrink-0">
+        <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 text-left sticky top-4">
+          <!-- Filter Header -->
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+            <span class="font-bold text-[#152C68] text-base uppercase tracking-wider">Bộ lọc tìm kiếm</span>
+            <button (click)="resetFilters()" class="text-xs font-semibold text-[#FF6A00] hover:underline cursor-pointer">
+              Xóa lọc
+            </button>
+          </div>
+
+          <!-- Group 1: GIỜ ĐI -->
+          <div class="mb-6">
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Giờ đi</h4>
+            <div class="flex flex-col gap-2.5">
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.early" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Sáng sớm 00:00 - 06:00</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.morning" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Buổi sáng 06:00 - 12:00</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.afternoon" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Buổi chiều 12:00 - 18:00</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.night" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Buổi tối 18:00 - 24:00</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Group 2: TẦNG -->
+          <div class="mb-6">
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Tầng</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                (click)="selectFloor('lower')"
+                class="border rounded-lg py-2 text-xs font-bold text-center transition-all cursor-pointer"
+                [class.border-[#FF6A00]]="selectedFloor === 'lower'"
+                [class.bg-[#FFF8F2]]="selectedFloor === 'lower'"
+                [class.text-[#FF6A00]]="selectedFloor === 'lower'"
+                [class.border-slate-200]="selectedFloor !== 'lower'"
+                [class.text-gray-600]="selectedFloor !== 'lower'"
+                [class.bg-white]="selectedFloor !== 'lower'"
+              >
+                Tầng dưới
+              </button>
+              <button
+                type="button"
+                (click)="selectFloor('upper')"
+                class="border rounded-lg py-2 text-xs font-bold text-center transition-all cursor-pointer"
+                [class.border-[#FF6A00]]="selectedFloor === 'upper'"
+                [class.bg-[#FFF8F2]]="selectedFloor === 'upper'"
+                [class.text-[#FF6A00]]="selectedFloor === 'upper'"
+                [class.border-slate-200]="selectedFloor !== 'upper'"
+                [class.text-gray-600]="selectedFloor !== 'upper'"
+                [class.bg-white]="selectedFloor !== 'upper'"
+              >
+                Tầng trên
+              </button>
+            </div>
+          </div>
+
+          <!-- Group 3: HẠNG GHẾ -->
+          <div class="mb-6">
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Hàng ghế</h4>
+            <div class="flex flex-col gap-2.5">
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="seatFilters.front" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Hàng đầu (Ghế 1-4)</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="seatFilters.middle" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Hàng giữa (Ghế 5-8)</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="seatFilters.back" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Hàng cuối (Ghế 9-12)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Group 4: GIÁ VÉ -->
+          <div>
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Giá vé</h4>
+            <div class="flex flex-col gap-2.5">
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="priceFilters.under300" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Dưới 300.000đ</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="priceFilters.over300" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Từ 300.000đ trở lên</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: SEARCH RESULTS -->
+      <section class="flex-1 flex flex-col gap-5 text-left">
+        <!-- Results Title -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <h2 class="text-xl font-bold text-[#152C68]">
+            {{searchDeparture}} - {{searchDestination}} ({{getFilteredTrips().length}} chuyến)
+          </h2>
+          
+          <!-- Sort buttons tabs -->
+          <div class="flex bg-slate-100 p-1 rounded-lg self-start">
+            <button
+              (click)="setSortBy('earliest')"
+              class="px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer"
+              [class.bg-white]="sortBy === 'earliest'"
+              [class.shadow-sm]="sortBy === 'earliest'"
+              [class.text-[#152C68]]="sortBy === 'earliest'"
+              [class.text-gray-500]="sortBy !== 'earliest'"
+            >
+              Giờ đi sớm nhất
+            </button>
+            <button
+              (click)="setSortBy('latest')"
+              class="px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer"
+              [class.bg-white]="sortBy === 'latest'"
+              [class.shadow-sm]="sortBy === 'latest'"
+              [class.text-[#152C68]]="sortBy === 'latest'"
+              [class.text-gray-500]="sortBy !== 'latest'"
+            >
+              Giờ đi muộn nhất
+            </button>
+            <button
+              (click)="setSortBy('cheapest')"
+              class="px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer"
+              [class.bg-white]="sortBy === 'cheapest'"
+              [class.shadow-sm]="sortBy === 'cheapest'"
+              [class.text-[#152C68]]="sortBy === 'cheapest'"
+              [class.text-gray-500]="sortBy !== 'cheapest'"
+            >
+              Giá rẻ nhất
+            </button>
+          </div>
+        </div>
+
+        <!-- Trips List -->
+        <div class="flex flex-col gap-4">
+          <!-- Zero Results State -->
+          <div *ngIf="getFilteredTrips().length === 0" class="bg-white border border-slate-150 rounded-xl p-12 text-center shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-slate-300 mx-auto mb-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+            <h3 class="text-base font-bold text-gray-700">Không tìm thấy chuyến xe phù hợp</h3>
+            <p class="text-xs text-gray-400 mt-1">Vui lòng thay đổi bộ lọc tìm kiếm hoặc quay lại trang chủ.</p>
+            <button (click)="resetFilters()" class="mt-4 bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer">
+              Xóa tất cả bộ lọc
+            </button>
+          </div>
+
+          <!-- Trip Cards Loop -->
+          <ng-container *ngFor="let trip of getFilteredTrips(); let i = index">
+            <!-- Normal Trip Card -->
+            <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full">
+              <!-- Top content -->
+              <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <!-- Timeline Info -->
+                <div class="flex items-center gap-6 flex-1 max-w-md">
+                  <div class="flex flex-col text-left">
+                    <span class="text-xl font-bold text-[#152C68]">{{trip.depTime}}</span>
+                    <span class="text-xs text-gray-500 font-semibold mt-1">{{trip.depLocation}}</span>
+                  </div>
+
+                  <!-- Connection Line -->
+                  <div class="flex-1 flex flex-col items-center gap-1 min-w-[80px]">
+                    <span class="text-[10px] text-gray-400 font-semibold">{{trip.duration}}</span>
+                    <div class="relative w-full flex items-center justify-center">
+                      <div class="w-full border-t-2 border-dashed border-slate-200"></div>
+                      <div class="absolute w-2 h-2 rounded-full bg-slate-300 -left-1"></div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-[#FF6A00] absolute bg-white px-0.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
+                      <div class="absolute w-2 h-2 rounded-full bg-slate-300 -right-1"></div>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col text-left">
+                    <span class="text-xl font-bold text-[#152C68]">{{trip.arrTime}}</span>
+                    <span class="text-xs text-gray-500 font-semibold mt-1">{{trip.arrLocation}}</span>
+                  </div>
+                </div>
+
+                <!-- Vehicle Info -->
+                <div class="flex items-center gap-2 md:justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.136a3.375 3.375 0 00-2.87-3.148l-1.077-.197a48.772 48.772 0 00-11.83 0l-1.078.197a3.375 3.375 0 00-2.87 3.148l-.317 5.136c-.04.62.469 1.124 1.09 1.124H3.75m14.25 0h-3.75m0 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                  </svg>
+                  <span class="text-xs font-semibold text-gray-500">{{trip.type}} - <span class="text-[#FF6A00] font-bold">{{trip.availableSeats}} chỗ trống</span></span>
+                </div>
+
+                <!-- Price and CTA -->
+                <div class="flex items-center md:flex-col gap-4 md:gap-1.5 md:items-end justify-between md:justify-center border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
+                  <span class="text-xl font-black text-[#FF6A00]">{{trip.price | number:'1.0-0'}}đ</span>
+                  <button
+                    (click)="selectTrip(trip)"
+                    class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold px-5 py-2.5 rounded-lg transition-colors active:scale-95 cursor-pointer shadow-sm"
+                  >
+                    Chọn chuyến
+                  </button>
+                </div>
+              </div>
+
+              <!-- Bottom links -->
+              <div class="bg-slate-50 border-t border-slate-100 px-6 py-2.5 flex items-center gap-4 text-[10px] font-bold text-gray-400">
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Quầy vé</span>
+                <span>&bull;</span>
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Lịch trình</span>
+                <span>&bull;</span>
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Trong chuyến</span>
+                <span>&bull;</span>
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Chính sách</span>
+              </div>
+            </div>
+
+            <!-- Member Promo Banner Banner inserted in middle of listing -->
+            <div *ngIf="i === 1" class="bg-gradient-to-r from-[#00236F] to-[#1A3A8A] rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden text-white">
+              <div class="flex-1 flex flex-col gap-1.5 text-left z-10">
+                <h3 class="text-lg font-black tracking-wide">Đăng nhập ngay để nhận nhiều quyền lợi dành cho thành viên</h3>
+                <p class="text-xs font-semibold text-slate-200 opacity-90 leading-relaxed max-w-xl">
+                  Với đăng nhập và đăng ký, bạn sẽ dễ dàng quản lý đặt chỗ, hoặc nhận các thông tin khuyến mãi đặc quyền dành riêng cho khách hàng VIAGO của chúng tôi.
+                </p>
+              </div>
+              <div class="z-10 flex-shrink-0">
+                <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-black px-6 py-3 rounded-lg transition-colors active:scale-95 cursor-pointer shadow-md">
+                  Đăng nhập ngay
+                </button>
+              </div>
+              
+              <!-- Subtle decorative element/avatar badge on the right -->
+              <div class="absolute right-4 bottom-0 opacity-10 pointer-events-none transform translate-y-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-32 h-32">
+                  <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-4 self-center">
+          <button (click)="goBackHome()" class="text-xs font-bold text-gray-500 hover:text-[#1A3A8A] flex items-center gap-1 transition-colors py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            <span>Quay lại trang chủ</span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </ng-container>
 </main>
