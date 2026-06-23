@@ -1,4 +1,363 @@
-<div class="p-8">
-  <h1 class="text-h1 text-primary">Dịch vụ</h1>
-  <p class="text-body-main mt-4">Nội dung trang Dịch vụ đang được phát triển.</p>
+<!-- HERO BANNER -->
+<section class="service-hero">
+    <div class="container mx-auto px-4 md:px-10 lg:px-16 text-center">
+        <div class="service-hero-content">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4">Trải nghiệm Hành Trình Đẳng Cấp<br>Cùng VIAGO</h1>
+            <p class="text-sm md:text-base text-slate-200 max-w-2xl mx-auto">Chúng tôi cung cấp giải pháp vận tải chuyên nghiệp cho mọi nhu cầu: Cho thuê xe Limousine/Ghế giường sang trọng và tìm kiếm tài sản thất lạc nhanh chóng.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICE TABS -->
+<div class="container mx-auto px-4 md:px-10 lg:px-16 relative z-10 -mt-6">
+    <div class="service-tabs-wrapper flex justify-center gap-4">
+        <button (click)="setTab('thue-xe')" class="tab-btn" [class.active]="activeTab === 'thue-xe'">Dịch vụ Thuê xe</button>
+        <button (click)="setTab('that-lac')" class="tab-btn" [class.active]="activeTab === 'that-lac'">Thất lạc & Tìm thấy</button>
+    </div>
+</div>
+
+<!-- TAB 1: CAR RENTAL CONTENT -->
+<div *ngIf="activeTab === 'thue-xe'" class="container mx-auto px-4 md:px-10 lg:px-16 py-12 tab-content">
+    <div class="rental-layout grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-10 items-start">
+        <!-- Form Card -->
+        <div class="form-card bg-white border border-[#eeeeee] rounded-xl p-6 md:p-8 shadow-sm">
+            <h2 class="text-xl font-extrabold text-[#123063] mb-1">Đăng Ký Thuê Xe</h2>
+            <p class="text-xs text-gray-500 mb-6">Vui lòng điền thông tin bên dưới để nhận báo giá chi tiết trong vòng 15 phút.</p>
+            
+            <form (submit)="submitRentalForm($event)">
+                <div class="input-grid-2 grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-500">Họ và tên</label>
+                        <input type="text" placeholder="Nguyễn Văn A" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                    </div>
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-500">Số điện thoại</label>
+                        <input type="tel" placeholder="0987 354 567" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                    </div>
+                </div>
+                
+                <div class="form-field flex flex-col gap-2 mb-4">
+                    <label class="text-xs font-bold text-gray-500">Email</label>
+                    <input type="email" placeholder="name@example.com" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                </div>
+
+                <div class="input-grid-2 grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-500">Điểm đón</label>
+                        <input type="text" placeholder="Nhập địa điểm đón" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                    </div>
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-500">Điểm đến</label>
+                        <input type="text" placeholder="Nhập địa điểm đến" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                    </div>
+                </div>
+
+                <div class="input-grid-2 grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-500">Ngày & Giờ đi</label>
+                        <input type="datetime-local" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                    </div>
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-500">Loại xe</label>
+                        <select class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                            <option value="" disabled selected>Chọn dòng xe</option>
+                            <option value="limo9">Limousine 9 Chỗ</option>
+                            <option value="van16">Xe 16 Chỗ</option>
+                            <option value="coach45">Xe 45 Chỗ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-grid-2 grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-500">Số lượng xe muốn thuê</label>
+                        <input type="number" min="1" value="1" placeholder="Nhập số lượng xe" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition" required>
+                    </div>
+                    <div class="form-field"></div>
+                </div>
+
+                <div class="form-field flex flex-col gap-2 mb-6">
+                    <label class="text-xs font-bold text-gray-500">Yêu cầu đặc biệt</label>
+                    <textarea placeholder="Ghi chú thêm về chuyến đi của bạn..." rows="4" class="p-3 border border-[#dddddd] rounded-lg bg-gray-50 text-sm focus:border-[#123063] focus:bg-white outline-none transition"></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit w-full bg-[#123063] text-white p-4 font-bold rounded-lg hover:bg-[#0a1f44] transition uppercase tracking-wider text-sm cursor-pointer">Đăng ký thuê xe</button>
+            </form>
+        </div>
+
+        <!-- Sidebar Panel -->
+        <div class="sidebar-panel flex flex-col gap-6">
+            <div class="info-card bg-[#123063] text-white rounded-xl p-6">
+                <h3 class="text-base font-extrabold mb-4">Vì sao chọn VIAGO?</h3>
+                <div class="info-list flex flex-col gap-4">
+                    <div class="info-item flex gap-3 text-xs leading-normal">
+                        <svg class="w-5 h-5 fill-[#f96d00] flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <div>
+                            <strong class="text-sm block mb-1">Đội ngũ lái xe tận tâm:</strong>
+                            <p class="text-gray-300">Được đào tạo bài bản, am hiểu cung đường, thân thiện lịch thiệp.</p>
+                        </div>
+                    </div>
+                    <div class="info-item flex gap-3 text-xs leading-normal">
+                        <svg class="w-5 h-5 fill-[#f96d00] flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <div>
+                            <strong class="text-sm block mb-1">Hệ thống xe đời mới:</strong>
+                            <p class="text-gray-300">Các dòng xe Limousine giường nằm được nâng cấp và bảo dưỡng thường xuyên.</p>
+                        </div>
+                    </div>
+                    <div class="info-item flex gap-3 text-xs leading-normal">
+                        <svg class="w-5 h-5 fill-[#f96d00] flex-shrink-0" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        <div>
+                            <strong class="text-sm block mb-1">Cam kết đúng giờ:</strong>
+                            <p class="text-gray-300">Đón đúng điểm, trả đúng nơi, đúng lộ trình thỏa thuận.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card border border-[#eeeeee] bg-white rounded-xl p-6 grid grid-cols-2 gap-4 text-center">
+                <div class="stat-item">
+                    <h4 class="text-2xl font-extrabold text-[#f96d00]">500+</h4>
+                    <p class="text-[10px] text-gray-500 font-semibold uppercase">Phương tiện</p>
+                </div>
+                <div class="stat-item">
+                    <h4 class="text-2xl font-extrabold text-[#f96d00]">10k+</h4>
+                    <p class="text-[10px] text-gray-500 font-semibold uppercase">Khách hàng</p>
+                </div>
+                <div class="stat-item">
+                    <h4 class="text-2xl font-extrabold text-[#f96d00]">63</h4>
+                    <p class="text-[10px] text-gray-500 font-semibold uppercase">Tỉnh thành</p>
+                </div>
+                <div class="stat-item">
+                    <h4 class="text-2xl font-extrabold text-[#f96d00]">4.9/5</h4>
+                    <p class="text-[10px] text-gray-500 font-semibold uppercase">Đánh giá</p>
+                </div>
+            </div>
+
+            <div class="support-card bg-[#00796b] text-white rounded-xl p-6 flex justify-between items-center">
+                <div>
+                    <h4 class="text-sm font-extrabold mb-1">Hỗ trợ 24/7</h4>
+                    <p class="text-xs text-gray-200">Hotline: 1900 1234</p>
+                </div>
+                <svg class="w-9 h-9 fill-current" viewBox="0 0 24 24">
+                    <path d="M12,2A10,10 0 0,0 2,12V20A2,2 0 0,0 4,22H7A2,2 0 0,0 9,20V17A2,2 0 0,0 7,15H4V12A8,8 0 0,1 20,12V15H17A2,2 0 0,0 15,17V20A2,2 0 0,0 17,22H20A2,2 0 0,0 22,20V12A10,10 0 0,0 12,2Z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fleet Grid -->
+    <div class="fleet-section mt-12 border-t border-[#eeeeee] pt-12">
+        <h2 class="text-2xl font-extrabold text-[#123063] text-center mb-2">Hạm Đội Xe Đa Dạng</h2>
+        <p class="text-sm text-gray-500 text-center mb-8">Hạng xe VIP trang bị sang trọng tiện nghi bậc nhất, đáp ứng mọi quy mô đoàn hành khách.</p>
+        
+        <div class="fleet-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Fleet 1 -->
+            <div class="fleet-card bg-white border border-[#eeeeee] rounded-xl overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                <div class="fleet-img h-44 overflow-hidden">
+                    <img src="/asset/images/customer/limo_9_seater.png" alt="Limousine 9 Chỗ" class="w-full h-full object-cover">
+                </div>
+                <div class="fleet-info p-5">
+                    <h3 class="text-base font-bold text-[#123063] mb-2">Limousine 9 Chỗ</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Ghế massage xoay 180 độ, wifi tốc độ cao, tủ lạnh mini, cổng sạc USB riêng biệt cho từng hành khách.</p>
+                    <a href="#" (click)="$event.preventDefault(); alert('Xem chi tiết xe Limousine 9 Chỗ');" class="fleet-link text-xs font-bold text-[#123063] hover:text-[#f96d00] transition">Xem chi tiết &rarr;</a>
+                </div>
+            </div>
+            <!-- Fleet 2 -->
+            <div class="fleet-card bg-white border border-[#eeeeee] rounded-xl overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                <div class="fleet-img h-44 overflow-hidden">
+                    <img src="/asset/images/customer/bus_16_seater.png" alt="Xe 16 Chỗ" class="w-full h-full object-cover">
+                </div>
+                <div class="fleet-info p-5">
+                    <h3 class="text-base font-bold text-[#123063] mb-2">Xe 16 Chỗ</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Không gian rộng rãi, thoáng mát, nội thất bọc da êm ái, thích hợp cho các chuyến du lịch gia đình hoặc nhóm nhỏ.</p>
+                    <a href="#" (click)="$event.preventDefault(); alert('Xem chi tiết xe 16 Chỗ');" class="fleet-link text-xs font-bold text-[#123063] hover:text-[#f96d00] transition">Xem chi tiết &rarr;</a>
+                </div>
+            </div>
+            <!-- Fleet 3 -->
+            <div class="fleet-card bg-white border border-[#eeeeee] rounded-xl overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                <div class="fleet-img h-44 overflow-hidden">
+                    <img src="/asset/images/customer/xe.jpg" alt="Xe 45 Chỗ" class="w-full h-full object-cover">
+                </div>
+                <div class="fleet-info p-5">
+                    <h3 class="text-base font-bold text-[#123063] mb-2">Xe 45 Chỗ</h3>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Động cơ vận hành êm ái, giảm xóc hiện đại, trang bị màn hình tivi lớn cùng dàn âm thanh sống động.</p>
+                    <a href="#" (click)="$event.preventDefault(); alert('Xem chi tiết xe 45 Chỗ');" class="fleet-link text-xs font-bold text-[#123063] hover:text-[#f96d00] transition">Xem chi tiết &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TAB 2: LOST & FOUND CONTENT -->
+<div *ngIf="activeTab === 'that-lac'" class="container mx-auto px-4 md:px-10 lg:px-16 py-12 tab-content">
+    <div class="lostfound-intro text-center max-w-2xl mx-auto mb-10">
+        <h2 class="text-2xl font-extrabold text-[#123063] mb-2">Thất lạc & Tìm thấy</h2>
+        <p class="text-sm text-gray-500 leading-relaxed">Chúng tôi hiểu rằng việc thất lạc tài sản là điều không mong muốn. VIAGO cam kết hỗ trợ hành khách tìm lại những vật phẩm đã bỏ quên trên các tuyến xe.</p>
+    </div>
+
+    <div class="rental-layout grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-10 items-start">
+        <!-- Grid of Lost Items -->
+        <div>
+            <h3 class="text-base font-extrabold text-[#123063] mb-5">Vật phẩm vừa tìm thấy</h3>
+            
+            <div class="lostfound-grid grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Dynamic Items -->
+                <div class="lost-item-card bg-white border border-[#eeeeee] rounded-xl p-4 hover:shadow-md hover:-translate-y-1 transition duration-300" *ngFor="let item of paginatedLostItems">
+                    <div class="lost-item-img h-36 rounded-lg overflow-hidden mb-4 relative">
+                        <span class="lost-badge-status absolute top-2.5 right-2.5 bg-[#123063] text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase">{{ item.status }}</span>
+                        <img [src]="item.imageUrl" [alt]="item.name" class="w-full h-full object-cover">
+                    </div>
+                    <div class="lost-item-info">
+                        <h4 class="text-sm font-bold text-gray-800 mb-2">{{ item.name }}</h4>
+                        <div class="lost-item-meta flex flex-col gap-1 text-[11px] text-gray-500 mb-4">
+                            <span>📅 Tìm thấy: {{ item.date }}</span>
+                            <span>🚍 Tuyến: {{ item.route }}</span>
+                            <span>📍 Trạm lưu giữ: {{ item.location }}</span>
+                        </div>
+                        <button class="btn-claim w-full bg-transparent border border-[#123063] text-[#123063] py-2 rounded-lg text-xs font-bold hover:bg-[#123063] hover:text-white transition cursor-pointer" (click)="alert('Vui lòng liên hệ Hotline 1900 1234 và đọc mã ' + item.name + ' để nhận lại.')">Báo nhận sở hữu</button>
+                    </div>
+                </div>
+                
+                <!-- Card 4 (Placeholder) -->
+                <div class="report-placeholder-card border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-[#f96d00] hover:bg-[#f96d00]/5 transition duration-300" onclick="document.getElementById('desc-input').focus();">
+                    <svg class="w-10 h-10 fill-gray-400 mb-3" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    <h4 class="text-xs font-bold text-gray-500 leading-normal">Khai báo vật phẩm thất lạc của bạn tại đây</h4>
+                </div>
+            </div>
+
+            <!-- Lost items pagination -->
+            <div class="pagination flex justify-center items-center gap-2 mt-6" *ngIf="lostTotalPages > 1">
+                <button class="px-3 py-1.5 border border-[#eeeeee] rounded-lg text-xs font-bold hover:bg-[#123063] hover:text-white transition cursor-pointer disabled:opacity-50 disabled:pointer-events-none" 
+                        [disabled]="lostCurrentPage === 1" 
+                        (click)="setLostPage(lostCurrentPage - 1)">
+                    &larr; Trước
+                </button>
+                <button *ngFor="let p of lostPagesArray" 
+                        class="w-8 h-8 rounded-lg text-xs font-bold transition cursor-pointer"
+                        [class.bg-[#123063]]="lostCurrentPage === p"
+                        [class.text-white]="lostCurrentPage === p"
+                        [class.border]="lostCurrentPage !== p"
+                        [class.border-[#eeeeee]]="lostCurrentPage !== p"
+                        [class.hover:bg-gray-100]="lostCurrentPage !== p"
+                        (click)="setLostPage(p)">
+                    {{ p }}
+                </button>
+                <button class="px-3 py-1.5 border border-[#eeeeee] rounded-lg text-xs font-bold hover:bg-[#123063] hover:text-white transition cursor-pointer disabled:opacity-50 disabled:pointer-events-none" 
+                        [disabled]="lostCurrentPage === lostTotalPages" 
+                        (click)="setLostPage(lostCurrentPage + 1)">
+                    Sau &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- Form Sidebar for Reporting -->
+        <div class="report-sidebar-form bg-white border border-[#eeeeee] rounded-xl p-6 shadow-sm">
+            <h3 class="text-base font-extrabold text-[#123063] mb-2">Khai báo thất lạc</h3>
+            <p class="text-xs text-gray-500 mb-5 leading-relaxed">Nếu bạn không tìm thấy vật phẩm của mình trong danh sách, hãy gửi biểu mẫu khai báo chi tiết bên dưới cho VIAGO.</p>
+            
+            <form (submit)="submitLostForm($event)">
+                <div class="form-field flex flex-col gap-2 mb-4">
+                    <label class="text-xs font-bold text-gray-700">Mô tả vật phẩm</label>
+                    <input type="text" id="desc-input" placeholder="Ví dụ: Ví màu đỏ, điện thoại Samsung màu xanh..." class="p-3 border border-[#eeeeee] rounded-lg text-sm bg-gray-50 focus:border-[#123063] focus:bg-white outline-none transition" required>
+                </div>
+
+                <div class="input-grid-2 grid grid-cols-2 gap-4 mb-4">
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-700">Tuyến xe</label>
+                        <select class="p-3 border border-[#eeeeee] rounded-lg text-sm bg-gray-50 focus:border-[#123063] focus:bg-white outline-none transition" required>
+                            <option value="" disabled selected>Chọn tuyến</option>
+                            <option value="T001-GO">TP.HCM &rarr; Đà Lạt</option>
+                            <option value="T001-BACK">Đà Lạt &rarr; TP.HCM</option>
+                            <option value="T002-GO">TP.HCM &rarr; Nha Trang</option>
+                            <option value="T002-BACK">Nha Trang &rarr; TP.HCM</option>
+                            <option value="T003-GO">TP.HCM &rarr; Cần Thơ</option>
+                            <option value="T003-BACK">Cần Thơ &rarr; TP.HCM</option>
+                            <option value="T004-GO">TP.HCM &rarr; Vũng Tàu</option>
+                            <option value="T004-BACK">Vũng Tàu &rarr; TP.HCM</option>
+                            <option value="T005-GO">Đà Lạt &rarr; Nha Trang</option>
+                            <option value="T005-BACK">Nha Trang &rarr; Đà Lạt</option>
+                            <option value="T006-GO">Nha Trang &rarr; Đà Nẵng</option>
+                            <option value="T006-BACK">Đà Nẵng &rarr; Nha Trang</option>
+                            <option value="T007-GO">Cần Thơ &rarr; Rạch Giá</option>
+                            <option value="T007-BACK">Rạch Giá &rarr; Cần Thơ</option>
+                            <option value="T008-GO">Đà Lạt &rarr; Buôn Ma Thuột</option>
+                            <option value="T008-BACK">Buôn Ma Thuột &rarr; Đà Lạt</option>
+                        </select>
+                    </div>
+                    <div class="form-field flex flex-col gap-2">
+                        <label class="text-xs font-bold text-gray-700">Ngày đi</label>
+                        <input type="date" class="p-3 border border-[#eeeeee] rounded-lg text-sm bg-gray-50 focus:border-[#123063] focus:bg-white outline-none transition" required>
+                    </div>
+                </div>
+
+                <div class="form-field flex flex-col gap-2 mb-4">
+                    <label class="text-xs font-bold text-gray-700">Số ghế (nếu nhớ)</label>
+                    <input type="text" placeholder="Ví dụ: A12, B5..." class="p-3 border border-[#eeeeee] rounded-lg text-sm bg-gray-50 focus:border-[#123063] focus:bg-white outline-none transition">
+                </div>
+
+                <div class="form-field flex flex-col gap-2 mb-4">
+                    <label class="text-xs font-bold text-gray-700">Họ và tên người liên hệ</label>
+                    <input type="text" placeholder="Nguyễn Văn A" class="p-3 border border-[#eeeeee] rounded-lg text-sm bg-gray-50 focus:border-[#123063] focus:bg-white outline-none transition" required>
+                </div>
+
+                <div class="form-field flex flex-col gap-2 mb-4">
+                    <label class="text-xs font-bold text-gray-700">Số điện thoại</label>
+                    <input type="tel" placeholder="0987 354 567" class="p-3 border border-[#eeeeee] rounded-lg text-sm bg-gray-50 focus:border-[#123063] focus:bg-white outline-none transition" required>
+                </div>
+
+                <div class="form-field flex flex-col gap-2 mb-6">
+                    <label class="text-xs font-bold text-gray-700">Email</label>
+                    <input type="email" placeholder="name@example.com" class="p-3 border border-[#eeeeee] rounded-lg text-sm bg-gray-50 focus:border-[#123063] focus:bg-white outline-none transition" required>
+                </div>
+
+                <button type="submit" class="btn-submit w-full bg-[#f96d00] text-white p-3 font-bold rounded-lg hover:bg-[#d85c00] transition text-sm cursor-pointer shadow-sm">Gửi yêu cầu thất lạc</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Claiming workflow -->
+    <div class="workflow-section mt-16 border-t border-[#eeeeee] pt-12">
+        <h2 class="text-xl font-extrabold text-[#123063] text-center mb-10">Quy trình nhận lại tài sản</h2>
+        
+        <div class="workflow-grid grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <!-- Step 1 -->
+            <div class="workflow-step">
+                <div class="workflow-icon w-12 h-12 bg-[#123063]/5 rounded-full flex items-center justify-center mx-auto text-[#123063]">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                </div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Xác minh thông tin</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Cung cấp các giấy tờ, hình ảnh hoặc mô tả chính xác chi tiết vật dụng bên trong tài sản bỏ quên.</p>
+            </div>
+            <!-- Step 2 -->
+            <div class="workflow-step">
+                <div class="workflow-icon w-12 h-12 bg-[#123063]/5 rounded-full flex items-center justify-center mx-auto text-[#123063]">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                </div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Giấy tờ cần thiết</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Chuẩn bị thẻ CCCD/CMND bản gốc trùng khớp với tên đăng ký thông tin nhận đồ thất lạc.</p>
+            </div>
+            <!-- Step 3 -->
+            <div class="workflow-step">
+                <div class="workflow-icon w-12 h-12 bg-[#123063]/5 rounded-full flex items-center justify-center mx-auto text-[#123063]">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Bàn giao & Ký biên bản</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Ký tên xác thực vào biên bản bàn giao và đối chiếu lại tình trạng tài sản tại các trạm lưu trữ của VIAGO.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESS MODAL OVERLAY -->
+<div *ngIf="showSuccessModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-icon">
+            <svg viewBox="0 0 24 24" class="w-8 h-8 fill-current">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </svg>
+        </div>
+        <h3 class="modal-title">{{ modalTitle }}</h3>
+        <p class="modal-desc">{{ modalDesc }}</p>
+        <button class="modal-btn" (click)="closeSuccessModal()">Xác nhận</button>
+    </div>
 </div>

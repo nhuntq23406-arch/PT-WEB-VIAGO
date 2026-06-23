@@ -716,7 +716,7 @@
         </h2>
         <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
       </div>
-      <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
+      <a routerLink="/tin-tuc" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
         <span>Xem tất cả</span>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -734,17 +734,17 @@
             <img src="/asset/images/customer/nha_trang.jpg" alt="VIAGO News" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
           </div>
           <div class="p-6">
-            <span class="text-[10px] semi-bold text-[#D95800] uppercase">01/01/2026</span>
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">08/05/2026</span>
             <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
-              VIAGO mở thêm chuyến Đà Lạt - Nha Trang
+              <a [routerLink]="['/tin-tuc/chi-tiet', 1]">VIAGO mở thêm chuyến Hà Nội - Quảng Ninh</a>
             </h3>
             <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
-              Nhằm đáp ứng nhu cầu đi lại ngày càng tăng, VIAGO chính thức bổ sung thêm 5 chuyến xe mỗi ngày trên tuyến Đà Lạt - Nha Trang...
+              Tăng cường chuyến mới phục vụ nhu cầu đi lại của quý hành khách giữa thủ đô Hà Nội và tỉnh Quảng Ninh bằng dòng xe Limousine giường nằm VIP chất lượng cao...
             </p>
           </div>
         </div>
         <div class="px-6 pb-6 pt-2">
-          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+          <a [routerLink]="['/tin-tuc/chi-tiet', 1]" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
             Chi tiết &rarr;
           </a>
         </div>
@@ -758,17 +758,17 @@
             <img src="/asset/images/customer/ben_xe.jpg" alt="Bến xe Miền Đông mới" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
           </div>
           <div class="p-6">
-            <span class="text-[10px] semi-bold text-[#D95800] uppercase">20/05/2026</span>
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">24/05/2026</span>
             <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
-              Cập nhật lịch trình tại BX Miền Đông mới
+              <a [routerLink]="['/tin-tuc/chi-tiet', 2]">Cập Nhật Lịch Trình 6 Chuyến Cố Định Mỗi Ngày Tăng Cường Phục Vụ</a>
             </h3>
             <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
-              Lịch trình mới nhất áp dụng cho mùa hè 2026 sẽ giúp quý khách dễ dàng sắp xếp thời gian cho các hành trình tại BX Miền Đông mới...
+              Nhằm đáp ứng nhu cầu đi lại ngày càng cao của hành khách, nhà xe VIAGO chính thức cập nhật lịch trình chạy mới thông thoáng hơn...
             </p>
           </div>
         </div>
         <div class="px-6 pb-6 pt-2">
-          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+          <a [routerLink]="['/tin-tuc/chi-tiet', 2]" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
             Chi tiết &rarr;
           </a>
         </div>
@@ -778,21 +778,21 @@
       <!-- News 3 -->
       <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between w-full mx-auto">
         <div>
-          <div class="w-full h-[216px] overflow-hidden">
+          <a [routerLink]="['/tin-tuc/chi-tiet', 3]" class="block w-full h-[216px] overflow-hidden">
             <img src="/asset/images/customer/summer.jpg" alt="Ưu đãi hè" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-          </div>
+          </a>
           <div class="p-6">
-            <span class="text-[10px] semi-bold text-[#D95800] uppercase">01/06/2026</span>
+            <span class="text-[10px] semi-bold text-[#D95800] uppercase">24/05/2026</span>
             <h3 class="text-[24px] font-bold text-[#152C68] mt-2 hover:text-[#00236F] transition-colors cursor-pointer leading-snug">
-              Ưu đãi hè rực rỡ: Giảm ngay 10% giá vé
+              <a [routerLink]="['/tin-tuc/chi-tiet', 3]">Ưu Đãi Hè Rực Rỡ: Giảm Ngay 10% Giá Vé Phòng Limousine Khứ Hồi</a>
             </h3>
             <p class="text-[16px] text-gray-500 mt-2.5 line-clamp-3 leading-relaxed">
-              Đón mùa du lịch hè 2026, VIAGO tung chương trình khuyến mãi cực lớn cho tất cả khách hàng đặt vé trực tuyến qua website...
+              Chào mùa du lịch hè 2026, VIAGO hân hạnh mang chương trình ưu đãi cực lớn, giảm thẳng 10% giá vé khi hành khách đặt chỗ khứ hồi...
             </p>
           </div>
         </div>
         <div class="px-6 pb-6 pt-2">
-          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+          <a [routerLink]="['/tin-tuc/chi-tiet', 3]" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
             Chi tiết &rarr;
           </a>
         </div>

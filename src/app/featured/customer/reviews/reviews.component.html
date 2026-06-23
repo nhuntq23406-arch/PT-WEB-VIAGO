@@ -1,4 +1,220 @@
-<div class="p-8">
-  <h1 class="text-h1 text-primary">Đánh giá</h1>
-  <p class="text-body-main mt-4">Nội dung trang Đánh giá đang được phát triển.</p>
-</div>
+<main class="container mx-auto px-4 md:px-10 lg:px-16 my-8 feedback-section">
+    
+    <!-- Heading -->
+    <div class="feedback-header mb-8">
+        <h5 class="feedback-title-sub text-teal-600 font-bold text-xs uppercase tracking-wider mb-1">ĐÁNH GIÁ & NHẬN XÉT</h5>
+        <h2 class="feedback-title-main text-2xl font-black text-[#123063] leading-snug">Phản hồi từ khách hàng đã trải nghiệm dịch vụ của chúng tôi.</h2>
+    </div>
+
+    <!-- Dashboard card -->
+    <div class="dashboard-card bg-white border border-[#eeeeee] rounded-2xl p-6 md:p-8 shadow-sm mb-8 grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8 items-center">
+        <!-- Left Score -->
+        <div class="score-block text-center md:border-r border-[#eeeeee] md:pr-8">
+            <div class="score-num text-6xl font-black text-[#f96d00] leading-none mb-2">4.8</div>
+            <div class="score-stars flex justify-center gap-1 text-[#ff9800] mb-2">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                <svg class="w-6 h-6 fill-current opacity-95" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+            </div>
+            <div class="score-total text-xs text-gray-500 font-semibold">120 đánh giá</div>
+        </div>
+
+        <!-- Right progress bars -->
+        <div class="metrics-block flex flex-col gap-3">
+            <!-- Row 1 -->
+            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
+                <span class="metric-label w-24">An toàn</span>
+                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
+                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 98%;"></div>
+                </div>
+                <span class="metric-value w-8 text-right text-gray-800">4.9</span>
+            </div>
+            <!-- Row 2 -->
+            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
+                <span class="metric-label w-24">Sạch sẽ</span>
+                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
+                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 96%;"></div>
+                </div>
+                <span class="metric-value w-8 text-right text-gray-800">4.8</span>
+            </div>
+            <!-- Row 3 -->
+            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
+                <span class="metric-label w-24">Nhân viên</span>
+                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
+                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 98%;"></div>
+                </div>
+                <span class="metric-value w-8 text-right text-gray-800">4.9</span>
+            </div>
+            <!-- Row 4 -->
+            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
+                <span class="metric-label w-24">Đúng giờ</span>
+                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
+                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 94%;"></div>
+                </div>
+                <span class="metric-value w-8 text-right text-gray-800">4.7</span>
+            </div>
+            <!-- Row 5 -->
+            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
+                <span class="metric-label w-24">Thông tin</span>
+                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
+                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 96%;"></div>
+                </div>
+                <span class="metric-value w-8 text-right text-gray-800">4.8</span>
+            </div>
+            <!-- Row 6 -->
+            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
+                <span class="metric-label w-24">Tiện nghi</span>
+                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
+                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 96%;"></div>
+                </div>
+                <span class="metric-value w-8 text-right text-gray-800">4.8</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs-wrapper flex flex-wrap gap-2.5 mb-8 border-b border-[#eeeeee] pb-5">
+        <button (click)="setFilter('all')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === 'all'"
+                [class.border-[#f96d00]]="activeFilter === 'all'"
+                [class.text-[#f96d00]]="activeFilter === 'all'"
+                [class.bg-gray-100]="activeFilter !== 'all'"
+                [class.border-transparent]="activeFilter !== 'all'"
+                [class.text-gray-600]="activeFilter !== 'all'"
+                [class.hover:bg-gray-200]="activeFilter !== 'all'">Tất cả (120)</button>
+        <button (click)="setFilter('comment')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === 'comment'"
+                [class.border-[#f96d00]]="activeFilter === 'comment'"
+                [class.text-[#f96d00]]="activeFilter === 'comment'"
+                [class.bg-gray-100]="activeFilter !== 'comment'"
+                [class.border-transparent]="activeFilter !== 'comment'"
+                [class.text-gray-600]="activeFilter !== 'comment'"
+                [class.hover:bg-gray-200]="activeFilter !== 'comment'">Có bình luận (95)</button>
+        <button (click)="setFilter('image')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === 'image'"
+                [class.border-[#f96d00]]="activeFilter === 'image'"
+                [class.text-[#f96d00]]="activeFilter === 'image'"
+                [class.bg-gray-100]="activeFilter !== 'image'"
+                [class.border-transparent]="activeFilter !== 'image'"
+                [class.text-gray-600]="activeFilter !== 'image'"
+                [class.hover:bg-gray-200]="activeFilter !== 'image'">Có hình ảnh (32)</button>
+        <button (click)="setFilter('5star')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === '5star'"
+                [class.border-[#f96d00]]="activeFilter === '5star'"
+                [class.text-[#f96d00]]="activeFilter === '5star'"
+                [class.bg-gray-100]="activeFilter !== '5star'"
+                [class.border-transparent]="activeFilter !== '5star'"
+                [class.text-gray-600]="activeFilter !== '5star'"
+                [class.hover:bg-gray-200]="activeFilter !== '5star'">5 Sao (102)</button>
+        <button (click)="setFilter('4star')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === '4star'"
+                [class.border-[#f96d00]]="activeFilter === '4star'"
+                [class.text-[#f96d00]]="activeFilter === '4star'"
+                [class.bg-gray-100]="activeFilter !== '4star'"
+                [class.border-transparent]="activeFilter !== '4star'"
+                [class.text-gray-600]="activeFilter !== '4star'"
+                [class.hover:bg-gray-200]="activeFilter !== '4star'">4 Sao (15)</button>
+        <button (click)="setFilter('3star')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === '3star'"
+                [class.border-[#f96d00]]="activeFilter === '3star'"
+                [class.text-[#f96d00]]="activeFilter === '3star'"
+                [class.bg-gray-100]="activeFilter !== '3star'"
+                [class.border-transparent]="activeFilter !== '3star'"
+                [class.text-gray-600]="activeFilter !== '3star'"
+                [class.hover:bg-gray-200]="activeFilter !== '3star'">3 Sao (2)</button>
+        <button (click)="setFilter('2star')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === '2star'"
+                [class.border-[#f96d00]]="activeFilter === '2star'"
+                [class.text-[#f96d00]]="activeFilter === '2star'"
+                [class.bg-gray-100]="activeFilter !== '2star'"
+                [class.border-transparent]="activeFilter !== '2star'"
+                [class.text-gray-600]="activeFilter !== '2star'"
+                [class.hover:bg-gray-200]="activeFilter !== '2star'">2 Sao (1)</button>
+        <button (click)="setFilter('1star')" 
+                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
+                [class.bg-[#f96d00]/10]="activeFilter === '1star'"
+                [class.border-[#f96d00]]="activeFilter === '1star'"
+                [class.text-[#f96d00]]="activeFilter === '1star'"
+                [class.bg-gray-100]="activeFilter !== '1star'"
+                [class.border-transparent]="activeFilter !== '1star'"
+                [class.text-gray-600]="activeFilter !== '1star'"
+                [class.hover:bg-gray-200]="activeFilter !== '1star'">1 Sao (0)</button>
+    </div>
+
+    <!-- Reviews List -->
+    <div class="reviews-list flex flex-col gap-6">
+        <!-- Review card -->
+        <div class="review-card bg-white border border-[#eeeeee] rounded-xl p-6 transition-all hover:shadow-md hover:border-gray-300" *ngFor="let review of paginatedReviews">
+            <div class="review-top-row flex justify-between items-start mb-4">
+                <div class="review-user-info flex gap-4 items-center">
+                    <div class="review-avatar w-12 h-12 rounded-full text-white font-bold flex items-center justify-center text-base" [ngClass]="review.avatarBg">{{ review.avatarText }}</div>
+                    <div class="review-name-meta flex flex-col gap-1">
+                        <div class="review-name-wrap flex items-center gap-2">
+                            <span class="review-user-name text-sm font-bold text-[#123063]">{{ review.userName }}</span>
+                            <span class="tag-traveled bg-teal-100 text-teal-800 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">Đã đi</span>
+                        </div>
+                        <span class="review-date text-xs text-gray-500 font-semibold">{{ review.date }}</span>
+                    </div>
+                </div>
+                
+                <div class="review-stars-wrap flex items-center gap-1.5">
+                    <span class="review-score-label text-sm font-extrabold text-gray-700">{{ review.score }}</span>
+                    <div class="review-stars flex gap-0.5 text-[#ff9800]">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="review-body text-sm text-gray-700 leading-relaxed mb-4 md:pl-16">{{ review.content }}</p>
+            
+            <!-- Optional Images -->
+            <div class="review-images flex gap-3 mb-4 md:pl-16" *ngIf="review.images && review.images.length > 0">
+                <img *ngFor="let img of review.images" [src]="img" alt="Review Image" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
+            </div>
+            
+            <div class="review-route-info flex items-center gap-1.5 text-xs text-gray-500 font-semibold mb-4 md:pl-16">
+                <svg class="w-4 h-4 fill-[#00a49f]" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>Tuyến: {{ review.route }}</span>
+            </div>
+
+            <div class="review-action-bar md:pl-16 flex gap-4">
+                <button (click)="likeReview(review)" class="btn-like border border-[#eeeeee] px-3 py-1.5 rounded-lg text-xs font-semibold hover:border-[#123063] hover:text-[#123063] hover:bg-[#123063]/5 flex items-center gap-1.5 cursor-pointer" [class.bg-[#123063]/5]="review.liked" [class.text-[#123063]]="review.liked">
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M23,10C23,9.5 22.9,9 22.7,8.6C22.4,8.1 22,7.7 21.4,7.5C21,7.2 20.5,7.1 20,7.1H15.4L16.1,3.4C16.2,3.1 16.2,2.8 16.1,2.5C15.9,2 15.6,1.6 15.1,1.3C14.7,1.1 14.2,1 13.7,1C13.2,1 12.8,1.2 12.5,1.5L7.7,6.3C7.2,6.8 7,7.4 7,8V18C7,19.1 7.9,20 9,20H18C18.8,20 19.5,19.5 19.8,18.8L22.8,11.8C22.9,11.5 23,11.1 23,10.8V10M1,20H5V8H1V20Z"/></svg>
+                    <span>Hữu ích (<span class="like-count">{{ review.likes }}</span>)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination flex justify-center items-center gap-2 mt-10" *ngIf="totalPages > 1">
+        <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="page-btn w-10 h-10 border border-[#dce1e7] bg-white rounded-lg flex items-center justify-center font-bold text-gray-700 hover:border-[#123063] hover:text-[#123063] hover:bg-[#123063]/5 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="14,7 8,12 14,17"/></svg>
+        </button>
+        <ng-container *ngFor="let p of getVisiblePages()">
+            <button *ngIf="p !== '...'" (click)="setPage(p)" class="page-btn w-10 h-10 border border-[#dce1e7] rounded-lg flex items-center justify-center font-bold cursor-pointer transition" [class.bg-[#123063]]="currentPage === p" [class.text-white]="currentPage === p" [class.bg-white]="currentPage !== p" [class.text-gray-700]="currentPage !== p" [class.hover:bg-gray-100]="currentPage !== p">
+                {{ p }}
+            </button>
+            <span *ngIf="p === '...'" class="w-10 h-10 flex items-center justify-center font-bold text-gray-400">
+                ...
+            </span>
+        </ng-container>
+        <button [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)" class="page-btn w-10 h-10 border border-[#dce1e7] bg-white rounded-lg flex items-center justify-center font-bold text-gray-700 hover:border-[#123063] hover:text-[#123063] hover:bg-[#123063]/5 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="10,7 16,12 10,17"/></svg>
+        </button>
+    </div>
+
+</main>
