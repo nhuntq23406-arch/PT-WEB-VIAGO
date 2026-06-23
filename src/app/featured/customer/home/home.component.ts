@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
@@ -122,6 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
+    history.replaceState(null, '');
   }
 
   ngOnDestroy() {
@@ -228,7 +229,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.generateTrips();
 
     // Show results
+    history.pushState({ step: 'results' }, '');
     this.showResults = true;
+    this.selectedTrip = null;
   }
 
   generateTrips() {
@@ -247,7 +250,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         duration: '9 giờ 40 phút',
         arrTime: '05:10',
         type: 'Limousine',
-        availableSeats: 15,
+        availableSeats: 17,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 0),
         arrLocation: this.getDetailedSpot(this.searchDestination, 0),
@@ -260,7 +263,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         duration: '9 giờ 30 phút',
         arrTime: '05:30',
         type: 'Limousine',
-        availableSeats: 23,
+        availableSeats: 17,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 1),
         arrLocation: this.getDetailedSpot(this.searchDestination, 1),
@@ -272,8 +275,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         depTime: '17:15',
         duration: '11 giờ 57 phút',
         arrTime: '05:12',
-        type: 'Limousine VIP',
-        availableSeats: 5,
+        type: 'Limousine',
+        availableSeats: 17,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 2),
         arrLocation: this.getDetailedSpot(this.searchDestination, 2),
@@ -286,7 +289,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         duration: '13 giờ 10 phút',
         arrTime: '05:10',
         type: 'Limousine',
-        availableSeats: 23,
+        availableSeats: 17,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 3),
         arrLocation: this.getDetailedSpot(this.searchDestination, 3),
@@ -299,7 +302,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         duration: '11 giờ 15 phút',
         arrTime: '06:20',
         type: 'Limousine',
-        availableSeats: 9,
+        availableSeats: 17,
         price: 390000,
         depLocation: this.getDetailedSpot(this.searchDeparture, 4),
         arrLocation: this.getDetailedSpot(this.searchDestination, 4),
@@ -384,6 +387,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   selectTrip(trip: any) {
+    history.pushState({ step: 'booking' }, '');
     this.selectedTrip = trip;
     this.selectedSeats = [];
     this.passengerName = '';
@@ -397,7 +401,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   cancelBooking() {
-    this.selectedTrip = null;
+    history.back();
   }
 
   submitBooking() {
@@ -552,8 +556,21 @@ Cảm ơn bạn đã lựa chọn dịch vụ của VIAGO!`);
   }
 
   goBackHome() {
-    this.showResults = false;
-    this.selectedTrip = null;
+    history.back();
+  }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: PopStateEvent) {
+    const state = event.state;
+    if (!state) {
+      this.showResults = false;
+      this.selectedTrip = null;
+    } else if (state.step === 'results') {
+      this.showResults = true;
+      this.selectedTrip = null;
+    } else if (state.step === 'booking') {
+      this.showResults = true;
+    }
   }
 
   private formatDate(date: Date): string {
