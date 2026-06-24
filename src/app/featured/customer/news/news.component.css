@@ -1,3 +1,7 @@
+:host {
+  display: block;
+  width: 100%;
+}
 :root {
     --primary-color: #123063;
     --primary-hover: #0a1f44;
@@ -403,3 +407,4 @@
         height: 220px;
     }
 }
+

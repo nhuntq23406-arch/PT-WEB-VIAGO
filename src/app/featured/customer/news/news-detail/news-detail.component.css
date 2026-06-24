@@ -1,3 +1,7 @@
+:host {
+  display: block;
+  width: 100%;
+}
 /* News Detail Component styling */
 .article-main-grid {
     display: grid;
@@ -41,3 +45,4 @@
         grid-template-columns: 1fr;
     }
 }
+
