@@ -1,1 +1,36 @@
 <router-outlet />
+
+<!-- Top-Right Toasts Container (Hành động phụ) -->
+<div class="fixed top-6 right-6 z-[9999] flex flex-col gap-3.5 max-w-xs md:max-w-sm w-full pointer-events-none">
+  <div *ngFor="let toast of toastService.toasts$ | async" 
+       [class]="toast.type === 'success' 
+         ? 'pointer-events-auto bg-white rounded-xl shadow-lg border border-slate-100 border-l-4 border-l-emerald-500 p-4 flex items-center gap-3.5 animate-slide-in-right' 
+         : 'pointer-events-auto bg-white rounded-xl shadow-lg border border-slate-100 border-l-4 border-l-red-500 p-4 flex items-center gap-3.5 animate-slide-in-right'">
+    
+    <!-- Status Icon -->
+    <div class="shrink-0">
+      <!-- 🟢 Success Icon (Orange brand color checkmark) -->
+      <svg *ngIf="toast.type === 'success'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 text-[#FF6600]">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+      </svg>
+      <!-- 🔴 Error Icon (Red color cross) -->
+      <svg *ngIf="toast.type === 'error'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-5 h-5 text-red-500">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </div>
+
+    <!-- Text Message -->
+    <div class="flex-1">
+      <p [class]="toast.type === 'success' ? 'text-sm font-bold text-[#00236F] leading-snug' : 'text-sm font-bold text-red-500 leading-snug'">
+        {{ toast.message }}
+      </p>
+    </div>
+
+    <!-- Close Button -->
+    <button (click)="toastService.dismissToast(toast.id)" class="text-slate-400 hover:text-slate-600 p-1 rounded-full hover:bg-slate-50 transition-all cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>

@@ -1,1 +1,1655 @@
-<p>profile works!</p>
+<div class="max-w-7xl mx-auto px-4 md:px-10 lg:px-16 py-10 flex flex-col md:flex-row gap-8 min-h-[600px] bg-slate-50/50">
+  
+  <!-- Left Side: Sidebar Navigation Menu -->
+  <div class="w-full md:w-[280px] shrink-0">
+    <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm flex flex-col gap-1">
+      
+      <!-- Tab 1: Thông tin cá nhân -->
+      <button 
+        (click)="selectTab('personal')" 
+        [class]="activeTab === 'personal' 
+          ? 'flex items-center gap-3 px-4 py-3 text-sm font-bold text-[#1E3A8A] bg-blue-50 rounded-xl transition-all w-full text-left cursor-pointer' 
+          : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl transition-all w-full text-left cursor-pointer'"
+      >
+        <img src="/asset/images/customer/icon_personal.svg" class="w-4 h-4 opacity-75" alt="user icon" />
+        <span>Thông tin cá nhân</span>
+      </button>
+
+      <!-- Tab 2: Bảo mật tài khoản -->
+      <button 
+        (click)="selectTab('security')" 
+        [class]="activeTab === 'security' 
+          ? 'flex items-center gap-3 px-4 py-3 text-sm font-bold text-[#1E3A8A] bg-blue-50 rounded-xl transition-all w-full text-left cursor-pointer' 
+          : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl transition-all w-full text-left cursor-pointer'"
+      >
+        <img src="/asset/images/customer/icon_bao_mat.svg" class="w-4 h-4 opacity-75" alt="security icon" />
+        <span>Bảo mật tài khoản</span>
+      </button>
+
+      <!-- Tab 3: Lịch sử mua vé -->
+      <button 
+        (click)="selectTab('tickets')" 
+        [class]="activeTab === 'tickets' 
+          ? 'flex items-center gap-3 px-4 py-3 text-sm font-bold text-[#1E3A8A] bg-blue-50 rounded-xl transition-all w-full text-left cursor-pointer' 
+          : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl transition-all w-full text-left cursor-pointer'"
+      >
+        <img src="/asset/images/customer/icon_lich_su_ve.svg" class="w-4 h-4 opacity-75" alt="ticket history icon" />
+        <span>Lịch sử mua vé</span>
+      </button>
+
+      <!-- Tab 4: Đặc quyền thành viên -->
+      <button 
+        (click)="selectTab('privileges')" 
+        [class]="activeTab === 'privileges' 
+          ? 'flex items-center gap-3 px-4 py-3 text-sm font-bold text-[#1E3A8A] bg-blue-50 rounded-xl transition-all w-full text-left cursor-pointer' 
+          : 'flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl transition-all w-full text-left cursor-pointer'"
+      >
+        <img src="/asset/images/customer/icon_dac_quyen.svg" class="w-4 h-4 opacity-75" alt="privileges icon" />
+        <span>Đặc quyền thành viên</span>
+      </button>
+
+      <!-- Divider -->
+      <div class="h-px bg-slate-100 my-2"></div>
+
+      <!-- Đăng xuất -->
+      <button 
+        (click)="logout()" 
+        class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-[#FF6600] hover:bg-red-50 hover:text-red-700 rounded-xl transition-all w-full text-left cursor-pointer"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+        </svg>
+        <span>Đăng xuất</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Right Side: Content Area corresponding to active tab -->
+  <div class="flex-1">
+    
+    <!-- Tab 1 CONTENT: THÔNG TIN CÁ NHÂN -->
+    <div *ngIf="activeTab === 'personal'" class="bg-white rounded-[24px] border border-slate-100 p-8 md:p-10 shadow-sm flex flex-col">
+      <h2 class="text-2xl font-extrabold text-[#00236F] text-center mb-8">Thông tin cá nhân</h2>
+
+      <!-- Progress bar (Mức độ hoàn thiện hồ sơ) - Hidden when 100% -->
+      <div *ngIf="profileCompleteness < 100" class="w-full mb-8 max-w-xl mx-auto">
+        <div class="flex justify-between items-center mb-1.5 text-xs font-bold text-[#FF6600]">
+          <span>Mức độ hoàn thiện hồ sơ</span>
+          <span>{{ profileCompleteness }}%</span>
+        </div>
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden shadow-inner">
+          <div class="bg-[#FF6600] h-full rounded-full transition-all duration-500 ease-out" [style.width.%]="profileCompleteness"></div>
+        </div>
+      </div>
+
+      <div class="flex flex-col lg:flex-row items-center lg:items-start gap-10 max-w-2xl mx-auto w-full pt-4">
+        
+        <!-- Profile Picture and Upload UI -->
+        <div class="flex flex-col items-center gap-3">
+          <div class="w-32 h-32 rounded-full border-4 border-slate-50 shadow-md relative overflow-hidden group">
+            <img [src]="avatarPreview || '/asset/images/customer/icon_user_2.jpg'" alt="avatar preview" class="w-full h-full object-cover rounded-full" />
+            
+            <!-- Edit Avatar Overlay -->
+            <button 
+              *ngIf="isEditing" 
+              type="button"
+              (click)="photoFileInput.click()" 
+              class="absolute bottom-1 right-1 bg-[#FF6600] hover:bg-[#e05900] text-white p-2 rounded-full shadow-md border-2 border-white transition-all flex items-center justify-center cursor-pointer"
+            >
+              <img src="/asset/images/customer/icon_but_chinh_sua.svg" class="w-4 h-4 brightness-0 invert" alt="edit icon" />
+            </button>
+          </div>
+          
+          <input type="file" #photoFileInput (change)="onPhotoSelected($event)" accept="image/*" class="hidden" />
+          <p *ngIf="isEditing" class="text-[10px] text-slate-400 text-center leading-normal">Định dạng: .JPG, .PNG<br>Dung lượng tối đa: 5MB</p>
+        </div>
+
+        <!-- Fields: Info Column -->
+        <div class="flex-1 w-full">
+          
+          <!-- READ-ONLY VIEW -->
+          <div *ngIf="!isEditing" class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 w-full">
+            
+            <!-- Họ và tên -->
+            <div class="flex flex-col gap-1">
+              <span class="text-xs text-[#00236F] font-bold flex items-center gap-1.5">
+                <img src="/asset/images/customer/icon_personal.svg" class="w-3.5 h-3.5" />
+                Họ và tên
+              </span>
+              <span [ngClass]="authService.currentUser()?.name ? 'text-sm font-bold text-slate-800' : 'text-sm font-normal text-slate-400'">
+                {{ authService.currentUser()?.name || 'Chưa thiết lập' }}
+              </span>
+            </div>
+
+            <!-- Số điện thoại -->
+            <div class="flex flex-col gap-1">
+              <span class="text-xs text-[#00236F] font-bold flex items-center gap-1.5">
+                <img src="/asset/images/customer/icon_sdt.svg" class="w-3.5 h-3.5" />
+                Số điện thoại
+              </span>
+              <span class="text-sm font-bold text-slate-800">
+                {{ authService.currentUser()?.phoneNumber }}
+              </span>
+            </div>
+
+            <!-- Giới tính -->
+            <div class="flex flex-col gap-1">
+              <span class="text-xs text-[#00236F] font-bold flex items-center gap-1.5">
+                <img src="/asset/images/customer/icon_gioi_tinh.svg" class="w-3.5 h-3.5" />
+                Giới tính
+              </span>
+              <span [ngClass]="authService.currentUser()?.gender ? 'text-sm font-bold text-slate-800' : 'text-sm font-normal text-slate-400'">
+                {{ authService.currentUser()?.gender || 'Chưa thiết lập' }}
+              </span>
+            </div>
+
+            <!-- Email -->
+            <div class="flex flex-col gap-1">
+              <span class="text-xs text-[#00236F] font-bold flex items-center gap-1.5">
+                <img src="/asset/images/customer/icon_email.svg" class="w-3.5 h-3.5" />
+                Email
+              </span>
+              <span [ngClass]="authService.currentUser()?.email ? 'text-sm font-bold text-slate-800' : 'text-sm font-normal text-slate-400'">
+                {{ authService.currentUser()?.email || 'Chưa thiết lập' }}
+              </span>
+            </div>
+
+            <!-- Ngày sinh -->
+            <div class="flex flex-col gap-1">
+              <span class="text-xs text-[#00236F] font-bold flex items-center gap-1.5">
+                <img src="/asset/images/customer/icon_lich.svg" class="w-3.5 h-3.5" />
+                Ngày sinh
+              </span>
+              <span [ngClass]="authService.currentUser()?.birthday ? 'text-sm font-bold text-slate-800' : 'text-sm font-normal text-slate-400'">
+                {{ authService.currentUser()?.birthday ? (authService.currentUser()?.birthday | date:'dd/MM/yyyy') : 'Chưa thiết lập' }}
+              </span>
+            </div>
+
+            <!-- Nghề nghiệp -->
+            <div class="flex flex-col gap-1">
+              <span class="text-xs text-[#00236F] font-bold flex items-center gap-1.5">
+                <img src="/asset/images/customer/icon_nghe_nghiep.svg" class="w-3.5 h-3.5" />
+                Nghề nghiệp
+              </span>
+              <span [ngClass]="authService.currentUser()?.occupation ? 'text-sm font-bold text-slate-800' : 'text-sm font-normal text-slate-400'">
+                {{ authService.currentUser()?.occupation || 'Chưa thiết lập' }}
+              </span>
+            </div>
+
+          </div>
+
+          <!-- EDITABLE INPUT FORM VIEW -->
+          <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="saveEdit()" class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            
+            <!-- Họ và tên -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_personal.svg" class="w-3.5 h-3.5" alt="user icon" />
+                Họ và tên
+              </label>
+              <input type="text" formControlName="name" placeholder="Nhập họ và tên" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium text-slate-800" />
+            </div>
+
+            <!-- Số điện thoại (Disabled) -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_sdt.svg" class="w-3.5 h-3.5" alt="phone icon" />
+                Số điện thoại
+              </label>
+              <div class="relative">
+                <input type="text" [value]="authService.currentUser()?.phoneNumber" disabled class="w-full px-3 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-500 select-none pr-9" />
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 pointer-events-none">
+                  <img src="/asset/images/customer/icon_mat_khau.svg" class="w-4 h-4 opacity-50" alt="lock icon" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Giới tính -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_gioi_tinh.svg" class="w-3.5 h-3.5" alt="gender icon" />
+                Giới tính
+              </label>
+              <select formControlName="gender" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium text-slate-800">
+                <option value="" disabled>Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_email.svg" class="w-3.5 h-3.5" alt="email icon" />
+                Email
+              </label>
+              <input type="text" formControlName="email" autocomplete="off" placeholder="example@gmail.com" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium text-slate-800" />
+              <!-- Immediate Validation warning -->
+              <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.value" class="text-red-500 text-[10px] mt-1 pl-1.5">
+                Định dạng email không hợp lệ.
+              </div>
+            </div>
+
+            <!-- Ngày sinh -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_lich.svg" class="w-3.5 h-3.5" alt="birthday icon" />
+                Ngày sinh
+              </label>
+              <div class="relative w-full">
+                <input 
+                  type="text" 
+                  [value]="profileForm.get('birthday')?.value ? (profileForm.get('birthday')?.value | date:'dd/MM/yyyy') : ''"
+                  placeholder="dd/mm/yyyy"
+                  readonly
+                  (click)="dpProfileBirth.showPicker()"
+                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium text-slate-700 cursor-pointer"
+                />
+                <input 
+                  #dpProfileBirth
+                  type="date" 
+                  formControlName="birthday" 
+                  class="absolute inset-0 opacity-0 pointer-events-none"
+                />
+              </div>
+            </div>
+
+            <!-- Nghề nghiệp -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_nghe_nghiep.svg" class="w-3.5 h-3.5" alt="occupation icon" />
+                Nghề nghiệp
+              </label>
+              <select formControlName="occupation" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium text-slate-800">
+                <option value="" disabled>Bạn đang là...</option>
+                <option value="Học sinh/Sinh viên">Học sinh / Sinh viên</option>
+                <option value="Nhân viên văn phòng">Nhân viên văn phòng</option>
+                <option value="Kinh doanh tự do">Kinh doanh tự do</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom action button container: Always centered in the middle of the form -->
+      <div class="flex justify-center gap-3 mt-8 border-t border-slate-100 pt-6">
+        <!-- Edit Profile trigger CTA -->
+        <button 
+          *ngIf="!isEditing" 
+          (click)="startEdit()" 
+          class="px-8 py-3 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer w-full sm:w-auto text-center"
+        >
+          Chỉnh sửa hồ sơ
+        </button>
+        
+        <!-- Cancel and Save Changes CTAs (Hủy bỏ button matches Image 1) -->
+        <button 
+          *ngIf="isEditing" 
+          type="button" 
+          (click)="cancelEdit()" 
+          class="px-6 py-2.5 border-2 border-[#00236F] text-[#00236F] hover:bg-blue-50/50 rounded-xl font-bold text-sm transition-all cursor-pointer bg-white"
+        >
+          Hủy bỏ
+        </button>
+        <button 
+          *ngIf="isEditing" 
+          (click)="saveEdit()" 
+          class="px-6 py-2.5 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+        >
+          Lưu thay đổi
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Tab 2 CONTENT: BẢO MẬT TÀI KHOẢN -->
+    <div *ngIf="activeTab === 'security'" class="bg-white rounded-[24px] border border-slate-100 p-8 md:p-10 shadow-sm flex flex-col">
+      <h2 class="text-2xl font-extrabold text-[#00236F] text-center mb-8">Bảo mật tài khoản</h2>
+
+      <!-- Section: XÁC THỰC CƠ BẢN -->
+      <div class="mb-8">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Xác thực cơ bản</h3>
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 border border-slate-100 rounded-2xl hover:bg-slate-50/50 transition-all">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#1E3A8A] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Đổi mật khẩu</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Thay đổi mật khẩu định kỳ để bảo vệ tài khoản</p>
+              <div class="text-xs text-slate-400 font-medium tracking-widest mt-1">••••••••</div>
+            </div>
+          </div>
+          <button 
+            (click)="openChangePassword()" 
+            class="text-[#FF6600] font-bold text-xs bg-transparent border-0 cursor-pointer p-0 hover:underline hover:opacity-90 self-start sm:self-center select-none"
+          >
+            Đổi mật khẩu
+          </button>
+        </div>
+      </div>
+
+      <!-- Section: BẢO MẬT NÂNG CAO -->
+      <div class="mb-8">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Bảo mật nâng cao</h3>
+        
+        <div class="flex items-center justify-between p-4 border border-slate-100 rounded-2xl hover:bg-slate-50/50 transition-all">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-orange-50 text-[#FF6600] flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Xác thực 2 lớp (2FA)</h4>
+              <p class="text-xs text-slate-500 mt-0.5 max-w-lg">Bảo vệ tài khoản bằng mã OTP gửi về SĐT/Email khi đăng nhập ở thiết bị lạ</p>
+              <div class="text-xs font-bold mt-1" [ngClass]="is2FAEnabled ? 'text-emerald-600' : 'text-[#FF6600]'">
+                {{ is2FAEnabled ? 'Đang bật' : 'Đang tắt' }}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Custom Toggle Switch -->
+          <label (click)="onToggle2FAClick($event)" class="relative inline-flex items-center cursor-pointer select-none">
+            <input type="checkbox" [checked]="is2FAEnabled" disabled class="sr-only" />
+            <div 
+              [class.bg-emerald-500]="is2FAEnabled"
+              [class.bg-slate-200]="!is2FAEnabled"
+              class="w-11 h-6 rounded-full transition-colors duration-300 relative"
+            >
+              <div 
+                [class.translate-x-5]="is2FAEnabled"
+                [class.translate-x-0]="!is2FAEnabled"
+                class="absolute top-[2px] left-[2px] bg-white rounded-full h-5 w-5 transition-transform duration-300 shadow-sm"
+              ></div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Section: QUYỀN RIÊNG TƯ & QUẢN TRỊ TÀI KHOẢN -->
+      <div>
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Quyền riêng tư & Quản trị tài khoản</h3>
+        
+        <div class="flex flex-col gap-4 p-4 border border-slate-100 rounded-2xl hover:bg-slate-50/50 transition-all">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-[#1E3A8A] flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25M19.5 5.25L12 11.25m0 0l-7.5-6M12 11.25v7.5" />
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-sm">Quản lý thiết bị đăng nhập</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Danh sách các thiết bị đang đăng nhập tài khoản của bạn</p>
+              </div>
+            </div>
+            
+            <button 
+              *ngIf="devicesList.length > 1" 
+              (click)="confirmLogoutAllOtherDevices()" 
+              class="text-xs font-bold text-[#FF6600] hover:text-[#e05900] bg-transparent border-0 cursor-pointer self-start sm:self-center hover:underline p-0"
+            >
+              Đăng xuất tất cả thiết bị khác
+            </button>
+          </div>
+
+          <!-- Nested Devices List: Slightly indented (ml-6 pl-4) with a custom scrollbar (max-h-[170px]) -->
+          <div class="ml-6 pl-4 border-l border-slate-100 max-h-[170px] overflow-y-auto pr-2 flex flex-col gap-3 mt-2 scrollbar-thin">
+            <div *ngFor="let device of devicesList" class="flex items-center justify-between p-3 border border-slate-50 rounded-xl bg-white shadow-sm hover:shadow transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 shrink-0">
+                  <svg *ngIf="device.id === 'chrome'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25M19.5 5.25L12 11.25m0 0l-7.5-6M12 11.25v7.5" />
+                  </svg>
+                  <svg *ngIf="device.id !== 'chrome'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-800">{{ device.name }}</span>
+                    <span *ngIf="device.status" class="px-1.5 py-0.5 text-[8px] font-bold text-blue-600 bg-blue-50 rounded">{{ device.status }}</span>
+                  </div>
+                  <span class="text-[10px] text-slate-400">{{ device.time }}</span>
+                </div>
+              </div>
+              
+              <!-- Device card logout link: Triggers the Image 3 confirmation modal -->
+              <button 
+                *ngIf="!device.isCurrent"
+                (click)="removeDevice(device.id)" 
+                class="text-[#FF6600] font-bold text-xs hover:underline bg-transparent border-0 cursor-pointer p-0"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Deactivation Row -->
+        <div class="flex items-center justify-between p-4 border border-slate-100 rounded-2xl hover:bg-slate-50/50 transition-all mt-4">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-800 text-sm">Khóa tài khoản</h4>
+              <p class="text-xs text-slate-500 mt-0.5 max-w-lg">Tài khoản và mọi dữ liệu liên quan sẽ bị khóa vĩnh viễn. Hành động này không thể hoàn tác.</p>
+            </div>
+          </div>
+          <button 
+            (click)="openLockAccount()" 
+            class="text-xs font-bold text-red-600 hover:underline bg-transparent border-0 cursor-pointer select-none"
+          >
+            Khóa tài khoản
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tab 3 CONTENT: LỊCH SỬ MUA VÉ (Full layout matching Image 5) -->
+    <div *ngIf="activeTab === 'tickets'" class="bg-white rounded-[24px] border border-slate-100 p-6 md:p-8 shadow-sm flex flex-col">
+      <h2 class="text-2xl font-extrabold text-[#00236F] text-center mb-8">Lịch sử mua vé</h2>
+      
+      <!-- Search and Filters Section -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        
+        <!-- Search bar -->
+        <div class="relative flex items-center">
+          <span class="absolute left-3 text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.637 10.637z" />
+            </svg>
+          </span>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            placeholder="Tìm theo mã vé hoặc tuyến đường..." 
+            class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] text-xs font-semibold text-slate-800 transition-all placeholder:text-slate-400"
+          />
+        </div>
+
+        <!-- Status Filter Select -->
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">Trạng thái:</label>
+          <select 
+            [(ngModel)]="statusFilter" 
+            class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] text-xs font-bold text-slate-800 cursor-pointer"
+          >
+            <option value="Tất cả">Tất cả</option>
+            <option value="CHỜ THANH TOÁN">Chờ thanh toán</option>
+            <option value="CHỜ KHỞI HÀNH">Chờ khởi hành</option>
+            <option value="ĐÃ HOÀN THÀNH">Đã hoàn thành</option>
+            <option value="ĐÃ HỦY">Đã hủy</option>
+            <option value="ĐÃ ĐÁNH GIÁ">Đã đánh giá</option>
+          </select>
+        </div>
+
+        <!-- Date Picker Filter -->
+        <div class="flex items-center gap-2 relative">
+          <label class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">Thời gian:</label>
+          <div class="flex-1 relative">
+            <input 
+              type="text" 
+              [value]="dateFilter ? (dateFilter | date:'dd/MM/yyyy') : ''"
+              placeholder="dd/mm/yyyy"
+              readonly
+              (click)="dpTime.showPicker()"
+              class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] text-xs font-semibold text-slate-800 cursor-pointer"
+            />
+            <input 
+              #dpTime
+              type="date" 
+              [(ngModel)]="dateFilter" 
+              class="absolute inset-0 opacity-0 pointer-events-none"
+            />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Centered Xóa bộ lọc button under search and filters -->
+      <div class="flex justify-center mb-6" *ngIf="searchQuery || statusFilter !== 'Tất cả' || dateFilter">
+        <button 
+          (click)="clearFilters()"
+          class="text-xs font-bold text-[#FF6600] hover:text-[#e05900] flex items-center gap-1.5 bg-[#FFF9F5] border border-orange-200 px-4 py-2 rounded-xl cursor-pointer select-none transition-all shadow-sm"
+        >
+          <span>Xóa bộ lọc</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Ticket Cards List -->
+      <div *ngIf="filteredTickets.length > 0; else noTickets" class="flex flex-col gap-4">
+        
+        <div 
+          *ngFor="let ticket of paginatedTickets" 
+          class="border border-slate-100 rounded-2xl p-5 hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-5 relative bg-white"
+        >
+          <!-- Left border colored by status (border thickness 4px) -->
+          <div class="absolute left-0 top-4 bottom-4 w-1 rounded-r-lg"
+               [ngClass]="{
+                 'bg-orange-500': ticket.status === 'CHỜ THANH TOÁN',
+                 'bg-blue-500': ticket.status === 'CHỜ KHỞI HÀNH',
+                 'bg-emerald-500': ticket.status === 'ĐÃ HOÀN THÀNH',
+                 'bg-red-500': ticket.status === 'ĐÃ HỦY',
+                 'bg-cyan-500': ticket.status === 'ĐÃ ĐÁNH GIÁ'
+               }">
+          </div>
+
+          <!-- Main Info Column -->
+          <div class="flex-1 pl-2">
+            <!-- Header Row: Badge & Ticket ID -->
+            <div class="flex flex-wrap items-center gap-3 mb-3">
+              <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg border shadow-sm select-none"
+                    [ngClass]="{
+                      'text-[#FF6600] bg-orange-50 border-orange-100': ticket.status === 'CHỜ THANH TOÁN',
+                      'text-blue-600 bg-blue-50 border-blue-100': ticket.status === 'CHỜ KHỞI HÀNH',
+                      'text-emerald-600 bg-emerald-50 border-emerald-100': ticket.status === 'ĐÃ HOÀN THÀNH',
+                      'text-rose-600 bg-rose-50 border-rose-100': ticket.status === 'ĐÃ HỦY',
+                      'text-cyan-600 bg-cyan-50 border-cyan-100': ticket.status === 'ĐÃ ĐÁNH GIÁ'
+                    }">
+                {{ ticket.status }}
+              </span>
+              <span class="text-xs font-bold text-slate-400">Mã vé: <strong class="text-slate-800">{{ ticket.id }}</strong></span>
+            </div>
+
+            <!-- Route and Time Layout (Matches Image 5 timeline style) -->
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4 md:gap-8 mt-1">
+              
+              <!-- Travel Route Timeline -->
+              <div class="flex items-center gap-4 shrink-0">
+                <div class="flex flex-col items-center">
+                  <span class="text-base font-extrabold text-slate-800 leading-none">{{ ticket.depTime }}</span>
+                  <span class="text-[10px] text-slate-400 font-bold uppercase mt-1">{{ ticket.depLoc }}</span>
+                </div>
+
+                <!-- Custom arrow line with bus icon -->
+                <div class="flex flex-col items-center gap-0.5 min-w-[100px] sm:min-w-[120px]">
+                  <div class="flex items-center w-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                    <span class="flex-1 h-px border-t border-dashed border-slate-300 mx-1"></span>
+                    <!-- Bus Icon SVG (Stroke-based, completely visible) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-400 shrink-0">
+                      <rect x="3" y="4" width="18" height="12" rx="2" />
+                      <path d="M3 11h18" />
+                      <path d="M12 4v7" />
+                      <circle cx="7" cy="19" r="2" />
+                      <circle cx="17" cy="19" r="2" />
+                    </svg>
+                    <span class="flex-1 h-px border-t border-dashed border-slate-300 mx-1"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#FF6600]"></span>
+                  </div>
+                  <span class="text-[9px] text-slate-400 font-bold">{{ ticket.duration }}</span>
+                </div>
+
+                <div class="flex flex-col items-center">
+                  <span class="text-base font-extrabold text-slate-800 leading-none">{{ ticket.arrTime }}</span>
+                  <span class="text-[10px] text-slate-400 font-bold uppercase mt-1">{{ ticket.arrLoc }}</span>
+                </div>
+              </div>
+
+              <!-- Ticket Info: Seat, Car Type -->
+              <div class="flex flex-col gap-1 text-xs text-slate-600 font-semibold sm:border-l sm:border-slate-100 sm:pl-6">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-slate-400">Ghế:</span>
+                  <strong class="text-[#00236F]">{{ ticket.seat }}</strong>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-slate-400">Loại:</span>
+                  <span class="text-slate-800">{{ ticket.type }}</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Date text under details -->
+            <div class="flex items-center gap-1.5 text-[11px] text-slate-400 font-semibold mt-3">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+              </svg>
+              <span>{{ ticket.dateLabel }}</span>
+            </div>
+
+          </div>
+
+          <!-- Price & CTA Buttons Column -->
+          <div class="flex flex-row md:flex-col md:items-end justify-between items-center gap-4 border-t md:border-t-0 border-slate-50 pt-4 md:pt-0 shrink-0">
+            <div class="text-right">
+              <div class="text-xs font-bold text-slate-400">Tổng cộng</div>
+              <div class="text-lg font-extrabold text-[#FF6600]">{{ ticket.priceLabel }}</div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex gap-2">
+              <!-- Rebook button (shows for finished/canceled/evaluated tickets) -->
+              <button 
+                *ngIf="ticket.status === 'ĐÃ HOÀN THÀNH' || ticket.status === 'ĐÃ HỦY' || ticket.status === 'ĐÃ ĐÁNH GIÁ'" 
+                (click)="rebookTicket(ticket.id)"
+                class="px-3 py-2 border border-slate-300 text-slate-600 hover:bg-slate-50 rounded-xl font-bold text-xs transition-all cursor-pointer bg-white select-none whitespace-nowrap"
+              >
+                Đặt lại chuyến
+              </button>
+              
+              <!-- Primary Detail CTA -->
+              <button 
+                (click)="viewTicketDetail(ticket.id)" 
+                class="px-4 py-2 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white font-bold text-xs rounded-xl shadow-sm hover:shadow transition-all cursor-pointer border-0 select-none whitespace-nowrap"
+              >
+                Chi tiết
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Pagination Section centered below the list -->
+        <div class="flex items-center justify-center gap-1.5 mt-8 select-none">
+          <!-- Prev page -->
+          <button 
+            (click)="prevPage()" 
+            [disabled]="currentPage === 1"
+            [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1}"
+            class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 flex items-center justify-center cursor-pointer transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          
+          <!-- Page numbers -->
+          <button 
+            *ngFor="let num of pageNumbers" 
+            (click)="goToPage(num)"
+            [ngClass]="num === currentPage ? 'bg-[#00236F] text-white' : 'border border-slate-200 text-slate-600 hover:bg-slate-50'"
+            class="w-8 h-8 rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer select-none"
+          >
+            {{ num }}
+          </button>
+          
+          <!-- Next page -->
+          <button 
+            (click)="nextPage()" 
+            [disabled]="currentPage === totalPages"
+            [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages}"
+            class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 flex items-center justify-center cursor-pointer transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- No Tickets Placeholder state -->
+      <ng-template #noTickets>
+        <!-- Case A: Completely empty history (user has no tickets at all) -->
+        <div *ngIf="userTickets.length === 0" class="min-h-[400px] flex flex-col items-center justify-center text-center p-6 bg-white rounded-2xl">
+          <!-- Ticket outline icon -->
+          <div class="relative mb-6">
+            <div class="w-36 h-36 bg-slate-50/50 rounded-full flex items-center justify-center relative shadow-inner">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.2" stroke="currentColor" class="w-20 h-20 text-slate-300">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-3.75-5.25h-.008v.008h.008v-.008zm-3.75 0h-.008v.008h.008v-.008zm-3.75 0h-.008v.008h.008v-.008zm-.75-5.25h.008v.008H5.25v-.008zm0 2.25h.008v.008H5.25v-.008zm0 2.25h.008v.008H5.25v-.008zm0 2.25h.008v.008H5.25v-.008zM18 6.75A2.25 2.25 0 0015.75 4.5H8.25A2.25 2.25 0 006 6.75v10.5A2.25 2.25 0 008.25 19.5h7.5A2.25 2.25 0 0018 17.25V6.75z" />
+              </svg>
+              <!-- Small orange ticket sub-badge or box -->
+              <span class="absolute bottom-2 right-2 w-7 h-7 bg-white text-[#FF6600] rounded-xl flex items-center justify-center border border-slate-100 shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9" />
+                </svg>
+              </span>
+            </div>
+          </div>
+          
+          <h3 class="text-lg md:text-xl font-extrabold text-slate-800 mb-2">Bạn chưa có lịch sử đặt vé nào</h3>
+          <p class="text-slate-400 text-xs md:text-sm max-w-sm leading-relaxed mb-6 font-medium">
+            Dường như bạn chưa thực hiện bất kỳ chuyến đi nào cùng VIAGO. Hãy bắt đầu hành trình của bạn ngay hôm nay!
+          </p>
+          
+          <!-- CTA: Đặt vé ngay -->
+          <a 
+            routerLink="/" 
+            class="px-6 py-3 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer border-0 select-none"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.82-13.14a2.25 2.25 0 00-2.247-2.11H13.75" />
+            </svg>
+            <span>Đặt vé ngay</span>
+          </a>
+        </div>
+
+        <!-- Case B: No matches found from search/filters (but user has history) -->
+        <div *ngIf="userTickets.length > 0" class="min-h-[300px] flex flex-col items-center justify-center text-center p-6 bg-white rounded-2xl">
+          <div class="relative mb-4">
+            <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center relative">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-slate-300">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.637 10.637z" />
+              </svg>
+            </div>
+          </div>
+
+          <h3 class="text-base md:text-lg font-extrabold text-slate-800 mb-1">Không tìm thấy kết quả phù hợp</h3>
+          <p class="text-slate-400 text-xs md:text-sm max-w-xs leading-relaxed mb-5 font-semibold">
+            Vui lòng thử lại với từ khóa tìm kiếm hoặc bộ lọc khác.
+          </p>
+
+        </div>
+      </ng-template>
+
+    </div>
+
+    <!-- Tab 4 CONTENT: ĐẶC QUYỀN THÀNH VIÊN -->
+    <div *ngIf="activeTab === 'privileges'" class="bg-white rounded-[24px] border border-slate-100 p-6 md:p-10 shadow-sm flex flex-col">
+      <h2 class="text-2xl font-extrabold text-[#00236F] text-center mb-2">Hạng thành viên của bạn</h2>
+      
+      <!-- Cards Slider Carousel (Silver, Gold, Diamond cards in order) -->
+      <!-- Cards Slider Carousel (Silver, Gold, Diamond cards in order) -->
+      <div class="relative w-full max-w-[500px] md:max-w-[550px] mx-auto flex items-center justify-between gap-4 py-6 overflow-visible">
+        <!-- Left Arrow Button -->
+        <button (click)="prevCard()" class="w-10 h-10 rounded-full border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 flex items-center justify-center cursor-pointer transition-colors shadow-sm shrink-0 z-35">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+
+        <!-- Cards Slider Container -->
+        <div class="flex-1 flex items-center justify-center relative overflow-visible h-[200px]">
+          <!-- Card 0: Bạc (Silver) -->
+          <div [class]="getCardClass(0) + ' bg-gradient-to-br from-slate-400 via-slate-200 to-slate-500 text-slate-800'" (click)="activeCardIndex = 0">
+            <div *ngIf="isCardLocked(0)" class="absolute inset-0 bg-slate-900/60 rounded-2xl flex flex-col items-center justify-center z-30 backdrop-blur-[1px]">
+              <div class="w-10 h-10 rounded-full bg-white text-slate-800 flex items-center justify-center shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+              </div>
+              <span class="text-[10px] text-white font-bold mt-2">Hạng Bạc</span>
+            </div>
+            <div class="flex justify-between items-start w-full">
+              <span class="text-xs font-black tracking-widest opacity-80">VIAGO</span>
+              <span class="text-[9px] font-black bg-slate-800/10 text-slate-850 px-2 py-0.5 rounded-full uppercase">SILVER</span>
+            </div>
+            <div class="text-center text-sm font-semibold tracking-wider my-3 w-full">
+              {{ authService.currentUser()?.name || 'Nguyễn Minh Anh' }}
+            </div>
+            <div class="flex justify-between items-end w-full">
+              <span class="text-[10px] font-bold opacity-80">VG-{{ authService.currentUser()?.id || 'KH0001' }}</span>
+              <span class="text-[9px] font-bold bg-white/20 border border-white/20 px-2 py-0.5 rounded">BẠC</span>
+            </div>
+          </div>
+
+          <!-- Card 1: Vàng (Gold) -->
+          <div [class]="getCardClass(1) + ' bg-gradient-to-br from-amber-400 via-yellow-100 to-amber-600 text-amber-950'" (click)="activeCardIndex = 1">
+            <div *ngIf="isCardLocked(1)" class="absolute inset-0 bg-slate-900/60 rounded-2xl flex flex-col items-center justify-center z-30 backdrop-blur-[1px]">
+              <div class="w-10 h-10 rounded-full bg-white text-slate-800 flex items-center justify-center shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+              </div>
+              <span class="text-[10px] text-white font-bold mt-2">Hạng Vàng</span>
+            </div>
+            <div class="flex justify-between items-start w-full">
+              <span class="text-xs font-black tracking-widest opacity-80">VIAGO</span>
+              <span class="text-[9px] font-black bg-amber-950/10 text-amber-950 px-2 py-0.5 rounded-full uppercase">GOLD</span>
+            </div>
+            <div class="text-center text-sm font-semibold tracking-wider my-3 w-full">
+              {{ authService.currentUser()?.name || 'Nguyễn Minh Anh' }}
+            </div>
+            <div class="flex justify-between items-end w-full">
+              <span class="text-[10px] font-bold opacity-80">VG-{{ authService.currentUser()?.id || 'KH0001' }}</span>
+              <span class="text-[9px] font-bold bg-white/20 border border-white/20 px-2 py-0.5 rounded">VÀNG</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Kim cương (Diamond) -->
+          <div [class]="getCardClass(2) + ' bg-gradient-to-br from-[#0B1528] via-[#1E293B] to-[#0F172A] text-indigo-200 border border-indigo-500/30'" (click)="activeCardIndex = 2">
+            <div *ngIf="isCardLocked(2)" class="absolute inset-0 bg-slate-900/60 rounded-2xl flex flex-col items-center justify-center z-30 backdrop-blur-[1px]">
+              <div class="w-10 h-10 rounded-full bg-white text-slate-800 flex items-center justify-center shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+              </div>
+              <span class="text-[10px] text-white font-bold mt-2">Hạng Kim Cương</span>
+            </div>
+            <div class="flex justify-between items-start w-full">
+              <span class="text-xs font-black tracking-widest text-indigo-400">VIAGO</span>
+              <span class="text-[9px] font-black bg-indigo-500/15 text-indigo-300 px-2 py-0.5 rounded-full uppercase">DIAMOND</span>
+            </div>
+            <div class="text-center text-sm font-semibold tracking-wider my-3 w-full text-white">
+              {{ authService.currentUser()?.name || 'Nguyễn Minh Anh' }}
+            </div>
+            <div class="flex justify-between items-end w-full">
+              <span class="text-[10px] font-bold text-indigo-300">VG-{{ authService.currentUser()?.id || 'KH0001' }}</span>
+              <span class="text-[9px] font-bold bg-indigo-500/20 border border-indigo-500/20 px-2 py-0.5 rounded">K.CƯƠNG</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Arrow Button -->
+        <button (click)="nextCard()" class="w-10 h-10 rounded-full border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 flex items-center justify-center cursor-pointer transition-colors shadow-sm shrink-0 z-35">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- side-by-side progress bars -->
+      <div class="w-full max-w-xl mx-auto mt-6 bg-[#FFF9F5] border border-orange-100 rounded-2xl p-5 shadow-sm">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-xs font-bold text-[#00236F] uppercase tracking-wider">Tiến trình thăng hạng</span>
+          <button (click)="selectTab('tickets')" class="text-xs font-bold text-[#FF6600] hover:text-[#e05900] flex items-center gap-1 bg-transparent border-0 cursor-pointer">
+            <span>Chi tiết</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Bar 1: Tổng số vé -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1.5 text-slate-700">
+              <span class="flex items-center gap-1.5">
+                <img src="/asset/images/customer/icon_ve.svg" class="w-4 h-4" alt="ticket icon" />
+                Tổng số vé
+              </span>
+              <span class="text-[#FF6600]">{{ membershipProgress.currentTickets }}/{{ membershipProgress.targetTickets }}</span>
+            </div>
+            <div class="relative w-full bg-slate-200/70 h-3 rounded-full overflow-visible">
+              <div class="bg-gradient-to-r from-[#FF9E00] to-[#FF5C00] h-full rounded-full transition-all duration-500" [style.width.%]="membershipProgress.ticketPercent"></div>
+              <!-- tier icon at the end of progress bar -->
+              <div class="absolute top-[-4px] w-5 h-5 bg-white border border-orange-500 rounded-full flex items-center justify-center shadow-md transition-all duration-500" [style.left.%]="membershipProgress.ticketPinPercent">
+                <img src="/asset/images/customer/icon_ve.svg" class="w-3 h-3 object-contain" alt="ticket icon" />
+              </div>
+            </div>
+          </div>
+          
+          <!-- Bar 2: Tổng chi tiêu -->
+          <div>
+            <div class="flex justify-between items-center text-xs font-bold mb-1.5 text-slate-700">
+              <span class="flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-550"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-1.972-.659-1.106-.83-1.106-2.17 0-3 1.02-.764 2.67-.764 3.69 0l.282.21" /></svg>
+                Tổng chi tiêu
+              </span>
+              <span class="text-[#FF6600]">
+                {{ membershipProgress.currentSpent.toLocaleString('vi-VN') }}đ/{{ membershipProgress.targetSpent >= 1000000 ? (membershipProgress.targetSpent / 1000000) + 'tr' : membershipProgress.targetSpent.toLocaleString('vi-VN') + 'đ' }}
+              </span>
+            </div>
+            <div class="relative w-full bg-slate-200/70 h-3 rounded-full overflow-visible">
+              <div class="bg-gradient-to-r from-[#FF9E00] to-[#FF5C00] h-full rounded-full transition-all duration-500" [style.width.%]="membershipProgress.spentPercent"></div>
+              <!-- tier icon at the end of progress bar -->
+              <div class="absolute top-[-4px] w-5 h-5 bg-white border border-orange-500 rounded-full flex items-center justify-center shadow-md transition-all duration-500" [style.left.%]="membershipProgress.spentPinPercent">
+                <span class="text-[9px] font-black text-[#FF6600]">S</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vùng Ưu đãi hạng -->
+      <div class="mt-10 border-t border-slate-100 pt-8">
+        <h3 class="text-lg font-extrabold text-[#00236F] mb-6">Ưu đãi hạng {{ authService.currentUser()?.rank || 'Khách vãng lai' }}</h3>
+        
+        <div *ngIf="rankVouchers.length > 0; else noRankVouchers" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div *ngFor="let v of rankVouchers" [class]="'relative flex border bg-[#FFF9F5] rounded-2xl overflow-hidden shadow-sm hover:shadow transition-all min-h-[110px] ' + (v.status !== 'active' ? 'grayscale opacity-60' : 'border-orange-200')">
+            <!-- Tear-off circle cutouts (top and bottom of the divider line) -->
+            <div class="absolute right-[30%] -top-2 w-4 h-4 bg-white rounded-full border-b border-orange-200 z-10"></div>
+            <div class="absolute right-[30%] -bottom-2 w-4 h-4 bg-white rounded-full border-t border-orange-200 z-10"></div>
+            
+            <!-- Left Section -->
+            <div class="w-[70%] p-4 flex flex-col justify-between pr-6 border-r border-dashed border-orange-200">
+              <div>
+                <div class="text-lg font-extrabold text-[#FF6600]">{{ v.discount }}</div>
+                <div class="text-xs font-bold text-slate-800 mt-1 leading-snug">{{ v.title }}</div>
+                <div class="text-[10px] text-slate-550 font-semibold mt-0.5 leading-normal">{{ v.description }}</div>
+              </div>
+              <div class="text-[10px] text-slate-400 font-bold mt-2">Hạn: {{ v.validity }}</div>
+            </div>
+            
+            <!-- Right Section -->
+            <div class="w-[30%] p-2 flex flex-col items-center justify-center bg-[#FFFDFB] relative">
+              <!-- Status tags for non-active vouchers -->
+              <span *ngIf="v.status === 'expired'" class="text-[9px] font-extrabold text-red-500 bg-red-50 px-1.5 py-0.5 rounded border border-red-200 mb-1 leading-none">HẾT HẠN</span>
+              <span *ngIf="v.status === 'upcoming'" class="text-[9px] font-extrabold text-amber-500 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-250 mb-1 leading-none text-center">SẮP DIỄN RA</span>
+              <span *ngIf="v.status === 'paused'" class="text-[9px] font-extrabold text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200 mb-1 leading-none">TẠM DỪNG</span>
+              
+              <span class="text-[9px] font-bold bg-white border border-orange-200 border-dashed text-slate-700 px-2 py-0.5 rounded tracking-wide mb-2">{{ v.code }}</span>
+              
+              <button 
+                *ngIf="v.status === 'active'"
+                (click)="claimVoucher(v)" 
+                class="px-4 py-1.5 bg-[#FF6600] hover:bg-[#e05900] text-white font-bold text-[10px] rounded-lg shadow-sm transition-all border-0 cursor-pointer"
+              >
+                {{ isVoucherClaimed(v.code) ? 'Dùng ngay' : 'Lưu' }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <ng-template #noRankVouchers>
+          <div class="text-center py-10 text-slate-400 text-xs font-semibold">Không có ưu đãi đặc quyền nào cho hạng thành viên này.</div>
+        </ng-template>
+      </div>
+
+      <!-- Ví Voucher của tôi (Image 2 style with Image 3 dynamic statuses) -->
+      <div class="mt-10 border-t border-slate-100 pt-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h3 class="text-lg font-extrabold text-[#00236F]">Ví voucher của bạn</h3>
+          
+          <!-- Voucher Tab selectors -->
+          <div class="flex bg-slate-100 p-1 rounded-xl">
+            <button 
+              (click)="activeVoucherTab = 'active'"
+              [class]="activeVoucherTab === 'active' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border-0 select-none"
+            >
+              Còn hạn ({{ activeVouchers.length }})
+            </button>
+            <button 
+              (click)="activeVoucherTab = 'expired'"
+              [class]="activeVoucherTab === 'expired' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700 bg-transparent'"
+              class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border-0 select-none"
+            >
+              Hết hạn / Đã dùng ({{ expiredVouchers.length }})
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 1: Vouchers còn hạn -->
+        <div *ngIf="activeVoucherTab === 'active'">
+          <div *ngIf="activeVouchers.length > 0; else noActiveVouchers" class="relative w-full group">
+            <!-- Left scroll button -->
+            <button (click)="scrollVouchers('left')" class="absolute left-[-18px] top-[50%] translate-y-[-50%] w-8 h-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:bg-slate-50 cursor-pointer z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+            </button>
+            <!-- Right scroll button -->
+            <button (click)="scrollVouchers('right')" class="absolute right-[-18px] top-[50%] translate-y-[-50%] w-8 h-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:bg-slate-50 cursor-pointer z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+            </button>
+
+            <!-- Scroll container -->
+            <div id="voucher-scroll-container" class="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-3 snap-x">
+              <div *ngFor="let v of activeVouchers" class="w-[280px] sm:w-[325px] shrink-0 snap-start relative flex border border-orange-200 bg-[#FFF9F5] rounded-2xl overflow-hidden shadow-sm hover:shadow transition-all min-h-[110px]">
+                <!-- Tear-off circle cutouts (top and bottom of the divider line) -->
+                <div class="absolute right-[30%] -top-2 w-4 h-4 bg-white rounded-full border-b border-orange-200 z-10"></div>
+                <div class="absolute right-[30%] -bottom-2 w-4 h-4 bg-white rounded-full border-t border-orange-200 z-10"></div>
+                
+                <!-- Left Section -->
+                <div class="w-[70%] p-4 flex flex-col justify-between pr-6 border-r border-dashed border-orange-200">
+                  <div>
+                    <div class="text-lg font-extrabold text-[#FF6600]">{{ v.discount }}</div>
+                    <div class="text-xs font-bold text-slate-800 mt-1 leading-snug">{{ v.title }}</div>
+                    <div class="text-[10px] text-slate-500 font-semibold mt-0.5 leading-normal">{{ v.description }}</div>
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-bold mt-2">HSD: {{ v.expiry }}</div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="w-[30%] p-4 flex flex-col items-center justify-center gap-2 bg-[#FFFDFB]">
+                  <span class="text-[9px] font-bold bg-white border border-orange-200 border-dashed text-slate-700 px-2 py-0.5 rounded tracking-wide">{{ v.code }}</span>
+                  <button (click)="viewTicketDetail(v.id)" class="px-3 py-1.5 bg-[#FF6600] hover:bg-[#e05900] text-white font-bold text-[10px] rounded-lg shadow-sm transition-all border-0 cursor-pointer">Dùng ngay</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noActiveVouchers>
+            <div class="text-center py-10 text-slate-400 text-xs font-semibold">Bạn không có voucher nào còn hạn.</div>
+          </ng-template>
+        </div>
+
+        <!-- Tab 2: Vouchers hết hạn / đã dùng -->
+        <div *ngIf="activeVoucherTab === 'expired'">
+          <div *ngIf="expiredVouchers.length > 0; else noExpiredVouchers" class="relative w-full group">
+            <!-- Left scroll button -->
+            <button (click)="scrollVouchersExpired('left')" class="absolute left-[-18px] top-[50%] translate-y-[-50%] w-8 h-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:bg-slate-50 cursor-pointer z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
+            </button>
+            <!-- Right scroll button -->
+            <button (click)="scrollVouchersExpired('right')" class="absolute right-[-18px] top-[50%] translate-y-[-50%] w-8 h-8 rounded-full bg-white border border-slate-200 shadow-md flex items-center justify-center text-slate-600 hover:bg-slate-50 cursor-pointer z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+            </button>
+
+            <!-- Scroll container -->
+            <div id="voucher-scroll-container-expired" class="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-3 snap-x">
+              <div *ngFor="let v of expiredVouchers" class="w-[280px] sm:w-[325px] shrink-0 snap-start relative flex border border-slate-200 bg-[#F8FAFC] rounded-2xl overflow-hidden min-h-[110px]">
+                <!-- Tear-off circle cutouts -->
+                <div class="absolute right-[30%] -top-2 w-4 h-4 bg-white rounded-full border-b border-slate-200 z-10"></div>
+                <div class="absolute right-[30%] -bottom-2 w-4 h-4 bg-white rounded-full border-t border-slate-200 z-10"></div>
+                
+                <!-- Left Section -->
+                <div class="w-[70%] p-4 flex flex-col justify-between pr-6 border-r border-dashed border-slate-200 opacity-60">
+                  <div>
+                    <div class="text-lg font-extrabold text-slate-500">{{ v.discount }}</div>
+                    <div class="text-xs font-bold text-slate-600 mt-1 leading-snug">{{ v.title }}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold mt-0.5 leading-normal">{{ v.description }}</div>
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-bold mt-2">
+                    <span *ngIf="v.status === 'used'">Dùng lúc: {{ v.usedAt }}</span>
+                    <span *ngIf="v.status === 'expired'">Hạn dùng: {{ v.expiry }}</span>
+                  </div>
+                </div>
+                
+                <!-- Right Section -->
+                <div class="w-[30%] p-2 flex flex-col items-center justify-center bg-slate-100 relative">
+                  <!-- Badges ABOVE the promo code -->
+                  <span *ngIf="v.status === 'used'" class="text-[9px] font-extrabold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-350 mb-1 leading-none shadow-sm">ĐÃ DÙNG</span>
+                  <span *ngIf="v.status === 'expired'" class="text-[9px] font-extrabold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-350 mb-1 leading-none shadow-sm">HẾT HẠN</span>
+                  <span class="text-[9px] font-bold bg-white border border-slate-200 border-dashed text-slate-400 px-2 py-0.5 rounded tracking-wide select-none">{{ v.code }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noExpiredVouchers>
+            <div class="text-center py-10 text-slate-400 text-xs font-semibold">Không có lịch sử voucher hết hạn hoặc đã dùng.</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL POPUPS FOR CHANGE PASSWORD & LOGOUTS -->
+<!-- ========================================== -->
+
+<!-- Change Password Sequence Overlay Modal -->
+<div *ngIf="showChangePasswordModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+  
+  <!-- Recaptcha Container (hidden in DOM) -->
+  <div id="profile-recaptcha-container" class="hidden"></div>
+
+  <!-- Step 1: Change Password Input Form Modal -->
+  <div *ngIf="changePasswordStep === 1" class="bg-white rounded-3xl w-full max-w-[420px] shadow-2xl p-6 md:p-8 flex flex-col relative animate-fade-in">
+    <!-- Close button -->
+    <button (click)="closeChangePassword()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 text-xl cursor-pointer">
+      &times;
+    </button>
+
+    <h2 class="text-[#00236F] text-xl md:text-2xl font-extrabold text-center mt-2 mb-8">Đổi mật khẩu</h2>
+
+    <div class="flex flex-col gap-4">
+      <!-- Current Password -->
+      <div class="flex flex-col gap-1.5">
+        <label class="block text-xs font-bold text-[#00236F] pl-0.5">Mật khẩu hiện tại</label>
+        <div class="relative flex items-center">
+          <span class="absolute left-3.5 text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </span>
+          <input 
+            [type]="showCurrentPassword ? 'text' : 'password'" 
+            [(ngModel)]="currentPasswordVal" 
+            placeholder="Nhập mật khẩu hiện tại" 
+            autocomplete="current-password"
+            class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] text-xs font-semibold text-slate-800 transition-all"
+          />
+          <button (click)="showCurrentPassword = !showCurrentPassword" type="button" class="absolute right-3.5 text-slate-400 hover:text-slate-600 bg-transparent border-0 cursor-pointer">
+            <svg *ngIf="showCurrentPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+            </svg>
+            <svg *ngIf="!showCurrentPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- New Password -->
+      <div class="flex flex-col gap-1.5">
+        <label class="block text-xs font-bold text-[#00236F] pl-0.5">Mật khẩu mới</label>
+        <div class="relative flex items-center">
+          <span class="absolute left-3.5 text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </span>
+          <input 
+            [type]="showNewPassword ? 'text' : 'password'" 
+            [(ngModel)]="newPasswordVal" 
+            placeholder="Nhập mật khẩu mới (ít nhất 8 ký tự)" 
+            autocomplete="new-password"
+            class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] text-xs font-semibold text-slate-800 transition-all"
+          />
+          <button (click)="showNewPassword = !showNewPassword" type="button" class="absolute right-3.5 text-slate-400 hover:text-slate-600 bg-transparent border-0 cursor-pointer">
+            <svg *ngIf="showNewPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+            </svg>
+            <svg *ngIf="!showNewPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirm New Password -->
+      <div class="flex flex-col gap-1.5">
+        <label class="block text-xs font-bold text-[#00236F] pl-0.5">Nhập lại mật khẩu mới</label>
+        <div class="relative flex items-center">
+          <span class="absolute left-3.5 text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </span>
+          <input 
+            [type]="showConfirmPassword ? 'text' : 'password'" 
+            [(ngModel)]="confirmPasswordVal" 
+            placeholder="Nhập lại mật khẩu mới" 
+            autocomplete="new-password"
+            class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] text-xs font-semibold text-slate-800 transition-all"
+          />
+          <button (click)="showConfirmPassword = !showConfirmPassword" type="button" class="absolute right-3.5 text-slate-400 hover:text-slate-600 bg-transparent border-0 cursor-pointer">
+            <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+            </svg>
+            <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert warning card above CTA button (designed like Image 1 warning box) -->
+    <div *ngIf="samePasswordAlert || currentPasswordError || newPasswordError || confirmPasswordError" class="mt-5 p-3.5 bg-rose-50 border border-rose-100 rounded-xl text-red-700 text-xs font-bold leading-normal flex gap-2.5 items-start animate-fade-in animate-shake">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5 text-red-500 shrink-0 mt-0.5">
+        <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+      </svg>
+      <span>{{ samePasswordAlert ? 'Mật khẩu mới không được trùng với mật khẩu hiện tại.' : (currentPasswordError || newPasswordError || confirmPasswordError) }}</span>
+    </div>
+
+    <button 
+      (click)="onPasswordSubmit()" 
+      class="mt-6 w-full py-3.5 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer border-0 text-center"
+    >
+      Tiếp tục
+    </button>
+  </div>
+
+  <!-- Step 2: OTP Verification Modal (CSS matches registration/forgot password OTP exactly) -->
+  <div *ngIf="changePasswordStep === 2" class="bg-white rounded-3xl w-full max-w-[420px] shadow-2xl p-6 md:p-8 flex flex-col items-center relative animate-fade-in">
+    <!-- Close Button -->
+    <button (click)="closeChangePassword()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 text-xl cursor-pointer">
+      &times;
+    </button>
+
+    <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-3">Nhập mã xác thực</h2>
+    
+    <p class="text-slate-500 text-sm text-center mb-8 font-medium">
+      Mã xác thực đã được gửi về số <span class="font-bold text-[#00236F]">{{ authService.currentUser()?.phoneNumber }}</span>
+    </p>
+
+    <!-- Blue Test Environment OTP Alertbox -->
+    <div *ngIf="generatedOtp" class="w-full max-w-sm mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-805 flex gap-2 items-center justify-center animate-fade-in mx-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5 text-blue-600 shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+      </svg>
+      <span>[Môi trường Thử nghiệm] Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
+    </div>
+
+    <!-- Single Hidden Input OTP Container -->
+    <div class="relative flex justify-center gap-2 md:gap-3 mb-6 w-full max-w-sm mx-auto">
+      <!-- Hidden input covering the entire area -->
+      <input 
+        type="text" 
+        maxlength="6" 
+        pattern="[0-9]*"
+        inputmode="numeric"
+        autocomplete="off"
+        [value]="otpString"
+        (input)="onOtpInput($event)"
+        (focus)="isOtpFocused = true"
+        (blur)="isOtpFocused = false"
+        (paste)="onOtpPaste($event)"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-text z-10"
+      />
+      <!-- 6 Visual Boxes -->
+      <div 
+        *ngFor="let box of [0, 1, 2, 3, 4, 5]; let i = index"
+        [class]="(isOtpFocused && otpString.length === i) 
+          ? 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-[#00236F] ring-2 ring-[#00236F]/10 bg-white rounded-xl transition-all' 
+          : 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-slate-200 bg-slate-50 rounded-xl transition-all'"
+      >
+        {{ otpString.charAt(i) }}
+      </div>
+    </div>
+
+    <!-- Countdown Timer and Resend Link -->
+    <div class="flex justify-between w-full max-w-sm mb-6 text-sm font-semibold">
+      <span class="text-slate-500">
+        Thời gian còn lại: 
+        <span class="text-[#FF6600] font-bold tracking-wider">{{ getFormattedTime() }}</span>
+      </span>
+      <button 
+        type="button" 
+        (click)="resendChangePasswordOtp()" 
+        [disabled]="otpTimer > 0" 
+        class="text-[#00236F] disabled:text-slate-400 hover:text-blue-900 cursor-pointer disabled:cursor-not-allowed hover:underline bg-transparent border-0 p-0"
+      >
+        Gửi lại mã
+      </button>
+    </div>
+
+    <!-- Alert warning card above CTA button (designed like Image 1 warning box) -->
+    <div *ngIf="otpErrorMessage" class="w-full max-w-sm bg-rose-50 border border-rose-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start mb-5 animate-fade-in">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5 text-red-500 shrink-0 mt-0.5">
+        <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+      </svg>
+      <span>{{ otpErrorMessage }}</span>
+    </div>
+
+    <button 
+      type="button"
+      (click)="verifyChangePasswordOtp()" 
+      class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer border-0"
+    >
+      Xác nhận
+    </button>
+
+    <!-- Back Button -->
+    <a 
+      (click)="goBackToPasswordForm()" 
+      class="mt-2 flex items-center justify-start w-auto gap-2 text-sm font-bold text-[#00236F] hover:text-blue-900 cursor-pointer group select-none self-start"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+      </svg>
+      <span>Quay lại</span>
+    </a>
+  </div>
+
+  <!-- Step 3: Centered Success Status Modal (Omit description text, display 1.5s - 2s) -->
+  <div *ngIf="changePasswordStep === 3" class="bg-white rounded-3xl w-full max-w-[360px] shadow-2xl p-8 flex flex-col items-center justify-center text-center animate-fade-in relative z-50">
+    <!-- Icon trạng thái (Vòng tròn tích Xanh lá cây) -->
+    <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mb-5 shrink-0 shadow-sm border border-emerald-100">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor" class="w-8 h-8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+      </svg>
+    </div>
+    
+    <!-- Tiêu đề (Màu Xanh dương đậm VIAGO) -->
+    <h2 class="text-[#00236F] text-xl font-extrabold mb-1">Đổi mật khẩu thành công</h2>
+  </div>
+
+</div>
+
+<!-- Popup 3: Đăng xuất tất cả thiết bị khác Confirmation Modal -->
+<div *ngIf="showLogoutAllModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+  <div class="bg-white rounded-3xl w-full max-w-[400px] shadow-2xl p-6 md:p-8 flex flex-col relative animate-fade-in">
+    <!-- Close Button -->
+    <button (click)="showLogoutAllModal = false" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 text-xl cursor-pointer">
+      &times;
+    </button>
+
+    <h2 class="text-[#00236F] text-lg md:text-xl font-extrabold text-center mt-2 mb-3 px-2 leading-snug">
+      Đăng xuất tất cả thiết bị khác?
+    </h2>
+    
+    <p class="text-slate-500 text-xs md:text-sm text-center leading-relaxed max-w-xs mx-auto mb-8">
+      Bạn sẽ cần đăng nhập lại trên các thiết bị đó để tiếp tục sử dụng dịch vụ.
+    </p>
+
+    <!-- CTAs Container -->
+    <div class="flex gap-4">
+      <button 
+        (click)="showLogoutAllModal = false" 
+        class="flex-1 py-3 border-2 border-[#00236F] text-[#00236F] hover:bg-slate-50 font-bold text-xs rounded-xl transition-all cursor-pointer bg-white"
+      >
+        Hủy bỏ
+      </button>
+      <button 
+        (click)="logoutAllOtherDevices()" 
+        class="flex-1 py-3 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer border-0"
+      >
+        Đăng xuất
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup 4: Đăng xuất khỏi thiết bị này Confirmation Modal (Device card logouts only) -->
+<div *ngIf="showDeviceLogoutConfirm" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+  <div class="bg-white rounded-3xl w-full max-w-[400px] shadow-2xl p-6 md:p-8 flex flex-col relative animate-fade-in">
+    <!-- Close Button -->
+    <button (click)="showDeviceLogoutConfirm = false" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 text-xl cursor-pointer">
+      &times;
+    </button>
+
+    <h2 class="text-[#00236F] text-lg md:text-xl font-extrabold text-center mt-2 mb-3 px-2 leading-snug">
+      Đăng xuất khỏi thiết bị này?
+    </h2>
+    
+    <p class="text-slate-500 text-xs md:text-sm text-center leading-relaxed max-w-xs mx-auto mb-8">
+      Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng dịch vụ trên thiết bị này.
+    </p>
+
+    <!-- CTAs Container -->
+    <div class="flex gap-4">
+      <button 
+        (click)="showDeviceLogoutConfirm = false" 
+        class="flex-1 py-3 border-2 border-[#00236F] text-[#00236F] hover:bg-slate-50 font-bold text-xs rounded-xl transition-all cursor-pointer bg-white"
+      >
+        Hủy bỏ
+      </button>
+      <button 
+        (click)="confirmDeviceLogout()" 
+        class="flex-1 py-3 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer border-0"
+      >
+        Đăng xuất
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup 5: Khóa tài khoản Confirmation & Success Waiting Modal -->
+<div *ngIf="showLockAccountModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+  
+  <!-- Step 1: Input Password Form to Confirm Deactivation -->
+  <div *ngIf="!isLockingProcess" class="bg-white rounded-3xl w-full max-w-[420px] shadow-2xl p-6 md:p-8 flex flex-col relative animate-fade-in">
+    <!-- Close Button -->
+    <button (click)="closeLockAccount()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 text-xl cursor-pointer">
+      &times;
+    </button>
+
+    <!-- Title with Red Alert Triangle -->
+    <div class="flex flex-col items-center mt-2 mb-4 text-center">
+      <span class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </span>
+      <h2 class="text-red-600 text-lg md:text-xl font-bold px-2 leading-snug">
+        Xác nhận khóa tài khoản
+      </h2>
+    </div>
+
+    <!-- Alert warning text -->
+    <p class="text-slate-600 text-xs md:text-sm text-center leading-relaxed mb-6 font-medium">
+      Hành động này không thể hoàn tác. Toàn bộ lịch sử mua vé và thông tin cá nhân của bạn sẽ bị <span class="text-[#FF6600] font-bold">xóa vĩnh viễn</span>. Nếu bạn chắc chắn muốn khóa tài khoản, hãy nhập lại mật khẩu hiện tại của bạn tại đây:
+    </p>
+
+    <!-- Password Input with real-time verify -->
+    <div class="flex flex-col gap-1.5">
+      <div class="relative flex items-center">
+        <span class="absolute left-3.5 text-slate-400">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        </span>
+        <input 
+          [type]="showConfirmPassword ? 'text' : 'password'" 
+          [(ngModel)]="lockConfirmPassword" 
+          (input)="checkLockPassword()"
+          placeholder="Nhập mật khẩu hiện tại" 
+          class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] text-xs font-semibold text-slate-800 transition-all"
+        />
+        <button (click)="showConfirmPassword = !showConfirmPassword" type="button" class="absolute right-3.5 text-slate-400 hover:text-slate-600 bg-transparent border-0 cursor-pointer">
+          <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+          </svg>
+          <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Red warning alert if password incorrect (designed like Image 1 warning box) -->
+      <div *ngIf="lockPasswordError" class="mt-2.5 p-3 bg-rose-50 border border-rose-100 rounded-xl text-red-700 text-xs font-bold leading-normal flex gap-2 items-start animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5 text-red-500 shrink-0 mt-0.5">
+          <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ lockPasswordError }}</span>
+      </div>
+    </div>
+
+    <!-- CTAs: Confirm button is faded/disabled unless password is correct -->
+    <div class="flex gap-4 mt-6">
+      <button 
+        (click)="closeLockAccount()" 
+        class="flex-1 py-3 border-2 border-[#00236F] text-[#00236F] hover:bg-slate-50 font-bold text-xs rounded-xl transition-all cursor-pointer bg-white"
+      >
+        Hủy bỏ
+      </button>
+      <button 
+        (click)="confirmLockAccount()" 
+        [disabled]="!isLockPasswordCorrect" 
+        [ngClass]="isLockPasswordCorrect 
+          ? 'flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer border-0' 
+          : 'flex-1 py-3 bg-red-200 text-red-400 font-bold text-xs rounded-xl transition-all cursor-not-allowed border-0'"
+      >
+        Xác nhận khóa
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 2: Red Lock success modal waiting state (shown for 2s) -->
+  <div *ngIf="isLockingProcess" class="bg-white rounded-3xl w-full max-w-[360px] shadow-2xl p-8 flex flex-col items-center justify-center text-center animate-fade-in relative z-50">
+    <!-- Icon trạng thái (Vòng tròn tích đỏ ổ khóa) -->
+    <div class="w-16 h-16 rounded-full bg-red-50 text-red-500 flex items-center justify-center mb-5 shrink-0 shadow-sm border border-red-100">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-7 h-7">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+      </svg>
+    </div>
+    
+    <!-- Tiêu đề (Màu Đỏ) -->
+    <h2 class="text-red-600 text-xl font-extrabold mb-2">Khóa tài khoản thành công</h2>
+    <p class="text-slate-400 text-[11px] leading-relaxed max-w-[240px]">
+      Hệ thống đang đăng xuất và quay trở lại trang chủ...
+    </p>
+  </div>
+
+</div>
+
+<!-- Popup 2FA Step 1: Chọn Phương thức (Số điện thoại / Email) -->
+<div *ngIf="show2FAPopup1" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+  <div class="bg-white rounded-3xl w-full max-w-[420px] shadow-2xl p-6 md:p-8 flex flex-col relative animate-fade-in">
+    <!-- Close Button -->
+    <button (click)="close2FAPopup1()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 text-xl cursor-pointer">
+      &times;
+    </button>
+
+    <!-- Title & Description -->
+    <div class="text-center mt-2 mb-6">
+      <h2 class="text-[#00236F] text-xl md:text-2xl font-extrabold mb-2">Kích hoạt xác thực 2 lớp</h2>
+      <p class="text-slate-500 text-xs md:text-sm">Vui lòng chọn phương thức nhận mã xác thực</p>
+    </div>
+
+    <!-- Options List -->
+    <div class="flex flex-col gap-4 mb-6">
+      <!-- Option 1: Phone -->
+      <label 
+        (click)="twoFactorMethod = 'phone'"
+        [class]="twoFactorMethod === 'phone' ? 'border-2 border-[#FF6600] bg-orange-50/10' : 'border border-slate-200'"
+        class="flex items-center justify-between p-4 rounded-2xl cursor-pointer hover:bg-slate-50/50 transition-all"
+      >
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-blue-50 text-[#00236F] flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+            </svg>
+          </div>
+          <div>
+            <span class="block text-xs md:text-sm font-bold text-slate-800">Gửi qua Số điện thoại</span>
+            <span class="block text-[11px] text-slate-400 font-semibold mt-0.5">{{ getMaskedPhone() }}</span>
+          </div>
+        </div>
+        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+             [class]="twoFactorMethod === 'phone' ? 'border-[#FF6600]' : 'border-slate-300'">
+          <div class="w-2.5 h-2.5 rounded-full bg-[#FF6600]" *ngIf="twoFactorMethod === 'phone'"></div>
+        </div>
+      </label>
+
+      <!-- Option 2: Email -->
+      <label 
+        (click)="twoFactorMethod = 'email'"
+        [class]="twoFactorMethod === 'email' ? 'border-2 border-[#FF6600] bg-orange-50/10' : 'border border-slate-200'"
+        class="flex items-center justify-between p-4 rounded-2xl cursor-pointer hover:bg-slate-50/50 transition-all"
+      >
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-blue-50 text-[#00236F] flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+            </svg>
+          </div>
+          <div>
+            <span class="block text-xs md:text-sm font-bold text-slate-800">Gửi qua địa chỉ Email</span>
+            <span class="block text-[11px] text-slate-400 font-semibold mt-0.5">{{ getMaskedEmail() }}</span>
+          </div>
+        </div>
+        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+             [class]="twoFactorMethod === 'email' ? 'border-[#FF6600]' : 'border-slate-300'">
+          <div class="w-2.5 h-2.5 rounded-full bg-[#FF6600]" *ngIf="twoFactorMethod === 'email'"></div>
+        </div>
+      </label>
+    </div>
+
+    <!-- Continue Button -->
+    <button 
+      (click)="submit2FAMethod()" 
+      class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all cursor-pointer border-0"
+    >
+      Tiếp tục
+    </button>
+  </div>
+</div>
+
+<!-- Popup 2FA Step 2: Nhập Mã Xác Thực -->
+<div *ngIf="show2FAPopup2" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+  <div class="bg-white rounded-3xl w-full max-w-[420px] shadow-2xl p-6 md:p-8 flex flex-col relative animate-fade-in">
+    <!-- Close Button -->
+    <button (click)="close2FAPopup2()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors bg-transparent border-0 text-xl cursor-pointer">
+      &times;
+    </button>
+
+    <!-- Title & Description -->
+    <div class="text-center mt-2 mb-6">
+      <h2 class="text-[#00236F] text-xl md:text-2xl font-extrabold mb-3">Nhập mã xác thực</h2>
+      <p class="text-slate-500 text-xs md:text-sm leading-relaxed max-w-sm mx-auto">
+        Mã xác thực đã được gửi đến SMS/ Email của bạn. Vui lòng kiểm tra và nhập mã để xác nhận.
+      </p>
+    </div>
+
+    <!-- Blue Test Environment OTP Alertbox -->
+    <div *ngIf="generatedOtp" class="w-full max-w-sm mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-805 flex gap-2 items-center justify-center animate-fade-in mx-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5 text-blue-600 shrink-0">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+      </svg>
+      <span>[Môi trường Thử nghiệm] Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
+    </div>
+
+    <!-- OTP Input Section (Single Hidden Input Method) -->
+    <div class="relative flex justify-center gap-2 md:gap-3 mb-6 w-full max-w-sm mx-auto">
+      <input 
+        type="text" 
+        maxlength="6" 
+        pattern="[0-9]*"
+        inputmode="numeric"
+        autocomplete="off"
+        [value]="twoFactorOtpVal"
+        (input)="on2FAOtpInput($event)"
+        (focus)="is2FAOtpFocused = true;"
+        (blur)="is2FAOtpFocused = false;"
+        (paste)="on2FAOtpPaste($event)"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-text z-10"
+      />
+      <div 
+        *ngFor="let box of [0,1,2,3,4,5]; let i = index"
+        [class]="(is2FAOtpFocused && twoFactorOtpVal.length === i) 
+          ? 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-[#00236F] ring-2 ring-[#00236F]/10 bg-white rounded-xl transition-all' 
+          : 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-slate-200 bg-slate-50 rounded-xl transition-all'"
+      >
+        {{ twoFactorOtpVal.charAt(i) }}
+      </div>
+    </div>
+
+    <!-- Timer and Resend Link -->
+    <div class="flex justify-between w-full max-w-sm mb-6 text-sm font-semibold mx-auto px-1.5">
+      <span class="text-slate-500">
+        Thời gian còn lại: 
+        <span class="text-[#FF6600] font-bold tracking-wider">{{ getFormatted2FATime() }}</span>
+      </span>
+      <button 
+        (click)="resend2FAOtp()" 
+        [disabled]="twoFactorTimer > 0"
+        [class]="twoFactorTimer > 0 ? 'text-slate-400 cursor-not-allowed' : 'text-[#00236F] hover:underline cursor-pointer'"
+        class="bg-transparent border-0 font-bold text-sm"
+      >
+        Gửi lại mã
+      </button>
+    </div>
+
+    <!-- Error Alert Card -->
+    <div *ngIf="twoFactorOtpError" class="p-3.5 bg-rose-50 border border-rose-100 rounded-xl text-red-700 text-xs font-bold leading-normal flex gap-2.5 items-start mb-6 animate-fade-in w-full max-w-sm mx-auto">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5 text-red-500 shrink-0 mt-0.5">
+        <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+      </svg>
+      <span>{{ twoFactorOtpError }}</span>
+    </div>
+
+    <!-- Confirm Button -->
+    <button 
+      (click)="verify2FA()" 
+      class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer border-0"
+    >
+      Xác nhận
+    </button>
+
+    <!-- Back button aligned left (Image 3) -->
+    <a 
+      (click)="goBackTo2FAPopup1()" 
+      class="mt-2 flex items-center justify-start w-auto gap-2 text-sm font-bold text-[#00236F] hover:text-blue-900 cursor-pointer group select-none self-start"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+      </svg>
+      <span>Quay lại</span>
+    </a>
+  </div>
+</div>
+
+<!-- Centered Toast: Bật xác thực 2 lớp thành công -->
+<div *ngIf="show2FASuccessToast" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/10 backdrop-blur-[1px] transition-all duration-300">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 flex items-center gap-4 border border-emerald-100 animate-scale-in">
+    <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center shadow-sm shrink-0 border border-emerald-100">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+      </svg>
+    </div>
+    <span class="text-[#00236F] font-bold text-sm pr-2">Bật xác thực 2 lớp thành công</span>
+  </div>
+</div>
+
+<!-- Popup 2FA Email Error (Image 1 logic requirement) -->
+<div *ngIf="show2FAEmailErrorPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300">
+  <div class="bg-white rounded-3xl w-full max-w-[400px] shadow-2xl p-6 md:p-8 flex flex-col items-center text-center relative animate-scale-in">
+    <!-- Icon error or warning -->
+    <div class="w-16 h-16 rounded-full bg-rose-50 border border-rose-100 text-red-500 flex items-center justify-center mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-8 h-8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+      </svg>
+    </div>
+    <!-- Title & Message -->
+    <h3 class="text-[#00236F] text-lg font-extrabold mb-3">Yêu cầu cập nhật Email</h3>
+    <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-6 font-semibold">
+      Vui lòng cập nhật địa chỉ Email tại trang Thông tin cá nhân trước khi kích hoạt Xác thực 2 lớp.
+    </p>
+    <!-- Close button -->
+    <button 
+      (click)="show2FAEmailErrorPopup = false" 
+      class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer border-0"
+    >
+      Đóng
+    </button>
+  </div>
+</div>
+

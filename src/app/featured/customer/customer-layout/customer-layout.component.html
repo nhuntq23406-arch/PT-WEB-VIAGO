@@ -20,12 +20,62 @@
       </a>
     </div>
 
-    <!-- Right Column: Auth Button -->
-    <div class="w-1/3 flex justify-end items-center">
-      <button class="bg-[#00236F] hover:bg-[#001b54] active:bg-[#00133b] text-white px-6 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm cursor-pointer">
+    <!-- Right Column: Auth Button / User Profile -->
+    <div class="w-1/3 flex justify-end items-center relative">
+      <!-- NOT Logged In -->
+      <button *ngIf="!authService.currentUser()" (click)="openAuthModal()" class="bg-[#00236F] hover:bg-[#001b54] active:bg-[#00133b] text-white px-6 py-2.5 rounded-full text-sm font-semibold flex items-center gap-2 transition-colors shadow-sm cursor-pointer">
         <img src="/asset/images/customer/icon_user.svg" class="w-4 h-4 brightness-0 invert" alt="user icon" />
         <span>Đăng nhập / Đăng ký</span>
       </button>
+
+      <!-- Logged In -->
+      <div *ngIf="authService.currentUser() as user" class="relative">
+        <button (click)="toggleDropdown($event)" class="flex items-center gap-1.5 py-1 px-2.5 rounded-full hover:bg-slate-50 transition-colors cursor-pointer border-2 border-[#1E3A8A] bg-white">
+          <img [src]="user.avatar || '/asset/images/customer/icon_user_2.jpg'" alt="User Avatar" class="w-8 h-8 rounded-full object-cover" />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-[#1E3A8A] transition-transform duration-200" [class.rotate-180]="isDropdownOpen">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
+ 
+        <!-- Dropdown Menu -->
+        <div 
+          [class.opacity-100]="isDropdownOpen" 
+          [class.scale-100]="isDropdownOpen" 
+          [class.pointer-events-auto]="isDropdownOpen"
+          [class.pointer-events-none]="!isDropdownOpen"
+          class="absolute right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-xl py-2 z-50 transition-all duration-200 transform scale-95 opacity-0 origin-top-right flex flex-col"
+        >
+          
+          <a routerLink="/profile" [queryParams]="{tab: 'personal'}" (click)="isDropdownOpen = false" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 cursor-pointer group/item">
+            <img src="/asset/images/customer/icon_personal.svg" class="w-4 h-4 opacity-70 group-hover/item:opacity-100 transition-opacity" alt="user icon" />
+            <span>Thông tin cá nhân</span>
+          </a>
+ 
+          <a routerLink="/profile" [queryParams]="{tab: 'security'}" (click)="isDropdownOpen = false" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 cursor-pointer group/item">
+            <img src="/asset/images/customer/icon_bao_mat.svg" class="w-4 h-4 opacity-70 group-hover/item:opacity-100 transition-opacity" alt="security icon" />
+            <span>Bảo mật tài khoản</span>
+          </a>
+ 
+          <a routerLink="/profile" [queryParams]="{tab: 'tickets'}" (click)="isDropdownOpen = false" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 cursor-pointer group/item">
+            <img src="/asset/images/customer/icon_lich_su_ve.svg" class="w-4 h-4 opacity-70 group-hover/item:opacity-100 transition-opacity" alt="ticket history icon" />
+            <span>Lịch sử mua vé</span>
+          </a>
+ 
+          <a routerLink="/profile" [queryParams]="{tab: 'privileges'}" (click)="isDropdownOpen = false" class="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 cursor-pointer group/item">
+            <img src="/asset/images/customer/icon_dac_quyen.svg" class="w-4 h-4 opacity-70 group-hover/item:opacity-100 transition-opacity" alt="membership privileges icon" />
+            <span>Đặc quyền thành viên</span>
+          </a>
+ 
+          <div class="h-px bg-slate-100 my-1.5"></div>
+ 
+          <a (click)="logout()" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-[#FF6600] hover:bg-red-50 hover:text-red-700 transition-all duration-150 rounded-lg mx-1.5 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+            </svg>
+            <span>Đăng xuất</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -41,21 +91,28 @@
         <a routerLink="/danh-gia" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">ĐÁNH GIÁ</a>
        
         <!-- Dropdown Menu Item 1: Dịch vụ -->
-        <div class="relative group">
+        <div class="relative">
           <a
-            routerLink="/dich-vu"
-            routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] font-bold"
+            (click)="toggleServices($event)"
+            [class.text-[#1E3A8A]]="isDichVuActive()"
+            [class.border-b-2]="isDichVuActive()"
+            [class.border-b-[#1E3A8A]]="isDichVuActive()"
+            [class.font-bold]="isDichVuActive()"
             class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
           >
             <span>DỊCH VỤ</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200 group-hover:rotate-180">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-transform duration-200" [class.rotate-180]="isServicesOpen">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
           </a>
          
           <!-- Submenu Dịch vụ -->
           <div
-            class="absolute top-full left-0 mt-2.5 w-56 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto origin-top-left flex flex-col"
+            [class.opacity-100]="isServicesOpen"
+            [class.scale-100]="isServicesOpen"
+            [class.pointer-events-auto]="isServicesOpen"
+            [class.pointer-events-none]="!isServicesOpen"
+            class="absolute top-full left-0 mt-2.5 w-56 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 origin-top-left flex flex-col"
           >
             <a routerLink="/dich-vu" [queryParams]="{tab: 'thue-xe'}" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
               <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
@@ -69,21 +126,28 @@
         </div>
 
         <!-- Dropdown Menu Item 2: Giới thiệu -->
-        <div class="relative group">
+        <div class="relative">
           <a
-            routerLink="/gioi-thieu"
-            routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] font-bold"
+            (click)="toggleAbout($event)"
+            [class.text-[#1E3A8A]]="isGioiThieuActive()"
+            [class.border-b-2]="isGioiThieuActive()"
+            [class.border-b-[#1E3A8A]]="isGioiThieuActive()"
+            [class.font-bold]="isGioiThieuActive()"
             class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
           >
             <span>GIỚI THIỆU</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200 group-hover:rotate-180">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-transform duration-200" [class.rotate-180]="isAboutOpen">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
           </a>
          
           <!-- Submenu Giới thiệu -->
           <div
-            class="absolute top-full left-0 mt-2.5 w-60 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto origin-top-left flex flex-col"
+            [class.opacity-100]="isAboutOpen"
+            [class.scale-100]="isAboutOpen"
+            [class.pointer-events-auto]="isAboutOpen"
+            [class.pointer-events-none]="!isAboutOpen"
+            class="absolute top-full left-0 mt-2.5 w-60 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 origin-top-left flex flex-col"
           >
             <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
               <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
@@ -168,7 +232,7 @@
 
       <!-- Col 2: Support Links -->
       <div class="flex flex-col gap-4">
-        <h4 class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Hỗ trợ</h4>
+        <h4 class="text-[18px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Hỗ trợ</h4>
         <div class="flex flex-col gap-2.5 text-sm font-semibold text-[#b0b9c6]">
           <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Câu hỏi FAQs</a>
           <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Điều khoản sử dụng</a>
@@ -179,7 +243,7 @@
 
       <!-- Col 3: Intro Links -->
       <div class="flex flex-col gap-4">
-        <h4 class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Giới thiệu</h4>
+        <h4 class="text-[18px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Giới thiệu</h4>
         <div class="flex flex-col gap-2.5 text-sm font-semibold text-[#b0b9c6]">
           <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Về chúng tôi</a>
           <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Tuyển dụng</a>
@@ -191,12 +255,12 @@
       <!-- Col 4: Hotline & Connect -->
       <div class="flex flex-col gap-5">
         <div>
-          <span class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider block">Hotline liên hệ</span>
-          <a href="tel:19001234" class="text-[32px] font-black text-[#FF6A00] block mt-1 hover:opacity-90">1900 1234</a>
+          <span class="text-[18px] font-semibold text-[#7BD0FF] uppercase tracking-wider block">Hotline liên hệ</span>
+          <a href="tel:19001234" class="text-[24px] font-black text-[#FF6A00] block mt-1 hover:opacity-90">1900 1234</a>
         </div>
 
         <div>
-          <span class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider block mb-2.5 whitespace-nowrap">Kết nối với chúng tôi</span>
+          <span class="text-[18px] font-semibold text-[#7BD0FF] uppercase tracking-wider block mb-2.5 whitespace-nowrap">Kết nối với chúng tôi</span>
           <!-- Social Icons -->
           <div class="flex items-center gap-3">
             <!-- Facebook -->
@@ -234,3 +298,7 @@
     </p>
   </div>
 </footer>
+
+<!-- Auth and Security Modals -->
+<app-auth-modal *ngIf="showAuthModal" (close)="closeAuthModal()"></app-auth-modal>
+<app-security-settings-modal *ngIf="showSecurityModal" (close)="closeSecurityModal()"></app-security-settings-modal>

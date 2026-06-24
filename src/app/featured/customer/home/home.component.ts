@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -44,10 +45,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   departureCities: string[] = [];
   destinationCities: string[] = [];
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit() {
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
+
+    // Read query parameters to auto-fill search panel
+    this.route.queryParams.subscribe(params => {
+      if (params['departure']) {
+        this.departure = params['departure'];
+        this.updateDestinationCities();
+      }
+      if (params['destination']) {
+        this.destination = params['destination'];
+        this.updateDestinationCities();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -94,8 +109,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   updateDestinationCities() {
-    if (this.departure === 'TP.HCM') {
-      // If Departure is TP.HCM, Destination is limited to: Đà Lạt, Nha Trang, Cần Thơ, Vũng Tàu
+    if (this.departure === 'TP.HCM' || this.departure === 'TP. Hồ Chí Minh') {
+      // If Departure is TP.HCM / TP. Hồ Chí Minh, Destination is limited to: Đà Lạt, Nha Trang, Cần Thơ, Vũng Tàu
       this.destinationCities = ['Đà Lạt', 'Nha Trang', 'Cần Thơ', 'Vũng Tàu'];
     } else if (this.departure) {
       // Exclude departure city

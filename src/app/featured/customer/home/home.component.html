@@ -138,15 +138,20 @@
           </div>
           <div class="relative">
             <input
-              #dpDep
+              type="text"
+              [value]="departureDate ? (departureDate | date:'dd/MM/yyyy') : ''"
+              placeholder="dd/mm/yyyy"
+              readonly
               (click)="dpDep.showPicker()"
+              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+            />
+            <input
+              #dpDep
               id="departureDate"
               type="date"
               [(ngModel)]="departureDate"
-              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              class="absolute inset-0 opacity-0 pointer-events-none"
             />
-            <div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center">
-            </div>
           </div>
         </div>
 
@@ -161,12 +166,19 @@
           </div>
           <div class="relative">
             <input
-              #dpRet
+              type="text"
+              [value]="returnDate ? (returnDate | date:'dd/MM/yyyy') : ''"
+              placeholder="dd/mm/yyyy"
+              readonly
               (click)="dpRet.showPicker()"
+              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+            />
+            <input
+              #dpRet
               id="returnDate"
               type="date"
               [(ngModel)]="returnDate"
-              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              class="absolute inset-0 opacity-0 pointer-events-none"
             />
           </div>
         </div>
