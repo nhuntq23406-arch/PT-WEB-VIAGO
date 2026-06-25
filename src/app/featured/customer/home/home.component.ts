@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, ViewChild, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
 import { VoucherService, Voucher } from '../../../core/services/voucher.service';
 import { VoucherCardComponent } from '../../../shared/components/voucher-card/voucher-card.component';
@@ -12,7 +12,7 @@ import { LunarDatePickerComponent } from '../../../shared/components/lunar-date-
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchableDropdownComponent, VoucherCardComponent, LunarDatePickerComponent],
+  imports: [CommonModule, FormsModule, SearchableDropdownComponent, VoucherCardComponent, LunarDatePickerComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -86,7 +86,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public authService: AuthService,
     public voucherService: VoucherService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -337,5 +338,25 @@ ${searchParams.returnDate ? `- Ngày về: ${searchParams.returnDate}\n` : ''}- 
     this.toastService.showSuccess('Thanh toán giả lập thành công! Cảm ơn bạn đã lựa chọn VIAGO.');
     this.appliedVoucher = null;
     this.voucherCodeInput = '';
+  }
+
+  bookRoute(dep: string, dest: string): void {
+    this.departure = dep;
+    this.updateDestinationCities();
+    this.destination = dest;
+    this.cdr.detectChanges();
+
+    const element = document.getElementById('searchPanel');
+    if (element) {
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : 80;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - headerHeight - 20;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   }
 }
