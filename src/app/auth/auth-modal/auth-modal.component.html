@@ -1,12 +1,12 @@
 <!-- Auth Modal Backdrop -->
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" (click)="$event.stopPropagation(); currentStep !== 'success-status' && close.emit()">
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" (click)="$event.stopPropagation(); handleClose()">
   
   <!-- Main Modal Card Container -->
   <!-- Note: We adjust max-width dynamically for Step 4 (profile setup) because it needs more width to display the 2-column layout beautifully -->
   <div [class]="currentStep === 'register-profile' ? 'relative bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,35,111,0.15)] max-w-2xl w-full mx-4 p-8 border border-slate-100 overflow-hidden transition-all transform scale-100' : 'relative bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,35,111,0.15)] max-w-[460px] w-full mx-4 p-8 md:p-10 border border-slate-100 overflow-hidden transition-all transform scale-100'" (click)="$event.stopPropagation()">
     
     <!-- Close Button -->
-    <button *ngIf="currentStep !== 'success-status'" (click)="close.emit()" class="absolute top-6 right-6 p-1.5 rounded-full text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all cursor-pointer z-10">
+    <button *ngIf="currentStep !== 'success-status'" (click)="handleClose()" class="absolute top-6 right-6 p-1.5 rounded-full text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all cursor-pointer z-10">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
@@ -14,26 +14,7 @@
  
     <!-- Wrapper for normal steps to hide them during success status -->
     <div *ngIf="currentStep !== 'success-status'">
-      <!-- Simulated SMS Notification Box (Toast for mock mode) -->
-    <div *ngIf="smsNotification" class="mb-6 bg-blue-50 border border-blue-100 rounded-2xl p-4 text-xs text-blue-900 flex justify-between items-start animate-fade-in">
-      <div class="flex gap-3">
-        <div class="p-1.5 bg-blue-600 rounded-full text-white mt-0.5 shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5">
-            <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
-            <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
-          </svg>
-        </div>
-        <div>
-          <p class="font-bold text-[#00236F] mb-0.5">[GIẢ LẬP SMS] Tin nhắn mới</p>
-          <p class="text-slate-600">Mã OTP đăng ký/đổi mật khẩu VIAGO: <strong class="text-[#FF5C00] text-sm tracking-wider">{{ smsNotification.otp }}</strong></p>
-        </div>
-      </div>
-      <button (click)="closeSmsNotification()" class="text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+
  
     <!-- Recaptcha container for Firebase Phone Auth (Off-screen) -->
     <div id="recaptcha-container" class="absolute -left-[9999px] -top-[9999px]"></div>
@@ -165,7 +146,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5 text-blue-600 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
         </svg>
-        <span>[Môi trường Thử nghiệm] Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
+        <span>Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
       </div>
       
       <!-- Single Hidden Input OTP Container -->
@@ -354,7 +335,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5 text-blue-600 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
         </svg>
-        <span>[Môi trường Thử nghiệm] Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
+        <span>Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
       </div>
       
       <!-- Single Hidden Input OTP Container -->
@@ -498,10 +479,10 @@
     <div *ngIf="currentStep === 'register-profile'" class="flex flex-col">
       <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-2">Thiết lập hồ sơ của bạn</h2>
       
-      <!-- Gray Info Subtitle Bar -->
-      <div class="bg-slate-50 rounded-xl p-3 flex gap-2.5 items-center mb-6 border border-slate-100">
-        <img src="/asset/images/customer/icon_inf.svg" class="w-4 h-4 opacity-70 group-hover/item:opacity-100 transition-opacity" alt="user icon" />
-        <span class="text-[11px] md:text-xs text-slate-500 font-medium leading-relaxed">Cập nhật hồ sơ để nhận hỗ trợ tốt nhất khi đặt vé, hoặc bổ sung sau tại trang Thông tin cá nhân</span>
+      <!-- Light Blue Info Subtitle Bar -->
+      <div class="bg-blue-50 rounded-xl p-3 flex gap-2.5 items-center mb-6 border border-blue-100">
+        <img src="/asset/images/customer/icon_inf.svg" class="w-4 h-4 text-blue-600" alt="info icon" />
+        <span class="text-[11px] md:text-xs text-blue-800 font-medium leading-relaxed">Cập nhật hồ sơ để nhận hỗ trợ tốt nhất khi đặt vé, hoặc bổ sung sau tại trang Thông tin cá nhân</span>
       </div>
 
       <!-- Real-time Progress Bar -->
@@ -606,20 +587,9 @@
                 Ngày sinh
               </label>
               <div class="relative w-full">
-                <input 
-                  type="text" 
-                  [value]="profileForm.get('birthday')?.value ? (profileForm.get('birthday')?.value | date:'dd/MM/yyyy') : ''"
-                  placeholder="dd/mm/yyyy"
-                  readonly
-                  (click)="dpRegBirth.showPicker()"
-                  class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium text-slate-700 cursor-pointer"
-                />
-                <input 
-                  #dpRegBirth
-                  type="date" 
-                  formControlName="birthday" 
-                  class="absolute inset-0 opacity-0 pointer-events-none"
-                />
+                <app-lunar-date-picker
+                  formControlName="birthday"
+                ></app-lunar-date-picker>
               </div>
               <div *ngIf="profileForm.get('birthday')?.touched && profileForm.get('birthday')?.invalid" class="text-red-500 text-[10px] mt-1 pl-1.5">
                 Vui lòng chọn ngày sinh.
@@ -634,7 +604,7 @@
               </label>
               <select formControlName="occupation" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium">
                 <option value="" disabled selected>Bạn đang là...</option>
-                <option value="Học sinh/Sinh viên">Học sinh / Sinh viên</option>
+                <option value="Học sinh / Sinh viên">Học sinh / Sinh viên</option>
                 <option value="Nhân viên văn phòng">Nhân viên văn phòng</option>
                 <option value="Kinh doanh tự do">Kinh doanh tự do</option>
                 <option value="Khác">Khác</option>

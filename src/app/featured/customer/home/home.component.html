@@ -128,7 +128,7 @@
         </div>
 
 
-        <!-- Departure Date (Format dd/mm/yyyy display, click opens calendar) -->
+        <!-- Departure Date -->
         <div class="w-full lg:w-[220px] flex-none">
           <div class="flex items-center gap-2 mb-1">
             <img src="/asset/images/customer/icon_lich.svg" class="w-4 h-4 object-contain" alt="calendar icon" />
@@ -137,26 +137,15 @@
             </label>
           </div>
           <div class="relative">
-            <input
-              type="text"
-              [value]="departureDate ? (departureDate | date:'dd/MM/yyyy') : ''"
-              placeholder="dd/mm/yyyy"
-              readonly
-              (click)="dpDep.showPicker()"
-              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
-            />
-            <input
-              #dpDep
-              id="departureDate"
-              type="date"
+            <app-lunar-date-picker
               [(ngModel)]="departureDate"
-              class="absolute inset-0 opacity-0 pointer-events-none"
-            />
+              variant="search"
+            ></app-lunar-date-picker>
           </div>
         </div>
 
 
-        <!-- Return Date (Format dd/mm/yyyy display, click opens calendar) -->
+        <!-- Return Date -->
         <div *ngIf="tripType === 'round-trip'" class="w-full lg:w-[220px] flex-none">
           <div class="flex items-center gap-2 mb-1">
             <img src="/asset/images/customer/icon_lich.svg" class="w-4 h-4 object-contain" alt="calendar icon" />
@@ -165,21 +154,10 @@
             </label>
           </div>
           <div class="relative">
-            <input
-              type="text"
-              [value]="returnDate ? (returnDate | date:'dd/MM/yyyy') : ''"
-              placeholder="dd/mm/yyyy"
-              readonly
-              (click)="dpRet.showPicker()"
-              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
-            />
-            <input
-              #dpRet
-              id="returnDate"
-              type="date"
+            <app-lunar-date-picker
               [(ngModel)]="returnDate"
-              class="absolute inset-0 opacity-0 pointer-events-none"
-            />
+              variant="search"
+            ></app-lunar-date-picker>
           </div>
         </div>
 
@@ -260,86 +238,45 @@
           </h2>
           <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
         </div>
-        <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
-          <span>Xem tất cả</span>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-          </svg>
-        </a>
+        
+        <!-- Pagination Controls -->
+        <div class="flex items-center gap-3 pb-1 select-none">
+          <button 
+            (click)="prevPromoPage()" 
+            [disabled]="currentPromoPage === 1"
+            [class]="'w-8 h-8 rounded-full border flex items-center justify-center transition-all cursor-pointer ' + 
+              (currentPromoPage === 1 ? 'border-slate-205 text-slate-300 cursor-not-allowed bg-transparent' : 'border-[#00236F] text-[#00236F] hover:bg-[#00236F]/5')"
+          >
+            <svg xmlns="http://www.w3.org/2050/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          
+          <span class="text-sm font-bold text-slate-700">
+            {{ currentPromoPage }} / {{ totalPromoPages }}
+          </span>
+
+          <button 
+            (click)="nextPromoPage()" 
+            [disabled]="currentPromoPage === totalPromoPages"
+            [class]="'w-8 h-8 rounded-full border flex items-center justify-center transition-all cursor-pointer ' + 
+              (currentPromoPage === totalPromoPages ? 'border-slate-205 text-slate-300 cursor-not-allowed bg-transparent' : 'border-[#00236F] text-[#00236F] hover:bg-[#00236F]/5')"
+          >
+            <svg xmlns="http://www.w3.org/2050/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
       </div>
 
 
-      <!-- Promotion Cards Grid -->
+      <!-- Promotion Cards Grid (3 columns, renders paginated promos) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Promo 1 -->
-        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
-          <div class="flex flex-col gap-1 z-10">
-            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 20%</h3>
-            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi khách hàng mới</p>
-            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 31/12/2026</p>
-          </div>
-          <!-- Centered coupon details alignment -->
-          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
-            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
-              VIAGONEW
-            </div>
-            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
-              Lưu
-            </button>
-          </div>
-          <!-- Coupon cutout lines styling -->
-          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
-          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-        </div>
-
-
-        <!-- Promo 2 -->
-        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
-          <div class="flex flex-col gap-1 z-10">
-            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 50K</h3>
-            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi tháng sinh nhật</p>
-            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 15/08/2026</p>
-          </div>
-          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
-            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
-              HBD50K
-            </div>
-            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
-              Lưu
-            </button>
-          </div>
-          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
-          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-        </div>
-
-
-        <!-- Promo 3 -->
-        <div class="bg-[#FFF8F2] border border-[#FFD0A8] rounded-xl p-5 flex justify-between items-center relative overflow-hidden shadow-sm hover:shadow-md transition-all">
-          <div class="flex flex-col gap-1 z-10">
-            <h3 class="text-2xl font-black text-[#FF6A00]">GIẢM 10%</h3>
-            <p class="text-xs text-gray-700 mt-1 font-medium">Ưu đãi hè rực rỡ</p>
-            <p class="text-[10px] text-gray-500 mt-0.5">HSD: 30/06/2026</p>
-          </div>
-          <div class="absolute right-0 top-0 bottom-0 w-[112px] flex flex-col items-center justify-center gap-2 z-10">
-            <div class="w-[84px] border border-dashed border-[#FFC593] py-1 bg-white rounded text-[10px] font-bold text-gray-800 uppercase tracking-wider text-center">
-              SUMMER10
-            </div>
-            <button class="w-[84px] bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold py-1.5 rounded-md transition-colors active:scale-95 cursor-pointer text-center">
-              Lưu
-            </button>
-          </div>
-          <div class="absolute right-[112px] top-0 bottom-0 border-l border-dashed border-[#FFC593]"></div>
-          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute right-[102px] -top-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-          <div class="absolute right-[102px] -bottom-3 w-5 h-5 rounded-full bg-slate-50 border border-[#FFD0A8]"></div>
-        </div>
+        <app-voucher-card 
+          *ngFor="let voucher of paginatedPromos" 
+          [voucher]="voucher" 
+          context="home"
+        ></app-voucher-card>
       </div>
     </div>
   </section>
@@ -678,4 +615,5 @@
       </div>
     </div>
   </section>
+
 </main>

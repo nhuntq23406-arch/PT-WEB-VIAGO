@@ -6,11 +6,14 @@ import { AuthService, User } from '../../../auth/auth.service';
 import { ToastService } from '../../../shared/toast.service';
 import { RecaptchaVerifier } from 'firebase/auth';
 import emailjs from '@emailjs/browser';
+import { VoucherService, Voucher } from '../../../core/services/voucher.service';
+import { VoucherCardComponent } from '../../../shared/components/voucher-card/voucher-card.component';
+import { LunarDatePickerComponent } from '../../../shared/components/lunar-date-picker/lunar-date-picker.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, VoucherCardComponent, LunarDatePickerComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -39,6 +42,26 @@ export class Profile implements OnInit, OnDestroy {
   newPasswordError = '';
   confirmPasswordError = '';
   samePasswordAlert = false; // Mật khẩu mới trùng mật khẩu hiện tại
+
+  // Getters for password inline errors
+  get newPasswordInlineError(): string {
+    if (!this.newPasswordVal) return '';
+    if (this.newPasswordVal.length < 8) {
+      return 'Mật khẩu mới phải chứa ít nhất 8 ký tự.';
+    }
+    if (this.currentPasswordVal && this.newPasswordVal === this.currentPasswordVal) {
+      return 'Mật khẩu mới không được trùng với mật khẩu hiện tại.';
+    }
+    return '';
+  }
+
+  get confirmPasswordInlineError(): string {
+    if (!this.confirmPasswordVal) return '';
+    if (this.newPasswordVal && this.newPasswordVal !== this.confirmPasswordVal) {
+      return 'Mật khẩu xác nhận không khớp.';
+    }
+    return '';
+  }
 
   // OTP details for Step 2
   otpString = '';
@@ -75,56 +98,21 @@ export class Profile implements OnInit, OnDestroy {
   // Carousel slider for membership cards
   activeCardIndex = 1; // 0: Bronze, 1: Silver, 2: Gold (default 1 for 0981939379)
 
-  // Voucher Wallet state
-  activeVoucherTab = 'active'; // 'active' or 'expired'
-
-  // Vouchers list for user wallet
-  vouchersList = [
-    {
-      id: 'VCH001',
-      title: 'Mã ưu đãi Hạng Bạc - Tháng 11',
-      description: 'Áp dụng cho mọi chuyến đi liên tỉnh',
-      discount: 'GIẢM 20%',
-      code: 'VIAGOSILVER',
-      expiry: '30/11/2026',
-      status: 'active'
-    },
-    {
-      id: 'VCH002',
-      title: 'Chào mừng thành viên mới',
-      description: 'Giảm trực tiếp 50k cho đơn hàng từ 200k',
-      discount: 'GIẢM 50K',
-      code: 'VIAGONEW',
-      expiry: '15/12/2026',
-      status: 'active'
-    },
-    {
-      id: 'VCH003',
-      title: 'Ưu đãi sinh nhật khách hàng',
-      description: 'Món quà tri ân từ VIAGO',
-      discount: 'GIẢM 10%',
-      code: 'HBD10',
-      expiry: '10/10/2024',
-      status: 'used',
-      usedAt: '10/10/2024'
-    },
-    {
-      id: 'VCH004',
-      title: 'Flash Sale Cuối Tuần',
-      description: 'Áp dụng cho tuyến TP.HCM - Đà Lạt',
-      discount: 'GIẢM 50K',
-      code: 'FLASHSALE',
-      expiry: '01/11/2024',
-      status: 'expired'
-    }
-  ];
-
-  get activeVouchers() {
-    return this.vouchersList.filter(v => v.status === 'active');
+  // Vouchers list for user wallet loaded from VoucherService
+  get vouchersList(): Voucher[] {
+    const user = this.authService.currentUser();
+    if (!user) return [];
+    return this.voucherService.getWalletVouchers(user.id);
   }
 
-  get expiredVouchers() {
-    return this.vouchersList.filter(v => v.status === 'used' || v.status === 'expired');
+  get activeVouchers(): Voucher[] {
+    return this.vouchersList;
+  }
+
+  get expiredVouchers(): any[] {
+    return [
+      { id: 'v_exp1', code: 'APPONLY70', title: 'Ưu đãi đặt qua App Mobile', description: 'Ưu đãi dành riêng khi đặt qua ứng dụng VIAGO Mobile', value: 70000, type: 'fixed', expiryDate: '15/06/2026', discount: 'GIẢM 70K', status: 'expired', expiry: '15/06/2026' }
+    ];
   }
 
   // Account Lock States
@@ -207,7 +195,8 @@ export class Profile implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     public toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public voucherService: VoucherService
   ) {}
 
   ngOnInit(): void {
@@ -226,7 +215,6 @@ export class Profile implements OnInit, OnDestroy {
 
     this.initForm();
     this.loadUserData();
-    this.loadVouchers();
   }
 
   ngOnDestroy(): void {
@@ -253,16 +241,22 @@ export class Profile implements OnInit, OnDestroy {
   }
 
   loadUserData(): void {
+    // Load user vouchers wallet
     const user = this.authService.currentUser();
     if (user) {
+      let occ = user.occupation || '';
+      const standardOccs = ['Học sinh / Sinh viên', 'Nhân viên văn phòng', 'Kinh doanh tự do'];
+      if (occ && !standardOccs.includes(occ)) {
+        occ = 'Khác';
+      }
       this.profileForm.patchValue({
         name: user.name || '',
         email: user.email || '',
         gender: user.gender || '',
         birthday: user.birthday || '',
-        occupation: user.occupation || ''
+        occupation: occ
       });
-      this.avatarPreview = user.avatar || '/asset/images/customer/icon_user_2.jpg';
+      this.avatarPreview = user.avatar || '/asset/images/customer/user.png';
       this.calculateCompleteness();
 
       // Update ticketsList dynamically based on this user's ticket count!
@@ -281,13 +275,14 @@ export class Profile implements OnInit, OnDestroy {
       return;
     }
 
+    const defaultAvatar = '/asset/images/customer/user.png';
     let score = 20; // SĐT is always pre-filled (20%)
     const nameVal = this.isEditing ? this.profileForm.get('name')?.value : user.name;
     const emailVal = this.isEditing ? this.profileForm.get('email')?.value : user.email;
     const genderVal = this.isEditing ? this.profileForm.get('gender')?.value : user.gender;
     const birthdayVal = this.isEditing ? this.profileForm.get('birthday')?.value : user.birthday;
     const occupationVal = this.isEditing ? this.profileForm.get('occupation')?.value : user.occupation;
-    const avatarVal = this.avatarPreview || user.avatar;
+    const avatarVal = this.avatarPreview || user.avatar || defaultAvatar;
 
     if (nameVal && nameVal.trim() !== '') {
       score += 20;
@@ -295,7 +290,7 @@ export class Profile implements OnInit, OnDestroy {
     if (emailVal && emailVal.trim() !== '' && this.profileForm.get('email')?.valid) {
       score += 15;
     }
-    if (avatarVal && avatarVal !== '/asset/images/customer/icon_user_2.jpg') {
+    if (avatarVal && avatarVal !== defaultAvatar) {
       score += 10;
     }
     if (genderVal && genderVal.trim() !== '') {
@@ -324,7 +319,9 @@ export class Profile implements OnInit, OnDestroy {
 
   startEdit(): void {
     this.isEditing = true;
+    this.cdr.detectChanges(); // Force DOM rendering of the form
     this.loadUserData();
+    this.cdr.detectChanges(); // Propagate patched values to DOM elements
   }
 
   cancelEdit(): void {
@@ -347,7 +344,7 @@ export class Profile implements OnInit, OnDestroy {
       gender,
       birthday,
       occupation,
-      avatar: this.avatarPreview || '/asset/images/customer/icon_user_2.jpg'
+      avatar: this.avatarPreview || '/asset/images/customer/user.png'
     });
 
     if (result.success) {
@@ -464,16 +461,18 @@ export class Profile implements OnInit, OnDestroy {
       this.currentPasswordError = 'Vui lòng nhập mật khẩu hiện tại.';
     }
 
-    if (!this.newPasswordVal) {
+    const inlineNew = this.newPasswordInlineError;
+    if (inlineNew) {
+      this.newPasswordError = inlineNew;
+    } else if (!this.newPasswordVal) {
       this.newPasswordError = 'Vui lòng nhập mật khẩu mới.';
-    } else if (this.newPasswordVal.length < 8) {
-      this.newPasswordError = 'Mật khẩu mới phải chứa ít nhất 8 ký tự.';
     }
 
-    if (!this.confirmPasswordVal) {
+    const inlineConfirm = this.confirmPasswordInlineError;
+    if (inlineConfirm) {
+      this.confirmPasswordError = inlineConfirm;
+    } else if (!this.confirmPasswordVal) {
       this.confirmPasswordError = 'Vui lòng xác nhận mật khẩu mới.';
-    } else if (this.newPasswordVal !== this.confirmPasswordVal) {
-      this.confirmPasswordError = 'Mật khẩu xác nhận không khớp.';
     }
 
     if (this.currentPasswordError || this.newPasswordError || this.confirmPasswordError) {
@@ -482,6 +481,7 @@ export class Profile implements OnInit, OnDestroy {
 
     if (this.currentPasswordVal === this.newPasswordVal) {
       this.samePasswordAlert = true;
+      this.newPasswordError = 'Mật khẩu mới không được trùng với mật khẩu hiện tại.';
       return;
     }
 
@@ -1026,10 +1026,10 @@ export class Profile implements OnInit, OnDestroy {
       return baseClass + 'z-20 scale-105 opacity-100 shadow-[0_15px_35px_rgba(0,35,111,0.15)] border-2 border-orange-500 ring-4 ring-orange-500/10 translate-x-0';
     } else if (cardIndex === activeIdx - 1 || (activeIdx === 0 && cardIndex === 2)) {
       // Left card (stacked offset)
-      return baseClass + 'z-10 scale-90 opacity-45 grayscale -translate-x-28 md:-translate-x-36';
+      return baseClass + 'z-10 scale-90 opacity-45 grayscale -translate-x-16 md:-translate-x-20';
     } else {
       // Right card (stacked offset)
-      return baseClass + 'z-10 scale-90 opacity-45 grayscale translate-x-28 md:translate-x-36';
+      return baseClass + 'z-10 scale-90 opacity-45 grayscale translate-x-16 md:translate-x-20';
     }
   }
 
@@ -1219,46 +1219,7 @@ export class Profile implements OnInit, OnDestroy {
     return SYSTEM_VOUCHERS.filter(v => v.rank.includes(rank));
   }
 
-  isVoucherClaimed(code: string): boolean {
-    return this.vouchersList.some(v => v.code === code);
-  }
-
-  claimVoucher(v: any): void {
-    const user = this.authService.currentUser();
-    if (!user) return;
-
-    if (this.isVoucherClaimed(v.code)) {
-      this.toastService.showSuccess(`Đang chuyển tới trang Đặt vé để áp dụng mã ${v.code}...`);
-      this.router.navigate(['/']);
-      return;
-    }
-
-    const newVoucher = {
-      id: `VCH_${Date.now()}`,
-      title: v.title,
-      description: v.description,
-      discount: v.discount.toUpperCase(),
-      code: v.code,
-      expiry: v.expiryDate,
-      status: v.status === 'expired' ? 'expired' : 'active'
-    };
-
-    this.vouchersList.push(newVoucher);
-    localStorage.setItem(`viago_vouchers_${user.id}`, JSON.stringify(this.vouchersList));
-    this.toastService.showSuccess(`Đã lưu voucher ${v.code} vào ví của bạn.`);
-    this.cdr.detectChanges();
-  }
-
-  loadVouchers(): void {
-    const user = this.authService.currentUser();
-    if (!user) return;
-    const stored = localStorage.getItem(`viago_vouchers_${user.id}`);
-    if (stored) {
-      this.vouchersList = JSON.parse(stored);
-    } else {
-      localStorage.setItem(`viago_vouchers_${user.id}`, JSON.stringify(this.vouchersList));
-    }
-  }
+  activeVoucherTab = 'active'; // 'active' or 'expired'
 
   scrollVouchers(direction: 'left' | 'right'): void {
     const container = document.getElementById('voucher-scroll-container');
@@ -1282,5 +1243,34 @@ export class Profile implements OnInit, OnDestroy {
         container.scrollLeft += scrollAmount;
       }
     }
+  }
+
+  get tierBenefits(): { title: string, desc: string }[] {
+    const rank = this.authService.currentUser()?.rank;
+    if (rank === 'Bạc') {
+      return [
+        { title: 'Nhận mã giảm giá độc quyền', desc: 'Cơ hội nhận các mã giảm giá đến 10% được hệ thống tự động gửi tặng vào Ví voucher của bạn trong các dịp lễ lớn hoặc chương trình tri ân bất ngờ.' },
+        { title: 'Ưu tiên check-in tại quầy vé', desc: 'Được hỗ trợ làm thủ tục nhanh tại quầy vé của VIAGO trong các khung giờ thông thường, giúp tiết kiệm thời gian chờ đợi.' },
+        { title: 'Quà tặng sinh nhật hội viên', desc: 'Tự động nhận mã giảm giá 20% (tối đa 50.000đ) thả thẳng vào Ví voucher ngay trong tuần sinh nhật dựa trên thông tin ngày sinh đã đăng ký.' },
+        { title: 'Hỗ trợ chăm sóc khách hàng 24/7', desc: 'Tổng đài chăm sóc khách hàng phục vụ 24/7, tiếp nhận và xử lý các yêu cầu đổi trả vé theo quy trình tiêu chuẩn một cách nhanh chóng.' }
+      ];
+    }
+    if (rank === 'Vàng') {
+      return [
+        { title: 'Nhận mã giảm giá độc quyền', desc: 'Cơ hội nhận mã giảm giá 20% thương hạng chuyên áp dụng cho các dòng xe Limousine VIP, tự động cấp vào ví vào các chiến dịch đặc biệt.' },
+        { title: 'Ưu tiên check-in tại quầy vé', desc: 'Được phục vụ tại hàng chờ VIP riêng biệt tại các văn phòng VIAGO trên toàn quốc và miễn phí 100% phí chọn trước chỗ ngồi phía trước.' },
+        { title: 'Quà tặng sinh nhật đặc biệt', desc: 'Tự động nhận mã giảm giá lớn (tối đa 100.000đ) thả thẳng vào Ví voucher kèm thông báo chúc mừng riêng biệt từ VIAGO trong tuần sinh nhật.' },
+        { title: 'Hỗ trợ chăm sóc khách hàng 24/7', desc: 'Tổng đài ưu tiên kết nối nhánh VIP với thời gian phản hồi dưới 30 giây, hỗ trợ xử lý đổi trả vé miễn phí trước giờ khởi hành 12 tiếng.' }
+      ];
+    }
+    if (rank === 'Kim cương') {
+      return [
+        { title: 'Mã giảm giá tối thượng', desc: 'Ưu tiên nhận các siêu mã giảm giá lên đến 30% toàn hệ thống, tự động thả thẳng vào Ví voucher của bạn trong các sự kiện đặc biệt của hãng.' },
+        { title: 'Đặc quyền di chuyển thượng lưu', desc: 'Đặc quyền sử dụng Phòng chờ thương gia (miễn phí nước uống/đồ ăn nhẹ) và xe trung chuyển đón trả tận nhà trong bán kính 5km.' },
+        { title: 'Đặc quyền sinh nhật VVIP', desc: 'Nhận combo voucher sinh nhật trị giá 200.000đ tự động cộng vào ví và một hộp quà vật lý cao cấp được VIAGO gửi chuyển phát nhanh đến tận nhà.' },
+        { title: 'Hỗ trợ chăm sóc khách hàng 24/7', desc: 'Kết nối trực tiếp với Trợ lý cá nhân qua Đường dây nóng VIP, hỗ trợ hoàn hủy vé hoàn toàn miễn phí ngay cả sát giờ xe chạy (trước 2 tiếng).' }
+      ];
+    }
+    return [];
   }
 }

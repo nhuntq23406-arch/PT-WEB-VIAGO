@@ -1,4 +1,4 @@
-﻿import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { 
   getAuth, 
@@ -62,6 +62,8 @@ const DEFAULT_CONFIG: AuthConfig = {
   sessionTimeoutMinutes: 30
 };
 
+const DEFAULT_USER_AVATAR = '/asset/images/customer/user.png';
+
 const SEED_USERS: User[] = [
   {
     id: 'KH0001',
@@ -84,7 +86,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -109,7 +111,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -134,7 +136,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -159,7 +161,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -184,7 +186,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -209,7 +211,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -234,7 +236,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -259,7 +261,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -284,7 +286,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -309,7 +311,7 @@ const SEED_USERS: User[] = [
     status: 'Đã khóa',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -334,7 +336,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -359,7 +361,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -384,7 +386,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -409,7 +411,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -434,7 +436,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -459,7 +461,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -484,7 +486,7 @@ const SEED_USERS: User[] = [
     status: 'Đã khóa',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -509,7 +511,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -534,7 +536,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   },
@@ -559,7 +561,7 @@ const SEED_USERS: User[] = [
     status: 'Đang hoạt động',
     twoFA: false,
     role: 'customer',
-    avatar: '/asset/images/customer/icon_user_2.jpg',
+    avatar: '/asset/images/customer/user.png',
     failedLoginAttempts: 0,
     lockoutUntil: null
   }
@@ -644,6 +646,17 @@ export class AuthService {
     localStorage.setItem('viago_users', JSON.stringify(users));
   }
 
+  private normalizeUserAvatar(user: User): User {
+    let avatar = user.avatar && user.avatar.trim() ? user.avatar : DEFAULT_USER_AVATAR;
+    if (avatar === '/asset/images/customer/icon_user.svg') {
+      avatar = DEFAULT_USER_AVATAR;
+    }
+    return {
+      ...user,
+      avatar: avatar
+    };
+  }
+
   private loadSession(): void {
     if (!this.isBrowser()) return;
     const sessionUser = localStorage.getItem('viago_current_user');
@@ -652,7 +665,8 @@ export class AuthService {
     if (sessionUser && sessionExpiry) {
       const expiryTime = parseInt(sessionExpiry, 10);
       if (Date.now() < expiryTime) {
-        this.currentUser.set(JSON.parse(sessionUser));
+        const parsedUser = JSON.parse(sessionUser) as User;
+        this.currentUser.set(this.normalizeUserAvatar(parsedUser));
         this.updateSessionExpiry();
       } else {
         this.logout('Phiên đăng nhập hết hạn do không hoạt động.');
@@ -706,7 +720,7 @@ export class AuthService {
       name,
       role: 'customer',
       status: 'active',
-      avatar: profileData.avatar || '/asset/images/customer/icon_user_2.jpg',
+      avatar: profileData.avatar && profileData.avatar.trim() ? profileData.avatar : DEFAULT_USER_AVATAR,
       failedLoginAttempts: 0,
       lockoutUntil: null,
       email: profileData.email || '',
@@ -750,7 +764,9 @@ export class AuthService {
     const updatedUser = {
       ...users[userIndex],
       name,
-      avatar: profileData.avatar !== undefined ? profileData.avatar : users[userIndex].avatar,
+      avatar: profileData.avatar !== undefined
+        ? (profileData.avatar && profileData.avatar.trim() ? profileData.avatar : DEFAULT_USER_AVATAR)
+        : (users[userIndex].avatar && users[userIndex].avatar.trim() ? users[userIndex].avatar : DEFAULT_USER_AVATAR),
       email: profileData.email !== undefined ? profileData.email : users[userIndex].email,
       gender: profileData.gender !== undefined ? profileData.gender : users[userIndex].gender,
       birthday: profileData.birthday !== undefined ? profileData.birthday : users[userIndex].birthday,
@@ -886,13 +902,14 @@ export class AuthService {
     user.failedLoginAttempts = 0;
     user.lockoutUntil = null;
     user.status = 'active';
-    users[userIndex] = user;
+    const normalizedUser = this.normalizeUserAvatar({ ...user });
+    users[userIndex] = normalizedUser;
     this.saveUsers(users);
 
-    this.logActivity(phoneTrimmed, 'LOGIN_SUCCESS', `Đăng nhập thành công (${user.role}).`);
+    this.logActivity(phoneTrimmed, 'LOGIN_SUCCESS', `Đăng nhập thành công (${normalizedUser.role}).`);
     
-    localStorage.setItem('viago_current_user', JSON.stringify(user));
-    this.currentUser.set(user);
+    localStorage.setItem('viago_current_user', JSON.stringify(normalizedUser));
+    this.currentUser.set(normalizedUser);
     this.updateSessionExpiry();
     this.lastActivityTime = Date.now();
     this.sessionTimeoutTriggered.set(false);

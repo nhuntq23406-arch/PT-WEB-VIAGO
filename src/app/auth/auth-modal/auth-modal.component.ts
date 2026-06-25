@@ -4,13 +4,14 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { getAuth, RecaptchaVerifier } from 'firebase/auth';
 import { AuthService } from '../auth.service';
 import { ToastService } from '../../shared/toast.service';
+import { LunarDatePickerComponent } from '../../shared/components/lunar-date-picker/lunar-date-picker.component';
 
 type AuthStep = 'login' | 'forgot' | 'forgot-otp' | 'forgot-reset' | 'register-phone' | 'register-otp' | 'register-password' | 'register-profile' | 'success-status';
 
 @Component({
   selector: 'app-auth-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, LunarDatePickerComponent],
   templateUrl: './auth-modal.component.html',
   styleUrl: './auth-modal.component.css'
 })
@@ -173,10 +174,16 @@ export class AuthModalComponent implements OnInit, OnDestroy {
     } else if (step === 'register-password') {
       this.registerPasswordForm.reset();
     } else if (step === 'register-profile') {
-      this.profileForm.reset();
+      this.profileForm.reset({
+        name: '',
+        email: '',
+        gender: '',
+        birthday: '',
+        occupation: ''
+      });
       this.avatarPreview = null;
       this.selectedAvatarFile = '';
-      this.profileCompleteness = 0;
+      this.profileCompleteness = 20;
     }
 
     this.cdr.detectChanges();
@@ -190,6 +197,17 @@ export class AuthModalComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.close.emit();
     }, delayMs);
+  }
+
+  handleClose(): void {
+    if (this.currentStep === 'success-status') {
+      return;
+    }
+    if (this.currentStep === 'register-profile') {
+      this.skipProfile();
+    } else {
+      this.close.emit();
+    }
   }
 
   toggleShowPassword(): void {
@@ -330,13 +348,13 @@ export class AuthModalComponent implements OnInit, OnDestroy {
     const occupationVal = this.profileForm.get('occupation')?.value;
     const avatarVal = this.avatarPreview;
 
-    if (nameVal && nameVal.trim() !== '' && this.profileForm.get('name')?.valid) {
+    if (nameVal && nameVal.trim() !== '') {
       score += 20;
     }
     if (emailVal && emailVal.trim() !== '' && this.profileForm.get('email')?.valid) {
       score += 15;
     }
-    if (avatarVal && avatarVal !== '/asset/images/customer/icon_user_2.jpg') {
+    if (avatarVal && avatarVal !== '/asset/images/customer/user.png') {
       score += 10;
     }
     if (genderVal && genderVal.trim() !== '') {
@@ -368,7 +386,7 @@ export class AuthModalComponent implements OnInit, OnDestroy {
       gender,
       birthday,
       occupation,
-      avatar: (this.avatarPreview as string) || '/asset/images/customer/icon_user_2.jpg'
+      avatar: (this.avatarPreview as string) || '/asset/images/customer/user.png'
     });
 
     if (result.success) {
