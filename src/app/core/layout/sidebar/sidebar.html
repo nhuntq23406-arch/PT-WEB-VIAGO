@@ -41,8 +41,8 @@
           </svg>
         </a>
         <div class="submenu-list" *ngIf="showBookingMenu">
-          <a class="submenu-item" routerLink="/admin/dat-ve/moi" routerLinkActive="submenu-item--active">Đặt vé mới</a>
-          <a class="submenu-item" routerLink="/admin/dat-ve/quan-ly" routerLinkActive="submenu-item--active">Quản lý đã đặt</a>
+          <a class="submenu-item" routerLink="/admin/datve/moi" routerLinkActive="submenu-item--active">Đặt vé mới</a>
+          <a class="submenu-item" routerLink="/admin/datve/danhsach" routerLinkActive="submenu-item--active">Quản lý đã đặt</a>
         </div>
 
         <!-- Quản lý điều phối -->
@@ -56,21 +56,21 @@
               <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
           </div>
-          <div class="text-wrapper-5">Quản lý điều hành</div>
+          <div class="text-wrapper-5">Quản lý điều phối</div>
           <svg class="chevron-icon" [class.chevron-icon--rotated]="showDispatchMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </a>
         <div class="submenu-list" *ngIf="showDispatchMenu">
-          <a class="submenu-item" routerLink="/admin/dieu-hanh/tuyen-xe" routerLinkActive="submenu-item--active">Quản lý tuyến xe</a>
-          <a class="submenu-item" routerLink="/admin/dieu-hanh/lich-trinh" routerLinkActive="submenu-item--active">Quản lý lịch trình</a>
-          <a class="submenu-item" routerLink="/admin/dieu-hanh/phuong-tien" routerLinkActive="submenu-item--active">Quản lý phương tiện</a>
-          <a class="submenu-item" routerLink="/admin/dieu-hanh/tai-xe-phu-xe" routerLinkActive="submenu-item--active">Tài xế &amp; phụ xe</a>
-          <a class="submenu-item" routerLink="/admin/dieu-hanh/diem-don-tra" routerLinkActive="submenu-item--active">Điểm đón trả dừng</a>
+          <a class="submenu-item" routerLink="/admin/dieuphoi/tuyen" routerLinkActive="submenu-item--active" [routerLinkActiveOptions]="{exact: true}">Tuyến xe</a>
+          <a class="submenu-item" routerLink="/admin/dieuphoi/lich-trinh" routerLinkActive="submenu-item--active" [routerLinkActiveOptions]="{exact: true}">Lịch trình</a>
+          <a class="submenu-item" routerLink="/admin/dieuphoi/don-tra" routerLinkActive="submenu-item--active" [routerLinkActiveOptions]="{exact: true}">Đón trả</a>
+          <a class="submenu-item" routerLink="/admin/dieuphoi/phuong-tien" routerLinkActive="submenu-item--active" [routerLinkActiveOptions]="{exact: true}">Phương tiện</a>
+          <a class="submenu-item" routerLink="/admin/dieuphoi/tai-xe" routerLinkActive="submenu-item--active" [routerLinkActiveOptions]="{exact: true}">Tài xế, phụ xe</a>
         </div>
 
         <!-- Khách hàng -->
-        <a class="item-link-2" routerLink="/admin/khachhang" routerLinkActive="item-link--active">
+        <a class="item-link-2" href="#" (click)="toggleCustomerMenu($event)">
           <div class="div-3">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -81,10 +81,18 @@
             </svg>
           </div>
           <div class="text-wrapper-5">Khách hàng</div>
+          <svg class="chevron-icon" [class.chevron-icon--rotated]="showCustomerMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
+        <div class="submenu-list" *ngIf="showCustomerMenu">
+          <a class="submenu-item" routerLink="/admin/khachhang/tai-khoan" routerLinkActive="submenu-item--active">Tài khoản khách hàng</a>
+          <a class="submenu-item" routerLink="/admin/khachhang/danh-gia" routerLinkActive="submenu-item--active">Đánh giá & phản hồi</a>
+          <a class="submenu-item" routerLink="/admin/khachhang/do-that-lac" routerLinkActive="submenu-item--active">Đồ thất lạc</a>
+        </div>
 
         <!-- Nội dung -->
-        <a class="item-link-2" routerLink="/admin/noidung" routerLinkActive="item-link--active">
+        <a class="item-link-2" href="#" (click)="toggleContentMenu($event)">
           <div class="div-3">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -95,19 +103,14 @@
             </svg>
           </div>
           <div class="text-wrapper-5">Nội dung</div>
+          <svg class="chevron-icon" [class.chevron-icon--rotated]="showContentMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
-
-        <!-- Khuyến mãi -->
-        <a class="item-link-2" routerLink="/admin/khuyen-mai" routerLinkActive="item-link--active">
-          <div class="div-3">
-            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
-              <line x1="7" y1="7" x2="7.01" y2="7" />
-            </svg>
-          </div>
-          <div class="text-wrapper-5">Khuyến mãi</div>
-        </a>
+        <div class="submenu-list" *ngIf="showContentMenu">
+          <a class="submenu-item" routerLink="/admin/noidung/tin-tuc" routerLinkActive="submenu-item--active">Quản lý tin tức</a>
+          <a class="submenu-item" routerLink="/admin/khuyenmai" routerLinkActive="submenu-item--active">Quản lý khuyến mãi</a>
+        </div>
 
         <!-- Thuê xe hợp đồng -->
         <a class="item-link-2" routerLink="/admin/thuexe" routerLinkActive="item-link--active">
@@ -140,11 +143,12 @@
           </svg>
         </a>
         <div class="submenu-list" *ngIf="showReportMenu">
+          <a class="submenu-item" routerLink="/admin/baocao/doanh-thu" routerLinkActive="submenu-item--active">Báo cáo doanh thu</a>
+          <a class="submenu-item" routerLink="/admin/baocao/dat-ve" routerLinkActive="submenu-item--active">Báo cáo đặt vé</a>
+          <a class="submenu-item" routerLink="/admin/baocao/khach-hang" routerLinkActive="submenu-item--active">Báo cáo khách hàng</a>
+          <a class="submenu-item" routerLink="/admin/baocao/van-hanh" routerLinkActive="submenu-item--active">Báo cáo vận hành</a>
           <a class="submenu-item" routerLink="/admin/baocao/chi-tiet" routerLinkActive="submenu-item--active">Báo cáo chi tiết</a>
-          <a class="submenu-item" routerLink="/admin/baocao/tuyen-xe" routerLinkActive="submenu-item--active">Tuyến xe</a>
-          <a class="submenu-item" routerLink="/admin/baocao/khach-hang" routerLinkActive="submenu-item--active">Khách hàng</a>
-          <a class="submenu-item" routerLink="/admin/baocao/hoan-huy" routerLinkActive="submenu-item--active">Hoàn hủy</a>
-          <a class="submenu-item" routerLink="/admin/baocao/tai-xe-phu-xe" routerLinkActive="submenu-item--active">Tài xế phụ xe</a>
+          <a class="submenu-item" routerLink="/admin/baocao/tuyen" routerLinkActive="submenu-item--active">Báo cáo tuyến xe</a>
         </div>
 
         <!-- Hệ thống -->
