@@ -14,6 +14,7 @@ export class SidebarComponent {
   showBookingMenu = false;
   showDispatchMenu = false;
   showCustomerMenu = false;
+  showContentMenu = false;
 
   toggleReportMenu(event: Event) {
     event.preventDefault();
@@ -33,5 +34,10 @@ export class SidebarComponent {
   toggleCustomerMenu(event: Event) {
     event.preventDefault();
     this.showCustomerMenu = !this.showCustomerMenu;
+  }
+
+  toggleContentMenu(event: Event) {
+    event.preventDefault();
+    this.showContentMenu = !this.showContentMenu;
   }
 }

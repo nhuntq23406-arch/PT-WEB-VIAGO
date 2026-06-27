@@ -33,6 +33,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'dieuphoi/tuyen',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tuyen-xe/quan-ly-tuyen-xe').then(
+            (m) => m.QuanLyTuyenXeComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/lich-trinh',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-lich-trinh/quan-ly-lich-trinh').then(
+            (m) => m.QuanLyLichTrinhComponent
+          ),
+      },
+      {
         path: 'dieuphoi/don-tra',
         loadComponent: () =>
           import('./featured/admin/don-tra/don-tra').then(
@@ -63,6 +77,34 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./featured/admin/baocao-khachhang/baocao-khachhang').then(
             (m) => m.BaoCaoKhachHangComponent
+          ),
+      },
+      {
+        path: 'baocao/chi-tiet',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao-chi-tiet/bao-cao-chi-tiet').then(
+            (m) => m.BaoCaoChiTietComponent
+          ),
+      },
+      {
+        path: 'baocao/tuyen',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao-tuyen-xe/bao-cao-tuyen-xe').then(
+            (m) => m.BaoCaoTuyenXeComponent
+          ),
+      },
+      {
+        path: 'khuyenmai',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-khuyen-mai/quan-ly-khuyen-mai').then(
+            (m) => m.QuanLyKhuyenMaiComponent
+          ),
+      },
+      {
+        path: 'noidung/tin-tuc',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tin-tuc/quan-ly-tin-tuc').then(
+            (m) => m.QuanLyTinTuc
           ),
       },
       {
