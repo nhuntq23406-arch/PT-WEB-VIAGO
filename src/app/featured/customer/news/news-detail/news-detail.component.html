@@ -1,0 +1,105 @@
+<!-- BREADCRUMBS -->
+<div class="container mx-auto px-4 md:px-10 lg:px-16 mt-6" *ngIf="article">
+    <div class="breadcrumbs text-xs text-gray-500 font-medium">
+        <a routerLink="/" class="hover:text-[#123063]">Trang chủ</a> &gt; <a routerLink="/tin-tuc" class="hover:text-[#123063]">Tin tức</a> &gt; <span class="text-gray-800">{{ article.title }}</span>
+    </div>
+</div>
+
+<!-- MAIN ARTICLE GRID -->
+<main class="container mx-auto px-4 md:px-10 lg:px-16 my-8 article-main-grid" *ngIf="article">
+    <!-- Left Column: Content -->
+    <article class="article-content-wrapper bg-white border border-[#eeeeee] rounded-xl p-6 md:p-8 shadow-sm">
+        <div class="article-header">
+            <span class="badge-category bg-[#00a49f] text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase mb-4 inline-block">{{ article.category }}</span>
+            <h1 class="article-title text-2xl md:text-3xl font-extrabold text-[#123063] leading-snug mb-4">{{ article.title }}</h1>
+            
+            <div class="article-meta-row flex justify-between items-center border-b border-[#eeeeee] pb-4 text-xs text-gray-500 font-medium">
+                <div class="article-date-block flex items-center gap-1.5">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M19,19H5V8H19M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3Z" />
+                    </svg>
+                    <span>{{ article.date }}</span>
+                </div>
+                <div class="article-actions flex items-center gap-4">
+                    <div class="action-link flex items-center gap-1 hover:text-[#123063] cursor-pointer">
+                        <span>Chia sẻ</span>
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7L15.92 7.2c.54.51 1.25.82 2.04.82 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                    </div>
+                    <span class="text-gray-300">|</span>
+                    <div class="action-link hover:text-[#123063] cursor-pointer" onclick="alert('Đã sao chép liên kết bài viết!')">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
+                    </div>
+                    <span class="text-gray-300">|</span>
+                    <div class="action-link hover:text-[#123063] cursor-pointer" onclick="window.print()">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-block bg-gray-50 border-l-4 border-[#123063] p-5 rounded-r-lg font-semibold text-sm text-[#123063] leading-relaxed my-6">
+            {{ article.excerpt }}
+        </div>
+
+        <div class="article-content-wrapper">
+            <img [src]="article.imageUrl" [alt]="article.title" class="w-full h-[400px] object-cover rounded-xl shadow-sm mb-6">
+            
+            <div class="article-body text-sm text-gray-700 leading-relaxed space-y-4 whitespace-pre-line">
+                {{ article.contentBody || article.excerpt }}
+            </div>
+        </div>
+    </article>
+
+    <!-- Right Column: Sidebar -->
+    <aside class="sidebar-container">
+        <div class="sidebar-section bg-white border border-[#eeeeee] rounded-xl p-5 shadow-sm sticky top-24">
+            <h3 class="sidebar-title text-sm font-extrabold text-[#123063] uppercase tracking-wider mb-5">Tin liên quan</h3>
+            <div class="related-list flex flex-col gap-4">
+                <div class="related-item flex gap-4 border-b border-gray-50 pb-4" *ngFor="let art of relatedArticles; let i = index">
+                    <div class="related-num text-lg font-extrabold text-gray-300">0{{ i + 1 }}</div>
+                    <div class="related-content flex flex-col gap-1">
+                        <a [routerLink]="['/tin-tuc/chi-tiet', art.id]" class="related-item-title text-xs font-bold text-[#123063] hover:text-[#f96d00] transition">
+                            {{ art.title }}
+                        </a>
+                        <span class="related-item-date text-[10px] text-gray-400 font-semibold">{{ art.date }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</main>
+
+<!-- BOTTOM RELATED ARTICLES -->
+<section class="bottom-related-section border-t border-[#eeeeee] py-12 mt-12" *ngIf="bottomArticles.length > 0">
+    <div class="container mx-auto px-4 md:px-10 lg:px-16">
+        <div class="section-header-block flex justify-between items-end mb-8">
+            <div class="section-title-wrapper relative pb-2">
+                <h2 class="section-title text-base font-extrabold text-[#123063] uppercase">Bài viết liên quan</h2>
+                <div class="absolute bottom-0 left-0 w-10 h-[3px] bg-[#f96d00]"></div>
+            </div>
+            <a routerLink="/tin-tuc" class="view-all-link text-xs font-bold text-[#123063] hover:text-[#f96d00] hover:translate-x-1 transition flex items-center gap-1">
+                <span>Xem tất cả</span>
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M4,11H16.17L10.58,5.41L12,4L20,12L12,20L10.58,18.59L16.17,13H4V11Z" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="related-cards-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card -->
+            <div class="news-card bg-white border border-[#eeeeee] rounded-xl overflow-hidden hover:shadow-md hover:-translate-y-1 transition duration-300" *ngFor="let art of bottomArticles">
+                <a [routerLink]="['/tin-tuc/chi-tiet', art.id]" class="news-img-wrapper h-44 overflow-hidden block">
+                    <img [src]="art.imageUrl" [alt]="art.title" class="w-full h-full object-cover">
+                </a>
+                <div class="news-content p-5">
+                    <span class="news-card-badge bg-gray-50 text-[#f96d00] text-[10px] font-bold px-2 py-0.5 rounded uppercase mb-2 inline-block">{{ art.category }}</span>
+                    <h3 class="news-card-title text-sm font-bold text-[#123063] leading-snug mb-2">
+                        <a [routerLink]="['/tin-tuc/chi-tiet', art.id]">{{ art.title }}</a>
+                    </h3>
+                    <p class="news-card-excerpt text-xs text-gray-500 leading-normal mb-4">{{ art.excerpt }}</p>
+                    <div class="news-card-date text-[10px] text-gray-400 font-semibold">{{ art.date }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

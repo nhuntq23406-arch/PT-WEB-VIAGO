@@ -1,0 +1,142 @@
+:host {
+  display: block;
+  width: 100%;
+}
+/* Reviews Page CSS styling */
+:root {
+    --primary-color: #123063;
+    --primary-hover: #0a1f44;
+    --secondary-color: #f96d00;
+    --secondary-hover: #e05e00;
+    --text-color: #333333;
+    --text-light: #666666;
+    --bg-light: #f8f9fa;
+    --bg-white: #ffffff;
+    --border-color: #eeeeee;
+    --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --star-color: #ff9800;
+    --teal-badge: #e0f2f1;
+    --teal-text: #00796b;
+}
+
+.feedback-section {
+    padding: 40px 0 70px;
+}
+
+.dashboard-card {
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 16px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.02);
+}
+
+.score-stars svg {
+    width: 24px;
+    height: 24px;
+}
+
+.metric-bar-container {
+    height: 8px;
+    background-color: #f0f0f0;
+}
+
+.metric-bar-fill {
+    height: 100%;
+    background-color: #f96d00;
+}
+
+.filter-tab {
+    transition: all 0.3s ease;
+}
+
+.filter-tab:hover {
+    background-color: #eef0f3;
+}
+
+.filter-tab.active {
+    background-color: rgba(249, 109, 0, 0.08);
+    border-color: #f96d00;
+    color: #f96d00;
+}
+
+.review-card {
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.review-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.03);
+    border-color: #e0e0e0;
+}
+
+.review-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+}
+
+.tag-traveled {
+    background-color: #e0f2f1;
+    color: #00796b;
+}
+
+.review-stars svg {
+    width: 14px;
+    height: 14px;
+}
+
+.btn-like {
+    transition: all 0.3s ease;
+}
+
+.btn-like:hover {
+    border-color: #123063;
+    color: #123063;
+    background-color: rgba(18, 48, 99, 0.02);
+}
+
+.btn-like.liked {
+    background-color: rgba(249, 109, 0, 0.08);
+    border-color: #f96d00;
+    color: #f96d00;
+}
+
+.page-btn {
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover {
+    border-color: #123063;
+    color: #123063;
+    background-color: rgba(18, 48, 99, 0.02);
+}
+
+.page-btn.active {
+    border-color: #a5b4fc;
+    background-color: #f1f5f9;
+    color: #123063;
+}
+
+@media (max-width: 992px) {
+    .dashboard-card {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+    .score-block {
+        border-right: none !important;
+        border-bottom: 1px solid #eeeeee;
+        padding-right: 0 !important;
+        padding-bottom: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+    .review-top-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+

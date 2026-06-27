@@ -1,0 +1,33 @@
+/* ===========================
+   ADMIN LAYOUT STYLES
+   Dùng chung cho toàn bộ admin layout
+   =========================== */
+
+.trang-ch-amin {
+  display: flex;
+  min-height: 100vh;
+  align-items: flex-start;
+  /* padding-left = sidebar width */
+  padding: 0px 0px 0px 256px;
+  position: relative;
+  background: linear-gradient(0deg,
+      rgba(243, 244, 246, 1) 0%,
+      rgba(243, 244, 246, 1) 100%),
+    linear-gradient(0deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 100%);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  flex: 1;
+  align-self: stretch;
+  flex-grow: 1;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(232, 240, 254, 1) 100%);
+}

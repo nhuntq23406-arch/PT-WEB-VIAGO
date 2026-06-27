@@ -1,34 +1,139 @@
 import { Routes } from '@angular/router';
-import { BoCuc } from './featured/admin/bo-cuc/bo-cuc';
-import { TrangChu } from './featured/admin/trang-chu/trang-chu';
-import { QuanLyVe } from './featured/admin/quan-ly-ve/quan-ly-ve';
-import { QuanLyTinTuc } from './featured/admin/quan-ly-tin-tuc/quan-ly-tin-tuc';
-import { QuanLyDieuHanh } from './featured/admin/quan-ly-dieu-hanh/quan-ly-dieu-hanh';
-import { QuanLyTaiKhoanKhachHang } from './featured/admin/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang';
-import { QuanLyTaiKhoanNhanVien } from './featured/admin/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien';
-import { QuanLyChinhSach } from './featured/admin/quan-ly-chinh-sach/quan-ly-chinh-sach';
-import { QuanLyTuKhoaCam } from './featured/admin/quan-ly-tu-khoa-cam/quan-ly-tu-khoa-cam';
-import { BaoCao } from './featured/admin/bao-cao/bao-cao';
-import { Login as AdminLogin } from './featured/admin/auth/login/login';
-import { Routes as AdminRoutesComponent } from './featured/admin/routes/routes';
+// Import phần của Nghi (Customer)
+import { CustomerLayoutComponent } from './featured/customer/customer-layout/customer-layout.component';
+import { HomeComponent } from './featured/customer/home/home.component';
+import { NewsComponent } from './featured/customer/news/news.component';
+import { ReviewsComponent } from './featured/customer/reviews/reviews.component';
+import { ServicesComponent } from './featured/customer/services/services.component';
+import { AboutComponent } from './featured/customer/about/about.component';
+import { AboutUsComponent } from './featured/customer/about/about-us/about-us.component';
+import { PoliciesComponent } from './featured/customer/about/policies/policies.component';
+import { TermsComponent } from './featured/customer/about/terms/terms.component';
+import { FaqComponent } from './featured/customer/about/faq/faq.component';
+import { ContactComponent } from './featured/customer/about/contact/contact.component';
+import { TicketLookupComponent } from './featured/customer/ticket-lookup/ticket-lookup.component';
+import { InvoiceComponent } from './featured/customer/invoice/invoice.component';
+import { ScheduleComponent } from './featured/customer/schedule/schedule.component';
+import { CareersComponent } from './featured/customer/about/careers/careers.component';
+
+// Import phần của Vanh (Admin)
+import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'admin/trang-chu', pathMatch: 'full' },
+  // --- TUYẾN ĐƯỜNG ADMIN (CỦA VANH) ---
   {
     path: 'admin',
-    component: BoCuc,
+    component: AdminLayoutComponent,
     children: [
-      { path: 'trang-chu', component: TrangChu },
-      { path: 'quan-ly-ve', component: QuanLyVe },
-      { path: 'quan-ly-tin-tuc', component: QuanLyTinTuc },
-      { path: 'quan-ly-dieu-hanh', component: QuanLyDieuHanh },
-      { path: 'quan-ly-tai-khoan-khach-hang', component: QuanLyTaiKhoanKhachHang },
-      { path: 'quan-ly-tai-khoan-nhan-vien', component: QuanLyTaiKhoanNhanVien },
-      { path: 'quan-ly-chinh-sach', component: QuanLyChinhSach },
-      { path: 'quan-ly-tu-khoa-cam', component: QuanLyTuKhoaCam },
-      { path: 'bao-cao', component: BaoCao },
-      { path: 'auth/login', component: AdminLogin },
-      { path: 'routes', component: AdminRoutesComponent },
+      {
+        path: 'trangchu',
+        loadComponent: () =>
+          import('./featured/admin/trangchu/trangchu').then(
+            (m) => m.TrangChuComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/tuyen',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tuyen-xe/quan-ly-tuyen-xe').then(
+            (m) => m.QuanLyTuyenXeComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/lich-trinh',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-lich-trinh/quan-ly-lich-trinh').then(
+            (m) => m.QuanLyLichTrinhComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/don-tra',
+        loadComponent: () =>
+          import('./featured/admin/don-tra/don-tra').then(
+            (m) => m.DonTraComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/phuong-tien',
+        loadComponent: () =>
+          import('./featured/admin/phuong-tien/phuong-tien').then(
+            (m) => m.PhuongTienComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/tai-xe',
+        loadComponent: () =>
+          import('./featured/admin/tai-xe/tai-xe').then((m) => m.TaiXeComponent),
+      },
+      {
+        path: 'thuexe',
+        loadComponent: () =>
+          import('./featured/admin/thue-xe-hop-dong/thue-xe-hop-dong').then(
+            (m) => m.ThueXeHopDongComponent
+          ),
+      },
+      {
+        path: 'baocao/khach-hang',
+        loadComponent: () =>
+          import('./featured/admin/baocao-khachhang/baocao-khachhang').then(
+            (m) => m.BaoCaoKhachHangComponent
+          ),
+      },
+      {
+        path: 'baocao/chi-tiet',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao-chi-tiet/bao-cao-chi-tiet').then(
+            (m) => m.BaoCaoChiTietComponent
+          ),
+      },
+      {
+        path: 'baocao/tuyen',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao-tuyen-xe/bao-cao-tuyen-xe').then(
+            (m) => m.BaoCaoTuyenXeComponent
+          ),
+      },
+      {
+        path: 'khuyenmai',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-khuyen-mai/quan-ly-khuyen-mai').then(
+            (m) => m.QuanLyKhuyenMaiComponent
+          ),
+      },
+      {
+        path: 'noidung/tin-tuc',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tin-tuc/quan-ly-tin-tuc').then(
+            (m) => m.QuanLyTinTuc
+          ),
+      },
+      {
+        // Redirect /admin → /admin/trangchu
+        path: '',
+        redirectTo: 'trangchu',
+        pathMatch: 'full',
+      },
+    ],
+  },
+
+  // --- TUYẾN ĐƯỜNG CUSTOMER (CỦA NGHI) ---
+  {
+    path: '',
+    component: CustomerLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'tin-tuc', component: NewsComponent },
+      { path: 'danh-gia', component: ReviewsComponent },
+      { path: 'dich-vu', component: ServicesComponent },
+      { path: 've-chung-toi', component: AboutUsComponent },
+      { path: 'chinh-sach', component: PoliciesComponent },
+      { path: 'dieu-khoan', component: TermsComponent },
+      { path: 'faq', component: FaqComponent },
+      { path: 'lien-he', component: ContactComponent },
+      { path: 'tra-cuu-ve', component: TicketLookupComponent },
+      { path: 'hoa-don', component: InvoiceComponent },
+      { path: 'lich-trinh', component: ScheduleComponent },
+      { path: 'tuyen-dung', component: CareersComponent }
     ]
   }
 ];
