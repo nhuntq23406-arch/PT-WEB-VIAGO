@@ -1,220 +1,314 @@
+<section class="reviews-hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-badge">Đánh giá chất lượng</span>
+    <h1 class="hero-title">Đánh giá & Nhận xét</h1>
+    <p class="hero-subtitle">Xem tổng hợp điểm, bộ lọc chi tiết và phản hồi thật từ những hành khách đã trải nghiệm các chuyến xe VIAGO.</p>
+  </div>
+</section>
+
 <main class="container mx-auto px-4 md:px-10 lg:px-16 my-8 feedback-section">
-    
-    <!-- Heading -->
-    <div class="feedback-header mb-8">
-        <h5 class="feedback-title-sub text-teal-600 font-bold text-xs uppercase tracking-wider mb-1">ĐÁNH GIÁ & NHẬN XÉT</h5>
-        <h2 class="feedback-title-main text-2xl font-black text-[#123063] leading-snug">Phản hồi từ khách hàng đã trải nghiệm dịch vụ của chúng tôi.</h2>
-    </div>
-
-    <!-- Dashboard card -->
-    <div class="dashboard-card bg-white border border-[#eeeeee] rounded-2xl p-6 md:p-8 shadow-sm mb-8 grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8 items-center">
-        <!-- Left Score -->
-        <div class="score-block text-center md:border-r border-[#eeeeee] md:pr-8">
-            <div class="score-num text-6xl font-black text-[#f96d00] leading-none mb-2">4.8</div>
-            <div class="score-stars flex justify-center gap-1 text-[#ff9800] mb-2">
-                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                <svg class="w-6 h-6 fill-current opacity-95" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-            </div>
-            <div class="score-total text-xs text-gray-500 font-semibold">120 đánh giá</div>
+  
+  <!-- Overall rating and criteria card -->
+  <section class="bg-white border border-[#e8ebf3] rounded-3xl p-6 md:p-8 shadow-sm mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 items-center">
+      
+      <!-- Overall rating left column -->
+      <div class="flex flex-col items-center justify-center text-center border-b lg:border-b-0 lg:border-r border-[#e8ebf3] pb-6 lg:pb-0 lg:pr-8">
+        <h2 class="text-xs uppercase tracking-[0.25em] text-gray-500 font-bold mb-3">Đánh giá chung</h2>
+        <div class="flex items-baseline gap-2">
+          <span class="text-5xl font-black text-[#123063]">{{ averageRating }}</span>
+          <span class="text-3xl text-[#ff9800]">★</span>
         </div>
+        <p class="text-xs text-slate-400 font-semibold mt-2">Dựa trên {{ totalReviews }} đánh giá hành khách</p>
+      </div>
 
-        <!-- Right progress bars -->
-        <div class="metrics-block flex flex-col gap-3">
-            <!-- Row 1 -->
-            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
-                <span class="metric-label w-24">An toàn</span>
-                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
-                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 98%;"></div>
-                </div>
-                <span class="metric-value w-8 text-right text-gray-800">4.9</span>
-            </div>
-            <!-- Row 2 -->
-            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
-                <span class="metric-label w-24">Sạch sẽ</span>
-                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
-                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 96%;"></div>
-                </div>
-                <span class="metric-value w-8 text-right text-gray-800">4.8</span>
-            </div>
-            <!-- Row 3 -->
-            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
-                <span class="metric-label w-24">Nhân viên</span>
-                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
-                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 98%;"></div>
-                </div>
-                <span class="metric-value w-8 text-right text-gray-800">4.9</span>
-            </div>
-            <!-- Row 4 -->
-            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
-                <span class="metric-label w-24">Đúng giờ</span>
-                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
-                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 94%;"></div>
-                </div>
-                <span class="metric-value w-8 text-right text-gray-800">4.7</span>
-            </div>
-            <!-- Row 5 -->
-            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
-                <span class="metric-label w-24">Thông tin</span>
-                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
-                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 96%;"></div>
-                </div>
-                <span class="metric-value w-8 text-right text-gray-800">4.8</span>
-            </div>
-            <!-- Row 6 -->
-            <div class="metric-row flex items-center text-xs font-semibold text-[#123063]">
-                <span class="metric-label w-24">Tiện nghi</span>
-                <div class="metric-bar-container flex-grow h-2 bg-gray-100 rounded-full overflow-hidden mx-4">
-                    <div class="metric-bar-fill h-full bg-[#f96d00] rounded-full" style="width: 96%;"></div>
-                </div>
-                <span class="metric-value w-8 text-right text-gray-800">4.8</span>
-            </div>
+      <!-- Criteria progress bars right column -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+        <!-- An toàn -->
+        <div>
+          <div class="flex justify-between text-xs font-bold text-[#123063] mb-1">
+            <span>An toàn</span>
+            <span>4.8</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-[#0f6a57] h-full rounded-full" style="width: 96%"></div>
+          </div>
         </div>
-    </div>
-
-    <!-- Filter tabs -->
-    <div class="filter-tabs-wrapper flex flex-wrap gap-2.5 mb-8 border-b border-[#eeeeee] pb-5">
-        <button (click)="setFilter('all')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === 'all'"
-                [class.border-[#f96d00]]="activeFilter === 'all'"
-                [class.text-[#f96d00]]="activeFilter === 'all'"
-                [class.bg-gray-100]="activeFilter !== 'all'"
-                [class.border-transparent]="activeFilter !== 'all'"
-                [class.text-gray-600]="activeFilter !== 'all'"
-                [class.hover:bg-gray-200]="activeFilter !== 'all'">Tất cả (120)</button>
-        <button (click)="setFilter('comment')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === 'comment'"
-                [class.border-[#f96d00]]="activeFilter === 'comment'"
-                [class.text-[#f96d00]]="activeFilter === 'comment'"
-                [class.bg-gray-100]="activeFilter !== 'comment'"
-                [class.border-transparent]="activeFilter !== 'comment'"
-                [class.text-gray-600]="activeFilter !== 'comment'"
-                [class.hover:bg-gray-200]="activeFilter !== 'comment'">Có bình luận (95)</button>
-        <button (click)="setFilter('image')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === 'image'"
-                [class.border-[#f96d00]]="activeFilter === 'image'"
-                [class.text-[#f96d00]]="activeFilter === 'image'"
-                [class.bg-gray-100]="activeFilter !== 'image'"
-                [class.border-transparent]="activeFilter !== 'image'"
-                [class.text-gray-600]="activeFilter !== 'image'"
-                [class.hover:bg-gray-200]="activeFilter !== 'image'">Có hình ảnh (32)</button>
-        <button (click)="setFilter('5star')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === '5star'"
-                [class.border-[#f96d00]]="activeFilter === '5star'"
-                [class.text-[#f96d00]]="activeFilter === '5star'"
-                [class.bg-gray-100]="activeFilter !== '5star'"
-                [class.border-transparent]="activeFilter !== '5star'"
-                [class.text-gray-600]="activeFilter !== '5star'"
-                [class.hover:bg-gray-200]="activeFilter !== '5star'">5 Sao (102)</button>
-        <button (click)="setFilter('4star')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === '4star'"
-                [class.border-[#f96d00]]="activeFilter === '4star'"
-                [class.text-[#f96d00]]="activeFilter === '4star'"
-                [class.bg-gray-100]="activeFilter !== '4star'"
-                [class.border-transparent]="activeFilter !== '4star'"
-                [class.text-gray-600]="activeFilter !== '4star'"
-                [class.hover:bg-gray-200]="activeFilter !== '4star'">4 Sao (15)</button>
-        <button (click)="setFilter('3star')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === '3star'"
-                [class.border-[#f96d00]]="activeFilter === '3star'"
-                [class.text-[#f96d00]]="activeFilter === '3star'"
-                [class.bg-gray-100]="activeFilter !== '3star'"
-                [class.border-transparent]="activeFilter !== '3star'"
-                [class.text-gray-600]="activeFilter !== '3star'"
-                [class.hover:bg-gray-200]="activeFilter !== '3star'">3 Sao (2)</button>
-        <button (click)="setFilter('2star')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === '2star'"
-                [class.border-[#f96d00]]="activeFilter === '2star'"
-                [class.text-[#f96d00]]="activeFilter === '2star'"
-                [class.bg-gray-100]="activeFilter !== '2star'"
-                [class.border-transparent]="activeFilter !== '2star'"
-                [class.text-gray-600]="activeFilter !== '2star'"
-                [class.hover:bg-gray-200]="activeFilter !== '2star'">2 Sao (1)</button>
-        <button (click)="setFilter('1star')" 
-                class="filter-tab px-4 py-2 rounded-full text-xs font-semibold cursor-pointer transition border"
-                [class.bg-[#f96d00]/10]="activeFilter === '1star'"
-                [class.border-[#f96d00]]="activeFilter === '1star'"
-                [class.text-[#f96d00]]="activeFilter === '1star'"
-                [class.bg-gray-100]="activeFilter !== '1star'"
-                [class.border-transparent]="activeFilter !== '1star'"
-                [class.text-gray-600]="activeFilter !== '1star'"
-                [class.hover:bg-gray-200]="activeFilter !== '1star'">1 Sao (0)</button>
-    </div>
-
-    <!-- Reviews List -->
-    <div class="reviews-list flex flex-col gap-6">
-        <!-- Review card -->
-        <div class="review-card bg-white border border-[#eeeeee] rounded-xl p-6 transition-all hover:shadow-md hover:border-gray-300" *ngFor="let review of paginatedReviews">
-            <div class="review-top-row flex justify-between items-start mb-4">
-                <div class="review-user-info flex gap-4 items-center">
-                    <div class="review-avatar w-12 h-12 rounded-full text-white font-bold flex items-center justify-center text-base" [ngClass]="review.avatarBg">{{ review.avatarText }}</div>
-                    <div class="review-name-meta flex flex-col gap-1">
-                        <div class="review-name-wrap flex items-center gap-2">
-                            <span class="review-user-name text-sm font-bold text-[#123063]">{{ review.userName }}</span>
-                            <span class="tag-traveled bg-teal-100 text-teal-800 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase">Đã đi</span>
-                        </div>
-                        <span class="review-date text-xs text-gray-500 font-semibold">{{ review.date }}</span>
-                    </div>
-                </div>
-                
-                <div class="review-stars-wrap flex items-center gap-1.5">
-                    <span class="review-score-label text-sm font-extrabold text-gray-700">{{ review.score }}</span>
-                    <div class="review-stars flex gap-0.5 text-[#ff9800]">
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
-                    </div>
-                </div>
-            </div>
-            
-            <p class="review-body text-sm text-gray-700 leading-relaxed mb-4 md:pl-16">{{ review.content }}</p>
-            
-            <!-- Optional Images -->
-            <div class="review-images flex gap-3 mb-4 md:pl-16" *ngIf="review.images && review.images.length > 0">
-                <img *ngFor="let img of review.images" [src]="img" alt="Review Image" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
-            </div>
-            
-            <div class="review-route-info flex items-center gap-1.5 text-xs text-gray-500 font-semibold mb-4 md:pl-16">
-                <svg class="w-4 h-4 fill-[#00a49f]" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                <span>Tuyến: {{ review.route }}</span>
-            </div>
-
-            <div class="review-action-bar md:pl-16 flex gap-4">
-                <button (click)="likeReview(review)" class="btn-like border border-[#eeeeee] px-3 py-1.5 rounded-lg text-xs font-semibold hover:border-[#123063] hover:text-[#123063] hover:bg-[#123063]/5 flex items-center gap-1.5 cursor-pointer" [class.bg-[#123063]/5]="review.liked" [class.text-[#123063]]="review.liked">
-                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M23,10C23,9.5 22.9,9 22.7,8.6C22.4,8.1 22,7.7 21.4,7.5C21,7.2 20.5,7.1 20,7.1H15.4L16.1,3.4C16.2,3.1 16.2,2.8 16.1,2.5C15.9,2 15.6,1.6 15.1,1.3C14.7,1.1 14.2,1 13.7,1C13.2,1 12.8,1.2 12.5,1.5L7.7,6.3C7.2,6.8 7,7.4 7,8V18C7,19.1 7.9,20 9,20H18C18.8,20 19.5,19.5 19.8,18.8L22.8,11.8C22.9,11.5 23,11.1 23,10.8V10M1,20H5V8H1V20Z"/></svg>
-                    <span>Hữu ích (<span class="like-count">{{ review.likes }}</span>)</span>
-                </button>
-            </div>
+        <!-- Thông tin chính xác -->
+        <div>
+          <div class="flex justify-between text-xs font-bold text-[#123063] mb-1">
+            <span>Thông tin chính xác</span>
+            <span>4.7</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-[#0f6a57] h-full rounded-full" style="width: 94%"></div>
+          </div>
         </div>
+        <!-- Thông tin đầy đủ -->
+        <div>
+          <div class="flex justify-between text-xs font-bold text-[#123063] mb-1">
+            <span>Thông tin đầy đủ</span>
+            <span>4.7</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-[#0f6a57] h-full rounded-full" style="width: 94%"></div>
+          </div>
+        </div>
+        <!-- Thái độ nhân viên -->
+        <div>
+          <div class="flex justify-between text-xs font-bold text-[#123063] mb-1">
+            <span>Thái độ nhân viên</span>
+            <span>4.7</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-[#0f6a57] h-full rounded-full" style="width: 94%"></div>
+          </div>
+        </div>
+        <!-- Tiện nghi & thoải mái -->
+        <div>
+          <div class="flex justify-between text-xs font-bold text-[#123063] mb-1">
+            <span>Tiện nghi & thoải mái</span>
+            <span>4.7</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-[#0f6a57] h-full rounded-full" style="width: 94%"></div>
+          </div>
+        </div>
+        <!-- Chất lượng dịch vụ -->
+        <div>
+          <div class="flex justify-between text-xs font-bold text-[#123063] mb-1">
+            <span>Chất lượng dịch vụ</span>
+            <span>4.7</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-[#0f6a57] h-full rounded-full" style="width: 94%"></div>
+          </div>
+        </div>
+        <!-- Đúng giờ -->
+        <div>
+          <div class="flex justify-between text-xs font-bold text-[#123063] mb-1">
+            <span>Đúng giờ</span>
+            <span>4.6</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-[#0f6a57] h-full rounded-full" style="width: 92%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter tabs and selectors -->
+  <section class="bg-white border border-[#e8ebf3] rounded-3xl p-5 shadow-sm mb-8 space-y-4">
+    <!-- Row 1: Filter tabs -->
+    <div class="flex flex-wrap items-center gap-3 border-b border-[#e8ebf3] pb-4">
+      <button type="button" (click)="setFilterTab('all')" [class.bg-[#123063]]="activeFilterTab === 'all'" [class.text-white]="activeFilterTab === 'all'" class="px-5 py-2.5 rounded-xl text-xs font-bold border border-[#dce1e7] transition cursor-pointer text-[#123063]">
+        Tất cả ({{ totalAllCount }})
+      </button>
+      <button type="button" (click)="setFilterTab('comment')" [class.bg-[#123063]]="activeFilterTab === 'comment'" [class.text-white]="activeFilterTab === 'comment'" class="px-5 py-2.5 rounded-xl text-xs font-bold border border-[#dce1e7] transition cursor-pointer text-[#123063]">
+        Có nhận xét ({{ totalCommentCount }})
+      </button>
+      <button type="button" (click)="setFilterTab('media')" [class.bg-[#123063]]="activeFilterTab === 'media'" [class.text-white]="activeFilterTab === 'media'" class="px-5 py-2.5 rounded-xl text-xs font-bold border border-[#dce1e7] transition cursor-pointer text-[#123063]">
+        Có hình ảnh ({{ totalMediaCount }})
+      </button>
     </div>
 
-    <!-- Pagination -->
-    <div class="pagination flex justify-center items-center gap-2 mt-10" *ngIf="totalPages > 1">
-        <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="page-btn w-10 h-10 border border-[#dce1e7] bg-white rounded-lg flex items-center justify-center font-bold text-gray-700 hover:border-[#123063] hover:text-[#123063] hover:bg-[#123063]/5 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
-            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="14,7 8,12 14,17"/></svg>
-        </button>
+    <!-- Row 2: Filter dropdown selectors -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Star filter dropdown -->
+      <div class="relative">
+        <select class="w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs text-[#123063] bg-slate-50 focus:bg-white outline-none focus:border-[#123063] transition" [(ngModel)]="selectedStar" (ngModelChange)="updatePaginatedReviews()">
+          <option value="all">Sao ★ (Tất cả)</option>
+          <option *ngFor="let star of [5,4,3,2,1]" [value]="star">{{ star }} ★</option>
+        </select>
+      </div>
+
+      <!-- Vehicle filter dropdown -->
+      <div class="relative">
+        <select class="w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs text-[#123063] bg-slate-50 focus:bg-white outline-none focus:border-[#123063] transition" [(ngModel)]="selectedVehicle" (ngModelChange)="updatePaginatedReviews()">
+          <option value="all">Loại xe (Tất cả)</option>
+          <option *ngFor="let opt of vehicleOptions.slice(1)" [value]="opt">{{ opt }}</option>
+        </select>
+      </div>
+
+      <!-- Route filter dropdown -->
+      <div class="relative">
+        <select class="w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs text-[#123063] bg-slate-50 focus:bg-white outline-none focus:border-[#123063] transition" [(ngModel)]="selectedRoute" (ngModelChange)="updatePaginatedReviews()">
+          <option value="all">Tuyến đường (Tất cả)</option>
+          <option *ngFor="let route of routeOptions" [value]="route.name">{{ route.name }}</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sidebar domain filter & Review list grid -->
+  <section class="review-filters grid gap-6 xl:grid-cols-[280px_1fr]">
+    <!-- Left column: search and domain categorization filters -->
+    <aside class="filter-panel bg-white border border-[#e8ebf3] rounded-3xl p-6 shadow-sm space-y-6">
+      <!-- Search input -->
+      <div class="filter-section">
+        <h4 class="filter-title text-xs uppercase tracking-[0.25em] text-gray-500 font-bold mb-3">Tìm kiếm nhận xét</h4>
+        <input type="search" class="w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs text-[#123063] bg-slate-50 focus:bg-white outline-none focus:border-[#123063] transition" placeholder="Nhập từ khóa cần tìm..." [(ngModel)]="searchText" (ngModelChange)="updatePaginatedReviews()" />
+      </div>
+
+      <!-- Lĩnh vực khách hàng quan tâm -->
+      <div class="filter-section">
+        <h4 class="filter-title text-xs uppercase tracking-[0.25em] text-gray-500 font-bold mb-3 font-black">Lọc theo lĩnh vực</h4>
+        <div class="flex flex-col gap-2">
+          <button type="button" (click)="setDomain('all')" [class.bg-[#123063]]="activeDomain === 'all'" [class.text-white]="activeDomain === 'all'" class="text-left w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs font-bold text-[#123063] hover:bg-slate-50 transition flex items-center justify-between cursor-pointer">
+            <span>🌐 Tất cả lĩnh vực</span>
+          </button>
+          <button type="button" (click)="setDomain('driver')" [class.bg-[#123063]]="activeDomain === 'driver'" [class.text-white]="activeDomain === 'driver'" class="text-left w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs font-bold text-[#123063] hover:bg-slate-50 transition flex items-center justify-between cursor-pointer">
+            <span>👨‍✈️ Tài xế & Phục vụ</span>
+            <span class="text-[10px] text-slate-400 font-black">({{ criteriaAverages.driver }}★)</span>
+          </button>
+          <button type="button" (click)="setDomain('vehicle')" [class.bg-[#123063]]="activeDomain === 'vehicle'" [class.text-white]="activeDomain === 'vehicle'" class="text-left w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs font-bold text-[#123063] hover:bg-slate-50 transition flex items-center justify-between cursor-pointer">
+            <span>🚌 Độ êm ái & Xe</span>
+            <span class="text-[10px] text-slate-400 font-black">({{ criteriaAverages.vehicle }}★)</span>
+          </button>
+          <button type="button" (click)="setDomain('service')" [class.bg-[#123063]]="activeDomain === 'service'" [class.text-white]="activeDomain === 'service'" class="text-left w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs font-bold text-[#123063] hover:bg-slate-50 transition flex items-center justify-between cursor-pointer">
+            <span>🛎️ Dịch vụ & Đúng giờ</span>
+            <span class="text-[10px] text-slate-400 font-black">({{ criteriaAverages.service }}★)</span>
+          </button>
+          <button type="button" (click)="setDomain('price')" [class.bg-[#123063]]="activeDomain === 'price'" [class.text-white]="activeDomain === 'price'" class="text-left w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs font-bold text-[#123063] hover:bg-slate-50 transition flex items-center justify-between cursor-pointer">
+            <span>💵 Giá vé & Chi phí</span>
+            <span class="text-[10px] text-slate-400 font-black">({{ criteriaAverages.price }}★)</span>
+          </button>
+          <button type="button" (click)="setDomain('cleanliness')" [class.bg-[#123063]]="activeDomain === 'cleanliness'" [class.text-white]="activeDomain === 'cleanliness'" class="text-left w-full rounded-xl border border-[#dce1e7] px-4 py-3 text-xs font-bold text-[#123063] hover:bg-slate-50 transition flex items-center justify-between cursor-pointer">
+            <span>✨ Vệ sinh & Sạch sẽ</span>
+            <span class="text-[10px] text-slate-400 font-black">({{ criteriaAverages.cleanliness }}★)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Reset button -->
+      <button type="button" (click)="resetFilters()" class="w-full rounded-xl border border-dashed border-red-200 hover:border-red-400 text-red-500 py-3 text-xs font-bold hover:bg-red-50 transition cursor-pointer text-center">
+        Reset Bộ Lọc ×
+      </button>
+    </aside>
+
+    <!-- Right column: review lists -->
+    <div class="review-list-panel space-y-6">
+      
+      <!-- Toolbar: sort & status counts -->
+      <div class="review-toolbar flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-white border border-[#e8ebf3] rounded-3xl p-5 shadow-sm">
+        <div class="flex items-center gap-3">
+          <span class="text-xs uppercase tracking-wider text-gray-500 font-bold">Sắp xếp:</span>
+          <select class="rounded-xl border border-[#dce1e7] px-3 py-2 text-xs text-[#123063] outline-none" [(ngModel)]="sortOption" (ngModelChange)="updatePaginatedReviews()">
+            <option value="newest">Mới nhất</option>
+            <option value="helpful">Hữu ích nhất</option>
+            <option value="high">Sao cao nhất</option>
+            <option value="low">Sao thấp nhất</option>
+          </select>
+        </div>
+        <div class="text-xs text-gray-400 font-bold">Tìm thấy {{ filteredReviews.length }} đánh giá</div>
+      </div>
+
+      <!-- Domain notification bar -->
+      <div *ngIf="activeDomain !== 'all'" class="active-tags flex flex-wrap items-center justify-between gap-2 bg-[#123063]/5 border border-[#123063]/10 rounded-3xl px-5 py-4 text-xs text-[#123063] font-bold">
+        <span>🔍 Đang lọc lĩnh vực: <span class="px-2.5 py-1 bg-[#123063] text-white rounded-full text-[10px] font-bold">{{ activeDomain === 'driver' ? '👨‍✈️ Tài xế' : activeDomain === 'vehicle' ? '🚌 Xe' : activeDomain === 'service' ? '🛎️ Dịch vụ' : activeDomain === 'price' ? '💵 Giá cả' : '✨ Sạch sẽ' }}</span></span>
+        <button (click)="setDomain('all')" class="text-xs text-[#f96d00] hover:underline font-bold">Xóa lọc ×</button>
+      </div>
+
+      <!-- Reviews list -->
+      <div class="review-cards space-y-6">
+        <article class="review-card rounded-3xl bg-white border border-[#e8ebf3] p-6 shadow-sm" *ngFor="let review of paginatedReviews">
+          
+          <!-- User review info row -->
+          <div class="review-card-header flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div class="user-block flex items-center gap-4">
+              <!-- Avatar circle -->
+              <div class="avatar flex h-12 w-12 items-center justify-center rounded-full text-sm font-black text-white bg-green-600" [ngClass]="review.avatarBg">
+                {{ review.avatarText }}
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2 text-sm">
+                  <span class="font-bold text-[#123063]">{{ review.userName }}</span>
+                  <span class="badge-verified inline-flex items-center gap-0.5 rounded-full bg-[#e8f6f3] px-2 py-0.5 text-[10px] font-bold text-[#0f6a57]">
+                    ✓ Đã đi
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-bold">• {{ review.date }}</span>
+                </div>
+                <!-- Stars -->
+                <div class="stars flex gap-0.5 text-[#ff9800] mt-1.5">
+                  <ng-container *ngFor="let star of [1,2,3,4,5]">
+                    <svg class="w-3.5 h-3.5 fill-current" [class.opacity-25]="star > review.score" viewBox="0 0 24 24"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Review body content -->
+          <div class="mt-4">
+            <!-- Content -->
+            <p class="review-content text-sm leading-relaxed text-gray-700">
+              {{ getReviewSnippet(review) }} 
+              <button type="button" class="read-more text-[#123063] font-bold text-xs hover:underline ml-1 cursor-pointer" *ngIf="review.content.length > 220" (click)="toggleFullReview(review.id)">
+                {{ showMoreLabel(review) }}
+              </button>
+            </p>
+
+            <!-- Translate button -->
+            <div class="mt-2" *ngIf="review.userName === 'Jiyeon Shin' || review.content.includes('Thank you')">
+              <button (click)="toggleTranslation(review.id)" class="text-xs text-slate-400 font-bold hover:text-[#123063] transition flex items-center gap-1 cursor-pointer">
+                <span>🌐 {{ translatedReviews[review.id] ? 'Xem bản gốc' : 'Xem bản dịch' }}</span>
+              </button>
+              <p *ngIf="translatedReviews[review.id]" class="mt-2 text-xs italic text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                {{ getTranslationText(review) }}
+              </p>
+            </div>
+
+            <!-- Media list -->
+            <div class="media-thumb-list flex gap-3 mt-4 overflow-x-auto pb-2" *ngIf="review.media && review.media.length > 0">
+              <div *ngFor="let item of review.media" class="media-thumb-item w-16 h-16 rounded-xl overflow-hidden border border-[#e8ebf3] bg-[#f8fafc] flex-shrink-0">
+                <img [src]="item.url" alt="Hình đánh giá" class="w-full h-full object-cover" />
+              </div>
+            </div>
+
+            <!-- Bottom metadata -->
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-4 text-[11px] text-slate-400 font-bold border-t border-[#f8fafc] pt-3">
+              <span>Loại xe: <span class="text-[#123063]">{{ review.vehicleType }}</span></span>
+              <span>•</span>
+              <span>Tuyến đường: <span class="text-[#123063]">{{ review.route }}</span></span>
+            </div>
+          </div>
+
+          <!-- Interaction buttons -->
+          <div class="interaction-bar mt-4 flex flex-wrap items-center gap-3 text-xs text-gray-500">
+            <button type="button" class="interaction-btn rounded-xl border border-[#dce1e7] px-3.5 py-2 transition hover:border-[#123063] hover:text-[#123063] cursor-pointer bg-transparent" (click)="likeReview(review)" [class.liked-state]="review.liked">👍 Hữu ích ({{ review.likes }})</button>
+          </div>
+
+          <!-- Operator Reply Box -->
+          <div *ngIf="review.replies" class="reply-box mt-5 rounded-2xl border border-[#e8ebf3] bg-slate-50 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-[10px] font-black uppercase tracking-wider text-gray-500">Phản hồi của nhà xe</div>
+            </div>
+            <div class="text-xs text-[#123063] font-bold mb-1">VIAGO Team · {{ review.replies.date }}</div>
+            <p class="text-xs leading-relaxed text-slate-600">{{ review.replies.comment }}</p>
+          </div>
+
+          <!-- Operator Reply Form -->
+          <div *ngIf="isOperatorMode && !review.replies" class="reply-box mt-5 rounded-2xl border-2 border-dashed border-[#123063]/30 bg-[#123063]/5 p-4">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-[#123063] mb-2">💬 Phản hồi với tư cách Nhà xe VIAGO</div>
+            <textarea class="w-full rounded-xl border border-slate-200 p-3 text-xs text-[#123063] focus:border-[#123063] bg-white outline-none transition" rows="2" placeholder="Nhập phản hồi..." [(ngModel)]="newReplyTexts[review.id]"></textarea>
+            <div class="flex justify-end mt-2">
+              <button (click)="submitReply(review.id)" class="px-3.5 py-2 bg-[#123063] text-white text-xs font-bold rounded-lg hover:bg-[#1d4586] transition shadow-sm cursor-pointer">Gửi phản hồi</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination flex flex-wrap justify-center items-center gap-2 mt-8" *ngIf="totalPages > 1">
+        <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="page-btn rounded-xl border border-[#dce1e7] bg-white px-4 py-2 text-xs font-bold text-gray-700 transition hover:border-[#123063] hover:text-[#123063] disabled:opacity-50 disabled:pointer-events-none cursor-pointer">Trước</button>
         <ng-container *ngFor="let p of getVisiblePages()">
-            <button *ngIf="p !== '...'" (click)="setPage(p)" class="page-btn w-10 h-10 border border-[#dce1e7] rounded-lg flex items-center justify-center font-bold cursor-pointer transition" [class.bg-[#123063]]="currentPage === p" [class.text-white]="currentPage === p" [class.bg-white]="currentPage !== p" [class.text-gray-700]="currentPage !== p" [class.hover:bg-gray-100]="currentPage !== p">
-                {{ p }}
-            </button>
-            <span *ngIf="p === '...'" class="w-10 h-10 flex items-center justify-center font-bold text-gray-400">
-                ...
-            </span>
+          <button *ngIf="p !== '...'" (click)="setPage(p)" class="page-btn rounded-xl border px-3.5 py-2 text-xs font-bold transition cursor-pointer" [ngClass]="{ 'border-[#123063] bg-[#123063] text-white': currentPage === p, 'border-[#dce1e7] bg-white text-gray-700 hover:border-[#123063] hover:text-[#123063]': currentPage !== p }">{{ p }}</button>
+          <span *ngIf="p === '...'" class="page-dot inline-flex h-9 w-9 items-center justify-center text-gray-400">...</span>
         </ng-container>
-        <button [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)" class="page-btn w-10 h-10 border border-[#dce1e7] bg-white rounded-lg flex items-center justify-center font-bold text-gray-700 hover:border-[#123063] hover:text-[#123063] hover:bg-[#123063]/5 cursor-pointer disabled:opacity-50 disabled:pointer-events-none">
-            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><polygon points="10,7 16,12 10,17"/></svg>
-        </button>
+        <button [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)" class="page-btn rounded-xl border border-[#dce1e7] bg-white px-4 py-2 text-xs font-bold text-gray-700 transition hover:border-[#123063] hover:text-[#123063] disabled:opacity-50 disabled:pointer-events-none cursor-pointer">Tiếp</button>
+      </div>
     </div>
-
+  </section>
 </main>

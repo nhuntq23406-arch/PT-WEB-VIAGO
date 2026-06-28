@@ -169,22 +169,61 @@ allRoutes: Route[] = [
 ];
 
   filteredRoutes: Route[] = [];
+  selectedRouteForDetails: Route | null = null;
+  selectedDirection: 'forward' | 'backward' = 'forward';
+
+  mockTrips = [
+    { time: '08:00', type: 'Limousine 9 chỗ', price: 250000, amenities: 'Ghế massage, Cổng sạc, Nước uống' },
+    { time: '10:30', type: 'Limousine giường nằm 34 chỗ', price: 250000, amenities: 'Giường rộng rãi, Tivi riêng, Wifi' },
+    { time: '13:00', type: 'Limousine 9 chỗ', price: 250000, amenities: 'Ghế massage, Cổng sạc, Nước uống' },
+    { time: '16:00', type: 'Limousine giường nằm 34 chỗ', price: 250000, amenities: 'Giường rộng rãi, Tivi riêng, Wifi' },
+    { time: '21:00', type: 'Limousine 22 giường phòng (có WC)', price: 350000, amenities: 'Cabin cung điện, WC khép kín, Tivi' },
+    { time: '22:30', type: 'Limousine 22 giường phòng (có WC)', price: 350000, amenities: 'Cabin cung điện, WC khép kín, Tivi' },
+    { time: '23:00', type: 'Limousine giường nằm 34 chỗ', price: 250000, amenities: 'Giường rộng rãi, Tivi riêng, Wifi' }
+  ];
+
+  mockStops = {
+    forward: {
+      pickups: ['Văn phòng Hàng Xanh (TP.HCM)', 'Bến xe Miền Đông mới', 'Ngã ba Dầu Giây'],
+      dropoffs: ['Di Linh', 'Đức Trọng', 'Văn phòng Phan Bội Châu (Đà Lạt)', 'Bến xe Liên tỉnh Đà Lạt']
+    },
+    backward: {
+      pickups: ['Bến xe Liên tỉnh Đà Lạt', 'Văn phòng Phan Bội Châu (Đà Lạt)', 'Đức Trọng', 'Di Linh'],
+      dropoffs: ['Ngã ba Dầu Giây', 'Bến xe Miền Đông mới', 'Văn phòng Hàng Xanh (TP.HCM)']
+    }
+  };
 
   ngOnInit() {
     this.filteredRoutes = [...this.allRoutes];
   }
 
   onSearch() {
-    const term = this.searchTerm.toLowerCase().trim();
+    let term = this.searchTerm.toLowerCase().trim();
     if (!term) {
       this.filteredRoutes = [...this.allRoutes];
       return;
+    }
+
+    // Smart aliases matching user request ("Lâm Đồng", "Sài Gòn/Sgon")
+    if (term.includes('lâm đồng') || term.includes('lam dong') || term.includes('lâmđồng')) {
+      term = 'đà lạt';
+    } else if (term.includes('sài gòn') || term.includes('sai gon') || term.includes('sgon') || term.includes('sg')) {
+      term = 'tp.hcm';
     }
     
     this.filteredRoutes = this.allRoutes.filter(route => 
       route.from.toLowerCase().includes(term) || 
       route.to.toLowerCase().includes(term)
     );
+  }
+
+  viewSchedule(route: Route) {
+    this.selectedRouteForDetails = route;
+    this.selectedDirection = 'forward';
+  }
+
+  closeSchedule() {
+    this.selectedRouteForDetails = null;
   }
 
   formatPrice(price: number): string {

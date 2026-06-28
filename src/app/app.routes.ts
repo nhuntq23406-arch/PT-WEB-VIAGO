@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { CustomerLayoutComponent } from './featured/customer/customer-layout/customer-layout.component';
 import { HomeComponent } from './featured/customer/home/home.component';
 import { NewsComponent } from './featured/customer/news/news.component';
+import { NewsDetailComponent } from './featured/customer/news/news-detail/news-detail.component';
 import { ReviewsComponent } from './featured/customer/reviews/reviews.component';
 import { ServicesComponent } from './featured/customer/services/services.component';
 import { AboutComponent } from './featured/customer/about/about.component';
@@ -123,6 +124,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'tin-tuc', component: NewsComponent },
+      { path: 'tin-tuc/chi-tiet/:id', component: NewsDetailComponent },
       { path: 'danh-gia', component: ReviewsComponent },
       { path: 'dich-vu', component: ServicesComponent },
       { path: 've-chung-toi', component: AboutUsComponent },
