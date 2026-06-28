@@ -24,6 +24,18 @@ export const routes: Routes = [
   // --- TUYẾN ĐƯỜNG ADMIN (CỦA VANH) ---
   {
     path: 'admin',
+    pathMatch: 'full',
+    redirectTo: 'admin/login'
+  },
+  {
+    path: 'admin/login',
+    loadComponent: () =>
+      import('./featured/admin/auth/login/login').then(
+        (m) => m.Login
+      ),
+  },
+  {
+    path: 'admin',
     component: AdminLayoutComponent,
     children: [
       {
@@ -106,6 +118,27 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./featured/admin/quan-ly-tin-tuc/quan-ly-tin-tuc').then(
             (m) => m.QuanLyTinTuc
+          ),
+      },
+      {
+        path: 'khachhang/tai-khoan',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang').then(
+            (m) => m.QuanLyTaiKhoanKhachHang
+          ),
+      },
+      {
+        path: 'nhanvien/tai-khoan',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien').then(
+            (m) => m.QuanLyTaiKhoanNhanVien
+          ),
+      },
+      {
+        path: 'nhatky',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-nhat-ky/quan-ly-nhat-ky').then(
+            (m) => m.QuanLyNhatKy
           ),
       },
       {
