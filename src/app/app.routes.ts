@@ -79,6 +79,20 @@ export const routes: Routes = [
           import('./featured/admin/tai-xe/tai-xe').then((m) => m.TaiXeComponent),
       },
       {
+        path: 'datve/moi',
+        loadComponent: () =>
+          import('./featured/admin/dat-ve/moi/dat-ve-moi').then(
+            (m) => m.DatVeMoiComponent
+          ),
+      },
+      {
+        path: 'datve/danhsach',
+        loadComponent: () =>
+          import('./featured/admin/dat-ve/danhsach/danh-sach-ve').then(
+            (m) => m.DanhSachVeComponent
+          ),
+      },
+      {
         path: 'thuexe',
         loadComponent: () =>
           import('./featured/admin/thue-xe-hop-dong/thue-xe-hop-dong').then(
@@ -107,6 +121,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'baocao/hoan-huy',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao/hoan-huy/hoan-huy').then(
+            (m) => m.HoanHuyComponent
+          ),
+      },
+      {
         path: 'khuyenmai',
         loadComponent: () =>
           import('./featured/admin/quan-ly-khuyen-mai/quan-ly-khuyen-mai').then(
@@ -125,6 +146,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./featured/admin/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang').then(
             (m) => m.QuanLyTaiKhoanKhachHang
+          ),
+      },
+      {
+        path: 'khachhang/danh-gia',
+        loadComponent: () =>
+          import('./featured/admin/khach-hang/danh-gia-phan-hoi/danh-gia-phan-hoi').then(
+            (m) => m.DanhGiaPhanHoi
+          ),
+      },
+      {
+        path: 'khachhang/danh-gia-phan-hoi',
+        loadComponent: () =>
+          import('./featured/admin/khach-hang/danh-gia-phan-hoi/danh-gia-phan-hoi').then(
+            (m) => m.DanhGiaPhanHoi
           ),
       },
       {
