@@ -1,0 +1,97 @@
+<div class="container mx-auto px-4 md:px-10 lg:px-16 mt-6" *ngIf="article">
+  <nav class="breadcrumbs">
+    <a routerLink="/">Trang chủ</a>
+    <span>›</span>
+    <a routerLink="/tin-tuc">Tin tức</a>
+    <span>›</span>
+    <strong>{{ article.title }}</strong>
+  </nav>
+</div>
+
+<main class="container mx-auto px-4 md:px-10 lg:px-16 my-8 article-main-grid" *ngIf="article">
+  <article class="article-content-wrapper">
+    <header class="article-header">
+      <span class="badge-category">{{ article.category }}</span>
+      <h1>{{ article.title }}</h1>
+      <div class="article-meta-row">
+        <span>{{ article.date }} • {{ article.author }}</span>
+        <div class="article-actions flex gap-2">
+          <button type="button" (click)="copyLink()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs text-gray-600 hover:border-[#123063] hover:text-[#123063] transition flex items-center gap-1 cursor-pointer bg-slate-50">
+            🔗 Chia sẻ (Copy link)
+          </button>
+          <button type="button" (click)="bookmarked = !bookmarked" [class.saved]="bookmarked" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs text-gray-600 hover:border-[#123063] hover:text-[#123063] transition flex items-center gap-1 cursor-pointer bg-slate-50">
+            ★ {{ bookmarked ? 'Đã lưu' : 'Lưu bài' }}
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <p class="highlight-block">{{ article.excerpt }}</p>
+
+    <img [src]="article.imageUrl" [alt]="article.title" class="article-cover" />
+
+    <div class="article-chips">
+      <span *ngIf="article.route">{{ article.route }}</span>
+      <span *ngIf="article.discount">Ưu đãi: {{ article.discount }}</span>
+      <span *ngIf="article.target">{{ article.target }}</span>
+      <span *ngIf="article.eventDate">Ngày sự kiện: {{ article.eventDate }}</span>
+      <span *ngIf="article.deadline">Hạn nộp: {{ article.deadline }}</span>
+    </div>
+
+    <div class="article-body">
+      {{ article.contentBody || article.excerpt }}
+    </div>
+
+    <!-- Article gallery (2-3 images) -->
+    <div class="article-gallery-section" *ngIf="article.gallery && article.gallery.length > 0">
+      <h3>Hình ảnh thực tế</h3>
+      <div class="gallery-grid">
+        <div class="gallery-img-card" *ngFor="let gImg of article.gallery">
+          <img [src]="gImg" alt="Hình ảnh chi tiết" loading="lazy" />
+        </div>
+      </div>
+    </div>
+
+    <section class="comment-box">
+      <h2>Bình luận</h2>
+      <textarea rows="4" placeholder="Chia sẻ cảm nhận hoặc câu hỏi của bạn..."></textarea>
+      <button type="button">Gửi bình luận</button>
+    </section>
+  </article>
+
+  <aside class="sidebar-container">
+    <section class="sidebar-section">
+      <h2>Tin liên quan</h2>
+      <a class="related-item" *ngFor="let art of relatedArticles; let i = index" [routerLink]="['/tin-tuc/chi-tiet', art.id]">
+        <strong>0{{ i + 1 }}</strong>
+        <span>
+          {{ art.title }}
+          <small>{{ art.date }} • {{ art.category }}</small>
+        </span>
+      </a>
+    </section>
+  </aside>
+</main>
+
+<section class="bottom-related-section" *ngIf="bottomArticles.length > 0">
+  <div class="container mx-auto px-4 md:px-10 lg:px-16">
+    <div class="section-header-block">
+      <h2>Bài viết liên quan</h2>
+      <a routerLink="/tin-tuc">Xem tất cả →</a>
+    </div>
+
+    <div class="related-cards-grid">
+      <article class="news-card" *ngFor="let art of bottomArticles">
+        <a [routerLink]="['/tin-tuc/chi-tiet', art.id]" class="news-img-wrapper">
+          <img [src]="art.imageUrl" [alt]="art.title" />
+        </a>
+        <div class="news-content">
+          <span class="news-card-badge">{{ art.category }}</span>
+          <h3><a [routerLink]="['/tin-tuc/chi-tiet', art.id]">{{ art.title }}</a></h3>
+          <p>{{ art.excerpt }}</p>
+          <small>{{ art.date }}</small>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

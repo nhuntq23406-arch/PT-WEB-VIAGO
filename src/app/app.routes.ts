@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { CustomerLayoutComponent } from './featured/customer/customer-layout/customer-layout.component';
 import { HomeComponent } from './featured/customer/home/home.component';
 import { NewsComponent } from './featured/customer/news/news.component';
+import { NewsDetailComponent } from './featured/customer/news/news-detail/news-detail.component';
 import { ReviewsComponent } from './featured/customer/reviews/reviews.component';
 import { ServicesComponent } from './featured/customer/services/services.component';
 import { AboutComponent } from './featured/customer/about/about.component';
@@ -23,6 +24,18 @@ export const routes: Routes = [
   // --- TUYẾN ĐƯỜNG ADMIN (CỦA VANH) ---
   {
     path: 'admin',
+    pathMatch: 'full',
+    redirectTo: 'admin/login'
+  },
+  {
+    path: 'admin/login',
+    loadComponent: () =>
+      import('./featured/admin/auth/login/login').then(
+        (m) => m.Login
+      ),
+  },
+  {
+    path: 'admin',
     component: AdminLayoutComponent,
     children: [
       {
@@ -30,6 +43,20 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./featured/admin/trangchu/trangchu').then(
             (m) => m.TrangChuComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/tuyen',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tuyen-xe/quan-ly-tuyen-xe').then(
+            (m) => m.QuanLyTuyenXeComponent
+          ),
+      },
+      {
+        path: 'dieuphoi/lich-trinh',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-lich-trinh/quan-ly-lich-trinh').then(
+            (m) => m.QuanLyLichTrinhComponent
           ),
       },
       {
@@ -66,6 +93,55 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'baocao/chi-tiet',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao-chi-tiet/bao-cao-chi-tiet').then(
+            (m) => m.BaoCaoChiTietComponent
+          ),
+      },
+      {
+        path: 'baocao/tuyen',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao-tuyen-xe/bao-cao-tuyen-xe').then(
+            (m) => m.BaoCaoTuyenXeComponent
+          ),
+      },
+      {
+        path: 'khuyenmai',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-khuyen-mai/quan-ly-khuyen-mai').then(
+            (m) => m.QuanLyKhuyenMaiComponent
+          ),
+      },
+      {
+        path: 'noidung/tin-tuc',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tin-tuc/quan-ly-tin-tuc').then(
+            (m) => m.QuanLyTinTuc
+          ),
+      },
+      {
+        path: 'khachhang/tai-khoan',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang').then(
+            (m) => m.QuanLyTaiKhoanKhachHang
+          ),
+      },
+      {
+        path: 'nhanvien/tai-khoan',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien').then(
+            (m) => m.QuanLyTaiKhoanNhanVien
+          ),
+      },
+      {
+        path: 'nhatky',
+        loadComponent: () =>
+          import('./featured/admin/quan-ly-nhat-ky/quan-ly-nhat-ky').then(
+            (m) => m.QuanLyNhatKy
+          ),
+      },
+      {
         // Redirect /admin → /admin/trangchu
         path: '',
         redirectTo: 'trangchu',
@@ -81,6 +157,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'tin-tuc', component: NewsComponent },
+      { path: 'tin-tuc/chi-tiet/:id', component: NewsDetailComponent },
       { path: 'danh-gia', component: ReviewsComponent },
       { path: 'dich-vu', component: ServicesComponent },
       { path: 've-chung-toi', component: AboutUsComponent },

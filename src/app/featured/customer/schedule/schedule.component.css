@@ -52,7 +52,8 @@
   margin-top: -60px;
   padding: 0 20px;
   position: relative;
-  z-index: 100; /* Đảm bảo nổi lên trên Hero */
+  z-index: 100;
+  /* Đảm bảo nổi lên trên Hero */
 }
 
 .search-container {
@@ -61,7 +62,7 @@
   padding: 24px 32px;
   background-color: white;
   border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .search-wrapper {
@@ -198,7 +199,7 @@
   height: 480px;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -215,7 +216,7 @@
 .card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
   z-index: 1;
 }
 
@@ -260,12 +261,12 @@
 }
 
 .v-tag {
-  background-color: rgba(255,255,255,0.15);
+  background-color: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(4px);
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 11px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .card-info {
@@ -330,7 +331,7 @@
 }
 
 .compact-card:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .compact-image {
@@ -457,21 +458,115 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .featured-grid, .routes-grid {
+
+  .featured-grid,
+  .routes-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
   }
 }
 
 @media (max-width: 768px) {
-  .featured-grid, .routes-grid {
+
+  .featured-grid,
+  .routes-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  .featured-section, .all-routes-section {
+
+  .featured-section,
+  .all-routes-section {
     padding: 60px 24px;
   }
+
   .hero-title {
     font-size: 32px;
+  }
+}
+
+/* Detailed Schedule Modal Styling */
+.schedule-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(18, 48, 99, 0.45);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.schedule-modal-content {
+  position: relative;
+  background: white;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 32px;
+  padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(18, 48, 99, 0.25);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: #f1f5f9;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  font-weight: 800;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-modal-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.modal-header .modal-title {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #f96d00;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.modal-header .modal-route {
+  font-size: 28px;
+  font-weight: 900;
+  color: #123063;
+  margin: 0;
+}
+
+.trip-row {
+  transition: all 0.25s ease;
+}
+
+.trip-row:hover {
+  box-shadow: 0 10px 15px -3px rgba(18, 48, 99, 0.05);
+}
+
+.animate-fadeIn {
+  animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }

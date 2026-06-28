@@ -91,8 +91,28 @@
           <a class="submenu-item" routerLink="/admin/khachhang/do-that-lac" routerLinkActive="submenu-item--active">Đồ thất lạc</a>
         </div>
 
+        <!-- Nhân viên -->
+        <a class="item-link-2" href="#" (click)="toggleEmployeeMenu($event)">
+          <div class="div-3">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="text-wrapper-5">Nhân viên</div>
+          <svg class="chevron-icon" [class.chevron-icon--rotated]="showEmployeeMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+        <div class="submenu-list" *ngIf="showEmployeeMenu">
+          <a class="submenu-item" routerLink="/admin/nhanvien/tai-khoan" routerLinkActive="submenu-item--active">Tài khoản nhân viên</a>
+        </div>
+
         <!-- Nội dung -->
-        <a class="item-link-2" routerLink="/admin/noidung" routerLinkActive="item-link--active">
+        <a class="item-link-2" href="#" (click)="toggleContentMenu($event)">
           <div class="div-3">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -103,7 +123,14 @@
             </svg>
           </div>
           <div class="text-wrapper-5">Nội dung</div>
+          <svg class="chevron-icon" [class.chevron-icon--rotated]="showContentMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </a>
+        <div class="submenu-list" *ngIf="showContentMenu">
+          <a class="submenu-item" routerLink="/admin/noidung/tin-tuc" routerLinkActive="submenu-item--active">Quản lý tin tức</a>
+          <a class="submenu-item" routerLink="/admin/khuyenmai" routerLinkActive="submenu-item--active">Quản lý khuyến mãi</a>
+        </div>
 
         <!-- Thuê xe hợp đồng -->
         <a class="item-link-2" routerLink="/admin/thuexe" routerLinkActive="item-link--active">
@@ -140,7 +167,24 @@
           <a class="submenu-item" routerLink="/admin/baocao/dat-ve" routerLinkActive="submenu-item--active">Báo cáo đặt vé</a>
           <a class="submenu-item" routerLink="/admin/baocao/khach-hang" routerLinkActive="submenu-item--active">Báo cáo khách hàng</a>
           <a class="submenu-item" routerLink="/admin/baocao/van-hanh" routerLinkActive="submenu-item--active">Báo cáo vận hành</a>
+          <a class="submenu-item" routerLink="/admin/baocao/chi-tiet" routerLinkActive="submenu-item--active">Báo cáo chi tiết</a>
+          <a class="submenu-item" routerLink="/admin/baocao/tuyen" routerLinkActive="submenu-item--active">Báo cáo tuyến xe</a>
         </div>
+
+        <!-- Quản lý nhật ký -->
+        <a class="item-link-2" routerLink="/admin/nhatky" routerLinkActive="item-link--active">
+          <div class="div-3">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+          </div>
+          <div class="text-wrapper-5">Quản lý nhật ký</div>
+        </a>
 
         <!-- Hệ thống -->
         <a class="item-link-2" routerLink="/admin/hethong" routerLinkActive="item-link--active">
@@ -160,7 +204,27 @@
   </nav>
 
   <!-- User Profile / Logout -->
-  <div class="user-profile-logout">
+  <div class="user-profile-logout" (click)="toggleUserMenu($event)">
+    <!-- User Menu Popover -->
+    <div class="user-menu-popover" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
+      <a class="popover-item" href="#" (click)="openProfileModal($event)">
+        <svg class="popover-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span>Thông tin cá nhân</span>
+      </a>
+      <div class="popover-divider"></div>
+      <a class="popover-item popover-item--danger" href="#" (click)="logout($event)">
+        <svg class="popover-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+        <span>Đăng xuất</span>
+      </a>
+    </div>
+
     <div class="container-4">
       <div class="div">
         <div class="user-avatar"></div>
@@ -177,7 +241,7 @@
       </div>
       <!-- Logout chevron icon -->
       <div class="div-3">
-        <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+        <svg class="logout-icon" [class.logout-icon--active]="showUserMenu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 18l6-6-6-6" />
         </svg>
@@ -185,3 +249,170 @@
     </div>
   </div>
 </aside>
+
+<!-- Personal Profile Modal -->
+<div class="modal-overlay" *ngIf="showProfileModal" (click)="closeProfileModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-left">
+        <h2 class="modal-title">Thông tin cá nhân</h2>
+        <p class="modal-subtitle">NVQT100001 · Quản trị viên</p>
+      </div>
+      <button class="btn-close" (click)="closeProfileModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="close-icon-svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <div class="profile-layout">
+        <!-- Left Column: Avatar & Actions -->
+        <div class="profile-left-col">
+          <div class="profile-avatar-large">
+            <img src="/asset/img/admin/user_avartar.png" alt="Nguyen An Ninh Avatar" class="profile-avatar-img" />
+          </div>
+          <button class="btn-action-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+            </svg>
+            <span>Đổi ảnh</span>
+          </button>
+          <button class="btn-action-outline btn-action-password" (click)="openPasswordModal($event)">
+            <span>Đổi mật khẩu</span>
+          </button>
+        </div>
+
+        <!-- Right Column: Form Fields -->
+        <div class="profile-right-col">
+          <form class="profile-form">
+            <div class="form-row">
+              <div class="form-group flex-2">
+                <label class="form-label">Họ và tên đệm</label>
+                <input type="text" value="Nguyen An" class="form-input" />
+              </div>
+              <div class="form-group flex-1">
+                <label class="form-label">Tên</label>
+                <input type="text" value="Ninh" class="form-input" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tên hiển thị</label>
+              <input type="text" value="Nguyen An Ninh" class="form-input" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label class="form-label">Số điện thoại</label>
+                <input type="text" value="0901234567" class="form-input" />
+              </div>
+              <div class="form-group flex-1">
+                <label class="form-label">Email</label>
+                <input type="email" value="ninh.na@viago.vn" class="form-input" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label class="form-label">Giới tính</label>
+                <select class="form-select">
+                  <option value="Nam" selected>Nam</option>
+                  <option value="Nữ">Nữ</option>
+                  <option value="Khác">Khác</option>
+                </select>
+              </div>
+              <div class="form-group flex-1">
+                <label class="form-label">Ngày sinh</label>
+                <input type="text" value="15/03/1985" class="form-input" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Địa chỉ</label>
+              <input type="text" value="123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh" class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ghi chú</label>
+              <textarea class="form-textarea" rows="1" placeholder="Nhập ghi chú..."></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeProfileModal()">Hủy</button>
+      <button class="btn-save" (click)="closeProfileModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+        </svg>
+        <span>Lưu thay đổi</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" *ngIf="showPasswordModal" (click)="closePasswordModal()" style="z-index: 1050;">
+  <div class="modal-container-pw" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header-pw">
+      <div class="header-left-pw">
+        <h2 class="modal-title-pw">Đổi mật khẩu</h2>
+        <p class="modal-subtitle-pw">Mật khẩu mới tối thiểu 8 ký tự, có chữ hoa, chữ thường và số.</p>
+      </div>
+      <button class="btn-close-pw" (click)="closePasswordModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="close-icon-svg-pw">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body-pw">
+      <form class="pw-form" (submit)="$event.preventDefault(); changePassword()">
+        <div class="form-group-pw">
+          <label class="form-label-pw">MẬT KHẨU HIỆN TẠI</label>
+          <div class="input-container-pw">
+            <input [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="currentPassword" name="currentPassword" class="form-input-pw" />
+            <button type="button" class="btn-toggle-pw" (click)="toggleCurrentPassword()">
+              {{ showCurrentPassword ? 'Ẩn' : 'Hiện' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group-pw">
+          <label class="form-label-pw">MẬT KHẨU MỚI</label>
+          <div class="input-container-pw">
+            <input [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="newPassword" name="newPassword" class="form-input-pw" />
+            <button type="button" class="btn-toggle-pw" (click)="toggleNewPassword()">
+              {{ showNewPassword ? 'Ẩn' : 'Hiện' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group-pw">
+          <label class="form-label-pw">XÁC NHẬN MẬT KHẨU MỚI</label>
+          <div class="input-container-pw">
+            <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-input-pw" />
+            <button type="button" class="btn-toggle-pw" (click)="toggleConfirmPassword()">
+              {{ showConfirmPassword ? 'Ẩn' : 'Hiện' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer-pw">
+      <button class="btn-cancel-pw" (click)="closePasswordModal()">Hủy</button>
+      <button class="btn-save-pw" (click)="changePassword()">Đổi mật khẩu</button>
+    </div>
+  </div>
+</div>
