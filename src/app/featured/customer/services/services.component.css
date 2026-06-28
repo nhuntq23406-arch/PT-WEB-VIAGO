@@ -1,1 +1,396 @@
-/* services.component.css */
+/* Services component styles (Car Rental & Lost and Found) */
+.service-hero {
+    position: relative;
+    background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1600&q=80');
+    background-size: cover;
+    background-position: center;
+    padding: 80px 0 90px;
+    color: white;
+}
+
+.service-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(18, 48, 99, 0.32), rgba(18, 48, 99, 0.7));
+}
+
+.service-hero .service-hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.service-tabs-wrapper {
+    position: relative;
+    z-index: 10;
+}
+
+.tab-btn {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #123063;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    outline: none;
+}
+
+.tab-btn:hover {
+    border-color: #123063;
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background-color: #f96d00;
+    border-color: #f96d00;
+    color: #ffffff;
+    box-shadow: 0 10px 25px rgba(249, 109, 0, 0.25);
+}
+
+.tab-content {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    box-shadow: 0 0 0 3px rgba(18, 48, 99, 0.08);
+}
+
+/* Modern premium service rental layout */
+.selected-car-panel {
+    background: #ffffff;
+    border: 1px solid #eef2f7;
+    border-radius: 32px;
+    box-shadow: 0 20px 40px rgba(18, 48, 99, 0.04);
+}
+
+/* Fleet Selector styles */
+.active-car {
+    border-color: #f96d00 !important;
+    box-shadow: 0 12px 30px rgba(249, 109, 0, 0.1) !important;
+    transform: translateY(-4px);
+}
+
+.fleet-card {
+    border: 1px solid #eef2f7;
+    box-shadow: 0 4px 12px rgba(18, 48, 99, 0.02);
+}
+
+.fleet-card:hover {
+    border-color: #c7d8ff;
+    box-shadow: 0 10px 25px rgba(18, 48, 99, 0.06);
+    transform: translateY(-4px);
+}
+
+/* 360 Viewer drag cursor & spins */
+.cursor-grab {
+    cursor: grab;
+}
+
+.cursor-grabbing {
+    cursor: grabbing;
+}
+
+.animate-spin-slow {
+    animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Custom Gallery & Thumbnail styles */
+.gallery-thumbs {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.gallery-thumbs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.gallery-thumbs::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 99px;
+}
+
+.gallery-thumbs::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 99px;
+}
+
+.thumb-item {
+    border-color: #eef2f7;
+}
+
+.thumb-item:hover {
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.active-thumb {
+    border-color: #f96d00 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(249, 109, 0, 0.15);
+}
+
+.thumb-360 {
+    background: #123063;
+    border-color: #123063;
+    color: white;
+}
+
+.thumb-360:hover {
+    background: #1a3c8d;
+    border-color: #1a3c8d;
+}
+
+/* Info Badges spec cards */
+.info-badges .flex {
+    transition: all 0.25s ease;
+}
+
+.info-badges .flex:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+/* Table Price Table styles */
+.price-table-section table th {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+}
+
+.price-table-section table tr {
+    transition: background-color 0.2s ease;
+}
+
+.price-table-section table tr:hover td {
+    color: #123063;
+}
+
+/* Booking sidebar container */
+.booking-sidebar {
+    background: linear-gradient(135deg, #123063 0%, #0a1f44 100%);
+    position: relative;
+    top: 0;
+}
+
+.booking-sidebar input,
+.booking-sidebar select,
+.booking-sidebar textarea {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.booking-sidebar input::placeholder,
+.booking-sidebar textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.booking-sidebar input:focus,
+.booking-sidebar textarea:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: #f96d00;
+    box-shadow: 0 0 0 3px rgba(249, 109, 0, 0.2);
+}
+
+.btn-booking-submit {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-booking-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(249, 109, 0, 0.35);
+}
+
+.btn-booking-submit:active {
+    transform: translateY(0);
+}
+
+/* Lost badge status overlay */
+.lost-badge-status {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 1024px) {
+    .selected-car-panel {
+        padding: 20px;
+    }
+    .flex-col.lg\:flex-row {
+        flex-direction: column;
+    }
+    .lg\:max-w-\[62\%\] {
+        max-width: 100% !important;
+    }
+    .w-full.lg\:w-\[35\%\] {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .service-hero {
+        padding: 60px 0 70px;
+    }
+    .viewer-container div {
+        height: 300px !important;
+    }
+}
+
+/* --- SUCCESS POPUP MODAL --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(10, 31, 68, 0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-card {
+    background: white;
+    width: 440px;
+    border-radius: 20px;
+    padding: 35px 30px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(10, 31, 68, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    animation: modalAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-icon {
+    width: 64px;
+    height: 64px;
+    background-color: #e6f7f0;
+    color: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 22px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #123063;
+    margin-bottom: 12px;
+}
+
+.modal-desc {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.modal-btn {
+    background-color: #f96d00;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modal-btn:hover {
+    background-color: #e56400;
+    box-shadow: 0 4px 12px rgba(249, 109, 0, 0.2);
+}
+
+.car-category-tag {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+}
+
+/* Lost and Found styling */
+.lost-filter-wrapper {
+    box-shadow: 0 10px 30px rgba(18, 48, 99, 0.03);
+}
+
+.status-unclaimed {
+    background: rgba(249, 109, 0, 0.1);
+    color: #f96d00;
+}
+
+.status-claimed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.unclaimed-btn {
+    background-color: #123063;
+    border: 1px solid #123063;
+    color: white;
+}
+
+.unclaimed-btn:hover {
+    background-color: #1a3c8d;
+    border-color: #1a3c8d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(18, 48, 99, 0.15);
+}
+
+.claimed-btn {
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.report-placeholder-card {
+    transition: all 0.3s ease;
+}
+
+.report-placeholder-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(249, 109, 0, 0.05);
+}
+
+.workflow-step {
+    transition: all 0.3s ease;
+}
+
+.workflow-step:hover {
+    transform: translateY(-3px);
+    border-color: #cbd5e1;
+    box-shadow: 0 10px 25px rgba(18, 48, 99, 0.05);
+}

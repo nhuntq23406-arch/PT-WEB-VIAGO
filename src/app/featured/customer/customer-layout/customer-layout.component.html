@@ -41,27 +41,36 @@
         <a routerLink="/danh-gia" routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] font-bold" class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] transition-colors pb-1">ĐÁNH GIÁ</a>
        
         <!-- Dropdown Menu Item 1: Dịch vụ -->
-        <div class="relative group">
+        <div class="relative">
           <a
-            routerLink="/dich-vu"
-            routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] font-bold"
+            (click)="toggleServices($event)"
             class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
+            [class.text-[#1E3A8A]]="isServicesOpen || isServicesRouteActive()"
+            [class.border-b-2]="isServicesRouteActive()"
+            [class.border-[#1E3A8A]]="isServicesRouteActive()"
+            [class.font-bold]="isServicesRouteActive()"
           >
             <span>DỊCH VỤ</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200 group-hover:rotate-180">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-transform duration-200" [class.rotate-180]="isServicesOpen" [class.text-[#1E3A8A]]="isServicesRouteActive()">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
           </a>
          
           <!-- Submenu Dịch vụ -->
           <div
-            class="absolute top-full left-0 mt-2.5 w-56 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto origin-top-left flex flex-col"
+            class="absolute top-full left-0 mt-2.5 w-56 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform origin-top-left flex flex-col"
+            [class.scale-100]="isServicesOpen"
+            [class.opacity-100]="isServicesOpen"
+            [class.pointer-events-auto]="isServicesOpen"
+            [class.scale-95]="!isServicesOpen"
+            [class.opacity-0]="!isServicesOpen"
+            [class.pointer-events-none]="!isServicesOpen"
           >
-            <a routerLink="/dich-vu" [queryParams]="{tab: 'thue-xe'}" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+            <a routerLink="/dich-vu" [queryParams]="{tab: 'thue-xe'}" (click)="isServicesOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
               <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
               <span>Thuê xe hợp đồng</span>
             </a>
-            <a routerLink="/dich-vu" [queryParams]="{tab: 'that-lac'}" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+            <a routerLink="/dich-vu" [queryParams]="{tab: 'that-lac'}" (click)="isServicesOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
               <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
               <span>Tìm đồ thất lạc</span>
             </a>
@@ -69,48 +78,57 @@
         </div>
 
         <!-- Dropdown Menu Item 2: Giới thiệu -->
-        <div class="relative group">
+        <div class="relative">
           <a
-            routerLink="/gioi-thieu"
-            routerLinkActive="text-[#1E3A8A] border-b-2 border-[#1E3A8A] font-bold"
+            (click)="toggleAbout($event)"
             class="text-sm font-semibold text-gray-500 hover:text-[#1E3A8A] flex items-center gap-1 transition-colors pb-1 cursor-pointer"
+            [class.text-[#1E3A8A]]="isAboutOpen || isAboutRouteActive()"
+            [class.border-b-2]="isAboutRouteActive()"
+            [class.border-[#1E3A8A]]="isAboutRouteActive()"
+            [class.font-bold]="isAboutRouteActive()"
           >
             <span>GIỚI THIỆU</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-colors duration-200 group-hover:rotate-180">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-gray-500 transition-transform duration-200" [class.rotate-180]="isAboutOpen" [class.text-[#1E3A8A]]="isAboutRouteActive()">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
           </a>
          
           <!-- Submenu Giới thiệu -->
           <div
-            class="absolute top-full left-0 mt-2.5 w-60 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform scale-95 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto origin-top-left flex flex-col"
+            class="absolute top-full left-0 mt-2.5 w-60 bg-white border border-slate-100 rounded-xl shadow-lg py-1.5 z-50 transition-all duration-200 transform origin-top-left flex flex-col"
+            [class.scale-100]="isAboutOpen"
+            [class.opacity-100]="isAboutOpen"
+            [class.pointer-events-auto]="isAboutOpen"
+            [class.scale-95]="!isAboutOpen"
+            [class.opacity-0]="!isAboutOpen"
+            [class.pointer-events-none]="!isAboutOpen"
           >
-            <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+            <a routerLink="/ve-chung-toi" (click)="isAboutOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors" [class.bg-[#1E3A8A]]="router.url === '/ve-chung-toi'"></span>
               <span>Về chúng tôi</span>
             </a>
-            <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+            <a routerLink="/chinh-sach" (click)="isAboutOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors" [class.bg-[#1E3A8A]]="router.url === '/chinh-sach'"></span>
               <span>Chính sách nhà xe</span>
             </a>
-            <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+            <a routerLink="/gioi-thieu" (click)="isAboutOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors" [class.bg-[#1E3A8A]]="router.url === '/gioi-thieu'"></span>
               <span>Hướng dẫn mua vé</span>
             </a>
-            <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+            <a routerLink="/faq" (click)="isAboutOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors" [class.bg-[#1E3A8A]]="router.url === '/faq'"></span>
               <span>Câu hỏi thường gặp</span>
             </a>
-            <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+            <a routerLink="/dieu-khoan" (click)="isAboutOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors" [class.bg-[#1E3A8A]]="router.url === '/dieu-khoan'"></span>
               <span>Điều khoản sử dụng</span>
             </a>
-            <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+            <a routerLink="/tuyen-dung" (click)="isAboutOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors" [class.bg-[#1E3A8A]]="router.url === '/tuyen-dung'"></span>
               <span>Tuyển dụng</span>
             </a>
-            <a routerLink="/gioi-thieu" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
-              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors"></span>
+            <a routerLink="/lien-he" (click)="isAboutOpen = false" class="flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#1E3A8A] transition-all duration-150 rounded-lg mx-1.5 group/item">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/item:bg-[#1E3A8A] transition-colors" [class.bg-[#1E3A8A]]="router.url === '/lien-he'"></span>
               <span>Liên hệ</span>
             </a>
           </div>
@@ -170,10 +188,10 @@
       <div class="flex flex-col gap-4">
         <h4 class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Hỗ trợ</h4>
         <div class="flex flex-col gap-2.5 text-sm font-semibold text-[#b0b9c6]">
-          <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Câu hỏi FAQs</a>
-          <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Điều khoản sử dụng</a>
-          <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Chính sách bảo mật</a>
-          <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Liên hệ</a>
+          <a routerLink="/faq" class="hover:text-white transition-colors">Câu hỏi FAQs</a>
+          <a routerLink="/dieu-khoan" class="hover:text-white transition-colors">Điều khoản sử dụng</a>
+          <a routerLink="/chinh-sach" class="hover:text-white transition-colors">Chính sách bảo mật</a>
+          <a routerLink="/lien-he" class="hover:text-white transition-colors">Liên hệ</a>
         </div>
       </div>
 
@@ -181,8 +199,8 @@
       <div class="flex flex-col gap-4">
         <h4 class="text-[24px] font-semibold text-[#7BD0FF] uppercase tracking-wider">Giới thiệu</h4>
         <div class="flex flex-col gap-2.5 text-sm font-semibold text-[#b0b9c6]">
-          <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Về chúng tôi</a>
-          <a routerLink="/gioi-thieu" class="hover:text-white transition-colors">Tuyển dụng</a>
+          <a routerLink="/ve-chung-toi" class="hover:text-white transition-colors">Về chúng tôi</a>
+          <a routerLink="/tuyen-dung" class="hover:text-white transition-colors">Tuyển dụng</a>
           <a routerLink="/tin-tuc" class="hover:text-[#7BD0FF] transition-colors">Tin tức nổi bật</a>
           <a routerLink="/lich-trinh" class="hover:text-[#7BD0FF] transition-colors">Lịch trình</a>
         </div>

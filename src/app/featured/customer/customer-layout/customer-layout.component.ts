@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 
 @Component({
   selector: 'app-customer-layout',
@@ -12,6 +12,17 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 export class CustomerLayoutComponent {
   isServicesOpen = false;
   isAboutOpen = false;
+
+  constructor(public router: Router) {}
+
+  isAboutRouteActive(): boolean {
+    const activeRoutes = ['/ve-chung-toi', '/chinh-sach', '/dieu-khoan', '/faq', '/lien-he', '/tuyen-dung'];
+    return activeRoutes.some(route => this.router.url.includes(route));
+  }
+
+  isServicesRouteActive(): boolean {
+    return this.router.url.includes('/dich-vu');
+  }
 
   toggleServices(event: Event) {
     event.stopPropagation();
