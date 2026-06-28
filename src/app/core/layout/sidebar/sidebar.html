@@ -281,7 +281,7 @@
             </svg>
             <span>Đổi ảnh</span>
           </button>
-          <button class="btn-action-outline btn-action-password">
+          <button class="btn-action-outline btn-action-password" (click)="openPasswordModal($event)">
             <span>Đổi mật khẩu</span>
           </button>
         </div>
@@ -354,6 +354,65 @@
         </svg>
         <span>Lưu thay đổi</span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" *ngIf="showPasswordModal" (click)="closePasswordModal()" style="z-index: 1050;">
+  <div class="modal-container-pw" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header-pw">
+      <div class="header-left-pw">
+        <h2 class="modal-title-pw">Đổi mật khẩu</h2>
+        <p class="modal-subtitle-pw">Mật khẩu mới tối thiểu 8 ký tự, có chữ hoa, chữ thường và số.</p>
+      </div>
+      <button class="btn-close-pw" (click)="closePasswordModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="close-icon-svg-pw">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body-pw">
+      <form class="pw-form" (submit)="$event.preventDefault(); changePassword()">
+        <div class="form-group-pw">
+          <label class="form-label-pw">MẬT KHẨU HIỆN TẠI</label>
+          <div class="input-container-pw">
+            <input [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="currentPassword" name="currentPassword" class="form-input-pw" />
+            <button type="button" class="btn-toggle-pw" (click)="toggleCurrentPassword()">
+              {{ showCurrentPassword ? 'Ẩn' : 'Hiện' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group-pw">
+          <label class="form-label-pw">MẬT KHẨU MỚI</label>
+          <div class="input-container-pw">
+            <input [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="newPassword" name="newPassword" class="form-input-pw" />
+            <button type="button" class="btn-toggle-pw" (click)="toggleNewPassword()">
+              {{ showNewPassword ? 'Ẩn' : 'Hiện' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group-pw">
+          <label class="form-label-pw">XÁC NHẬN MẬT KHẨU MỚI</label>
+          <div class="input-container-pw">
+            <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-input-pw" />
+            <button type="button" class="btn-toggle-pw" (click)="toggleConfirmPassword()">
+              {{ showConfirmPassword ? 'Ẩn' : 'Hiện' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer-pw">
+      <button class="btn-cancel-pw" (click)="closePasswordModal()">Hủy</button>
+      <button class="btn-save-pw" (click)="changePassword()">Đổi mật khẩu</button>
     </div>
   </div>
 </div>

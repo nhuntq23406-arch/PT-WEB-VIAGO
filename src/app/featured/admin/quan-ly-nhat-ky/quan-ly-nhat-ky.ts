@@ -34,8 +34,8 @@ export class QuanLyNhatKy implements OnInit {
   selectedRole = 'all';
   selectedAction = 'all';
   selectedStatus = 'all';
-  startDate = '2026-06-01';
-  endDate = '2026-06-28';
+  startDate = '';
+  endDate = '';
 
   // Modal state
   selectedLog: LogItem | null = null;
@@ -293,13 +293,68 @@ export class QuanLyNhatKy implements OnInit {
     this.selectedRole = 'all';
     this.selectedAction = 'all';
     this.selectedStatus = 'all';
-    this.startDate = '2026-06-01';
-    this.endDate = '2026-06-28';
+    this.startDate = '';
+    this.endDate = '';
     this.applyFilters();
   }
 
   exportExcel() {
-    alert('Xuất báo cáo Excel thành công với ' + this.filteredLogs.length + ' bản ghi!');
+    if (this.filteredLogs.length === 0) {
+      alert('Không có dữ liệu để xuất!');
+      return;
+    }
+
+    // CSV header columns
+    const headers = [
+      'Mã nhật ký',
+      'Người thực hiện',
+      'Tài khoản',
+      'Vai trò',
+      'Thao tác',
+      'Trạng thái',
+      'Thời gian',
+      'Địa chỉ IP',
+      'Chi tiết thao tác'
+    ];
+
+    // CSV data rows
+    const rows = this.filteredLogs.map(log => [
+      log.id,
+      log.name,
+      log.username,
+      log.role,
+      log.action,
+      log.status,
+      log.time,
+      log.ip,
+      (log.details || '').replace(/"/g, '""') // Escape double quotes for CSV format
+    ]);
+
+    // Build CSV content string
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(val => `"${val}"`).join(','))
+    ].join('\r\n');
+
+    // Add UTF-8 BOM so Excel opens Vietnamese characters correctly
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+    // Create direct download link
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '_');
+      link.setAttribute('download', `nhat_ky_hoat_dong_${today}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert('Trình duyệt của bạn không hỗ trợ tính năng tải file!');
+    }
   }
 
   openDetailModal(log: LogItem) {
