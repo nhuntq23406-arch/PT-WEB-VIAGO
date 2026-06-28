@@ -32,7 +32,7 @@
       </button>
 
       <!-- Dots Navigation Indicator -->
-      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+      <div class="absolute bottom-20 md:bottom-28 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         <button *ngFor="let img of heroImages; let i = index"
                 (click)="setHeroIndex(i)"
                 class="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer shadow-sm"
@@ -45,8 +45,8 @@
   </div>
 
 
-  <!-- Booking Form Container (Immediately below hero banner, NOT absolute, NOT floating, just normal flow) -->
-  <div class="w-full bg-slate-50 py-8 flex justify-center px-4 md:px-8 relative z-20 overflow-visible">
+  <!-- Booking Form Container (Floating overlapping the hero banner) -->
+  <div class="w-full flex justify-center px-4 md:px-8 -mt-16 md:-mt-24 lg:-mt-28 relative z-30 overflow-visible mb-8">
     <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 md:p-8 w-full max-w-[1200px] lg:h-[263px] flex flex-col justify-between overflow-visible">
       <!-- Radio Ticket Types -->
       <div class="flex items-center gap-6 mb-4">
@@ -1528,45 +1528,26 @@
                 <!-- Tầng Dưới Grid -->
                 <div class="text-center">
                   <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Dưới</span>
-                  <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <!-- Row 1 to 9 (left: odd, right: even) -->
-                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
-                      <!-- Left seat (odd index: 1A, 3A, 5A, etc.) -->
+                  <div class="grid grid-cols-3 gap-3 max-w-[220px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <ng-container *ngFor="let seat of ['1A', '', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '10A', '11A', '12A', '13A', '14A', '15A', '16A', '17A']">
+                      <div *ngIf="seat === ''" class="w-12 h-10"></div>
                       <button
+                        *ngIf="seat !== ''"
                         type="button"
-                        (click)="toggleSeat((row * 2 + 1) + 'A')"
+                        (click)="toggleSeat(seat)"
                         class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
-                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
-                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'A')"
-                        [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
-                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
-                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.bg-slate-200]="isSeatSoldOut(seat)"
+                        [class.border-slate-300]="isSeatSoldOut(seat)"
+                        [class.text-slate-400]="isSeatSoldOut(seat)"
+                        [class.pointer-events-none]="isSeatSoldOut(seat)"
+                        [class.bg-[#FF6A00]]="isSeatSelected(seat)"
+                        [class.border-[#FF6A00]]="isSeatSelected(seat)"
+                        [class.text-white]="isSeatSelected(seat)"
+                        [class.bg-white]="!isSeatSoldOut(seat) && !isSeatSelected(seat)"
+                        [class.border-[#1A3A8A]]="!isSeatSoldOut(seat) && !isSeatSelected(seat)"
+                        [class.text-[#1A3A8A]]="!isSeatSoldOut(seat) && !isSeatSelected(seat)"
                       >
-                        {{(row * 2 + 1)}}A
-                      </button>
-
-                      <!-- Right seat (even index: 2A, 4A, 6A, etc.) -->
-                      <button
-                        type="button"
-                        (click)="toggleSeat((row * 2 + 2) + 'A')"
-                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
-                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
-                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'A')"
-                        [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
-                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
-                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
-                      >
-                        {{(row * 2 + 2)}}A
+                        {{seat}}
                       </button>
                     </ng-container>
                   </div>
@@ -1575,45 +1556,26 @@
                 <!-- Tầng Trên Grid -->
                 <div class="text-center">
                   <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Trên</span>
-                  <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
-                    <!-- Row 1 to 8 (left: odd, right: even) -->
-                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5, 6, 7]">
-                      <!-- Left seat (odd index: 1B, 3B, 5B, etc.) -->
+                  <div class="grid grid-cols-3 gap-3 max-w-[220px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <ng-container *ngFor="let seat of ['1B', '', '2B', '3B', '4B', '5B', '6B', '7B', '8B', '9B', '10B', '11B', '12B', '13B', '14B', '15B', '16B', '17B']">
+                      <div *ngIf="seat === ''" class="w-12 h-10"></div>
                       <button
+                        *ngIf="seat !== ''"
                         type="button"
-                        (click)="toggleSeat((row * 2 + 1) + 'B')"
+                        (click)="toggleSeat(seat)"
                         class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
-                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
-                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'B')"
-                        [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
-                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
-                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.bg-slate-200]="isSeatSoldOut(seat)"
+                        [class.border-slate-300]="isSeatSoldOut(seat)"
+                        [class.text-slate-400]="isSeatSoldOut(seat)"
+                        [class.pointer-events-none]="isSeatSoldOut(seat)"
+                        [class.bg-[#FF6A00]]="isSeatSelected(seat)"
+                        [class.border-[#FF6A00]]="isSeatSelected(seat)"
+                        [class.text-white]="isSeatSelected(seat)"
+                        [class.bg-white]="!isSeatSoldOut(seat) && !isSeatSelected(seat)"
+                        [class.border-[#1A3A8A]]="!isSeatSoldOut(seat) && !isSeatSelected(seat)"
+                        [class.text-[#1A3A8A]]="!isSeatSoldOut(seat) && !isSeatSelected(seat)"
                       >
-                        {{(row * 2 + 1)}}B
-                      </button>
-
-                      <!-- Right seat (even index: 2B, 4B, 6B, etc.) -->
-                      <button
-                        type="button"
-                        (click)="toggleSeat((row * 2 + 2) + 'B')"
-                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
-                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
-                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'B')"
-                        [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
-                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
-                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
-                      >
-                        {{(row * 2 + 2)}}B
+                        {{seat}}
                       </button>
                     </ng-container>
                   </div>

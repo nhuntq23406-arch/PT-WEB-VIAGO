@@ -1,7 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +15,9 @@ import { SearchableDropdownComponent } from '../../../shared/components/searchab
 })
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('destinationDropdown') destinationDropdown!: SearchableDropdownComponent;
+
+  private router = inject(Router);
+  private routerSubscription!: Subscription;
 
   heroImages = [
     '/asset/images/customer/hero_banner_1.png',
@@ -161,6 +167,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     this.todayDate = `${yyyy}-${mm}-${dd}`;
+
+    // Reset customer view state when user clicks "TRANG CHỦ" or Logo (navigates to "/" or "/?...")
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      const url = event.urlAfterRedirects || event.url;
+      if (url === '/' || url.startsWith('/?')) {
+        this.resetAllStates();
+      }
+    });
   }
 
   formatDateToShort(dateStr: string): string {
@@ -175,6 +191,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       clearInterval(this.heroIntervalId);
     }
     this.stopPaymentTimer();
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   startHeroTimer() {
@@ -886,6 +905,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showTicketModal = false;
     this.stopPaymentTimer();
     history.pushState(null, '');
+    window.scrollTo(0, 0);
+  }
+
+  resetAllStates() {
+    this.showResults = false;
+    this.selectedTrip = null;
+    this.showPayment = false;
+    this.showSuccessScreen = false;
+    this.showTicketModal = false;
+    this.stopPaymentTimer();
+    this.selectedSeats = [];
+    this.passengerName = '';
+    this.passengerPhone = '';
+    this.passengerEmail = '';
+    this.passengerNameTouched = false;
+    this.passengerPhoneTouched = false;
+    this.passengerEmailTouched = false;
+    this.acceptedTerms = false;
+    this.pickupPoint = '';
+    this.dropoffPoint = '';
+    this.promoCode = '';
+    this.appliedPromo = null;
     window.scrollTo(0, 0);
   }
 
