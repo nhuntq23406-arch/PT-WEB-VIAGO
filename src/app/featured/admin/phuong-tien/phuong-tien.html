@@ -1,0 +1,235 @@
+<div class="management-container">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-item">Quản lý điều hành</span>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-item active">Quản lý phương tiện</span>
+  </div>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Quản lý phương tiện</h1>
+    <p class="page-description">Theo dõi, quản lý danh sách và trạng thái hoạt động của toàn bộ phương tiện trong hệ thống.</p>
+  </div>
+
+  <!-- Main Content Card -->
+  <div class="content-card">
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <button class="tab-item" [class.active]="activeTab === 'Tất cả'" (click)="setTab('Tất cả')">
+        Tất cả phương tiện
+      </button>
+      <button class="tab-item" [class.active]="activeTab === 'Đang hoạt động'" (click)="setTab('Đang hoạt động')">
+        Đang hoạt động
+      </button>
+      <button class="tab-item" [class.active]="activeTab === 'Bảo trì'" (click)="setTab('Bảo trì')">
+        Bảo trì
+      </button>
+      <button class="tab-item" [class.active]="activeTab === 'Đã khóa'" (click)="setTab('Đã khóa')">
+        Đã khóa
+      </button>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <div class="action-top">
+        <button class="btn-primary" (click)="openAddModal()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Thêm phương tiện</span>
+        </button>
+      </div>
+
+      <div class="filter-group">
+        <div class="search-box">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Tìm theo tên xe hoặc biển số..." (keyup.enter)="filterVehicles()">
+        </div>
+        
+        <div class="select-box">
+          <select [(ngModel)]="selectedType" (change)="filterVehicles()">
+            <option *ngFor="let type of vehicleTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+
+        <div class="select-box" *ngIf="activeTab === 'Tất cả'">
+          <select [(ngModel)]="selectedStatus" (change)="filterVehicles()">
+            <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+
+        <button class="btn-secondary" (click)="filterVehicles()">Tìm kiếm</button>
+        <button class="btn-outline" (click)="clearFilters()">Xóa bộ lọc</button>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="col-stt">STT</th>
+            <th class="col-name">Tên xe</th>
+            <th class="col-plate">Biển số</th>
+            <th class="col-type">Loại xe</th>
+            <th class="col-seats">Số chỗ</th>
+            <th class="col-expiry">Hạn đăng kiểm</th>
+            <th class="col-amenities">Tiện ích xe</th>
+            <th class="col-status">Trạng thái</th>
+            <th class="col-actions">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filteredVehicles.length === 0">
+            <td colspan="9" class="empty-state">
+              <div class="empty-content">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <p>Không tìm thấy phương tiện nào phù hợp</p>
+              </div>
+            </td>
+          </tr>
+          
+          <tr *ngFor="let vehicle of filteredVehicles; let i = index">
+            <td class="text-center">{{ i + 1 }}</td>
+            <td class="text-semibold">{{ vehicle.name }}</td>
+            <td>{{ vehicle.licensePlate }}</td>
+            <td>{{ vehicle.type }}</td>
+            <td class="text-center">{{ vehicle.seats }}</td>
+            <td class="text-center">{{ vehicle.registrationExpiry }}</td>
+            <td>
+              <div class="amenity-tags">
+                <span class="amenity-tag" *ngFor="let amenity of vehicle.amenities">{{ amenity }}</span>
+              </div>
+            </td>
+            <td class="text-center">
+              <span class="status-badge" 
+                [class.status-active]="vehicle.status === 'Đang hoạt động'"
+                [class.status-maintenance]="vehicle.status === 'Bảo trì'"
+                [class.status-locked]="vehicle.status === 'Đã khóa'">
+                {{ vehicle.status }}
+              </span>
+            </td>
+            <td class="text-center">
+              <div class="action-buttons">
+                <button class="btn-icon" (click)="openEditModal(vehicle)" title="Chỉnh sửa">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">{{ isEditMode ? 'Cập nhật' : 'Thêm mới' }} phương tiện</h2>
+        <button class="btn-close" (click)="closeModal()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-item col-8" [class.has-error]="errors.name">
+            <label>Tên xe <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="currentVehicle.name" placeholder="VD: VIAGO Limousine 01">
+            <span class="error-msg" *ngIf="errors.name">Vui lòng nhập tên xe</span>
+          </div>
+          <div class="form-item col-4" [class.has-error]="errors.licensePlate">
+            <label>Biển số xe <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="currentVehicle.licensePlate" placeholder="VD: 51B-123.45">
+            <span class="error-msg" *ngIf="errors.licensePlate">Vui lòng nhập biển số</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-item col-6" [class.has-error]="errors.type">
+            <label>Loại xe <span class="required">*</span></label>
+            <select [(ngModel)]="currentVehicle.type" (change)="onVehicleTypeChange()">
+              <option value="">Chọn loại xe</option>
+              <option value="Limousine">Limousine</option>
+              <option value="Giường nằm">Giường nằm</option>
+              <option value="Cabin đôi">Cabin đôi</option>
+            </select>
+            <span class="error-msg" *ngIf="errors.type">Vui lòng chọn loại xe</span>
+          </div>
+          <div class="form-item col-6" [class.has-error]="errors.registrationExpiry">
+            <label>Hạn đăng kiểm <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="currentVehicle.registrationExpiry" placeholder="dd/mm/yyyy">
+            <span class="error-msg" *ngIf="errors.registrationExpiry">Vui lòng nhập hạn đăng kiểm</span>
+          </div>
+        </div>
+
+        <div class="amenities-wrapper">
+          <label class="section-label">Tiện ích xe</label>
+          <div class="amenities-grid">
+            <label *ngFor="let a of amenitiesList" class="amenity-item">
+              <input type="checkbox" [checked]="hasAmenity(a.label)" (change)="toggleAmenity(a.label)">
+              <div class="amenity-box">
+                <span class="checkbox-custom"></span>
+                <span class="amenity-text">{{ a.label }}</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="upload-grid">
+          <div class="upload-item">
+            <label>Giấy đăng kiểm</label>
+            <div class="upload-box" (click)="regInput.click()">
+              <input type="file" #regInput hidden (change)="onImageUpload($event, 'registrationImage')">
+              <div class="upload-content" *ngIf="!currentVehicle.registrationImage">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Tải ảnh lên</span>
+              </div>
+              <img *ngIf="currentVehicle.registrationImage" [src]="currentVehicle.registrationImage" class="preview-img">
+              <button *ngIf="currentVehicle.registrationImage" class="btn-remove" (click)="removeImage('registrationImage'); $event.stopPropagation()">×</button>
+            </div>
+          </div>
+          <div class="upload-item">
+            <label>Ảnh phương tiện</label>
+            <div class="upload-box" (click)="vehInput.click()">
+              <input type="file" #vehInput hidden (change)="onImageUpload($event, 'vehicleImage')">
+              <div class="upload-content" *ngIf="!currentVehicle.vehicleImage">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Tải ảnh lên</span>
+              </div>
+              <img *ngIf="currentVehicle.vehicleImage" [src]="currentVehicle.vehicleImage" class="preview-img">
+              <button *ngIf="currentVehicle.vehicleImage" class="btn-remove" (click)="removeImage('vehicleImage'); $event.stopPropagation()">×</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="footer-left">
+          <button class="btn-status-toggle" *ngIf="isEditMode" (click)="toggleStatus()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            {{ currentVehicle.status === 'Đã khóa' ? 'Mở khóa' : 'Khóa xe' }}
+          </button>
+        </div>
+        <div class="footer-right">
+          <button class="btn-cancel" (click)="closeModal()">Hủy bỏ</button>
+          <button class="btn-save" (click)="saveVehicle()">Lưu thông tin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
