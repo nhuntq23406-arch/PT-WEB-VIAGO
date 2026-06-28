@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   departureDate = '';
   returnDate = '';
   ticketCount = 1;
+  todayDate = '';
 
   // Search results visibility
   showResults = false;
@@ -85,18 +86,28 @@ export class HomeComponent implements OnInit, OnDestroy {
   showDropoffDropdown = false;
   searchPickupText = '';
   searchDropoffText = '';
+  showPayment = false;
+  showSuccessScreen = false;
+  orderCode = '';
+  ticketCode = '';
+  showTicketModal = false;
+  passengerNameTouched = false;
+  passengerPhoneTouched = false;
+  passengerEmailTouched = false;
+  paymentTimeLeft = 600;
+  paymentTimerInterval: any = null;
+  selectedPaymentMethod = 'vietqr';
 
   detailedSpots: { [key: string]: string[] } = {
-    'TP. Hồ Chí Minh': ['Bến xe Miền Đông', 'Văn phòng Quận 5', 'Bến xe Miền Tây', 'Bến xe An Sương', 'Ngã Tư Ga'],
-    'Đà Lạt': ['Bến xe Liên Tỉnh Đà Lạt', 'Văn phòng Đà Lạt', 'Chợ Đà Lạt', 'Hồ Tuyền Lâm', 'Đầu đèo Prenn'],
-    'Nha Trang': ['Bến xe phía Nam Nha Trang', 'Văn phòng Nha Trang', 'Cảng Cầu Đá', 'Ngã 3 Nhà Máy Sợi', 'Bãi Dài Nha Trang'],
-    'Cần Thơ': ['Bến xe Trung tâm Cần Thơ', 'Văn phòng Cần Thơ', 'Đại học Cần Thơ', 'Cầu Hưng Lợi', 'Cái Răng'],
-    'Vũng Tàu': ['Bến xe Vũng Tàu', 'Văn phòng Vũng Tàu', 'Bến đá Vũng Tàu', 'Bãi Sau', 'Bãi Trước'],
-    'Đà Nẵng': ['Bến xe Trung tâm Đà Nẵng', 'Văn phòng Đà Nẵng', 'Cầu Rồng', 'Ngũ Hành Sơn', 'Liên Chiểu'],
-    'Rạch Giá': ['Bến xe Rạch Giá', 'Văn phòng Rạch Giá', 'Cổng chào Rạch Giá', 'Cầu Cái Sắn', 'Rạch Sỏi'],
-    'Buôn Ma Thuột': ['Bến xe phía Nam BMT', 'Văn phòng BMT', 'Ngã sáu BMT', 'Đại học Tây Nguyên', 'Bến xe phía Bắc BMT'],
-    'Bình Định': ['Bến xe Quy Nhơn', 'Văn phòng Quy Nhơn', 'Bến xe Bồng Sơn', 'Ngã ba Phú Tài', 'Tuy Phước'],
-    'Quy Nhơn': ['Bến xe Quy Nhơn', 'Văn phòng Quy Nhơn', 'Ngã ba Phú Tài', 'Ghềnh Ráng', 'Nhơn Hội']
+    'TP.HCM': ['Bến xe Miền Đông Mới', 'Bến xe Miền Tây', 'Văn phòng Quận 1', 'Văn phòng Quận 5', 'Văn phòng Quận 10', 'Ngã tư Thủ Đức', 'Ngã tư An Sương', 'Suối Tiên'],
+    'Cần Thơ': ['Bến xe Trung tâm Cần Thơ', 'Văn phòng Ninh Kiều', 'Bến Ninh Kiều', 'Đại học Cần Thơ'],
+    'Vũng Tàu': ['Bến xe Vũng Tàu', 'Văn phòng Vũng Tàu', 'Bãi Sau', 'Bãi Trước'],
+    'Đà Lạt': ['Bến xe Liên Tỉnh Đà Lạt', 'Chợ Đà Lạt', 'Hồ Xuân Hương', 'Quảng trường Lâm Viên'],
+    'Nha Trang': ['Bến xe phía Nam Nha Trang', 'Ga Nha Trang', 'Quảng trường 2/4', 'Vinpearl Harbour'],
+    'Buôn Ma Thuột': ['Bến xe Phía Nam Buôn Ma Thuột', 'Ngã Sáu Buôn Ma Thuột', 'Coopmart Buôn Ma Thuột'],
+    'Phan Thiết': ['Bến xe Phan Thiết', 'Chợ Phan Thiết', 'Mũi Né', 'NovaWorld Phan Thiết'],
+    'Đà Nẵng': ['Bến xe Trung tâm Đà Nẵng', 'Sân bay Đà Nẵng', 'Công viên Biển Đông', 'Cầu Rồng'],
+    'Rạch Giá': ['Bến xe Rạch Giá', 'Bến tàu Rạch Giá', 'Văn phòng Rạch Giá']
   };
 
   getDetailedSpot(city: string, index: number): string {
@@ -111,17 +122,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     return spots[index % spots.length];
   }
 
-
-
   allCities = [
-    'TP. Hồ Chí Minh',
+    'TP.HCM',
     'Đà Lạt',
     'Nha Trang',
     'Cần Thơ',
     'Vũng Tàu',
     'Đà Nẵng',
     'Rạch Giá',
-    'Buôn Ma Thuột'
+    'Buôn Ma Thuột',
+    'Phan Thiết'
+  ];
+
+  routesData = [
+    { cities: ['TP.HCM', 'Cần Thơ'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '170 km', duration: '3.5 tiếng', tripsPerDay: 12, price: 180000 },
+    { cities: ['TP.HCM', 'Vũng Tàu'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '100 km', duration: '2 tiếng', tripsPerDay: 20, price: 160000 },
+    { cities: ['Đà Lạt', 'Buôn Ma Thuột'], types: ['Giường nằm 34 chỗ'], distance: '210 km', duration: '5 tiếng', tripsPerDay: 8, price: 220000 },
+    { cities: ['Đà Lạt', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '140 km', duration: '3 tiếng', tripsPerDay: 15, price: 170000 },
+    { cities: ['Cần Thơ', 'Rạch Giá'], types: ['Giường nằm 34 chỗ', 'Limousine 9 chỗ'], distance: '115 km', duration: '2.5 tiếng', tripsPerDay: 10, price: 150000 },
+    { cities: ['TP.HCM', 'Phan Thiết'], types: ['Giường nằm 34 chỗ'], distance: '200 km', duration: '4 tiếng', tripsPerDay: 18, price: 200000 },
+    { cities: ['TP.HCM', 'Đà Lạt'], types: ['Cabin 22 chỗ', 'Limousine 9 chỗ'], distance: '310 km', duration: '7 tiếng', tripsPerDay: 25, price: 250000 },
+    { cities: ['TP.HCM', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '435 km', duration: '8.5 tiếng', tripsPerDay: 22, price: 300000 },
+    { cities: ['Nha Trang', 'Đà Nẵng'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '530 km', duration: '11 tiếng', tripsPerDay: 14, price: 350000 }
   ];
 
   departureCities: string[] = [];
@@ -132,12 +154,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
     history.replaceState(null, '');
+
+    // Set todayDate to YYYY-MM-DD
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    this.todayDate = `${yyyy}-${mm}-${dd}`;
+  }
+
+  formatDateToShort(dateStr: string): string {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
   ngOnDestroy() {
     if (this.heroIntervalId) {
       clearInterval(this.heroIntervalId);
     }
+    this.stopPaymentTimer();
   }
 
   startHeroTimer() {
@@ -170,25 +207,39 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onDepartureChange(val: string) {
     this.departure = val;
-    this.updateDestinationCities();
+    this.updateCitiesLists();
   }
 
   onDestinationChange(val: string) {
     this.destination = val;
+    this.updateCitiesLists();
   }
 
-  updateDestinationCities() {
-    if (this.departure === 'TP.HCM') {
-      // If Departure is TP.HCM, Destination is limited to: Đà Lạt, Nha Trang, Cần Thơ, Vũng Tàu
-      this.destinationCities = ['Đà Lạt', 'Nha Trang', 'Cần Thơ', 'Vũng Tàu'];
-    } else if (this.departure) {
-      // Exclude departure city
-      this.destinationCities = this.allCities.filter(city => city !== this.departure);
+  updateCitiesLists() {
+    // 1. Filter destination cities based on selected departure
+    if (this.departure) {
+      const connected = this.routesData
+        .filter(r => r.cities.includes(this.departure))
+        .map(r => r.cities.find(c => c !== this.departure) || '');
+      this.destinationCities = connected.filter(c => c !== '');
     } else {
       this.destinationCities = [...this.allCities];
     }
 
-    // Clear selected destination if it's no longer in the filtered destination list
+    // 2. Filter departure cities based on selected destination
+    if (this.destination) {
+      const connected = this.routesData
+        .filter(r => r.cities.includes(this.destination))
+        .map(r => r.cities.find(c => c !== this.destination) || '');
+      this.departureCities = connected.filter(c => c !== '');
+    } else {
+      this.departureCities = [...this.allCities];
+    }
+
+    // Clear values if no longer valid
+    if (this.departure && !this.departureCities.includes(this.departure)) {
+      this.departure = '';
+    }
     if (this.destination && !this.destinationCities.includes(this.destination)) {
       this.destination = '';
     }
@@ -199,30 +250,51 @@ export class HomeComponent implements OnInit, OnDestroy {
     const tempDest = this.destination;
 
     this.departure = tempDest;
-    this.updateDestinationCities();
+    this.destination = tempDep;
 
-    if (this.destinationCities.includes(tempDep)) {
-      this.destination = tempDep;
-    } else {
-      this.destination = '';
+    this.updateCitiesLists();
+  }
+
+  selectPopularRoute(dep: string, dest: string) {
+    this.departure = dep;
+    this.updateCitiesLists();
+    this.destination = dest;
+    this.updateCitiesLists();
+
+    if (!this.departureDate) {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      this.departureDate = `${yyyy}-${mm}-${dd}`;
     }
+
+    window.scrollTo({ top: 300, behavior: 'smooth' });
   }
 
   onSubmitSearch() {
     if (!this.departure) {
-      alert('Vui lòng chọn điểm đi.');
+      this.showNotification('Vui lòng chọn điểm đi.', 'warning');
       return;
     }
     if (!this.destination) {
-      alert('Vui lòng chọn điểm đến.');
+      this.showNotification('Vui lòng chọn điểm đến.', 'warning');
       return;
     }
     if (!this.departureDate) {
-      alert('Vui lòng chọn ngày đi.');
+      this.showNotification('Vui lòng chọn ngày đi.', 'warning');
+      return;
+    }
+    if (this.departureDate < this.todayDate) {
+      this.showNotification('Ngày đi không được chọn ngày trong quá khứ.', 'warning');
       return;
     }
     if (this.tripType === 'round-trip' && !this.returnDate) {
-      alert('Vui lòng chọn ngày về.');
+      this.showNotification('Vui lòng chọn ngày về.', 'warning');
+      return;
+    }
+    if (this.tripType === 'round-trip' && this.returnDate < this.departureDate) {
+      this.showNotification('Ngày về không được trước ngày đi.', 'warning');
       return;
     }
 
@@ -245,7 +317,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   generateTrips() {
-    // Format departure date to display
     let dateStr = '';
     if (this.searchDepartureDate) {
       const parts = this.searchDepartureDate.split('-');
@@ -254,78 +325,80 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.trips = [
-      {
-        depTime: '19:30',
-        duration: '9 giờ 40 phút',
-        arrTime: '05:10',
-        type: 'Limousine',
-        availableSeats: 15,
-        price: 390000,
-        depLocation: this.getDetailedSpot(this.searchDeparture, 0),
-        arrLocation: this.getDetailedSpot(this.searchDestination, 0),
-        floor: 'lower',
-        seatGroup: 'front',
-        date: dateStr,
-        soldOutSeats: ['1B', '2B', '5A', '6A', '9B', '1A', '2A']
-      },
-      {
-        depTime: '20:00',
-        duration: '9 giờ 30 phút',
-        arrTime: '05:30',
-        type: 'Limousine',
-        availableSeats: 18,
-        price: 390000,
-        depLocation: this.getDetailedSpot(this.searchDeparture, 1),
-        arrLocation: this.getDetailedSpot(this.searchDestination, 1),
-        floor: 'upper',
-        seatGroup: 'middle',
-        date: dateStr,
-        soldOutSeats: ['1B', '2B', '5A', '6A']
-      },
-      {
-        depTime: '17:15',
-        duration: '11 giờ 57 phút',
-        arrTime: '05:12',
-        type: 'Limousine',
-        availableSeats: 5,
-        price: 390000,
-        depLocation: this.getDetailedSpot(this.searchDeparture, 2),
-        arrLocation: this.getDetailedSpot(this.searchDestination, 2),
-        floor: 'lower',
-        seatGroup: 'front',
-        date: dateStr,
-        soldOutSeats: ['1A', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '10A', '1B', '2B', '3B', '4B', '5B', '6B', '7B']
-      },
-      {
-        depTime: '16:00',
-        duration: '13 giờ 10 phút',
-        arrTime: '05:10',
-        type: 'Limousine',
-        availableSeats: 20,
-        price: 390000,
-        depLocation: this.getDetailedSpot(this.searchDeparture, 3),
-        arrLocation: this.getDetailedSpot(this.searchDestination, 3),
-        floor: 'upper',
-        seatGroup: 'back',
-        date: dateStr,
-        soldOutSeats: ['11A', '12A']
-      },
-      {
-        depTime: '19:05',
-        duration: '11 giờ 15 phút',
-        arrTime: '06:20',
-        type: 'Limousine',
-        availableSeats: 9,
-        price: 390000,
-        depLocation: this.getDetailedSpot(this.searchDeparture, 4),
-        arrLocation: this.getDetailedSpot(this.searchDestination, 4),
-        floor: 'lower',
-        seatGroup: 'middle',
-        date: dateStr,
-        soldOutSeats: ['1B', '2B', '3B', '4B', '5B', '6B', '7B', '8B', '9B', '10B', '1A', '2A', '3A']
+    const dep = this.searchDeparture;
+    const dest = this.searchDestination;
+
+    // Find matching route
+    const route = this.routesData.find(r => 
+      (r.cities[0] === dep && r.cities[1] === dest) ||
+      (r.cities[1] === dep && r.cities[0] === dest)
+    );
+
+    const priceVal = route ? route.price : 200000;
+    const durationVal = route ? route.duration : '4 giờ';
+    const distanceVal = route ? route.distance : '150 km';
+    const vehicleTypes = route ? route.types : ['Limousine 20 chỗ'];
+
+    // Helper to generate trips
+    const timeSlots = ['08:00', '13:30', '19:30', '22:15'];
+    this.trips = timeSlots.map((time, idx) => {
+      const typeStr = vehicleTypes[idx % vehicleTypes.length];
+      
+      // Calculate arrival time based on duration
+      // e.g. durationVal can be: "3.5 tiếng", "2 tiếng", "8.5 tiếng"
+      const depHours = parseInt(time.split(':')[0], 10);
+      const depMins = parseInt(time.split(':')[1], 10);
+      
+      let durHours = 3;
+      let durMins = 0;
+      if (durationVal.includes('tiếng')) {
+        const hoursNum = parseFloat(durationVal.replace('tiếng', '').trim());
+        durHours = Math.floor(hoursNum);
+        durMins = Math.round((hoursNum - durHours) * 60);
       }
-    ];
+      
+      let arrMins = depMins + durMins;
+      let arrHours = depHours + durHours + Math.floor(arrMins / 60);
+      arrMins = arrMins % 60;
+      arrHours = arrHours % 24;
+      
+      const arrTimeStr = `${String(arrHours).padStart(2, '0')}:${String(arrMins).padStart(2, '0')}`;
+
+      // Determine seats and utilities
+      let availableSeats = 15;
+      let soldOutSeatsList: string[] = [];
+      if (typeStr.includes('9 chỗ')) {
+        availableSeats = 4;
+        soldOutSeatsList = ['1A', '2A', '5A', '6A', '9A'];
+      } else if (typeStr.includes('22 chỗ')) {
+        availableSeats = 12;
+        soldOutSeatsList = ['1A', '2A', '5A', '6A', '10A', '1B', '2B', '5B', '6B', '10B'];
+      } else {
+        // 34 chỗ
+        availableSeats = 20;
+        soldOutSeatsList = ['1A', '2A', '3A', '4A', '5A', '10A', '11A', '12A', '1B', '2B', '3B', '4B', '5B', '10B'];
+      }
+
+      // Pick points
+      const depSpots = this.detailedSpots[dep] || [`Bến xe ${dep}`];
+      const destSpots = this.detailedSpots[dest] || [`Bến xe ${dest}`];
+
+      return {
+        depTime: time,
+        duration: durationVal,
+        distance: distanceVal,
+        arrTime: arrTimeStr,
+        type: typeStr,
+        availableSeats: availableSeats,
+        price: priceVal,
+        depLocation: depSpots[idx % depSpots.length],
+        arrLocation: destSpots[(idx + 2) % destSpots.length],
+        floor: idx % 2 === 0 ? 'lower' : 'upper',
+        seatGroup: idx % 3 === 0 ? 'front' : (idx % 3 === 1 ? 'middle' : 'back'),
+        date: dateStr,
+        soldOutSeats: soldOutSeatsList
+      };
+    });
   }
 
   getFilteredTrips() {
@@ -408,6 +481,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.passengerName = '';
     this.passengerPhone = '';
     this.passengerEmail = '';
+    this.passengerNameTouched = false;
+    this.passengerPhoneTouched = false;
+    this.passengerEmailTouched = false;
     this.acceptedTerms = false;
     this.pickupPoint = '';
     this.dropoffPoint = '';
@@ -421,6 +497,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showDropoffDropdown = false;
     this.searchPickupText = '';
     this.searchDropoffText = '';
+    this.showPayment = false;
+    this.selectedPaymentMethod = 'vietqr';
+    this.stopPaymentTimer();
     if (this.toastTimeout) {
       clearTimeout(this.toastTimeout);
     }
@@ -432,16 +511,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   submitBooking() {
+    this.passengerNameTouched = true;
+    this.passengerPhoneTouched = true;
+    this.passengerEmailTouched = true;
+
     if (this.selectedSeats.length === 0) {
       this.showNotification('Vui lòng chọn ít nhất một ghế.', 'warning');
       return;
     }
-    if (!this.passengerName) {
-      this.showNotification('Vui lòng nhập họ tên người đi.', 'warning');
+    if (this.getNameError()) {
+      this.showNotification(this.getNameError(), 'warning');
       return;
     }
-    if (!this.passengerPhone) {
-      this.showNotification('Vui lòng nhập số điện thoại.', 'warning');
+    if (this.getPhoneError()) {
+      this.showNotification(this.getPhoneError(), 'warning');
+      return;
+    }
+    if (this.getEmailError()) {
+      this.showNotification(this.getEmailError(), 'warning');
       return;
     }
     if (!this.acceptedTerms) {
@@ -457,18 +544,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const total = this.getBookingTotal();
-    this.showNotification(`Đặt vé thành công!
-- Chuyến: ${this.selectedTrip.depLocation} → ${this.selectedTrip.arrLocation}
-- Ghế: ${this.selectedSeats.join(', ')}
-- Khách hàng: ${this.passengerName} (${this.passengerPhone})
-- Tổng tiền: ${total.toLocaleString()}đ`, 'success');
-
-    // Reset and go back to home page after showing success toast
-    setTimeout(() => {
-      this.showResults = false;
-      this.selectedTrip = null;
-    }, 4000);
+    history.pushState({ step: 'payment' }, '');
+    this.showPayment = true;
+    this.startPaymentTimer();
+    window.scrollTo(0, 0);
   }
 
   toggleSeat(seatId: string) {
@@ -541,7 +620,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getBookingSubtotal(): number {
-    return this.selectedSeats.length * 390000;
+    if (!this.selectedTrip) return 0;
+    if (this.selectedTrip.type.includes('22 chỗ')) {
+      let subtotal = 0;
+      for (const seat of this.selectedSeats) {
+        if (seat.endsWith('A')) {
+          subtotal += 600000;
+        } else if (seat.endsWith('B')) {
+          subtotal += 390000;
+        } else {
+          subtotal += 390000;
+        }
+      }
+      return subtotal;
+    }
+    return this.selectedSeats.length * (this.selectedTrip.price || 390000);
   }
 
   getDiscountAmount(): number {
@@ -566,13 +659,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!timeStr) return '';
     const parts = timeStr.split(':');
     if (parts.length < 2) return timeStr;
-    let hours = parseInt(parts[0], 10);
-    let minutes = parseInt(parts[1], 10);
-    minutes += minsToAdd;
-    hours += Math.floor(minutes / 60);
-    minutes = minutes % 60;
-    hours = hours % 24;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    let totalMins = hours * 60 + minutes + minsToAdd;
+    if (totalMins < 0) {
+      totalMins = (1440 + (totalMins % 1440)) % 1440;
+    } else {
+      totalMins = totalMins % 1440;
+    }
+    const newHours = Math.floor(totalMins / 60);
+    const newMinutes = totalMins % 60;
+    return `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}`;
   }
 
   getPickupPointsList(): { time: string, name: string }[] {
@@ -654,7 +751,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   getArrivalDate(): string {
     if (!this.searchDepartureDate) return '';
     const dateObj = new Date(this.searchDepartureDate);
-    dateObj.setDate(dateObj.getDate() + 1);
+    
+    if (this.selectedTrip && this.selectedTrip.depTime && this.selectedTrip.arrTime) {
+      const depHour = parseInt(this.selectedTrip.depTime.split(':')[0], 10);
+      const arrHour = parseInt(this.selectedTrip.arrTime.split(':')[0], 10);
+      if (arrHour < depHour) {
+        dateObj.setDate(dateObj.getDate() + 1);
+      }
+    }
+    
     const weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
     const weekday = weekdays[dateObj.getDay()];
     const yyyy = dateObj.getFullYear();
@@ -676,16 +781,178 @@ export class HomeComponent implements OnInit, OnDestroy {
   @HostListener('window:popstate', ['$event'])
   onPopState(event: PopStateEvent) {
     const state = event.state;
+    this.showTicketModal = false;
     if (!state) {
       this.showResults = false;
       this.selectedTrip = null;
+      this.showPayment = false;
+      this.showSuccessScreen = false;
+      this.stopPaymentTimer();
     } else if (state.step === 'results') {
       this.showResults = true;
       this.selectedTrip = null;
+      this.showPayment = false;
+      this.showSuccessScreen = false;
+      this.stopPaymentTimer();
     } else if (state.step === 'booking') {
       this.showResults = true;
+      this.showPayment = false;
+      this.showSuccessScreen = false;
+      this.stopPaymentTimer();
+    } else if (state.step === 'payment') {
+      this.showResults = true;
+      this.showPayment = true;
+      this.showSuccessScreen = false;
+      if (!this.paymentTimerInterval) {
+        this.startPaymentTimer();
+      }
+    } else if (state.step === 'success') {
+      this.showResults = true;
+      this.showPayment = false;
+      this.showSuccessScreen = true;
+      this.stopPaymentTimer();
     }
     window.scrollTo(0, 0);
+  }
+
+  getQRColor(): string {
+    switch (this.selectedPaymentMethod) {
+      case 'momo':
+        return '#A50064';
+      case 'vnpay':
+        return '#005aab';
+      case 'zalopay':
+        return '#00c4cc';
+      default:
+        return '#152C68';
+    }
+  }
+
+  getFormattedPaymentTime(): string {
+    const minutes = Math.floor(this.paymentTimeLeft / 60);
+    const seconds = this.paymentTimeLeft % 60;
+    return `${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`;
+  }
+
+  startPaymentTimer() {
+    this.stopPaymentTimer();
+    this.paymentTimeLeft = 600; // 10 minutes
+    this.paymentTimerInterval = setInterval(() => {
+      if (this.paymentTimeLeft > 0) {
+        this.paymentTimeLeft--;
+      } else {
+        this.stopPaymentTimer();
+        this.showNotification('Hết thời gian giữ chỗ! Vui lòng thực hiện đặt vé lại.', 'warning');
+        setTimeout(() => {
+          this.cancelPayment();
+        }, 3000);
+      }
+    }, 1000);
+  }
+
+  stopPaymentTimer() {
+    if (this.paymentTimerInterval) {
+      clearInterval(this.paymentTimerInterval);
+      this.paymentTimerInterval = null;
+    }
+  }
+
+  cancelPayment() {
+    this.stopPaymentTimer();
+    this.showPayment = false;
+    history.back();
+  }
+
+  getPaymentMethodName(): string {
+    switch (this.selectedPaymentMethod) {
+      case 'vietqr':
+        return 'VietQR';
+      case 'momo':
+        return 'Ví MoMo';
+      case 'vnpay':
+        return 'Ví VNPay';
+      case 'zalopay':
+        return 'Ví ZaloPay';
+      default:
+        return 'Chuyển khoản';
+    }
+  }
+
+  resetToHome() {
+    this.showResults = false;
+    this.selectedTrip = null;
+    this.showPayment = false;
+    this.showSuccessScreen = false;
+    this.showTicketModal = false;
+    this.stopPaymentTimer();
+    history.pushState(null, '');
+    window.scrollTo(0, 0);
+  }
+
+  viewTicketDetails() {
+    this.showTicketModal = true;
+  }
+
+  confirmPayment() {
+    this.stopPaymentTimer();
+    this.orderCode = 'VIG' + Math.floor(100000 + Math.random() * 900000);
+    this.ticketCode = 'VE' + Math.floor(100000 + Math.random() * 900000);
+    this.showSuccessScreen = true;
+    this.showPayment = false;
+    history.pushState({ step: 'success' }, '');
+    window.scrollTo(0, 0);
+  }
+
+  getNameError(): string {
+    if (this.passengerNameTouched && !this.passengerName.trim()) {
+      return 'Họ tên không được để trống';
+    }
+    return '';
+  }
+
+  getPhoneError(): string {
+    const val = this.passengerPhone.trim();
+    if (!val) {
+      if (this.passengerPhoneTouched) {
+        return 'Số điện thoại không được để trống';
+      }
+      return '';
+    }
+    if (!val.startsWith('0')) {
+      return 'Số điện thoại phải bắt đầu bằng số 0';
+    }
+    if (val.startsWith('00')) {
+      return 'Số điện thoại không được bắt đầu bằng 00';
+    }
+    if (/[^0-9]/.test(val)) {
+      return 'Số điện thoại chỉ được chứa các chữ số';
+    }
+    if (val.length === 10) {
+      const phonePattern = /^0[1-9][0-9]{8}$/;
+      if (!phonePattern.test(val)) {
+        return 'Số điện thoại không hợp lệ';
+      }
+      return '';
+    }
+    if (val.length > 10) {
+      return 'Số điện thoại không được vượt quá 10 chữ số';
+    }
+    if (this.passengerPhoneTouched && val.length < 10) {
+      return 'Số điện thoại phải gồm 10 chữ số';
+    }
+    return '';
+  }
+
+  getEmailError(): string {
+    const val = this.passengerEmail.trim();
+    if (!val) return '';
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(val)) {
+      if (this.passengerEmailTouched || val.includes('@')) {
+        return 'Địa chỉ email không đúng định dạng';
+      }
+    }
+    return '';
   }
 
   private formatDate(date: Date): string {

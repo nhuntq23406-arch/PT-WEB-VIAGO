@@ -1,4 +1,54 @@
 <div class="p-8">
-  <h1 class="text-h1 text-primary">Tra cứu vé</h1>
+  <div class="header-row">
+    <h1 class="text-h1 text-primary">Tra cứu vé</h1>
+    <button class="btn-pay" (click)="openPayment()">Thanh toán</button>
+  </div>
+
   <p class="text-body-main mt-4">Nội dung trang Tra cứu vé đang được phát triển.</p>
+
+  <!-- Payment view (mimic image 2) -->
+  <div *ngIf="showPayment" class="payment-wrap">
+    <div class="payment-card">
+      <div class="col methods">
+        <h3>Phương thức thanh toán</h3>
+        <ul>
+          <li class="method active">Thanh toán qua VietQR</li>
+          <li class="method">VNPay</li>
+          <li class="method">Momo / ZaloPay</li>
+        </ul>
+      </div>
+
+      <div class="col qr">
+        <h3>Tổng thanh toán</h3>
+        <div class="amount">{{ booking.price | number }}đ</div>
+        <div class="timer">Thời gian để giữ chỗ: <b>09:00</b></div>
+
+        <div class="qr-box">QR CODE</div>
+
+        <ol class="instructions">
+          <li>Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử.</li>
+          <li>Chọn tài khoản và xác nhận thanh toán.</li>
+          <li>Quay lại trang để hoàn tất đặt vé.</li>
+        </ol>
+
+        <button class="btn-confirm">Xác nhận đã chuyển khoản</button>
+      </div>
+
+      <div class="col summary">
+        <h3>Thông tin hành khách</h3>
+        <div class="summary-row"><strong>Tuyến:</strong> {{ booking.route }}</div>
+        <div class="summary-row"><strong>Hành khách:</strong> {{ booking.passenger }}</div>
+        <div class="summary-row"><strong>Điện thoại:</strong> {{ booking.phone }}</div>
+        <div class="summary-row"><strong>Ngày giờ:</strong> {{ booking.date }} - {{ booking.time }}</div>
+        <div class="summary-row"><strong>Ghế:</strong> {{ booking.seat }}</div>
+
+        <div class="price-box">
+          <div class="label">Tổng tiền</div>
+          <div class="price">{{ booking.price | number }}đ</div>
+        </div>
+
+        <button class="btn-cancel" (click)="cancelPayment()">Hủy</button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -137,16 +137,22 @@
               Ngày đi
             </label>
           </div>
-          <div class="relative">
+          <div class="relative cursor-pointer" (click)="dpDep.showPicker()">
             <input
               #dpDep
-              (click)="dpDep.showPicker()"
               id="departureDate"
               type="date"
               [(ngModel)]="departureDate"
-              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              [min]="todayDate"
+              class="absolute inset-0 w-full h-full opacity-0 pointer-events-none z-0"
             />
-            <div class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none flex items-center justify-center">
+            <div class="w-full bg-slate-50 border border-slate-200 focus-within:border-[#00236F] focus-within:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm flex items-center justify-between min-h-[54px]">
+              <span [class.text-gray-400]="!departureDate" class="font-semibold select-none">
+                {{ departureDate ? formatDateToShort(departureDate) : 'dd/mm/yyyy' }}
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-400 pointer-events-none">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+              </svg>
             </div>
           </div>
         </div>
@@ -160,15 +166,23 @@
               Ngày về
             </label>
           </div>
-          <div class="relative">
+          <div class="relative cursor-pointer" (click)="dpRet.showPicker()">
             <input
               #dpRet
-              (click)="dpRet.showPicker()"
               id="returnDate"
               type="date"
               [(ngModel)]="returnDate"
-              class="w-full bg-slate-50 border border-slate-200 focus:border-[#00236F] focus:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm cursor-pointer"
+              [min]="departureDate || todayDate"
+              class="absolute inset-0 w-full h-full opacity-0 pointer-events-none z-0"
             />
+            <div class="w-full bg-slate-50 border border-slate-200 focus-within:border-[#00236F] focus-within:bg-white text-gray-800 font-medium text-base pl-4 pr-10 py-3.5 rounded-lg outline-none transition-all duration-200 shadow-sm flex items-center justify-between min-h-[54px]">
+              <span [class.text-gray-400]="!returnDate" class="font-semibold select-none">
+                {{ returnDate ? formatDateToShort(returnDate) : 'dd/mm/yyyy' }}
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-slate-400 pointer-events-none">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -770,12 +784,23 @@
               <img src="/asset/images/customer/icon_lich.svg" class="w-3.5 h-3.5 object-contain" alt="calendar icon" />
               Ngày đi
             </label>
-            <div class="relative">
+            <div class="relative cursor-pointer" (click)="dpDepResult.showPicker()">
               <input
+                #dpDepResult
+                id="resultDepartureDate"
                 type="date"
                 [(ngModel)]="departureDate"
-                class="w-full bg-[#F4F6FA] border border-[#E2E8F0] rounded-lg px-3 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors cursor-pointer"
+                [min]="todayDate"
+                class="absolute inset-0 w-full h-full opacity-0 pointer-events-none z-0"
               />
+              <div class="w-full bg-[#F4F6FA] border border-[#E2E8F0] focus-within:border-[#FF6A00] focus-within:bg-white text-gray-800 font-semibold text-sm px-3 py-3 rounded-lg outline-none transition-colors flex items-center justify-between min-h-[46px]">
+                <span [class.text-gray-400]="!departureDate" class="select-none">
+                  {{ departureDate ? formatDateToShort(departureDate) : 'dd/mm/yyyy' }}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400 pointer-events-none">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -1026,7 +1051,10 @@
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.136a3.375 3.375 0 00-2.87-3.148l-1.077-.197a48.772 48.772 0 00-11.83 0l-1.078.197a3.375 3.375 0 00-2.87 3.148l-.317 5.136c-.04.62.469 1.124 1.09 1.124H3.75m14.25 0h-3.75m0 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
                   </svg>
-                  <span class="text-xs font-semibold text-gray-500">{{trip.type}} - <span class="text-[#FF6A00] font-bold">{{trip.availableSeats}} chỗ trống</span></span>
+                  <div class="flex flex-col text-left">
+                    <span class="text-xs font-semibold text-gray-500">{{trip.type}}</span>
+                    <span class="text-[#FF6A00] font-bold text-xs">{{trip.availableSeats}} chỗ trống</span>
+                  </div>
                 </div>
 
                 <!-- Price and CTA -->
@@ -1034,11 +1062,66 @@
                   <span class="text-xl font-black text-[#FF6A00]">{{trip.price | number:'1.0-0'}}đ</span>
                   <button
                     (click)="selectTrip(trip)"
-                    class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold px-5 py-2.5 rounded-lg transition-colors active:scale-95 cursor-pointer shadow-sm"
+                    class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold px-5 py-2.5 rounded-lg transition-colors active:scale-95 cursor-pointer shadow-sm whitespace-nowrap"
                   >
                     Chọn chuyến
                   </button>
                 </div>
+              </div>
+
+              <!-- Amenities horizontal row directly above the bottom links bar -->
+              <div class="px-6 py-2.5 border-t border-slate-100 flex flex-wrap items-center gap-1.5 bg-white">
+                <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mr-1">Tiện ích:</span>
+                <!-- TV (only for 9 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ')" class="px-1.5 py-0.5 bg-teal-50 text-teal-600 border border-teal-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Tivi">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <rect x="2" y="5" width="20" height="11" rx="1.5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v3M9 19h6" />
+                  </svg>
+                  Tivi
+                </span>
+
+                <!-- USB Charger (for 9 chỗ, 22 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ')" class="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Ổ sạc, USB">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M12 6H9m3 4h4m-4 4H9m3 4h4" />
+                  </svg>
+                  Sạc USB
+                </span>
+
+                <!-- GPS (for 9 chỗ, 22 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ')" class="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="GPS định vị">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <circle cx="12" cy="12" r="9" />
+                    <circle cx="12" cy="12" r="2.5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+                  </svg>
+                  GPS
+                </span>
+
+                <!-- Wifi (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ') || trip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-sky-50 text-sky-600 border border-sky-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Wifi miễn phí">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.284 16.284A3 3 0 0012 17a3 3 0 003.716-.716M5.456 13.456a7 7 0 0113.088 0M2.628 10.628a11 11 0 0118.744 0" />
+                  </svg>
+                  Wifi
+                </span>
+
+                <!-- Nước uống & Khăn ướt (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ') || trip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Nước uống & Khăn ướt">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                  </svg>
+                  Nước/Khăn
+                </span>
+
+                <!-- Điều hòa (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ') || trip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-cyan-50 text-cyan-600 border border-cyan-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Điều hòa">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M2 12h20M12 12l7.07-7.07M12 12l-7.07 7.07M12 12l7.07 7.07M12 12L4.93 4.93" />
+                  </svg>
+                  Điều hòa
+                </span>
               </div>
 
               <!-- Bottom links -->
@@ -1094,24 +1177,41 @@
     <ng-container *ngIf="selectedTrip">
       <!-- Header Banner -->
       <div class="relative w-full max-w-[1920px] mx-auto bg-[#152C68] text-white py-4 px-4 md:px-8 xl:px-16 flex items-center justify-between shadow-md">
+        <!-- Back Button -->
         <button
-          (click)="cancelBooking()"
+          *ngIf="!showSuccessScreen"
+          (click)="showPayment ? cancelPayment() : cancelBooking()"
           class="bg-transparent hover:bg-white/10 text-white border border-white/20 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer"
         >
           Quay lại
         </button>
+        <button
+          *ngIf="showSuccessScreen"
+          (click)="resetToHome()"
+          class="bg-transparent hover:bg-white/10 text-white border border-white/20 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer"
+        >
+          Trang chủ
+        </button>
+
+        <!-- Center Text Details -->
         <div class="text-center flex-1">
+          <!-- Title -->
           <h2 class="text-lg md:text-xl font-black uppercase tracking-wide">
-            {{selectedTrip.depLocation}} - {{selectedTrip.arrLocation}}
+            <span *ngIf="showSuccessScreen">Đặt vé thành công</span>
+            <span *ngIf="showPayment">Thanh toán vé xe</span>
+            <span *ngIf="!showPayment && !showSuccessScreen">{{selectedTrip.depLocation}} - {{selectedTrip.arrLocation}}</span>
           </h2>
+          <!-- Subtitle -->
           <p class="text-xs font-semibold text-slate-200 mt-0.5 opacity-90">
-            {{selectedTrip.depTime}} - {{getFormattedTripDate()}}
+            <span *ngIf="showSuccessScreen">Cảm ơn bạn đã lựa chọn dịch vụ VIAGO Express</span>
+            <span *ngIf="showPayment">Vui lòng hoàn tất thanh toán trước khi hết thời gian giữ chỗ</span>
+            <span *ngIf="!showPayment && !showSuccessScreen">{{selectedTrip.depTime}} - {{getFormattedTripDate()}}</span>
           </p>
         </div>
         <div class="w-[80px]"></div> <!-- Spacer for balance -->
       </div>
 
-      <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 flex flex-col lg:flex-row gap-8 text-left">
+      <div *ngIf="!showPayment && !showSuccessScreen" class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 flex flex-col lg:flex-row gap-8 text-left">
         <!-- LEFT COLUMN: SEAT SELECTION & FORM INFO -->
         <div class="flex-1 flex flex-col gap-6">
           
@@ -1141,105 +1241,502 @@
                   <span>Đang chọn</span>
                 </div>
                 
-                <div class="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2 leading-relaxed text-gray-600">
-                  <p class="font-bold text-gray-700">Phòng đơn 2 (Khách người lớn):</p>
-                  <p class="text-[#FF6A00] font-black text-sm">390.000đ</p>
-                  <p class="font-bold text-gray-700 mt-2">Phòng đôi (2 khách người lớn hoặc 1 người lớn + 1 trẻ em dưới 6 tuổi):</p>
-                  <p class="text-[#FF6A00] font-black text-sm">600.000đ</p>
+                <div *ngIf="selectedTrip.type.includes('22 chỗ')" class="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-3 leading-relaxed text-gray-600">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-blue-50 border border-blue-600"></div>
+                    <span class="font-bold text-gray-700">Phòng đơn (390.000đ)</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-purple-50 border border-purple-600"></div>
+                    <span class="font-bold text-gray-700">Phòng đôi (600.000đ)</span>
+                  </div>
+                  <div class="text-[10px] font-semibold text-gray-400 mt-1 leading-normal">
+                    * Phòng đôi dành cho tối đa 2 khách người lớn hoặc 1 người lớn + 1 trẻ em dưới 6 tuổi.
+                  </div>
                 </div>
               </div>
 
-              <!-- Tầng Dưới Grid -->
-              <div class="text-center">
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Dưới</span>
-                <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <!-- Row 1 to 6 (left: odd, right: even) -->
-                  <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5]">
-                    <!-- Left seat (odd index: 1A, 3A, 5A, etc.) -->
-                    <button
-                      type="button"
-                      (click)="toggleSeat((row * 2 + 1) + 'A')"
-                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'A')"
-                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
-                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
-                      [class.text-white]="isSeatSelected((row * 2 + 1) + 'A')"
-                      [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
-                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
-                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
-                    >
-                      {{(row * 2 + 1)}}A
-                    </button>
+              <!-- 9 CHỖ SEAT GRID -->
+              <div *ngIf="selectedTrip.type.includes('9 chỗ')" class="text-center md:col-span-2">
+                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Sơ đồ ghế (9 chỗ)</span>
+                <div class="grid grid-cols-3 gap-3 max-w-[240px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  <!-- Row 1 -->
+                  <button
+                    type="button"
+                    (click)="toggleSeat('1A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('1A')"
+                    [class.border-slate-300]="isSeatSoldOut('1A')"
+                    [class.text-slate-400]="isSeatSoldOut('1A')"
+                    [class.pointer-events-none]="isSeatSoldOut('1A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('1A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('1A')"
+                    [class.text-white]="isSeatSelected('1A')"
+                    [class.bg-white]="!isSeatSoldOut('1A') && !isSeatSelected('1A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('1A') && !isSeatSelected('1A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('1A') && !isSeatSelected('1A')"
+                  >
+                    1A
+                  </button>
+                  <div></div> <!-- Aisle -->
+                  <button
+                    type="button"
+                    (click)="toggleSeat('2A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('2A')"
+                    [class.border-slate-300]="isSeatSoldOut('2A')"
+                    [class.text-slate-400]="isSeatSoldOut('2A')"
+                    [class.pointer-events-none]="isSeatSoldOut('2A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('2A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('2A')"
+                    [class.text-white]="isSeatSelected('2A')"
+                    [class.bg-white]="!isSeatSoldOut('2A') && !isSeatSelected('2A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('2A') && !isSeatSelected('2A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('2A') && !isSeatSelected('2A')"
+                  >
+                    2A
+                  </button>
 
-                    <!-- Right seat (even index: 2A, 4A, 6A, etc.) -->
-                    <button
-                      type="button"
-                      (click)="toggleSeat((row * 2 + 2) + 'A')"
-                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'A')"
-                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
-                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
-                      [class.text-white]="isSeatSelected((row * 2 + 2) + 'A')"
-                      [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
-                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
-                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
-                    >
-                      {{(row * 2 + 2)}}A
-                    </button>
-                  </ng-container>
+                  <!-- Row 2 -->
+                  <button
+                    type="button"
+                    (click)="toggleSeat('3A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('3A')"
+                    [class.border-slate-300]="isSeatSoldOut('3A')"
+                    [class.text-slate-400]="isSeatSoldOut('3A')"
+                    [class.pointer-events-none]="isSeatSoldOut('3A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('3A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('3A')"
+                    [class.text-white]="isSeatSelected('3A')"
+                    [class.bg-white]="!isSeatSoldOut('3A') && !isSeatSelected('3A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('3A') && !isSeatSelected('3A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('3A') && !isSeatSelected('3A')"
+                  >
+                    3A
+                  </button>
+                  <div></div> <!-- Aisle -->
+                  <button
+                    type="button"
+                    (click)="toggleSeat('4A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('4A')"
+                    [class.border-slate-300]="isSeatSoldOut('4A')"
+                    [class.text-slate-400]="isSeatSoldOut('4A')"
+                    [class.pointer-events-none]="isSeatSoldOut('4A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('4A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('4A')"
+                    [class.text-white]="isSeatSelected('4A')"
+                    [class.bg-white]="!isSeatSoldOut('4A') && !isSeatSelected('4A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('4A') && !isSeatSelected('4A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('4A') && !isSeatSelected('4A')"
+                  >
+                    4A
+                  </button>
+
+                  <!-- Row 3 -->
+                  <button
+                    type="button"
+                    (click)="toggleSeat('5A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('5A')"
+                    [class.border-slate-300]="isSeatSoldOut('5A')"
+                    [class.text-slate-400]="isSeatSoldOut('5A')"
+                    [class.pointer-events-none]="isSeatSoldOut('5A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('5A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('5A')"
+                    [class.text-white]="isSeatSelected('5A')"
+                    [class.bg-white]="!isSeatSoldOut('5A') && !isSeatSelected('5A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('5A') && !isSeatSelected('5A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('5A') && !isSeatSelected('5A')"
+                  >
+                    5A
+                  </button>
+                  <div></div> <!-- Aisle -->
+                  <button
+                    type="button"
+                    (click)="toggleSeat('6A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('6A')"
+                    [class.border-slate-300]="isSeatSoldOut('6A')"
+                    [class.text-slate-400]="isSeatSoldOut('6A')"
+                    [class.pointer-events-none]="isSeatSoldOut('6A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('6A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('6A')"
+                    [class.text-white]="isSeatSelected('6A')"
+                    [class.bg-white]="!isSeatSoldOut('6A') && !isSeatSelected('6A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('6A') && !isSeatSelected('6A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('6A') && !isSeatSelected('6A')"
+                  >
+                    6A
+                  </button>
+
+                  <!-- Row 4 -->
+                  <button
+                    type="button"
+                    (click)="toggleSeat('7A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('7A')"
+                    [class.border-slate-300]="isSeatSoldOut('7A')"
+                    [class.text-slate-400]="isSeatSoldOut('7A')"
+                    [class.pointer-events-none]="isSeatSoldOut('7A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('7A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('7A')"
+                    [class.text-white]="isSeatSelected('7A')"
+                    [class.bg-white]="!isSeatSoldOut('7A') && !isSeatSelected('7A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('7A') && !isSeatSelected('7A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('7A') && !isSeatSelected('7A')"
+                  >
+                    7A
+                  </button>
+                  <button
+                    type="button"
+                    (click)="toggleSeat('8A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('8A')"
+                    [class.border-slate-300]="isSeatSoldOut('8A')"
+                    [class.text-slate-400]="isSeatSoldOut('8A')"
+                    [class.pointer-events-none]="isSeatSoldOut('8A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('8A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('8A')"
+                    [class.text-white]="isSeatSelected('8A')"
+                    [class.bg-white]="!isSeatSoldOut('8A') && !isSeatSelected('8A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('8A') && !isSeatSelected('8A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('8A') && !isSeatSelected('8A')"
+                  >
+                    8A
+                  </button>
+                  <button
+                    type="button"
+                    (click)="toggleSeat('9A')"
+                    class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                    [class.bg-slate-200]="isSeatSoldOut('9A')"
+                    [class.border-slate-300]="isSeatSoldOut('9A')"
+                    [class.text-slate-400]="isSeatSoldOut('9A')"
+                    [class.pointer-events-none]="isSeatSoldOut('9A')"
+                    [class.bg-[#FF6A00]]="isSeatSelected('9A')"
+                    [class.border-[#FF6A00]]="isSeatSelected('9A')"
+                    [class.text-white]="isSeatSelected('9A')"
+                    [class.bg-white]="!isSeatSoldOut('9A') && !isSeatSelected('9A')"
+                    [class.border-[#1A3A8A]]="!isSeatSoldOut('9A') && !isSeatSelected('9A')"
+                    [class.text-[#1A3A8A]]="!isSeatSoldOut('9A') && !isSeatSelected('9A')"
+                  >
+                    9A
+                  </button>
                 </div>
               </div>
 
-              <!-- Tầng Trên Grid -->
-              <div class="text-center">
-                <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Trên</span>
-                <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
-                  <!-- Row 1 to 5 (left: odd, right: even) -->
-                  <ng-container *ngFor="let row of [0, 1, 2, 3, 4]">
-                    <!-- Left seat (odd index: 1B, 3B, 5B, etc.) -->
-                    <button
-                      type="button"
-                      (click)="toggleSeat((row * 2 + 1) + 'B')"
-                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'B')"
-                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
-                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
-                      [class.text-white]="isSeatSelected((row * 2 + 1) + 'B')"
-                      [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
-                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
-                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
-                    >
-                      {{(row * 2 + 1)}}B
-                    </button>
+              <!-- 22 CHỖ SEAT GRID -->
+              <ng-container *ngIf="selectedTrip.type.includes('22 chỗ')">
+                <!-- Tầng Dưới Grid -->
+                <div class="text-center">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Dưới (Phòng Đôi)</span>
+                  <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <!-- Row 1 to 6 (left: odd, right: even) -->
+                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5]">
+                      <!-- Left seat (odd index: 1A, 3A, 5A, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 1) + 'A')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.bg-purple-50]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.border-purple-600]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.text-purple-700]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                      >
+                        {{(row * 2 + 1)}}A
+                      </button>
 
-                    <!-- Right seat (even index: 2B, 4B, 6B, etc.) -->
-                    <button
-                      type="button"
-                      (click)="toggleSeat((row * 2 + 2) + 'B')"
-                      class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
-                      [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                      [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                      [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                      [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'B')"
-                      [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
-                      [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
-                      [class.text-white]="isSeatSelected((row * 2 + 2) + 'B')"
-                      [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
-                      [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
-                      [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
-                    >
-                      {{(row * 2 + 2)}}B
-                    </button>
-                  </ng-container>
+                      <!-- Right seat (even index: 2A, 4A, 6A, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 2) + 'A')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.bg-purple-50]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.border-purple-600]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.text-purple-700]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                      >
+                        {{(row * 2 + 2)}}A
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Tầng Trên Grid -->
+                <div class="text-center">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Trên (Phòng Đơn)</span>
+                  <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <!-- Row 1 to 5 (left: odd, right: even) -->
+                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4]">
+                      <!-- Left seat (odd index: 1B, 3B, 5B, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 1) + 'B')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.bg-blue-50]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.border-blue-600]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.text-blue-700]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                      >
+                        {{(row * 2 + 1)}}B
+                      </button>
+
+                      <!-- Right seat (even index: 2B, 4B, 6B, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 2) + 'B')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.bg-blue-50]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.border-blue-600]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.text-blue-700]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                      >
+                        {{(row * 2 + 2)}}B
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- 34 CHỖ SEAT GRID -->
+              <ng-container *ngIf="selectedTrip.type.includes('34 chỗ')">
+                <!-- Tầng Dưới Grid -->
+                <div class="text-center">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Dưới</span>
+                  <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <!-- Row 1 to 9 (left: odd, right: even) -->
+                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
+                      <!-- Left seat (odd index: 1A, 3A, 5A, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 1) + 'A')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'A')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'A') && !isSeatSelected((row * 2 + 1) + 'A')"
+                      >
+                        {{(row * 2 + 1)}}A
+                      </button>
+
+                      <!-- Right seat (even index: 2A, 4A, 6A, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 2) + 'A')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'A')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'A') && !isSeatSelected((row * 2 + 2) + 'A')"
+                      >
+                        {{(row * 2 + 2)}}A
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Tầng Trên Grid -->
+                <div class="text-center">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Trên</span>
+                  <div class="grid grid-cols-2 gap-3 max-w-[160px] mx-auto bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <!-- Row 1 to 8 (left: odd, right: even) -->
+                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5, 6, 7]">
+                      <!-- Left seat (odd index: 1B, 3B, 5B, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 1) + 'B')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'B')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.bg-white]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 1) + 'B') && !isSeatSelected((row * 2 + 1) + 'B')"
+                      >
+                        {{(row * 2 + 1)}}B
+                      </button>
+
+                      <!-- Right seat (even index: 2B, 4B, 6B, etc.) -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 2) + 'B')"
+                        class="w-12 h-10 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'B')"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.bg-white]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.border-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                        [class.text-[#1A3A8A]]="!isSeatSoldOut((row * 2 + 2) + 'B') && !isSeatSelected((row * 2 + 2) + 'B')"
+                      >
+                        {{(row * 2 + 2)}}B
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <!-- BLOCK: THÔNG TIN XE -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left">
+            <h3 class="text-base font-extrabold text-[#152C68] mb-5 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-[#FF6A00]">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.136a3.375 3.375 0 00-2.87-3.148l-1.077-.197a48.772 48.772 0 00-11.83 0l-1.078.197a3.375 3.375 0 00-2.87 3.148l-.317 5.136c-.04.62.469 1.124 1.09 1.124H3.75m14.25 0h-3.75m0 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+              </svg>
+              Thông tin xe
+            </h3>
+            
+            <div class="flex flex-col gap-6">
+              <!-- Detail fields -->
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                <div>
+                  <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Loại xe</span>
+                  <span class="text-sm font-extrabold text-gray-800">{{selectedTrip.type}}</span>
+                </div>
+                
+                <div class="flex-1 md:max-w-[70%]">
+                  <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Tiện ích phục vụ</span>
+                  <div class="flex flex-wrap gap-2">
+                    <!-- TV (only for 9 chỗ) -->
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ')" class="px-2 py-1 bg-teal-50 text-teal-600 border border-teal-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                        <rect x="2" y="5" width="20" height="11" rx="1.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v3M9 19h6" />
+                      </svg>
+                      Tivi giải trí
+                    </span>
+
+                    <!-- USB Charger (for 9 chỗ, 22 chỗ) -->
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ')" class="px-2 py-1 bg-emerald-50 text-emerald-600 border border-emerald-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-3.5 h-3.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M12 6H9m3 4h4m-4 4H9m3 4h4" />
+                      </svg>
+                      Cổng sạc USB
+                    </span>
+
+                    <!-- GPS (for 9 chỗ, 22 chỗ) -->
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ')" class="px-2 py-1 bg-indigo-50 text-indigo-600 border border-indigo-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                        <circle cx="12" cy="12" r="9" />
+                        <circle cx="12" cy="12" r="2.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+                      </svg>
+                      GPS định vị
+                    </span>
+
+                    <!-- Wifi (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ') || selectedTrip.type.includes('34 chỗ')" class="px-2 py-1 bg-sky-50 text-sky-600 border border-sky-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.284 16.284A3 3 0 0012 17a3 3 0 003.716-.716M5.456 13.456a7 7 0 0113.088 0M2.628 10.628a11 11 0 0118.744 0" />
+                      </svg>
+                      Wifi tốc độ cao
+                    </span>
+
+                    <!-- Nước uống & Khăn ướt (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ') || selectedTrip.type.includes('34 chỗ')" class="px-2 py-1 bg-blue-50 text-blue-600 border border-blue-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                      </svg>
+                      Nước uống, khăn lạnh
+                    </span>
+
+                    <!-- Điều hòa (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ') || selectedTrip.type.includes('34 chỗ')" class="px-2 py-1 bg-cyan-50 text-cyan-600 border border-cyan-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M2 12h20M12 12l7.07-7.07M12 12l-7.07 7.07M12 12l7.07 7.07M12 12L4.93 4.93" />
+                      </svg>
+                      Điều hòa thông gió
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Vehicle Interior Images -->
+              <div>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">Hình ảnh nội thất xe</span>
+                
+                <!-- If 9 chỗ -->
+                <div *ngIf="selectedTrip.type.includes('9 chỗ')" class="grid grid-cols-3 gap-4">
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/limo_9_1.jpg" alt="Nội thất Limousine 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/limo_9_2.jpg" alt="Nội thất Limousine 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/limo_9_3.jpg" alt="Nội thất Limousine 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                </div>
+
+                <!-- If 22 chỗ -->
+                <div *ngIf="selectedTrip.type.includes('22 chỗ')" class="grid grid-cols-3 gap-4">
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/sleeper_22_1.png" alt="Nội thất Giường nằm 22 chỗ 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/sleeper_22_2.jpg" alt="Nội thất Giường nằm 22 chỗ 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/sleeper_22_3.jpg" alt="Nội thất Giường nằm 22 chỗ 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                </div>
+
+                <!-- If 34 chỗ -->
+                <div *ngIf="selectedTrip.type.includes('34 chỗ')" class="grid grid-cols-3 gap-4">
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/sleeper_34_1.jpg" alt="Nội thất Giường nằm 34 chỗ 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/sleeper_34_2.jpg" alt="Nội thất Giường nằm 34 chỗ 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                    <img src="/asset/images/customer/sleeper_34_3.jpg" alt="Nội thất Giường nằm 34 chỗ 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1259,9 +1756,12 @@
                 <input
                   type="text"
                   [(ngModel)]="passengerName"
+                  (blur)="passengerNameTouched = true"
                   placeholder="Nhập họ và tên"
-                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors"
+                  class="w-full bg-[#F4F6FA] border rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none transition-colors"
+                  [ngClass]="getNameError() ? 'border-rose-400 focus:border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#FF6A00]'"
                 />
+                <span *ngIf="getNameError()" class="text-rose-500 text-[10px] font-bold mt-0.5 pl-1">{{ getNameError() }}</span>
               </div>
 
               <!-- Số điện thoại -->
@@ -1270,9 +1770,12 @@
                 <input
                   type="tel"
                   [(ngModel)]="passengerPhone"
+                  (blur)="passengerPhoneTouched = true"
                   placeholder="Nhập số điện thoại"
-                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors"
+                  class="w-full bg-[#F4F6FA] border rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none transition-colors"
+                  [ngClass]="getPhoneError() ? 'border-rose-400 focus:border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#FF6A00]'"
                 />
+                <span *ngIf="getPhoneError()" class="text-rose-500 text-[10px] font-bold mt-0.5 pl-1">{{ getPhoneError() }}</span>
               </div>
 
               <!-- Email -->
@@ -1281,9 +1784,12 @@
                 <input
                   type="email"
                   [(ngModel)]="passengerEmail"
+                  (blur)="passengerEmailTouched = true"
                   placeholder="Nhập email"
-                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors"
+                  class="w-full bg-[#F4F6FA] border rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none transition-colors"
+                  [ngClass]="getEmailError() ? 'border-rose-400 focus:border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#FF6A00]'"
                 />
+                <span *ngIf="getEmailError()" class="text-rose-500 text-[10px] font-bold mt-0.5 pl-1">{{ getEmailError() }}</span>
               </div>
 
               <!-- Chấp nhận điều khoản -->
@@ -1621,12 +2127,46 @@
                   <span class="text-[#152C68] font-bold">VIAGO EXPRESS</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>Số lượng ghế:</span>
+                  <span>Loại xe:</span>
+                  <span class="text-[#152C68] font-bold">{{selectedTrip.type}}</span>
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Giá vé:</span>
+                  <span class="text-[#FF6A00] font-black">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Số lượng ghế đặt:</span>
                   <span class="text-[#152C68] font-bold">{{selectedSeats.length}}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>Số ghế:</span>
+                  <span>Số ghế chọn:</span>
                   <span class="text-[#152C68] font-bold">{{selectedSeats.join(', ') || 'Chưa chọn'}}</span>
+                </div>
+                
+                <!-- Utilities Row -->
+                <div class="flex flex-col gap-1.5 mt-1 border-t border-slate-100 pt-3">
+                  <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Tiện ích phục vụ:</span>
+                  <div class="flex flex-wrap gap-1">
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ')" class="px-1.5 py-0.5 bg-teal-50 text-teal-600 border border-teal-150 rounded text-[9px] font-bold">
+                      Tivi
+                    </span>
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ')" class="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-150 rounded text-[9px] font-bold">
+                      Sạc USB
+                    </span>
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ')" class="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-150 rounded text-[9px] font-bold">
+                      GPS
+                    </span>
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ') || selectedTrip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-sky-50 text-sky-600 border border-sky-150 rounded text-[9px] font-bold">
+                      Wifi
+                    </span>
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ') || selectedTrip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-150 rounded text-[9px] font-bold">
+                      Nước/Khăn
+                    </span>
+                    <span *ngIf="selectedTrip.type.includes('9 chỗ') || selectedTrip.type.includes('22 chỗ') || selectedTrip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-cyan-50 text-cyan-600 border border-cyan-150 rounded text-[9px] font-bold">
+                      Điều hòa
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -1673,16 +2213,536 @@
         </aside>
       </div>
 
-      <!-- Floating Toast Alert clinging to right edge of screen, level with selected seats -->
-      <div *ngIf="showToast" 
-           [ngClass]="toastType === 'success' ? 'bg-[#10B981]' : 'bg-[#E0533C]'"
-           class="fixed right-0 top-[35%] z-50 flex items-center justify-between gap-4 text-white px-6 py-4 rounded-l-xl shadow-2xl transition-all duration-300 max-w-sm">
-        <p class="text-xs font-bold leading-relaxed whitespace-pre-line text-left">{{ toastMessage }}</p>
-        <button (click)="showToast = false" class="text-white hover:text-gray-200 focus:outline-none cursor-pointer font-bold text-sm leading-none">
+      <!-- PAYMENT SCREEN -->
+      <div *ngIf="showPayment" class="payment-wrap max-w-[1000px] mx-auto px-4">
+        <div class="payment-card">
+          <!-- Col 1: Methods -->
+          <div class="col methods text-left">
+            <h3>Phương thức thanh toán</h3>
+            <ul>
+              <li class="method" [class.active]="selectedPaymentMethod === 'vietqr'" (click)="selectedPaymentMethod = 'vietqr'">
+                <img src="/asset/images/customer/VietQR_Logo.png" alt="VietQR" />
+                <span>Thanh toán qua VietQR</span>
+              </li>
+              <li class="method" [class.active]="selectedPaymentMethod === 'vnpay'" (click)="selectedPaymentMethod = 'vnpay'">
+                <img src="/asset/images/customer/VNPay_logo.png" alt="VNPay" />
+                <span>VNPay</span>
+              </li>
+              <li class="method" [class.active]="selectedPaymentMethod === 'momo'" (click)="selectedPaymentMethod = 'momo'">
+                <img src="/asset/images/customer/MoMo_Logo.png" alt="MoMo" />
+                <span>Ví MoMo</span>
+              </li>
+              <li class="method" [class.active]="selectedPaymentMethod === 'zalopay'" (click)="selectedPaymentMethod = 'zalopay'">
+                <img src="/asset/images/customer/logo_removebg.png" alt="ZaloPay" class="opacity-95" />
+                <span>Ví ZaloPay</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Col 2: QR & Confirm -->
+          <div class="col qr">
+            <h3>Tổng thanh toán</h3>
+            <div class="amount">{{ getBookingTotal() | number:'1.0-0' }}đ</div>
+            <div class="timer">Thời gian để giữ chỗ: <b>{{ getFormattedPaymentTime() }}</b></div>
+
+            <!-- Dynamic styled QR code with overlay logo -->
+            <div 
+              [style.border-color]="getQRColor()"
+              class="relative w-52 h-52 bg-white p-3 rounded-2xl shadow-md border-4 flex items-center justify-center transition-all duration-300 mx-auto mb-4"
+            >
+              <!-- Static QR Code image -->
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=VIAGO_PAYMENT_QR" alt="Mã thanh toán QR" class="w-full h-full object-contain" />
+              
+              <!-- Dynamic brand logo in the center -->
+              <div class="absolute w-12 h-12 bg-white p-1 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center">
+                <img *ngIf="selectedPaymentMethod === 'vietqr'" src="/asset/images/customer/VietQR_Logo.png" alt="VietQR" class="w-full h-full object-contain" />
+                <img *ngIf="selectedPaymentMethod === 'vnpay'" src="/asset/images/customer/VNPay_logo.png" alt="VNPay" class="w-full h-full object-contain" />
+                <img *ngIf="selectedPaymentMethod === 'momo'" src="/asset/images/customer/MoMo_Logo.png" alt="MoMo" class="w-full h-full object-contain" />
+                <img *ngIf="selectedPaymentMethod === 'zalopay'" src="/asset/images/customer/logo_removebg.png" alt="ZaloPay" class="w-full h-full object-contain" />
+              </div>
+            </div>
+
+            <ol class="instructions">
+              <li>Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử.</li>
+              <li>Chọn tài khoản và xác nhận thanh toán.</li>
+              <li>Quay lại trang để hoàn tất đặt vé.</li>
+            </ol>
+
+            <button class="btn-confirm" (click)="confirmPayment()">Xác nhận đã chuyển khoản</button>
+          </div>
+
+          <!-- Col 3: Summary & Cancel -->
+          <div class="col summary text-left">
+            <h3>Thông tin hành khách</h3>
+            <div class="summary-row"><strong>Tuyến:</strong> {{ searchDeparture }} - {{ searchDestination }}</div>
+            <div class="summary-row"><strong>Hành khách:</strong> {{ passengerName }}</div>
+            <div class="summary-row"><strong>Điện thoại:</strong> {{ passengerPhone }}</div>
+            <div class="summary-row" *ngIf="passengerEmail"><strong>Email:</strong> {{ passengerEmail }}</div>
+            <div class="summary-row"><strong>Ngày giờ:</strong> {{ getFormattedTripDate() }} - {{ selectedTrip.depTime }}</div>
+            <div class="summary-row"><strong>Ghế:</strong> {{ selectedSeats.join(', ') }}</div>
+
+            <div class="price-box">
+              <div class="label font-bold">Tổng tiền</div>
+              <div class="price">{{ getBookingTotal() | number:'1.0-0' }}đ</div>
+            </div>
+
+            <button class="btn-cancel" (click)="cancelPayment()">Hủy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS SCREEN -->
+      <div *ngIf="showSuccessScreen" class="w-full max-w-[1200px] mx-auto px-4 py-12 flex flex-col gap-12">
+        <!-- Success main card (max-w-xl centered) -->
+        <div class="max-w-[650px] mx-auto w-full text-center flex flex-col items-center gap-6">
+          <div class="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center border-4 border-emerald-100 shadow-md">
+            <svg class="w-10 h-10 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <h2 class="text-2xl font-black text-[#152C68] uppercase tracking-wide">Đặt vé thành công!</h2>
+          <p class="text-sm font-semibold text-gray-500 max-w-md">Cảm ơn bạn đã lựa chọn dịch vụ VIAGO Express. Chúc quý khách một hành trình an toàn và thuận lợi.</p>
+
+          <div class="w-full bg-white rounded-2xl border border-slate-100 shadow-lg p-6 flex flex-col gap-4 text-left">
+            <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Thông tin vé xe</span>
+              <span class="text-xs font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">Đã thanh toán</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-xs font-semibold text-gray-500">
+              <div class="flex flex-col gap-1">
+                <span>Mã đơn hàng:</span>
+                <span class="text-slate-800 font-extrabold text-sm text-[#FF6A00]">{{orderCode}}</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <span>Mã vé:</span>
+                <span class="text-slate-800 font-extrabold text-sm">{{ticketCode}}</span>
+              </div>
+              <div class="flex flex-col gap-1 col-span-2">
+                <span>Hành trình:</span>
+                <span class="text-slate-800 font-bold">{{selectedTrip.depLocation}} → {{selectedTrip.arrLocation}}</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <span>Giờ xuất phát:</span>
+                <span class="text-slate-800 font-bold">{{selectedTrip.depTime}} - {{getFormattedTripDate()}}</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <span>Số ghế:</span>
+                <span class="text-slate-800 font-extrabold bg-[#FF6A00]/10 text-[#FF6A00] px-2 py-0.5 rounded w-max">{{selectedSeats.join(', ')}}</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <span>Họ tên hành khách:</span>
+                <span class="text-slate-800 font-bold">{{passengerName}}</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <span>Số điện thoại:</span>
+                <span class="text-slate-800 font-bold">{{passengerPhone}}</span>
+              </div>
+              <div class="flex flex-col gap-1 col-span-2" *ngIf="passengerEmail">
+                <span>Email nhận vé:</span>
+                <span class="text-slate-800 font-bold">{{passengerEmail}}</span>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 flex justify-between items-center text-sm font-bold mt-1">
+              <span class="text-gray-700">Tổng tiền đã thanh toán</span>
+              <span class="text-xl font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+            </div>
+          </div>
+
+          <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl text-left text-xs font-medium text-blue-800 leading-relaxed flex gap-3.5 max-w-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.085 1.085l-.04.04m-2.25 1.5h3m-6-1.5a9 9 0 1118 0 9 9 0 01-18 0z" />
+            </svg>
+            <span>Vé điện tử và hướng dẫn chi tiết đã được gửi đến số điện thoại và địa chỉ email của bạn. Quý khách vui lòng lưu lại thông tin để đối chiếu khi lên xe.</span>
+          </div>
+
+          <div class="flex items-center gap-4 w-full justify-center mt-2">
+            <button
+              (click)="viewTicketDetails()"
+              class="bg-white hover:bg-slate-50 text-[#FF6A00] border-2 border-[#FF6A00] text-sm font-bold px-8 py-3 rounded-xl transition-colors cursor-pointer"
+            >
+              Xem chi tiết vé
+            </button>
+            <button
+              (click)="resetToHome()"
+              class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-8 py-3 rounded-xl shadow-md transition-colors cursor-pointer"
+            >
+              Về trang chủ
+            </button>
+          </div>
+        </div>
+
+        <!-- TIỆN ÍCH TẠI ĐIỂM ĐẾN -->
+        <div class="border-t border-slate-200/80 pt-10 text-left flex flex-col gap-6">
+          <div class="flex items-start gap-3">
+            <div class="p-2 bg-blue-50 text-[#152C68] rounded-xl">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-black text-slate-800 leading-tight">Tiện ích tại điểm đến</h3>
+              <p class="text-xs font-semibold text-slate-400 mt-1">Các dịch vụ hỗ trợ hành trình của bạn tại điểm trả khách Bến xe Miền Đông.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-2">
+            <!-- Left: Weather and AI Suggestions -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+              <!-- Weather Card -->
+              <div class="bg-gradient-to-br from-blue-50 to-[#e9f2ff] border border-blue-100/50 rounded-2xl p-5 flex items-center justify-between shadow-sm relative overflow-hidden">
+                <div class="flex flex-col gap-1 text-left">
+                  <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Thời tiết TP. HCM</span>
+                  <span class="text-3xl font-black text-slate-800 mt-0.5">26-31°C</span>
+                  <span class="text-xs font-semibold text-slate-500">Mưa rào rải rác</span>
+                </div>
+                <!-- Weather cloud rain icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-16 h-16 text-blue-400 drop-shadow-md">
+                  <path fill="#93c5fd" d="M46 36a10 10 0 00-6.88-9.52 12 12 0 00-22.24-2 10 10 0 00-2.88 19.52c.62.13 1.25.2 1.88.2H44a10 10 0 002-20.2z"/>
+                  <path stroke="#2563eb" stroke-width="3" stroke-linecap="round" d="M22 48l-2 6M30 48l-2 6M38 48l-2 6"/>
+                </svg>
+              </div>
+
+              <!-- AI Suggestions Card -->
+              <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col gap-4 text-left">
+                <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-[#152C68]">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.904-4.473L21 9l-8.904 4.473L9 15.904z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15.904l-5.63-2.815M15.904 9l2.815-5.63" />
+                  </svg>
+                  <span class="text-sm font-black text-slate-800">Gợi ý từ VIAGO AI</span>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                  <!-- Check 1 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Mang theo áo mưa hoặc ô</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Dự báo thời tiết có khả năng xảy ra mưa rào rải rác vào buổi chiều và tối tại TP. HCM.</span>
+                    </div>
+                  </div>
+
+                  <!-- Check 2 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Sử dụng túi chống nước cho balo</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Bảo vệ các thiết bị điện tử và giấy tờ quan trọng tránh khỏi độ ẩm cao hoặc những cơn mưa bất chợt.</span>
+                    </div>
+                  </div>
+
+                  <!-- Check 3 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Chuẩn bị sạc dự phòng cầm tay</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Đảm bảo điện thoại luôn duy trì nguồn pin để liên hệ với người thân hoặc tài xế trung chuyển khi xe cập bến.</span>
+                    </div>
+                  </div>
+
+                  <!-- Check 4 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Đặt xe taxi / xe máy đón trước</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Bến xe Miền Đông mới nằm khá xa khu vực trung tâm thành phố. Bạn nên đặt xe trước 15-20 phút khi xe chuẩn bị cập bến.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Hotels and Transit -->
+            <div class="lg:col-span-8 flex flex-col gap-8">
+              <!-- Hotels section -->
+              <div class="flex flex-col gap-4 text-left">
+                <div class="flex justify-between items-center">
+                  <h4 class="text-sm font-black text-slate-800 uppercase tracking-wide">Khách sạn gần Bến xe Miền Đông</h4>
+                  <a href="https://booking.com" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1">
+                    Xem tất cả
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                    </svg>
+                  </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <!-- Hotel 1 -->
+                  <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
+                    <div class="h-28 bg-slate-100 overflow-hidden relative">
+                      <img src="/asset/images/customer/hotel_1.jpg" alt="Aurora Hotel" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-3 flex flex-col gap-2 flex-grow text-left">
+                      <div class="flex justify-between items-start gap-1">
+                        <span class="text-xs font-black text-slate-800 leading-tight">Aurora Hotel</span>
+                        <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-[10px]">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.209.818.686 1.464 1.394 1.003L10 15.422l4.192 2.702c.708.461 1.603-.185 1.394-1.003l-1.196-4.683 3.6-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+                          </svg>
+                          4.8
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-semibold text-slate-400">Cách bến xe 500m</span>
+                      <a href="https://booking.com" target="_blank" class="mt-1 w-full bg-slate-50 hover:bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold py-2 rounded-xl text-center transition-colors">
+                        Đặt ngay Booking.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Hotel 2 -->
+                  <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
+                    <div class="h-28 bg-slate-100 overflow-hidden relative">
+                      <img src="/asset/images/customer/hotel_2.jpg" alt="Saigon Riverside" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-3 flex flex-col gap-2 flex-grow text-left">
+                      <div class="flex justify-between items-start gap-1">
+                        <span class="text-xs font-black text-slate-800 leading-tight">Saigon Riverside</span>
+                        <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-[10px]">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.209.818.686 1.464 1.394 1.003L10 15.422l4.192 2.702c.708.461 1.603-.185 1.394-1.003l-1.196-4.683 3.6-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+                          </svg>
+                          4.5
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-semibold text-slate-400">Cách bến xe 1.2km</span>
+                      <a href="https://booking.com" target="_blank" class="mt-1 w-full bg-slate-50 hover:bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold py-2 rounded-xl text-center transition-colors">
+                        Đặt ngay Booking.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Hotel 3 -->
+                  <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
+                    <div class="h-28 bg-slate-100 overflow-hidden relative">
+                      <img src="/asset/images/customer/hotel_3.jpg" alt="Grand Central" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-3 flex flex-col gap-2 flex-grow text-left">
+                      <div class="flex justify-between items-start gap-1">
+                        <span class="text-xs font-black text-slate-800 leading-tight">Grand Central</span>
+                        <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-[10px]">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.209.818.686 1.464 1.394 1.003L10 15.422l4.192 2.702c.708.461 1.603-.185 1.394-1.003l-1.196-4.683 3.6-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+                          </svg>
+                          4.9
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-semibold text-slate-400">Cách bến xe 800m</span>
+                      <a href="https://booking.com" target="_blank" class="mt-1 w-full bg-slate-50 hover:bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold py-2 rounded-xl text-center transition-colors">
+                        Đặt ngay Booking.com
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Transit options -->
+              <div class="flex flex-col gap-4 text-left">
+                <h4 class="text-sm font-black text-slate-800 uppercase tracking-wide">Phương tiện di chuyển tiếp nối</h4>
+                <div class="bg-white border border-slate-100 rounded-2xl shadow-sm flex flex-col divide-y divide-slate-100 overflow-hidden">
+                  <!-- Option 1 -->
+                  <div class="p-4 flex justify-between items-center gap-4">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-650 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.077a2.25 2.25 0 00-2.247-2.112H5.625c-.906 0-1.745.548-2.11 1.378l-1.24 2.813c-.112.256-.168.534-.168.814v4.748c0 .621.504 1.125 1.125 1.125h1.125M18 10.5h1.875A1.125 1.125 0 0121 11.625v1.875m-9-6.75v1.5m3-1.5v1.5m-9-1.5v1.5M6 15h12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span class="text-xs font-black text-slate-800 block">Xe trung chuyển VIAGO (Khuyên dùng)</span>
+                        <span class="text-[10px] font-semibold text-slate-400 block mt-0.5 leading-relaxed">Liên hệ tổng đài nhà xe để đăng ký thay đổi bến trả mong muốn</span>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0 flex flex-col gap-1">
+                      <span class="text-xs font-black text-blue-600 block">Miễn phí (VIP)</span>
+                      <span class="text-[10px] font-bold text-slate-400 hover:text-blue-650 flex items-center justify-end gap-1 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-[#FF6A00]">
+                          <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 01-1.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.073a15.485 15.485 0 01-11.405-4.887A15.485 15.485 0 012 3.5z" clip-rule="evenodd" />
+                        </svg>
+                        Gọi tổng đài
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Option 2 -->
+                  <div class="p-4 flex justify-between items-center gap-4">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-650 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.077a2.25 2.25 0 00-2.247-2.112H5.625c-.906 0-1.745.548-2.11 1.378l-1.24 2.813c-.112.256-.168.534-.168.814v4.748c0 .621.504 1.125 1.125 1.125h1.125M18 10.5h1.875A1.125 1.125 0 0121 11.625v1.875m-9-6.75v1.5m3-1.5v1.5m-9-1.5v1.5M6 15h12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span class="text-xs font-black text-slate-800 block">Taxi đối tác liên kết (Nhà xe không tự cung cấp)</span>
+                        <span class="text-[10px] font-semibold text-slate-400 block mt-0.5 leading-relaxed">Quý khách vui lòng gọi tổng đài hãng taxi đối tác tại bến xe</span>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0 flex flex-col gap-1">
+                      <span class="text-xs font-black text-[#152C68] block">Theo đồng hồ xe</span>
+                      <span class="text-[10px] font-bold text-slate-400 hover:text-blue-650 flex items-center justify-end gap-1 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-[#FF6A00]">
+                          <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 01-1.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.073a15.485 15.485 0 01-11.405-4.887A15.485 15.485 0 012 3.5z" clip-rule="evenodd" />
+                        </svg>
+                        Gọi Mai Linh
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Option 3 -->
+                  <div class="p-4 flex justify-between items-center gap-4">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-650 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.077a2.25 2.25 0 00-2.247-2.112H5.625c-.906 0-1.745.548-2.11 1.378l-1.24 2.813c-.112.256-.168.534-.168.814v4.748c0 .621.504 1.125 1.125 1.125h1.125M18 10.5h1.875A1.125 1.125 0 0121 11.625v1.875m-9-6.75v1.5m3-1.5v1.5m-9-1.5v1.5M6 15h12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span class="text-xs font-black text-slate-800 block">Thuê xe hợp đồng 7 chỗ (Đơn vị liên kết đối tác)</span>
+                        <span class="text-[10px] font-semibold text-slate-400 block mt-0.5 leading-relaxed">Dịch vụ xe riêng của đối tác. Quý khách vui lòng liên hệ hotline để nhận báo giá</span>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0 flex flex-col gap-1">
+                      <span class="text-xs font-black text-[#152C68] block">Theo hợp đồng</span>
+                      <span class="text-[10px] font-bold text-slate-400 hover:text-blue-650 flex items-center justify-end gap-1 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-[#FF6A00]">
+                          <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 01-1.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.073a15.485 15.485 0 01-11.405-4.887A15.485 15.485 0 012 3.5z" clip-rule="evenodd" />
+                        </svg>
+                        Gọi hotline đối tác
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </ng-container>
+  </ng-container>
+
+  <!-- TICKET DETAILS MODAL -->
+  <div *ngIf="showTicketModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-lg w-full flex flex-col overflow-hidden max-h-[90vh] text-left">
+      <!-- Modal Header -->
+      <div class="bg-[#152C68] text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <span class="font-extrabold text-sm uppercase tracking-wider">Chi tiết vé xe VIAGO Express</span>
+        <button (click)="showTicketModal = false" class="text-white hover:text-slate-200 font-bold text-lg bg-transparent border-0 cursor-pointer">
           ✕
         </button>
       </div>
 
-    </ng-container>
-  </ng-container>
+      <!-- Modal Body (scrollable) -->
+      <div class="p-6 overflow-y-auto flex flex-col gap-6 flex-1 min-h-0">
+        <!-- Stylized ticket mockup -->
+        <div class="border-2 border-dashed border-[#152C68]/30 rounded-2xl bg-slate-50 relative overflow-hidden p-5 flex flex-col gap-4 shadow-inner shrink-0">
+          <!-- Ticket top brand row -->
+          <div class="flex items-center justify-between border-b border-slate-200/80 pb-4">
+            <span class="text-sm font-black text-[#152C68] tracking-widest">VIAGO EXPRESS</span>
+            <span class="text-[10px] font-bold text-[#FF6A00] bg-[#FF6A00]/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Vé điện tử</span>
+          </div>
+
+          <!-- Grid details -->
+          <div class="grid grid-cols-2 gap-y-3 gap-x-4 text-xs font-semibold text-gray-500">
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Mã đơn hàng:</span>
+              <span class="text-slate-800 font-extrabold text-sm text-[#FF6A00]">{{orderCode}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Mã vé:</span>
+              <span class="text-slate-800 font-extrabold text-sm">{{ticketCode}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2">
+              <span class="text-gray-400">Tuyến đường:</span>
+              <span class="text-slate-800 font-extrabold text-sm">{{searchDeparture}} → {{searchDestination}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2">
+              <span class="text-gray-400">Thời gian khởi hành:</span>
+              <span class="text-slate-800 font-bold text-sm">{{selectedTrip.depTime}} - {{getFormattedTripDate()}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Điểm đón:</span>
+              <span class="text-slate-800 font-bold">{{pickupPoint}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Điểm trả:</span>
+              <span class="text-slate-800 font-bold">{{dropoffPoint}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Họ tên khách đi:</span>
+              <span class="text-slate-850 font-bold">{{passengerName}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Số điện thoại:</span>
+              <span class="text-slate-850 font-bold">{{passengerPhone}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2" *ngIf="passengerEmail">
+              <span class="text-gray-400">Email nhận vé:</span>
+              <span class="text-slate-850 font-bold">{{passengerEmail}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2">
+              <span class="text-gray-400">Mã số ghế:</span>
+              <span class="text-slate-800 font-extrabold bg-[#FF6A00]/10 text-[#FF6A00] px-2.5 py-1 rounded w-max text-xs">{{selectedSeats.join(', ')}}</span>
+            </div>
+          </div>
+
+          <!-- Total fee -->
+          <div class="border-t border-slate-200/80 pt-3 flex justify-between items-center text-sm font-bold mt-1">
+            <span class="text-gray-500">Tổng tiền đã thanh toán</span>
+            <span class="text-lg font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+          </div>
+        </div>
+
+        <div class="text-xs text-gray-500 leading-relaxed bg-amber-50/50 border border-amber-100/50 rounded-xl p-4 flex flex-col gap-2 shrink-0">
+          <span class="font-bold text-amber-800 block text-[13px]">Lưu ý quan trọng:</span>
+          <p>• Quý khách vui lòng có mặt tại điểm đón trước 30 phút để chuẩn bị hành lý và check-in.</p>
+          <p>• Khi lên xe, quý khách vui lòng xuất trình vé điện tử này hoặc đọc số điện thoại đã đặt vé cho nhân viên.</p>
+          <p>• Để hủy hoặc đổi chuyến xe, vui lòng liên hệ Tổng đài hỗ trợ <strong class="text-[#FF6A00]">19001234</strong> trước giờ khởi hành ít nhất 60 phút.</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-slate-50 px-6 py-4 flex justify-end border-t border-slate-100 shrink-0">
+        <button
+          (click)="showTicketModal = false"
+          class="bg-[#152C68] hover:bg-[#1f3f88] text-white text-xs font-bold px-6 py-2.5 rounded-lg transition-colors cursor-pointer"
+        >
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Alert clinging to right edge of screen, level with selected seats -->
+  <div *ngIf="showToast" 
+       [ngClass]="toastType === 'success' ? 'bg-[#10B981]' : 'bg-[#DC2626]'"
+       class="fixed right-0 top-[35%] z-50 flex items-center justify-between gap-4 text-white px-5 py-3.5 rounded-l-2xl shadow-2xl max-w-sm animate-slide-in-right">
+    <div class="flex items-center gap-3">
+      <!-- Icon warning -->
+      <svg *ngIf="toastType === 'warning'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 shrink-0 text-white">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+      </svg>
+      <!-- Icon success -->
+      <svg *ngIf="toastType === 'success'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 shrink-0 text-white">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-xs font-bold leading-relaxed whitespace-pre-line text-left">{{ toastMessage }}</p>
+    </div>
+    <button (click)="showToast = false" class="text-white hover:text-gray-200 focus:outline-none cursor-pointer font-bold text-sm leading-none shrink-0">
+      ✕
+    </button>
+  </div>
 </main>
