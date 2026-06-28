@@ -81,14 +81,14 @@ export const routes: Routes = [
       {
         path: 'datve/moi',
         loadComponent: () =>
-          import('./featured/admin/dat-ve/moi/dat-ve-moi').then(
+          import('./featured/admin/dat-ve/dat-ve-moi/dat-ve-moi').then(
             (m) => m.DatVeMoiComponent
           ),
       },
       {
         path: 'datve/danhsach',
         loadComponent: () =>
-          import('./featured/admin/dat-ve/danhsach/danh-sach-ve').then(
+          import('./featured/admin/dat-ve/quan-ly-da-dat/danh-sach-ve').then(
             (m) => m.DanhSachVeComponent
           ),
       },
