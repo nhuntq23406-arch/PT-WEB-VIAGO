@@ -388,3 +388,371 @@
 .chevron-icon--rotated {
   transform: rotate(90deg);
 }
+
+/* User profile interaction cursor */
+.user-profile-logout {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.user-profile-logout:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* User Menu Popover */
+.user-menu-popover {
+  position: absolute;
+  bottom: calc(100% - 10px);
+  left: 16px;
+  right: 16px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 8px 0;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(229, 231, 235, 0.9);
+}
+
+.popover-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #374151;
+  font-family: "Montserrat-Medium", Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.popover-item:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.popover-icon {
+  width: 16px;
+  height: 16px;
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.popover-item:hover .popover-icon {
+  color: #374151;
+}
+
+.popover-divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 4px 0;
+}
+
+.popover-item--danger {
+  color: #dc2626;
+}
+
+.popover-item--danger:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.popover-item--danger:hover .popover-icon {
+  color: #b91c1c;
+}
+
+/* Chevron active state */
+.logout-icon {
+  transition: transform 0.2s ease;
+}
+
+.logout-icon--active {
+  transform: rotate(90deg);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal Container */
+.modal-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+  font-family: "Montserrat-Bold", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.modal-subtitle {
+  font-family: "Montserrat-Regular", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 9999px;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.close-icon-svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 16px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.profile-layout {
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+}
+
+@media (max-width: 640px) {
+  .profile-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Left Column styling */
+.profile-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.profile-avatar-large {
+  width: 110px;
+  height: 110px;
+  border-radius: 9999px;
+  background-color: #e0f2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bae6fd;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 8px;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.btn-action-outline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-action-outline:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-action-password {
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+  color: #0369a1;
+}
+
+.btn-action-password:hover {
+  background-color: #bae6fd;
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Right Column: Form fields styling */
+.profile-right-col {
+  flex: 1;
+  width: 100%;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-2 {
+  flex: 2;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-label {
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: "Montserrat-Regular", sans-serif;
+  font-size: 13px;
+  color: #1f2937;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #f7941e;
+  box-shadow: 0 0 0 3px rgba(247, 148, 30, 0.15);
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: "Montserrat-SemiBold", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-save {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #f7941e;
+  border: none;
+  border-radius: 8px;
+  font-family: "Montserrat-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #e08316;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
