@@ -108,6 +108,17 @@ export class SearchableDropdownComponent implements OnInit, OnChanges {
     this.inputEl.nativeElement.blur();
   }
 
+  clearValue(event: MouseEvent) {
+    event.stopPropagation();
+    this.searchText = '';
+    this.value = '';
+    this.valueChange.emit('');
+    this.filterList();
+    if (this.isOpen) {
+      this.inputEl.nativeElement.focus();
+    }
+  }
+
   toggleDropdown(event: MouseEvent) {
     event.stopPropagation();
     if (this.isOpen) {
@@ -149,7 +160,7 @@ export class SearchableDropdownComponent implements OnInit, OnChanges {
   }
 
   filterList() {
-    if (!this.searchText) {
+    if (!this.searchText || this.searchText === this.value) {
       this.filteredItems = [...this.items];
       return;
     }

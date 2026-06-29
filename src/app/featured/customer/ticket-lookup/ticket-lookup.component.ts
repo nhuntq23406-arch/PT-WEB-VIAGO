@@ -72,8 +72,9 @@ const LOCATION_OPTIONS: LocationOption[] = [
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './ticket-lookup.component.html',
-  styleUrl: './ticket-lookup.component.css',
+  styleUrls: ['./ticket-lookup.component.css'],
 })
+<<<<<<< HEAD
 export class TicketLookupComponent implements OnInit {
   phoneNumber = '';
   bookingCode = '';
@@ -1059,4 +1060,3 @@ export class TicketLookupComponent implements OnInit {
     }, 3000);
   }
 }
-
