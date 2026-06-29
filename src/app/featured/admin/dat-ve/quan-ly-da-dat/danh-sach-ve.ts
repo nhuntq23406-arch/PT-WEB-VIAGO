@@ -453,6 +453,10 @@ export class DanhSachVeComponent implements OnInit, AfterViewInit {
     return Math.min(this.trangHopLe() * this.soDongMoiTrang(), this.danhSachLoc().length);
   });
 
+  cacTrangHienThi = computed(() => {
+    return [1, 2, 3];
+  });
+
   coThayDoiSua = computed(() => {
     const selected = this.veDuocChon();
     if (!selected) return false;

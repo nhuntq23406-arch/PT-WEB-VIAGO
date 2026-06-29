@@ -132,6 +132,10 @@ export class DanhGiaPhanHoi implements OnInit {
     return Math.min(this.trangHopLe() * this.soDongMoiTrang(), this.DanhSachLoc().length);
   });
 
+  cacTrangHienThi = computed(() => {
+    return [1, 2, 3];
+  });
+
   ToggleDropdownSao() {
     this.HienDropdownSao.update(v => !v);
   }

@@ -334,6 +334,11 @@
         <button type="button" class="page-button" [disabled]="trangHopLe() <= 1" (click)="ChuyenTrang(trangHopLe() - 1)">
           Trước
         </button>
+        @for (page of cacTrangHienThi(); track page) {
+          <button type="button" class="page-button" [class.active]="page === trangHopLe()" [disabled]="page > tongTrang()" (click)="ChuyenTrang(page)">
+            {{ page }}
+          </button>
+        }
         <strong>{{ trangHopLe() }} / {{ tongTrang() }}</strong>
         <button type="button" class="page-button" [disabled]="trangHopLe() >= tongTrang()" (click)="ChuyenTrang(trangHopLe() + 1)">
           Sau
