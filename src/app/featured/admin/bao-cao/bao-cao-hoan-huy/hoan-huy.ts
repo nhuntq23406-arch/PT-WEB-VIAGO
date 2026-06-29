@@ -759,6 +759,9 @@ export class HoanHuyComponent implements OnInit {
   });
   chiSoDauTrang = computed(() => this.danhSachLoc().length === 0 ? 0 : (this.trangHopLe() - 1) * this.soDongMoiTrang() + 1);
   chiSoCuoiTrang = computed(() => Math.min(this.trangHopLe() * this.soDongMoiTrang(), this.danhSachLoc().length));
+  cacTrangHienThi = computed(() => {
+    return [1, 2, 3];
+  });
 
   ngOnInit() {
     this.TaiDuLieu();

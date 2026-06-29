@@ -23,6 +23,7 @@
   gap: 12px;
   width: 100%;
   min-height: calc(100vh - 78px);
+  box-sizing: border-box;
   padding: 12px;
   background: #f6f8fb;
   color: #0f172a;
@@ -77,7 +78,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 12px;
+  padding: 24px 30px;
 }
 
 .lookup-heading {
@@ -256,7 +257,7 @@ button.summary-item {
   gap: 12px;
   align-items: center;
   border-bottom: 1px solid #e2e8f0;
-  padding: 12px 14px;
+  padding: 20px 24px;
   background: #f8fafc;
 }
 
@@ -279,49 +280,70 @@ button.summary-item {
 .pagination-bar {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
   border-top: 1px solid #e2e8f0;
-  padding: 10px 14px;
+  padding: 16px 24px;
   background: #ffffff;
   color: #64748b;
   font-size: 13px;
   font-weight: 800;
 }
 
-.pagination-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.pagination-bar > span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
 }
 
-.pagination-controls label {
+.pagination-controls {
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
-.pagination-controls select {
-  min-height: 32px;
-  border: 1px solid #cbd5e1;
-  border-radius: 7px;
-  padding: 4px 8px;
-  background: #ffffff;
-  color: #0f172a;
-  font: inherit;
+.pagination-controls label,
+.pagination-controls > strong {
+  display: none;
 }
 
 .page-button {
+  display: inline-grid;
+  width: 32px;
   min-height: 32px;
   border: 1px solid #cbd5e1;
-  border-radius: 7px;
-  padding: 6px 10px;
+  border-radius: 8px;
+  padding: 0;
+  place-items: center;
   background: #ffffff;
   color: #334155;
   font: inherit;
   font-size: 12px;
   font-weight: 900;
   cursor: pointer;
+}
+
+.pagination-controls > .page-button:first-of-type,
+.pagination-controls > .page-button:last-of-type {
+  font-size: 0;
+}
+
+.pagination-controls > .page-button:first-of-type::before {
+  content: '\2039';
+  font-size: 16px;
+  line-height: 1;
+}
+
+.pagination-controls > .page-button:last-of-type::before {
+  content: '\203a';
+  font-size: 16px;
+  line-height: 1;
+}
+
+.page-button.active {
+  border-color: var(--viago-primary);
+  background: var(--viago-primary);
+  color: #ffffff;
 }
 
 .page-button:disabled {
@@ -344,7 +366,7 @@ th {
   color: #64748b;
   font-size: 12px;
   font-weight: 900;
-  padding: 10px 12px;
+  padding: 16px 24px;
   text-align: left;
   text-transform: uppercase;
 }
@@ -353,7 +375,7 @@ td {
   border-bottom: 1px solid #eef2f7;
   color: #334155;
   font-size: 13px;
-  padding: 10px 12px;
+  padding: 16px 24px;
   vertical-align: middle;
 }
 
@@ -963,6 +985,13 @@ tbody tr.cancelled {
   color: var(--viago-primary-active);
 }
 
+.page-button.active:hover,
+.page-button.active:active {
+  border-color: var(--viago-primary);
+  background: var(--viago-primary);
+  color: #ffffff;
+}
+
 .secondary-button {
   border-color: var(--viago-primary);
   background: #ffffff;
@@ -1103,12 +1132,35 @@ tbody tr.cancelled {
 }
 
 @media (max-width: 680px) {
+  .ticket-list-page {
+    padding: 12px;
+  }
+
+  .lookup-panel {
+    padding: 16px;
+  }
+
+  .table-header,
+  .pagination-bar {
+    padding: 14px 16px;
+  }
+
+  th,
+  td {
+    padding: 12px 16px;
+  }
+
   .lookup-heading,
   .modal-footer,
   .pagination-bar,
   .pagination-controls {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .pagination-controls {
+    flex-direction: row;
+    justify-content: flex-end;
   }
 
   .summary-strip {
