@@ -86,81 +86,82 @@
     <!-- Grid of Route Cards (Premium layout) -->
     <div class="routes-grid-container" *ngIf="filteredRoutes.length > 0">
       
-      <div class="route-premium-card" *ngFor="let route of filteredRoutes" [class.route-locked]="route.status === 'locked'">
+      <div class="route-premium-card" *ngFor="let route of filteredRoutes" [class.route-locked]="route.status === 'locked'" 
+           style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 24px; width: 100%; box-sizing: border-box;">
         
-        <!-- Card Header: Status & Actions -->
-        <div class="card-header-flex">
-          <div class="status-indicator-badge" [class.active]="route.status === 'active'">
+        <!-- Left Section: Status & Title -->
+        <div style="flex: 1.2; display: flex; flex-direction: column; gap: 8px; min-width: 180px;">
+          <div class="status-indicator-badge" [class.active]="route.status === 'active'" style="align-self: flex-start; margin: 0;">
             <span class="status-dot"></span>
             <span>{{ route.status === 'active' ? 'Đang hoạt động' : 'Tạm khóa' }}</span>
           </div>
-          
-          <button class="card-action-btn" title="Chỉnh sửa chi tiết" (click)="openEditModal(route, $event)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <h2 class="card-route-title" style="margin: 0; font-size: 1.15rem; font-weight: 800;">{{ route.name }}</h2>
+        </div>
+
+        <!-- Middle Section: Road Map Visualization -->
+        <div style="flex: 2; min-width: 260px; margin: 0;">
+          <div class="route-road-map" style="margin: 0; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius-lg); background-color: var(--slate-light); display: flex; align-items: center; justify-content: space-between;">
+            <div class="road-node start-node" style="width: auto;">
+              <span class="node-dot" style="margin: 0;"></span>
+            </div>
+            <div class="road-connector" style="margin: 0 8px;">
+              <span class="connector-line" style="top: 50%; transform: translateY(-50%);"></span>
+              <div class="road-metrics-box" style="margin: 0; display: flex; flex-direction: row; gap: 8px; align-items: center; z-index: 2; background-color: var(--slate-light); padding: 0 8px;">
+                <span class="metrics-dist" style="margin: 0;">{{ route.distance }}</span>
+                <span class="metrics-time" style="margin: 0;">{{ route.duration }}</span>
+              </div>
+            </div>
+            <div class="road-node end-node" style="width: auto;">
+              <span class="node-dot" style="margin: 0;"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Section: Details/Metrics -->
+        <div class="route-details-grid" style="flex: 2.2; margin: 0; padding: 0; border: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; min-width: 250px;">
+          <div class="detail-cell" style="gap: 2px;">
+            <span class="cell-label">Loại xe</span>
+            <span class="cell-value" style="font-size: 13px;">{{ route.carTypes }}</span>
+          </div>
+          <div class="detail-cell" style="gap: 2px;">
+            <span class="cell-label">Chuyến/ngày</span>
+            <span class="cell-value" style="font-size: 13px;">{{ route.tripsPerDay }} chuyến</span>
+          </div>
+          <div class="detail-cell price-cell" style="gap: 2px;">
+            <span class="cell-label">Giá vé</span>
+            <span class="cell-value" style="font-size: 14px; font-weight: 800;">{{ formatPrice(route.price) }}</span>
+          </div>
+        </div>
+
+        <!-- Right End: Stops Footer & Actions -->
+        <div style="flex: 1.8; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-left: 1px solid var(--border); padding-left: 20px; min-width: 200px;">
+          <div class="stops-summary-footer" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
+            <div class="stop-badge" title="Điểm đón/trả khách">
+              <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>{{ route.pickupPoints.length }} điểm đón/trả</span>
+            </div>
+
+            <div class="stop-badge" title="Điểm dừng chân nghỉ ngơi">
+              <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+              </svg>
+              <span>{{ route.stops.length }} điểm dừng</span>
+            </div>
+          </div>
+
+          <button class="card-action-btn" title="Chỉnh sửa chi tiết" (click)="openEditModal(route, $event)" style="background-color: var(--primary-light); color: var(--primary); padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="8" x2="13" y2="8"></line>
               <line x1="3" y1="13" x2="13" y2="13"></line>
               <line x1="3" y1="18" x2="9" y2="18"></line>
               <path d="M16 14l4.5-4.5a1.5 1.5 0 0 1 2.1 2.1L18 16.5H16V14z"></path>
             </svg>
           </button>
-        </div>
-
-        <!-- Route Main Title -->
-        <h2 class="card-route-title">{{ route.name }}</h2>
-
-        <!-- Route Road Map Visualization (Xịn style) -->
-        <div class="route-road-map">
-          <div class="road-node start-node">
-            <span class="node-dot"></span>
-            <span class="node-name">{{ route.startPoint }}</span>
-          </div>
-          <div class="road-connector">
-            <span class="connector-line"></span>
-            <div class="road-metrics-box">
-              <span class="metrics-dist">{{ route.distance }}</span>
-              <span class="metrics-time">{{ route.duration }}</span>
-            </div>
-          </div>
-          <div class="road-node end-node">
-            <span class="node-dot"></span>
-            <span class="node-name">{{ route.endPoint }}</span>
-          </div>
-        </div>
-
-        <!-- Metrics Grid -->
-        <div class="route-details-grid">
-          <div class="detail-cell">
-            <span class="cell-label">Loại xe</span>
-            <span class="cell-value">{{ route.carTypes }}</span>
-          </div>
-          <div class="detail-cell">
-            <span class="cell-label">Chuyến/ngày</span>
-            <span class="cell-value">{{ route.tripsPerDay }} chuyến</span>
-          </div>
-          <div class="detail-cell price-cell">
-            <span class="cell-label">Giá vé</span>
-            <span class="cell-value">{{ formatPrice(route.price) }}</span>
-          </div>
-        </div>
-
-        <!-- Stops summary bar at the bottom -->
-        <div class="stops-summary-footer">
-          <div class="stop-badge" title="Điểm đón/trả khách">
-            <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            <span>{{ route.pickupPoints.length }} điểm đón/trả</span>
-          </div>
-
-          <div class="stop-badge" title="Điểm dừng chân nghỉ ngơi">
-            <svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 24 24" width="14" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="9" y1="9" x2="15" y2="15"></line>
-              <line x1="15" y1="9" x2="9" y2="15"></line>
-            </svg>
-            <span>{{ route.stops.length }} điểm dừng</span>
-          </div>
         </div>
 
       </div>

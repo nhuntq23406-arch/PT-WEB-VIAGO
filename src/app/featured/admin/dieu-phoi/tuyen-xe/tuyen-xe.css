@@ -361,9 +361,9 @@
 
 /* Route Cards Grid */
 .routes-grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* Premium Card Design style */
@@ -505,8 +505,8 @@
 .connector-line {
   position: absolute;
   top: 8px; /* Positioned exactly at the vertical center of the node-dot */
-  left: -40px; /* Extends exactly to the center of the start node dot */
-  right: -40px; /* Extends exactly to the center of the end node dot */
+  left: 0; 
+  right: 0;
   height: 2px;
   background: repeating-linear-gradient(90deg, var(--primary) 0, var(--primary) 4px, transparent 4px, transparent 8px);
 }

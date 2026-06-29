@@ -49,11 +49,11 @@ export interface MemberTierRule {
 }
 
 @Component({
-  selector: 'app-quan-ly-khuyen-mai',
+  selector: 'app-khuyen-mai',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './quan-ly-khuyen-mai.html',
-  styleUrls: ['./quan-ly-khuyen-mai.css']
+  templateUrl: './khuyen-mai.html',
+  styleUrls: ['./khuyen-mai.css']
 })
 export class QuanLyKhuyenMaiComponent implements OnInit {
   // Membership Tiers definitions
@@ -413,6 +413,13 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
 
   // Selected Voucher for stats and details monitoring
   selectedVoucherForStats: Voucher | null = null;
+  showStatsModal = false;
+
+  get mostUsedVoucher(): string {
+    if (!this.vouchers || this.vouchers.length === 0) return 'Không có';
+    const sorted = [...this.vouchers].sort((a, b) => b.usageCount - a.usageCount);
+    return `${sorted[0].code} (${sorted[0].usageCount} lượt)`;
+  }
   
   // Available Tiers List for checkboxes
   availableTiers = ['Tất cả', 'Bạc', 'Vàng', 'Kim cương'];
@@ -453,10 +460,6 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
   ];
 
   ngOnInit() {
-    // Select first voucher by default to show stats
-    if (this.vouchers.length > 0) {
-      this.selectedVoucherForStats = this.vouchers[0];
-    }
   }
 
   get filteredVouchers(): Voucher[] {
@@ -702,10 +705,7 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
 
   viewStats(voucher: Voucher) {
     this.selectedVoucherForStats = voucher;
-    const element = document.getElementById('voucher-stats-card');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    this.showStatsModal = true;
   }
 
   formatCurrency(value: number): string {

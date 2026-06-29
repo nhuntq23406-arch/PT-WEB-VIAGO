@@ -113,3 +113,26 @@ button:focus-visible {
 a {
   text-decoration: none;
 }
+
+/* Force all primary/save/action buttons in admin area to brand orange (#f96d00) */
+.trang-ch-amin .btn-primary,
+.trang-ch-amin .btn-save,
+.trang-ch-amin .btn-secondary,
+.trang-ch-amin .btn-orange,
+.trang-ch-amin .btn-submit,
+.trang-ch-amin .btn-confirm {
+  background-color: #f96d00 !important;
+  color: white !important;
+  border-color: #f96d00 !important;
+}
+
+.trang-ch-amin .btn-primary:hover,
+.trang-ch-amin .btn-save:hover,
+.trang-ch-amin .btn-secondary:hover,
+.trang-ch-amin .btn-orange:hover,
+.trang-ch-amin .btn-submit:hover,
+.trang-ch-amin .btn-confirm:hover {
+  background-color: #e56400 !important;
+  border-color: #e56400 !important;
+  box-shadow: 0 4px 12px rgba(249, 109, 0, 0.25) !important;
+}

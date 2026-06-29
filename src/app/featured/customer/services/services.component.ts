@@ -57,6 +57,18 @@ export class ServicesComponent implements OnInit {
   selectedImageIndex = 0;
   modalTitle = '';
   modalDesc = '';
+  isErrorModal = false;
+
+  // Lost & Found claim verification modal state
+  showClaimVerificationModal = false;
+  selectedClaimItem: LostItem | null = null;
+  claimVerificationForm = {
+    fullName: '',
+    phone: '',
+    ticketCode: '',
+    date: '',
+    description: ''
+  };
 
   // 360 Degree Viewer States
   is360Mode = false;
@@ -98,9 +110,7 @@ export class ServicesComponent implements OnInit {
         '/asset/images/customer/fleet/limo_9_1.png',
         '/asset/images/customer/fleet/limo_9_2.png',
         '/asset/images/customer/fleet/limo_9_3.png',
-        '/asset/images/customer/fleet/limo_9_4.png',
-        '/asset/images/customer/fleet/limo_9_5.png',
-        '/asset/images/customer/fleet/limo_9_6.png'
+        '/asset/images/customer/fleet/limo_9_4.png'
       ],
       interiorImages: [],
       images360: [
@@ -147,9 +157,7 @@ export class ServicesComponent implements OnInit {
         '/asset/images/customer/fleet/sleeper_34_1.png',
         '/asset/images/customer/fleet/sleeper_34_2.png',
         '/asset/images/customer/fleet/sleeper_34_3.png',
-        '/asset/images/customer/fleet/sleeper_34_4.png',
-        '/asset/images/customer/fleet/sleeper_34_5.png',
-        '/asset/images/customer/fleet/sleeper_34_6.png'
+        '/asset/images/customer/fleet/sleeper_34_4.png'
       ],
       interiorImages: [],
       images360: [
@@ -304,6 +312,7 @@ export class ServicesComponent implements OnInit {
     this.bookingForm.pickup = car.availableRoutes[0]?.split(' - ')[0] || 'Hà Nội';
     this.bookingForm.destination = car.availableRoutes[0]?.split(' - ')[1] || 'Sapa';
     this.cdr.detectChanges();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
 
@@ -424,10 +433,21 @@ export class ServicesComponent implements OnInit {
       queryParams: { tab: tab },
       queryParamsHandling: 'merge'
     });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   submitRentalForm(event: Event) {
     event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    if (!form.checkValidity()) {
+      this.modalTitle = 'Thông báo';
+      this.modalDesc = 'Vui lòng điền đầy đủ các thông tin bắt buộc (*).';
+      this.isErrorModal = true;
+      this.showSuccessModal = true;
+      return;
+    }
+
+    this.isErrorModal = false;
     this.modalTitle = 'Gửi Yêu Cầu Thành Công!';
     this.modalDesc = 'Yêu cầu đăng ký thuê xe của bạn đã được ghi nhận. Nhà xe sẽ liên hệ lại với bạn trong vòng 24 giờ tới để báo giá và xác nhận.';
     this.showSuccessModal = true;
@@ -443,8 +463,15 @@ export class ServicesComponent implements OnInit {
 
   submitLostForm(event: Event) {
     event.preventDefault();
-
     const form = event.target as HTMLFormElement;
+    if (!form.checkValidity()) {
+      this.modalTitle = 'Thông báo';
+      this.modalDesc = 'Vui lòng điền đầy đủ các thông tin bắt buộc (*).';
+      this.isErrorModal = true;
+      this.showSuccessModal = true;
+      return;
+    }
+
     const descInput = form.querySelector('#desc-input') as HTMLInputElement;
     const routeSelect = form.querySelector('select') as HTMLSelectElement;
     
@@ -472,6 +499,7 @@ export class ServicesComponent implements OnInit {
     this.uploadedImageUrl = '';
     form.reset();
 
+    this.isErrorModal = false;
     this.modalTitle = 'Khai Báo Thành Công!';
     this.modalDesc = 'Yêu cầu khai báo thất lạc của bạn đã được ghi nhận. VIAGO đã cập nhật vật phẩm này vào danh sách đối soát. Hệ thống sẽ liên hệ lại với bạn trong vòng 24 giờ qua số điện thoại cung cấp.';
     this.showSuccessModal = true;
@@ -497,6 +525,36 @@ export class ServicesComponent implements OnInit {
 
   closeSuccessModal() {
     this.showSuccessModal = false;
+  }
+
+  claimItem(item: LostItem) {
+    this.selectedClaimItem = item;
+    this.claimVerificationForm = {
+      fullName: '',
+      phone: '',
+      ticketCode: '',
+      date: item.date,
+      description: ''
+    };
+    this.showClaimVerificationModal = true;
+  }
+
+  submitLostClaimVerification(event: Event) {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    if (!form.checkValidity()) {
+      this.modalTitle = 'Thông báo';
+      this.modalDesc = 'Vui lòng điền đầy đủ các thông tin bắt buộc (*).';
+      this.isErrorModal = true;
+      this.showSuccessModal = true;
+      return;
+    }
+
+    this.showClaimVerificationModal = false;
+    this.isErrorModal = false;
+    this.modalTitle = 'Đã Nhận Yêu Cầu Xác Minh!';
+    this.modalDesc = `VIAGO đã tiếp nhận yêu cầu xác minh sở hữu cho vật phẩm [ ${this.selectedClaimItem?.name} ]. Bộ phận đối soát camera và quản lý văn phòng đại diện sẽ kiểm tra thông tin và liên hệ lại với bạn qua số điện thoại ${this.claimVerificationForm.phone} trong vòng 15-30 phút tới.`;
+    this.showSuccessModal = true;
   }
 
   alert(message: string) {

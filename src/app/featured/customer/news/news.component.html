@@ -28,13 +28,12 @@
     <div class="filter-controls-grid grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center">
       <!-- Search input -->
       <div class="lg:col-span-2 relative">
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
         <input
           type="search"
           placeholder="Tìm tin tức, khuyến mãi..."
           [(ngModel)]="searchTerm"
           (input)="currentPage = 1; applyFilters()"
-          class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition"
+          class="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition"
         />
       </div>
 
@@ -178,8 +177,15 @@
           </div>
           <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold mt-1">
             <span>{{ art.date }}</span>
-            <button type="button" (click)="copyShareLink(art); $event.stopPropagation()" class="text-[#f96d00] hover:underline flex items-center gap-0.5 cursor-pointer bg-transparent border-0 font-bold" title="Copy liên kết">
-              🔗 Share
+            <button type="button" (click)="copyShareLink(art); $event.stopPropagation()" class="text-[#f96d00] hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-0 font-bold" title="Copy liên kết">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+              <span>Share</span>
             </button>
           </div>
         </div>
@@ -210,3 +216,18 @@
     Chưa có bài viết phù hợp với bộ lọc hiện tại.
   </div>
 </main>
+
+<!-- Custom Share Modal Dialog -->
+<div class="share-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs" *ngIf="showShareModal">
+  <div class="share-modal-card bg-white rounded-3xl p-6 shadow-xl max-w-md w-full mx-4 border border-slate-100 flex flex-col gap-4">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <h3 class="text-sm font-bold text-[#123063]">Chia sẻ liên kết</h3>
+      <button (click)="showShareModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer text-sm font-bold bg-transparent border-0">Đóng</button>
+    </div>
+    <p class="text-xs text-slate-500">Sao chép liên kết dưới đây để chia sẻ với bạn bè:</p>
+    <div class="flex gap-2">
+      <input type="text" readonly [value]="shareUrl" class="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none" />
+      <button (click)="copyLink()" class="px-4 py-2.5 bg-[#123063] hover:bg-[#1d4586] text-white text-xs font-bold rounded-xl transition cursor-pointer">Copy</button>
+    </div>
+  </div>
+</div>

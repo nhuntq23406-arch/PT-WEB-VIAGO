@@ -156,7 +156,26 @@ export class BaoCaoTuyenXeComponent implements OnInit {
 
   availableRoutesList: string[] = [];
   filteredRoutes: BáoCáoTuyếnXeItem[] = [];
+  paginatedRoutes: BáoCáoTuyếnXeItem[] = [];
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
+
   expandedRouteId: string | null = null;
+  activeReportTab: 'charts' | 'table' = 'charts';
+
+  chartColors = [
+    '#FF6A00', // Cam thương hiệu
+    '#1E3A8A', // Xanh dương đậm
+    '#10B981', // Xanh ngọc lục bảo
+    '#8B5CF6', // Tím hoa tử đinh hương
+    '#EC4899', // Hồng cánh sen
+    '#06B6D4', // Xanh cyan nước biển
+    '#F59E0B', // Vàng hổ phách
+    '#14B8A6'  // Xanh teal lục ngọc
+  ];
 
   // Summary KPI values
   summary = {
@@ -186,6 +205,29 @@ export class BaoCaoTuyenXeComponent implements OnInit {
     });
 
     this.calculateSummary();
+    this.currentPage = 1;
+    this.updatePaginatedRoutes();
+  }
+
+  updatePaginatedRoutes() {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredRoutes.length / this.pageSize));
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedRoutes = this.filteredRoutes.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedRoutes();
+    }
+  }
+
+  getVisiblePages(): number[] {
+    const pages = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   onResetFilters() {

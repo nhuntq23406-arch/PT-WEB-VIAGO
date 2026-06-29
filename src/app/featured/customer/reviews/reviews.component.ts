@@ -28,11 +28,13 @@ interface Review {
   route: string;
   vehicleType: string;
   criteriaRatings: {
-    driver: number;
-    vehicle: number;
+    safety: number;
+    accuracy: number;
+    completeness: number;
+    staff: number;
+    comfort: number;
     service: number;
-    price: number;
-    cleanliness: number;
+    punctuality: number;
   };
   tags: string[];
   media?: ReviewMedia[];
@@ -84,17 +86,22 @@ export class ReviewsComponent implements OnInit {
   totalMediaCount = 0;
 
   translatedReviews: Record<number, boolean> = {};
+  
+  // Three-dot report menu state
+  activeReportReviewId: number | null = null;
 
-  activeDomain = 'all'; // 'driver' | 'vehicle' | 'service' | 'price' | 'cleanliness' | 'all'
+  activeDomain = 'all'; // 'safety' | 'accuracy' | 'completeness' | 'staff' | 'comfort' | 'service' | 'punctuality' | 'all'
   isOperatorMode = false;
   newReplyTexts: Record<number, string> = {};
 
   domainKeywords: Record<string, string[]> = {
-    driver: ['tài xế', 'lái xe', 'bác tài', 'thân thiện', 'lịch sự', 'lái an toàn', 'phóng nhanh', 'vượt ẩu'],
-    vehicle: ['xe', 'giường', 'chỗ ngồi', 'ghế', 'thoải mái', 'chật', 'rách', 'bẩn', 'xe mới', 'xe cũ', 'điều hòa'],
-    service: ['dịch vụ', 'nhân viên', 'phục vụ', 'đúng giờ', 'trễ', 'wifi', 'toilet', 'nước uống', 'khăn lạnh'],
-    price: ['giá', 'vé', 'tiền', 'hợp lý', 'đắt', 'rẻ', 'chi phí', 'xứng đáng'],
-    cleanliness: ['sạch', 'bẩn', 'hôi', 'vệ sinh', 'thơm', 'dọn dẹp', 'rác'],
+    safety: ['tài xế', 'lái xe', 'bác tài', 'lái an toàn', 'an toàn', 'cẩn thận', 'phóng nhanh', 'vượt ẩu'],
+    accuracy: ['chính xác', 'thông tin', 'quảng cáo', 'như hình', 'mô tả', 'đúng hình', 'đúng mẫu', 'thực tế'],
+    completeness: ['đầy đủ', 'thông tin', 'chi tiết', 'rõ ràng', 'cụ thể', 'hướng dẫn'],
+    staff: ['nhân viên', 'thái độ', 'phục vụ', 'thân thiện', 'lịch sự', 'nhiệt tình', 'chu đáo', 'cộc cằn', 'khó chịu'],
+    comfort: ['giường', 'chỗ ngồi', 'ghế', 'thoải mái', 'chật', 'rách', 'điều hòa', 'êm ái', 'nội thất', 'giảm xóc', 'tiện nghi', 'giường nằm', 'ghế ngồi'],
+    service: ['dịch vụ', 'phục vụ', 'wifi', 'toilet', 'nước uống', 'khăn lạnh', 'tổng đài', 'hỗ trợ', 'chất lượng'],
+    punctuality: ['đúng giờ', 'trễ', 'muộn', 'đón', 'xuất phát', 'hẹn', 'giờ giấc'],
   };
 
   searchText = '';
@@ -111,11 +118,13 @@ export class ReviewsComponent implements OnInit {
   };
 
   criteriaAverages = {
-    driver: 0,
-    vehicle: 0,
+    safety: 0,
+    accuracy: 0,
+    completeness: 0,
+    staff: 0,
+    comfort: 0,
     service: 0,
-    price: 0,
-    cleanliness: 0,
+    punctuality: 0,
   };
 
   showFullReview: Record<number, boolean> = {};
@@ -158,6 +167,7 @@ export class ReviewsComponent implements OnInit {
       'Wifi ổn, ghế thoải mái',
       'Không gian xe rộng rãi và mát mẻ',
       'Tài xế lái cẩn thận, an toàn',
+      'Hành lý được sắp xếp chu đáo',
     ];
 
     const tagsPool = [
@@ -168,10 +178,11 @@ export class ReviewsComponent implements OnInit {
     const vehicleTypes = ['Limousine 9 chỗ', 'Limousine giường nằm 34 chỗ', 'Limousine 22 giường phòng (có WC)'];
     const reviews: Review[] = [];
 
-    for (let i = 1; i <= 80; i++) {
+    for (let i = 1; i <= 150; i++) {
       const user = users[(i - 1) % users.length];
       const route = routes[(i - 1) % routes.length];
-      const score = i <= 48 ? 5 : i <= 64 ? 4 : i <= 74 ? 3 : 2;
+      // Generate scores to average out to exactly 4.8 overall (with 134 5-star, 8 4-star, 4 3-star, 2 2-star, 2 1-star)
+      const score = i <= 134 ? 5 : i <= 142 ? 4 : i <= 146 ? 3 : i <= 148 ? 2 : 1;
       const title = titles[(i - 1) % titles.length];
       const content = this.generateReviewContent(i, score, route);
       const tags = this.generateTags(i, tagsPool);
@@ -229,7 +240,7 @@ export class ReviewsComponent implements OnInit {
         content: 'Nhân viên phục vụ nhiệt tình, hướng dẫn chỗ ngồi chu đáo, 5 sao cho nhà xe. Xe chạy rất êm, tài xế lái xe cẩn thận và đón đúng giờ. Sẽ tiếp tục ủng hộ.',
         route: 'Sài Gòn - Vũng Tàu',
         vehicleType: 'Limousine giường nằm 34 chỗ',
-        criteriaRatings: { driver: 5, vehicle: 5, service: 5, price: 5, cleanliness: 5 },
+        criteriaRatings: { safety: 5, accuracy: 5, completeness: 5, staff: 5, comfort: 5, service: 5, punctuality: 5 },
         tags: ['Thân thiện', 'Lịch sự', 'Đúng giờ', 'Thoải mái', 'Xe mới/sạch'],
         likes: 48,
         comments: 3,
@@ -252,7 +263,7 @@ export class ReviewsComponent implements OnInit {
         content: 'Dịch vụ chuyên nghiệp, ghế ngồi rất thoải mái. Wifi trên xe mạnh, sạc điện thoại tiện lợi. Một trải nghiệm đi đường dài tuyệt vời.',
         route: 'Sài Gòn - Nha Trang',
         vehicleType: 'Limousine 9 chỗ',
-        criteriaRatings: { driver: 5, vehicle: 5, service: 5, price: 4, cleanliness: 5 },
+        criteriaRatings: { safety: 5, accuracy: 5, completeness: 5, staff: 5, comfort: 5, service: 5, punctuality: 5 },
         tags: ['WiFi tốt', 'Thoải mái', 'Lịch sự', 'Suôn sẻ', 'Giá hợp lý'],
         likes: 36,
         comments: 2,
@@ -269,9 +280,9 @@ export class ReviewsComponent implements OnInit {
     this.totalReviews = this.allReviews.length;
 
     // Calculate tab counts
-    this.totalAllCount = reviews.length;
-    this.totalCommentCount = reviews.filter(r => r.content && r.content.trim().length > 0).length;
-    this.totalMediaCount = reviews.filter(r => r.media && r.media.length > 0).length;
+    this.totalAllCount = this.allReviews.length;
+    this.totalCommentCount = this.allReviews.filter(r => r.content && r.content.trim().length > 0).length;
+    this.totalMediaCount = this.allReviews.filter(r => r.media && r.media.length > 0).length;
   }
 
   buildRouteOptions(reviews: Review[]): RouteOption[] {
@@ -297,16 +308,16 @@ export class ReviewsComponent implements OnInit {
 
   generateReviewContent(index: number, score: number, route: string) {
     const templates5 = [
-      `Chuyến đi từ ${route} vô cùng hoàn hảo! Xe sạch sẽ tinh tươm, không mùi khó chịu. Lái xe nhiệt tình, chu đáo hỗ trợ mang vác hành lý cho gia đình mình. Rất hài lòng về chất lượng.`,
-      `Tôi đi chuyến lúc tối muộn, tài xế chạy cực kỳ êm và an toàn, giúp tôi ngủ rất ngon suốt chặng đường. Xe trang bị đầy đủ tiện nghi, nước uống, chăn ấm sạch sẽ. Xứng đáng 5 sao!`,
-      `Nhân viên tổng đài và nhân viên phụ xe hỗ trợ cực kỳ nhiệt tình. Xe chạy rất đúng giờ, không bắt khách dọc đường. Mình sẽ luôn chọn VIAGO cho tuyến ${route} này.`,
-      `Trải nghiệm tuyệt vời! Ghế nằm massage siêu thoải mái, hệ thống điều hòa mát mẻ dễ chịu, wifi căng đét giúp mình giải trí suốt cả chuyến đi dài.`
+      `Chuyến đi từ ${route} vô cùng hoàn hảo! Xe sạch sẽ tinh tươm, giống hệt mô tả quảng cáo và hình ảnh thực tế trên app. Lái xe nhiệt tình, chu đáo hỗ trợ mang vác hành lý cho gia đình mình. Rất hài lòng về chất lượng.`,
+      `Tôi đi chuyến lúc tối muộn, tài xế chạy cực kỳ êm và an toàn, đón đúng giờ chính xác như thông tin lịch trình. Xe trang bị đầy đủ tiện nghi, nước uống đầy đủ, chăn ấm sạch sẽ. Xứng đáng 5 sao!`,
+      `Nhân viên tổng đài cung cấp thông tin rõ ràng và hướng dẫn cụ thể cách đặt vé. Xe chạy rất đúng giờ, thông tin chính xác. Mình sẽ luôn chọn VIAGO cho tuyến ${route} này.`,
+      `Trải nghiệm tuyệt vời! Tiện ích đầy đủ chi tiết, ghế nằm massage siêu thoải mái đúng mẫu như hình, hệ thống điều hòa mát mẻ dễ chịu, wifi căng đét giúp mình giải trí suốt cả chuyến đi dài.`
     ];
 
     const templates4 = [
-      `Dịch vụ xe nhìn chung rất ổn định, xe sạch và rộng rãi. Tài xế lái xe cẩn thận. Tuy nhiên xuất phát trễ khoảng 10 phút, hy vọng nhà xe khắc phục điểm nhỏ này.`,
-      `Chất lượng xe VIP tương xứng với giá tiền. Điểm trừ duy nhất là trạm dừng nghỉ hơi đông đúc. Còn lại mọi thứ từ thái độ phục vụ đến tiện ích đều rất tuyệt vời.`,
-      `Tuyến xe này chạy khá êm, nhân viên lịch sự. Ghế ngồi thoải mái nhưng cổng sạc USB hơi lỏng một chút. Tổng quan chuyến đi vẫn rất hài lòng.`
+      `Dịch vụ xe nhìn chung rất ổn định, xe sạch và rộng rãi đúng như mô tả thực tế. Tài xế lái xe cẩn thận. Tuy nhiên xuất phát trễ khoảng 10 phút, hy vọng nhà xe khắc phục điểm nhỏ này.`,
+      `Chất lượng xe VIP tương xứng với giá tiền quảng cáo. Điểm trừ duy nhất là trạm dừng nghỉ hơi đông đúc. Còn lại mọi thứ từ thái độ phục vụ đến tiện ích đều đầy đủ, rất tuyệt vời.`,
+      `Tuyến xe này chạy khá êm, nhân viên lịch sự cung cấp thông tin hướng dẫn chi tiết. Ghế ngồi thoải mái nhưng cổng sạc USB hơi lỏng một chút. Tổng quan chuyến đi vẫn rất hài lòng.`
     ];
 
     const templates3 = [
@@ -360,11 +371,13 @@ export class ReviewsComponent implements OnInit {
 
   generateCriteria(score: number) {
     return {
-      driver: Math.min(5, Math.max(3, score + (Math.random() > 0.5 ? 0 : -1))),
-      vehicle: Math.min(5, Math.max(3, score + (Math.random() > 0.4 ? 0 : -1))),
-      service: Math.min(5, Math.max(3, score + (Math.random() > 0.6 ? 1 : 0))),
-      price: Math.min(5, Math.max(2, score + (Math.random() > 0.7 ? -1 : 0))),
-      cleanliness: Math.min(5, Math.max(3, score + (Math.random() > 0.5 ? 0 : -1))),
+      safety: Math.min(5, Math.max(3, score + (Math.random() > 0.5 ? 0 : -1))),
+      accuracy: Math.min(5, Math.max(3, score + (Math.random() > 0.4 ? 0 : -1))),
+      completeness: Math.min(5, Math.max(3, score + (Math.random() > 0.4 ? 0 : -1))),
+      staff: Math.min(5, Math.max(3, score + (Math.random() > 0.6 ? 1 : 0))),
+      comfort: Math.min(5, Math.max(3, score + (Math.random() > 0.4 ? 0 : -1))),
+      service: Math.min(5, Math.max(3, score + (Math.random() > 0.5 ? 0 : -1))),
+      punctuality: Math.min(5, Math.max(3, score + (Math.random() > 0.5 ? 0 : -1))),
     };
   }
 
@@ -382,26 +395,30 @@ export class ReviewsComponent implements OnInit {
 
     const total = this.allReviews.length;
     const sumScore = this.allReviews.reduce((sum, review) => sum + review.score, 0);
-    this.averageRating = 4.8;
+    this.averageRating = parseFloat((sumScore / total).toFixed(1));
 
     this.starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    const criteriaSum = { driver: 0, vehicle: 0, service: 0, price: 0, cleanliness: 0 };
+    const criteriaSum = { safety: 0, accuracy: 0, completeness: 0, staff: 0, comfort: 0, service: 0, punctuality: 0 };
 
     this.allReviews.forEach(review => {
       this.starCounts[review.score] = (this.starCounts[review.score] || 0) + 1;
-      criteriaSum.driver += review.criteriaRatings.driver;
-      criteriaSum.vehicle += review.criteriaRatings.vehicle;
+      criteriaSum.safety += review.criteriaRatings.safety;
+      criteriaSum.accuracy += review.criteriaRatings.accuracy;
+      criteriaSum.completeness += review.criteriaRatings.completeness;
+      criteriaSum.staff += review.criteriaRatings.staff;
+      criteriaSum.comfort += review.criteriaRatings.comfort;
       criteriaSum.service += review.criteriaRatings.service;
-      criteriaSum.price += review.criteriaRatings.price;
-      criteriaSum.cleanliness += review.criteriaRatings.cleanliness;
+      criteriaSum.punctuality += review.criteriaRatings.punctuality;
     });
 
     this.criteriaAverages = {
-      driver: parseFloat((criteriaSum.driver / total).toFixed(1)),
-      vehicle: parseFloat((criteriaSum.vehicle / total).toFixed(1)),
+      safety: parseFloat((criteriaSum.safety / total).toFixed(1)),
+      accuracy: parseFloat((criteriaSum.accuracy / total).toFixed(1)),
+      completeness: parseFloat((criteriaSum.completeness / total).toFixed(1)),
+      staff: parseFloat((criteriaSum.staff / total).toFixed(1)),
+      comfort: parseFloat((criteriaSum.comfort / total).toFixed(1)),
       service: parseFloat((criteriaSum.service / total).toFixed(1)),
-      price: parseFloat((criteriaSum.price / total).toFixed(1)),
-      cleanliness: parseFloat((criteriaSum.cleanliness / total).toFixed(1)),
+      punctuality: parseFloat((criteriaSum.punctuality / total).toFixed(1)),
     };
   }
 
@@ -420,7 +437,7 @@ export class ReviewsComponent implements OnInit {
       }
 
       // Star filter
-      if (this.selectedStar !== 'all' && review.score !== this.selectedStar) {
+      if (this.selectedStar !== 'all' && review.score !== Number(this.selectedStar)) {
         return false;
       }
 
@@ -597,5 +614,17 @@ export class ReviewsComponent implements OnInit {
     }
   }
 
+  toggleReportMenu(reviewId: number, event: Event) {
+    event.stopPropagation();
+    if (this.activeReportReviewId === reviewId) {
+      this.activeReportReviewId = null;
+    } else {
+      this.activeReportReviewId = reviewId;
+    }
+  }
 
+  reportReview(reviewId: number) {
+    window.alert('Cảm ơn bạn đã báo cáo nhận xét này. Ban quản trị sẽ rà soát và đối chiếu thông tin trong vòng 24 giờ tới.');
+    this.activeReportReviewId = null;
+  }
 }

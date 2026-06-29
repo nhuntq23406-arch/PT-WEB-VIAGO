@@ -9,12 +9,6 @@
   <div class="stats-grid-promotion">
     <!-- Card 1 -->
     <div class="stat-card border-orange">
-      <div class="stat-card-icon bg-orange">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-          <line x1="6" y1="12" x2="18" y2="12"></line>
-        </svg>
-      </div>
       <div class="stat-info">
         <span class="stat-title">Số chương trình chạy</span>
         <span class="stat-val text-orange">{{ totalActiveVouchers }} đang chạy</span>
@@ -23,11 +17,6 @@
 
     <!-- Card 2 -->
     <div class="stat-card border-blue">
-      <div class="stat-card-icon bg-blue">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-        </svg>
-      </div>
       <div class="stat-info">
         <span class="stat-title">Tổng số voucher tạo ra</span>
         <span class="stat-val text-blue">{{ vouchers.length }} chương trình</span>
@@ -36,14 +25,6 @@
 
     <!-- Card 3 -->
     <div class="stat-card border-green">
-      <div class="stat-card-icon bg-green">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-      </div>
       <div class="stat-info">
         <span class="stat-title">Lượt áp dụng thành công</span>
         <span class="stat-val text-green">{{ totalVoucherUsages | number }} lượt sử dụng</span>
@@ -52,23 +33,17 @@
 
     <!-- Card 4 -->
     <div class="stat-card border-purple">
-      <div class="stat-card-icon bg-purple">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="1" x2="12" y2="23"></line>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-        </svg>
-      </div>
       <div class="stat-info">
-        <span class="stat-title">Doanh thu thu hút</span>
-        <span class="stat-val text-purple">{{ formatCurrency(totalVoucherRevenue) }}</span>
+        <span class="stat-title">Voucher dùng nhiều nhất</span>
+        <span class="stat-val text-purple">{{ mostUsedVoucher }}</span>
       </div>
     </div>
   </div>
 
   <!-- Voucher List & Monitoring Area -->
-  <div class="layout-main-grid">
+  <div class="layout-main-grid full-width-list">
     <!-- Left column: Voucher List -->
-    <div class="table-card">
+    <div class="table-card" style="grid-column: span 12;">
       <div class="table-header-custom">
         <h2 class="table-title">Danh sách Chương trình Khuyến mãi & Vouchers</h2>
         
@@ -209,82 +184,6 @@
         </table>
       </div>
     </div>
-
-    <!-- Right column: Detailed Stats -->
-    <div class="sidebar-panels-column">
-      <!-- Section B: Statistics & Monitoring Card -->
-      <div class="stats-card-container" id="voucher-stats-card" *ngIf="selectedVoucherForStats">
-        <div class="stats-card-header">
-          <div>
-            <span style="font-size: 11px; font-weight: 700; color: #ea580c; text-transform: uppercase;">📊 THỐNG KÊ CHI TIẾT SỬ DỤNG</span>
-            <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin: 4px 0 0 0;">
-              Mã: {{ selectedVoucherForStats.code }}
-            </h3>
-          </div>
-          <span class="status-dot-badge" [class]="getStatusClass(selectedVoucherForStats.status)">
-            {{ getStatusLabel(selectedVoucherForStats.status) }}
-          </span>
-        </div>
-
-        <div class="stats-summary-grid">
-          <div class="stat-mini-box">
-            <span class="stat-mini-label">Số lần đã dùng</span>
-            <span class="stat-mini-val text-orange-val">{{ selectedVoucherForStats.usageCount | number }} lần</span>
-          </div>
-
-          <div class="stat-mini-box">
-            <span class="stat-mini-label">Doanh thu tạo ra</span>
-            <span class="stat-mini-val" style="color: #10b981;">{{ formatCurrency(selectedVoucherForStats.revenueGenerated) }}</span>
-          </div>
-        </div>
-
-        <!-- If specific compensation assigned -->
-        <div class="compensation-details-box" *ngIf="selectedVoucherForStats.assignedCustomer">
-          <div class="box-title">Khách hàng được gán bồi hoàn</div>
-          <div class="comp-info-row">
-            <span>Người nhận:</span>
-            <strong>{{ selectedVoucherForStats.assignedCustomer.emailOrPhone }}</strong>
-          </div>
-          <div class="comp-info-row">
-            <span>Lý do gán:</span>
-            <strong class="text-orange-val">{{ getReasonLabel(selectedVoucherForStats.assignedCustomer.reason) }}</strong>
-          </div>
-          <div class="comp-info-row">
-            <span>Chi tiết ghi chú:</span>
-            <span>{{ selectedVoucherForStats.assignedCustomer.note }}</span>
-          </div>
-          <div class="comp-info-row">
-            <span>Trạng thái dùng:</span>
-            <span class="badge-status" 
-                  [class.badge-status-active]="selectedVoucherForStats.assignedCustomer.used"
-                  [class.badge-status-suspended]="!selectedVoucherForStats.assignedCustomer.used">
-              {{ selectedVoucherForStats.assignedCustomer.used ? 'Đã dùng voucher' : 'Chưa sử dụng' }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Customer Usage List -->
-        <div class="usage-list-section">
-          <div class="usage-list-title">Khách hàng đã áp dụng mã gần đây:</div>
-          <div class="usage-records-list">
-            <div class="usage-record-card" *ngFor="let c of mockCustomerUsage">
-              <div class="record-header">
-                <strong>{{ c.name }}</strong>
-                <span class="record-time">{{ c.time }}</span>
-              </div>
-              <div class="record-meta">
-                <span>Khách hàng: {{ c.emailOrPhone }}</span>
-                <span>Số vé: <strong>{{ c.tickets }} vé</strong></span>
-              </div>
-              <div class="record-values">
-                <span>Tổng giá trị đơn: <strong>{{ formatCurrency(c.orderVal) }}</strong></span>
-                <span>Đã giảm: <strong style="color: #ea580c;">-{{ formatCurrency(c.savedVal) }}</strong></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Section A: Form Card Modal backdrop (Centers in middle of screen) -->
@@ -303,7 +202,7 @@
             {{ newVoucher.stt ? 'Cập nhật' : 'Thiết lập' }} Khuyến mãi / Voucher
           </h3>
           <div style="display: flex; gap: 10px; align-items: center;">
-            <button class="btn-clear-form" (click)="resetForm()" title="Làm mới form">Reset</button>
+            <button class="btn-clear-form" (click)="resetForm()" title="Làm mới form">Làm mới</button>
             <button class="btn-close-form" (click)="closeVoucherForm()" style="background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Đóng form">✕</button>
           </div>
         </div>
@@ -527,6 +426,90 @@
             </svg>
             Lưu khuyến mãi
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section B: Statistics & Monitoring Card Modal Popup Overlay -->
+  <div class="modal-overlay" *ngIf="showStatsModal && selectedVoucherForStats">
+    <div class="modal-container" style="max-width: 520px; width: 90%;">
+      <div class="stats-card-container" id="voucher-stats-card" style="margin: 0; border: none; box-shadow: none;">
+        <div class="stats-card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px; margin-bottom: 16px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; color: #ea580c; text-transform: uppercase; display: block; margin-bottom: 2px;">📊 THỐNG KÊ CHI TIẾT SỬ DỤNG</span>
+            <h3 style="font-size: 18px; font-weight: 800; color: #1e293b; margin: 0;">
+              Mã: {{ selectedVoucherForStats.code }}
+            </h3>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="status-dot-badge" [class]="getStatusClass(selectedVoucherForStats.status)">
+              {{ getStatusLabel(selectedVoucherForStats.status) }}
+            </span>
+            <button (click)="showStatsModal = false" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; padding: 4px; display: flex; align-items: center;" title="Đóng">✕</button>
+          </div>
+        </div>
+
+        <div class="stats-summary-grid">
+          <div class="stat-mini-box">
+            <span class="stat-mini-label">Số lần đã dùng</span>
+            <span class="stat-mini-val text-orange-val">{{ selectedVoucherForStats.usageCount | number }} lần</span>
+          </div>
+
+          <div class="stat-mini-box">
+            <span class="stat-mini-label">Doanh thu tạo ra</span>
+            <span class="stat-mini-val" style="color: #10b981;">{{ formatCurrency(selectedVoucherForStats.revenueGenerated) }}</span>
+          </div>
+        </div>
+
+        <!-- If specific compensation assigned -->
+        <div class="compensation-details-box" *ngIf="selectedVoucherForStats.assignedCustomer" style="margin-top: 16px;">
+          <div class="box-title">Khách hàng được gán bồi hoàn</div>
+          <div class="comp-info-row">
+            <span>Người nhận:</span>
+            <strong>{{ selectedVoucherForStats.assignedCustomer.emailOrPhone }}</strong>
+          </div>
+          <div class="comp-info-row">
+            <span>Lý do gán:</span>
+            <strong class="text-orange-val">{{ getReasonLabel(selectedVoucherForStats.assignedCustomer.reason) }}</strong>
+          </div>
+          <div class="comp-info-row">
+            <span>Chi tiết ghi chú:</span>
+            <span>{{ selectedVoucherForStats.assignedCustomer.note }}</span>
+          </div>
+          <div class="comp-info-row">
+            <span>Trạng thái dùng:</span>
+            <span class="badge-status" 
+                  [class.badge-status-active]="selectedVoucherForStats.assignedCustomer.used"
+                  [class.badge-status-suspended]="!selectedVoucherForStats.assignedCustomer.used">
+              {{ selectedVoucherForStats.assignedCustomer.used ? 'Đã dùng voucher' : 'Chưa sử dụng' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Customer Usage List -->
+        <div class="usage-list-section" style="margin-top: 16px;">
+          <div class="usage-list-title" style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">Khách hàng đã áp dụng mã gần đây:</div>
+          <div class="usage-records-list" style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px;">
+            <div class="usage-record-card" *ngFor="let c of mockCustomerUsage" style="border: 1px solid #e2e8f0; background-color: #ffffff; border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;">
+              <div class="record-header" style="display: flex; justify-content: space-between; font-size: 12px;">
+                <strong>{{ c.name }}</strong>
+                <span class="record-time" style="color: #94a3b8;">{{ c.time }}</span>
+              </div>
+              <div class="record-meta" style="display: flex; justify-content: space-between; font-size: 11px; color: #64748b;">
+                <span>Khách hàng: {{ c.emailOrPhone }}</span>
+                <span>Số vé: <strong>{{ c.tickets }} vé</strong></span>
+              </div>
+              <div class="record-values" style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span>Tổng giá trị đơn: <strong>{{ formatCurrency(c.orderVal) }}</strong></span>
+                <span>Đã giảm: <strong style="color: #ea580c;">-{{ formatCurrency(c.savedVal) }}</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px; border-top: 1px solid #f1f5f9; padding-top: 14px; gap: 12px;">
+          <button class="btn btn-outline" (click)="showStatsModal = false">Đóng</button>
         </div>
       </div>
     </div>

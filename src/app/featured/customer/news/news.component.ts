@@ -25,6 +25,10 @@ export class NewsComponent implements OnInit {
   favoriteRoute = 'TP.HCM - Đà Lạt';
   email = '';
 
+  // Share modal state
+  showShareModal = false;
+  shareUrl = '';
+
   categories = [
     { key: 'all', name: 'Tất cả' },
     { key: 'tin-nha-xe', name: 'Tin tức nhà xe' },
@@ -46,7 +50,7 @@ export class NewsComponent implements OnInit {
   subscribed = false;
 
   currentPage = 1;
-  pageSize = 9;
+  pageSize = 8;
   totalPages = 1;
   pagesArray: number[] = [];
 
@@ -60,6 +64,7 @@ export class NewsComponent implements OnInit {
     this.selectedRoute = 'all';
     this.jobType = 'all';
     this.applyFilters();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   applyFilters() {
@@ -114,6 +119,7 @@ export class NewsComponent implements OnInit {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
       this.updatePaginatedArticles();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
@@ -131,11 +137,16 @@ export class NewsComponent implements OnInit {
   }
 
   copyShareLink(article: Article) {
-    const url = `${window.location.origin}/tin-tuc/chi-tiet/${article.id}`;
-    navigator.clipboard.writeText(url).then(() => {
-      window.alert(`Đã sao chép liên kết bài viết: ${article.title}`);
+    this.shareUrl = `${window.location.origin}/tin-tuc/chi-tiet/${article.id}`;
+    this.showShareModal = true;
+  }
+
+  copyLink() {
+    navigator.clipboard.writeText(this.shareUrl).then(() => {
+      window.alert('Đã sao chép liên kết vào bộ nhớ tạm!');
+      this.showShareModal = false;
     }).catch(() => {
-      window.alert('Đã sao chép liên kết bài viết!');
+      window.alert('Không thể sao chép liên kết.');
     });
   }
 
@@ -161,7 +172,7 @@ export class NewsComponent implements OnInit {
       case 'su-kien':
         return 8;
       default:
-        return 9;
+        return 8;
     }
   }
 

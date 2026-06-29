@@ -53,6 +53,14 @@ export class BaoCaoChiTietComponent implements OnInit {
 
   // Rendered Data list
   filteredTrips: ChuyenXeReportItem[] = [];
+  paginatedTrips: ChuyenXeReportItem[] = [];
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
+
+  activeReportTab: 'charts' | 'table' = 'charts';
 
   // Summary Metrics
   summary = {
@@ -190,6 +198,29 @@ export class BaoCaoChiTietComponent implements OnInit {
     });
 
     this.calculateSummary();
+    this.currentPage = 1;
+    this.updatePaginatedTrips();
+  }
+
+  updatePaginatedTrips() {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredTrips.length / this.pageSize));
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedTrips = this.filteredTrips.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedTrips();
+    }
+  }
+
+  getVisiblePages(): number[] {
+    const pages = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   onResetFilters() {
