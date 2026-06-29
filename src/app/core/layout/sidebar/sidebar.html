@@ -228,7 +228,7 @@
 
     <div class="container-4">
       <div class="div">
-        <div class="user-avatar"></div>
+        <div class="user-avatar" [style.backgroundImage]="'url(' + avatarUrl + ')'"></div>
         <div class="container-wrapper">
           <div class="div-3">
             <div class="div-wrapper">
@@ -258,7 +258,12 @@
     <div class="modal-header">
       <div class="header-left">
         <h2 class="modal-title">Thông tin cá nhân</h2>
-        <p class="modal-subtitle">NVQT100001 · Quản trị viên</p>
+        <div class="modal-subtitle">
+          <span>NVQT100001</span>
+          <span>·</span>
+          <span class="role-badge">Quản trị viên</span>
+          <span class="status-badge-active">Đang hoạt động</span>
+        </div>
       </div>
       <button class="btn-close" (click)="closeProfileModal()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="close-icon-svg">
@@ -273,9 +278,10 @@
         <!-- Left Column: Avatar & Actions -->
         <div class="profile-left-col">
           <div class="profile-avatar-large">
-            <img src="/asset/img/admin/user_avartar.png" alt="Nguyen An Ninh Avatar" class="profile-avatar-img" />
+            <img [src]="tempAvatarUrl" alt="Nguyen An Ninh Avatar" class="profile-avatar-img" />
           </div>
-          <button class="btn-action-outline">
+          <input type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" style="display: none;" />
+          <button type="button" class="btn-action-outline" (click)="fileInput.click()">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
@@ -349,7 +355,7 @@
     <!-- Modal Footer -->
     <div class="modal-footer">
       <button class="btn-cancel" (click)="closeProfileModal()">Hủy</button>
-      <button class="btn-save" (click)="closeProfileModal()">
+      <button class="btn-save" (click)="saveProfile()">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
           <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
         </svg>
@@ -382,8 +388,17 @@
           <label class="form-label-pw">MẬT KHẨU HIỆN TẠI</label>
           <div class="input-container-pw">
             <input [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="currentPassword" name="currentPassword" class="form-input-pw" />
-            <button type="button" class="btn-toggle-pw" (click)="toggleCurrentPassword()">
-              {{ showCurrentPassword ? 'Ẩn' : 'Hiện' }}
+            <button type="button" class="btn-toggle-pw" [class.active]="showCurrentPassword" (click)="toggleCurrentPassword()">
+              <svg *ngIf="showCurrentPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg *ngIf="!showCurrentPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                <line x1="2" y1="2" x2="22" y2="22"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -392,8 +407,17 @@
           <label class="form-label-pw">MẬT KHẨU MỚI</label>
           <div class="input-container-pw">
             <input [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="newPassword" name="newPassword" class="form-input-pw" />
-            <button type="button" class="btn-toggle-pw" (click)="toggleNewPassword()">
-              {{ showNewPassword ? 'Ẩn' : 'Hiện' }}
+            <button type="button" class="btn-toggle-pw" [class.active]="showNewPassword" (click)="toggleNewPassword()">
+              <svg *ngIf="showNewPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg *ngIf="!showNewPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                <line x1="2" y1="2" x2="22" y2="22"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -402,8 +426,17 @@
           <label class="form-label-pw">XÁC NHẬN MẬT KHẨU MỚI</label>
           <div class="input-container-pw">
             <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-input-pw" />
-            <button type="button" class="btn-toggle-pw" (click)="toggleConfirmPassword()">
-              {{ showConfirmPassword ? 'Ẩn' : 'Hiện' }}
+            <button type="button" class="btn-toggle-pw" [class.active]="showConfirmPassword" (click)="toggleConfirmPassword()">
+              <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                <line x1="2" y1="2" x2="22" y2="22"/>
+              </svg>
             </button>
           </div>
         </div>

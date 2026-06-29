@@ -1,124 +1,48 @@
-<div class="customer-container">
-  <!-- Breadcrumbs & Header Title -->
-  <div class="breadcrumbs-header">
-    <div class="breadcrumbs-path">
-      Hệ thống / <span class="active-path">Nhật ký hoạt động</span>
-    </div>
-    <h1 class="header-title">Quản lý nhật ký hoạt động</h1>
-  </div>
-
-  <!-- Stats Grid -->
-  <div class="stats-grid">
-    <!-- Stat 1 -->
-    <div class="stat-card">
-      <div class="stat-header">
-        <div class="stat-icon-wrapper blue">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="stat-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v5.25c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0 1 3 18.375v-5.25ZM9 9.75c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v8.625c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0 1 9 17.25V9.75ZM15 6.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v12c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125v-12Z" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <span class="stat-label">Tổng log hôm nay</span>
-          <span class="stat-value">{{ totalLogsToday }}</span>
-        </div>
-      </div>
-      <div class="stat-footer green-text">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="footer-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-        </svg>
-        <span>Hệ thống ổn định</span>
+<div class="ticket-list-page">
+  <section class="lookup-panel">
+    <div class="lookup-heading">
+      <div>
+        <span class="eyebrow">Hệ thống</span>
+        <h1>Quản lý nhật ký hoạt động</h1>
       </div>
     </div>
 
-    <!-- Stat 2 -->
-    <div class="stat-card">
-      <div class="stat-header">
-        <div class="stat-icon-wrapper green">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="stat-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-          </svg>
+    <!-- Stats summary strip -->
+    <div class="lookup-summary-section" style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; align-items: stretch;">
+      <div class="summary-strip" style="grid-template-columns: repeat(4, 1fr); width: 100%;">
+        <div class="summary-item">
+          <span>{{ totalLogsToday }}</span>
+          <small>Tổng log hôm nay</small>
         </div>
-        <div class="stat-info">
-          <span class="stat-label">Đăng nhập thành công</span>
-          <span class="stat-value">{{ successfulLogins }}</span>
+        <div class="summary-item warning">
+          <span>{{ successfulLogins }}</span>
+          <small>Đăng nhập thành công</small>
         </div>
-      </div>
-      <div class="stat-footer green-text">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="footer-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
-        <span>Khách & Nhân viên</span>
+        <div class="summary-item danger">
+          <span>{{ failedOperations }}</span>
+          <small>Thao tác thất bại</small>
+        </div>
+        <div class="summary-item revenue">
+          <span>{{ ticketsBookedToday }}</span>
+          <small>Lượt đặt vé hôm nay</small>
+        </div>
       </div>
     </div>
 
-    <!-- Stat 3 -->
-    <div class="stat-card">
-      <div class="stat-header">
-        <div class="stat-icon-wrapper gray">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="stat-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <span class="stat-label">Thao tác thất bại</span>
-          <span class="stat-value">{{ failedOperations }}</span>
-        </div>
-      </div>
-      <div class="stat-footer gray-text">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="footer-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
-        <span>Không có lỗi</span>
-      </div>
-    </div>
-
-    <!-- Stat 4 -->
-    <div class="stat-card">
-      <div class="stat-header">
-        <div class="stat-icon-wrapper orange">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="stat-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-12h9c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-9a1.125 1.125 0 0 1-1.125-1.125v-9.75C6.375 6.504 6.879 6 7.5 6Z" />
-          </svg>
-        </div>
-        <div class="stat-info">
-          <span class="stat-label">Lượt đặt vé hôm nay</span>
-          <span class="stat-value">{{ ticketsBookedToday }}</span>
-        </div>
-      </div>
-      <div class="stat-footer green-text">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="footer-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-        </svg>
-        <span>Qua Web/App/Quầy</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Filter Card -->
-  <div class="filter-card">
-    <div class="filter-card-header">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="filter-header-svg">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-      </svg>
-      <span class="filter-card-title">Bộ lọc nhật ký hoạt động hệ thống</span>
-    </div>
-
-    <div class="filter-fields-grid">
-      <!-- Quick Search -->
-      <div class="filter-field-item">
-        <label class="filter-label">Tìm kiếm nhanh</label>
-        <div class="search-input-container">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="search-icon-inside">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
-          </svg>
-          <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" class="filter-input" placeholder="Tìm ID log, tài khoản, IP, mã vé..." />
+    <!-- Filters Grid -->
+    <div class="filters-grid">
+      <!-- Search Input field -->
+      <div class="field">
+        <label>Tìm kiếm nhanh</label>
+        <div style="position: relative; display: flex; align-items: center; width: 100%;">
+          <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Tìm ID log, tài khoản, IP, mã vé..." />
         </div>
       </div>
 
-      <!-- Role Selector -->
-      <div class="filter-field-item">
-        <label class="filter-label">Vai trò người thực hiện</label>
-        <select [(ngModel)]="selectedRole" (change)="applyFilters()" class="filter-select">
+      <!-- Role selector dropdown field -->
+      <div class="field">
+        <label>Vai trò người thực hiện</label>
+        <select [(ngModel)]="selectedRole" (change)="applyFilters()">
           <option value="all">Tất cả vai trò</option>
           <option value="KHÁCH HÀNG">Khách hàng</option>
           <option value="BÁN VÉ">Bán vé</option>
@@ -128,10 +52,10 @@
         </select>
       </div>
 
-      <!-- Action Type Selector -->
-      <div class="filter-field-item">
-        <label class="filter-label">Loại thao tác</label>
-        <select [(ngModel)]="selectedAction" (change)="applyFilters()" class="filter-select">
+      <!-- Action Type Selector dropdown field -->
+      <div class="field">
+        <label>Loại thao tác</label>
+        <select [(ngModel)]="selectedAction" (change)="applyFilters()">
           <option value="all">Tất cả thao tác</option>
           <option value="Đăng ký">Đăng ký</option>
           <option value="Đăng nhập">Đăng nhập</option>
@@ -155,91 +79,93 @@
         </select>
       </div>
 
-      <!-- Status Selector -->
-      <div class="filter-field-item">
-        <label class="filter-label">Trạng thái</label>
-        <select [(ngModel)]="selectedStatus" (change)="applyFilters()" class="filter-select">
+      <!-- Status Selector dropdown field -->
+      <div class="field">
+        <label>Trạng thái</label>
+        <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
           <option value="all">Tất cả trạng thái</option>
           <option value="Thành công">Thành công</option>
           <option value="Thất bại">Thất bại</option>
         </select>
       </div>
-    </div>
 
-    <!-- Date fields and action buttons row -->
-    <div class="filter-date-actions-row">
-      <div class="filter-date-group">
-        <label class="filter-label block-label">Khoảng thời gian</label>
-        <div class="date-range-container">
-          <input #startInput type="date" [(ngModel)]="startDate" (click)="showDatePicker(startInput)" (change)="applyFilters()" class="filter-date-input" />
-          <span class="date-separator">đến</span>
-          <input #endInput type="date" [(ngModel)]="endDate" (click)="showDatePicker(endInput)" (change)="applyFilters()" class="filter-date-input" />
-        </div>
+      <!-- From Date field -->
+      <div class="field">
+        <label>Từ ngày</label>
+        <input #startInput type="date" [(ngModel)]="startDate" (click)="showDatePicker(startInput)" (change)="applyFilters()" />
       </div>
 
-      <div class="filter-buttons-wrapper">
-        <div class="left-buttons">
-          <button class="btn-filter-teal" (click)="applyFilters()">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
-            </svg>
-            Lọc dữ liệu
-          </button>
-          <button class="btn-filter-outline" (click)="resetFilters()">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-            </svg>
-            Làm mới bộ lọc
-          </button>
-        </div>
+      <!-- To Date field -->
+      <div class="field">
+        <label>Đến ngày</label>
+        <input #endInput type="date" [(ngModel)]="endDate" (click)="showDatePicker(endInput)" (change)="applyFilters()" />
+      </div>
 
-        <button class="btn-export-excel" (click)="exportExcel()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
+      <!-- Clear filter button field -->
+      <div class="field filter-action-field">
+        <label>&nbsp;</label>
+        <button type="button" class="secondary-button" (click)="resetFilters()" style="width: 100%; min-height: 40px;">Xóa bộ lọc</button>
+      </div>
+
+      <!-- Export Excel button field -->
+      <div class="field filter-action-field">
+        <label>&nbsp;</label>
+        <button type="button" class="primary-blue-button" (click)="exportExcel()" style="width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; background-color: #10b981; border-color: #10b981; color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px;">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
           </svg>
-          Xuất Excel
+          <span>Xuất Excel</span>
         </button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Logs Table Card -->
-  <div class="main-card table-section-card">
-    <div class="table-card-header">
-      <h3 class="table-card-title">Nhật ký hệ thống & Biến động vé xe</h3>
-      <span class="results-badge">Đã tìm thấy {{ filteredLogs.length }} kết quả</span>
+  <section class="table-panel">
+    <div class="table-header">
+      <strong>Nhật ký hệ thống & Biến động vé xe</strong>
+      <span>Đã tìm thấy {{ filteredLogs.length }} kết quả</span>
     </div>
 
-    <div class="table-responsive-custom">
-      <table class="data-table-custom">
+    <div class="table-scroll">
+      <table>
         <thead>
           <tr>
-            <th>Mã nhật ký</th>
-            <th>Người thực hiện</th>
-            <th>Vai trò</th>
-            <th>Thao tác</th>
-            <th>Trạng thái</th>
-            <th>Thời gian</th>
-            <th>Địa chỉ IP</th>
-            <th class="text-center">Hành động</th>
+            <th style="width: 9%">Mã nhật ký</th>
+            <th style="width: 16%">Người thực hiện</th>
+            <th style="width: 11%">Vai trò</th>
+            <th style="width: 16%">Thao tác</th>
+            <th style="width: 11%">Trạng thái</th>
+            <th style="width: 18%">Thời gian</th>
+            <th style="width: 11%">Địa chỉ IP</th>
+            <th style="text-align: center; width: 8%;">Hành động</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let log of getPaginatedLogs()" class="log-row">
-            <td class="log-id-cell">{{ log.id }}</td>
+            <td class="log-id-cell" [title]="log.id" style="font-family: monospace; font-size: 12px; color: #64748b;">
+              {{ log.id.slice(-8) }}
+            </td>
             <td>
               <div class="operator-info">
-                <span class="operator-name">{{ log.name }}</span>
+                <strong class="operator-name">{{ log.name }}</strong>
                 <span class="operator-username">{{ log.username }}</span>
               </div>
             </td>
             <td>
-              <span class="role-pill" [class.role-admin]="log.role === 'QUẢN TRỊ VIÊN'"
-                                      [class.role-manager]="log.role === 'BAN QUẢN LÝ'"
-                                      [class.role-dispatcher]="log.role === 'ĐIỀU PHỐI'"
-                                      [class.role-cashier]="log.role === 'BÁN VÉ'"
-                                      [class.role-driver]="log.role === 'TÀI XẾ'">
-                {{ log.role }}
+              <span class="role-pill" [class.role-admin]="log.role.toUpperCase() === 'QUẢN TRỊ VIÊN'"
+                                      [class.role-manager]="log.role.toUpperCase() === 'BAN QUẢN LÝ'"
+                                      [class.role-dispatcher]="log.role.toUpperCase() === 'ĐIỀU PHỐI'"
+                                      [class.role-cashier]="log.role.toUpperCase() === 'BÁN VÉ'"
+                                      [class.role-driver]="log.role.toUpperCase() === 'TÀI XẾ'">
+                {{ 
+                  log.role.toUpperCase() === 'QUẢN TRỊ VIÊN' ? 'Quản trị viên' :
+                  log.role.toUpperCase() === 'BAN QUẢN LÝ' ? 'Ban quản lý' :
+                  log.role.toUpperCase() === 'ĐIỀU PHỐI' ? 'Điều phối' :
+                  log.role.toUpperCase() === 'BÁN VÉ' ? 'Bán vé' :
+                  log.role.toUpperCase() === 'TÀI XẾ' ? 'Tài xế' :
+                  log.role.toUpperCase() === 'CHƯA XÁC ĐỊNH' ? 'Chưa xác định' :
+                  log.role
+                }}
               </span>
             </td>
             <td>
@@ -247,19 +173,13 @@
             </td>
             <td>
               <span class="status-badge" [class.status-success]="log.status === 'Thành công'" [class.status-failed]="log.status === 'Thất bại'">
-                <svg *ngIf="log.status === 'Thành công'" class="status-badge-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                </svg>
-                <svg *ngIf="log.status === 'Thất bại'" class="status-badge-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
                 {{ log.status }}
               </span>
             </td>
             <td class="time-cell">{{ log.time }}</td>
             <td class="ip-cell">{{ log.ip }}</td>
-            <td class="text-center">
-              <button class="btn-action-view" (click)="openDetailModal(log)">Xem chi tiết</button>
+            <td style="text-align: center;">
+              <button type="button" class="btn-action-view" (click)="openDetailModal(log)">Xem chi tiết</button>
             </td>
           </tr>
           <tr *ngIf="filteredLogs.length === 0">
@@ -269,186 +189,174 @@
       </table>
     </div>
 
-    <!-- Pagination Footer -->
-    <div class="pagination-footer" *ngIf="filteredLogs.length > 0">
+    <!-- Pagination Bar -->
+    <div class="pagination-bar" *ngIf="filteredLogs.length > 0">
       <div class="pagination-left">
-        Hiển thị <span class="semibold-text">{{ getStartRowIndex() }} - {{ getEndRowIndex() }}</span> của <span class="bold-count">{{ filteredLogs.length }}</span> log
+        Hiển thị <strong class="semibold-text">{{ getStartRowIndex() }} - {{ getEndRowIndex() }}</strong> của <strong class="bold-count">{{ filteredLogs.length }}</strong> log
       </div>
       <div class="pagination-center">
-        Số hàng hiển thị:
-        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" class="page-size-select">
-          <option [ngValue]="10">10 / trang</option>
-          <option [ngValue]="20">20 / trang</option>
-          <option [ngValue]="50">50 / trang</option>
-          <option [ngValue]="100">100 / trang</option>
-        </select>
+        <label>
+          Số hàng hiển thị:
+          <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" class="page-size-select" style="min-height: auto; width: auto; padding: 4px 8px;">
+            <option [ngValue]="10">10 / trang</option>
+            <option [ngValue]="20">20 / trang</option>
+            <option [ngValue]="50">50 / trang</option>
+            <option [ngValue]="100">100 / trang</option>
+          </select>
+        </label>
       </div>
-      <div class="pagination-right">
-        <button class="btn-page-nav" [disabled]="currentPage === 1" (click)="setPage(1)">|<</button>
-        <button class="btn-page-nav" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)"><</button>
+      <div class="pagination-controls">
+        <button type="button" class="page-button" [disabled]="currentPage === 1" (click)="setPage(1)">|<</button>
+        <button type="button" class="page-button" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)"><</button>
         
-        <button *ngFor="let page of getPageNumbers()" 
+        <button type="button" 
+                *ngFor="let page of getPageNumbers()"
                 [class.active]="currentPage === page" 
-                class="btn-page-number" 
+                class="page-button" 
                 (click)="setPage(page)">
           {{ page }}
         </button>
 
-        <button class="btn-page-nav" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">></button>
-        <button class="btn-page-nav" [disabled]="currentPage === totalPages" (click)="setPage(totalPages)">>|</button>
+        <button type="button" class="page-button" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">></button>
+        <button type="button" class="page-button" [disabled]="currentPage === totalPages" (click)="setPage(totalPages)">>|</button>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Detail Modal -->
-  <div class="modal-backdrop-custom" *ngIf="showDetailModal" (click)="closeDetailModal()">
-    <div class="modal-window-custom" (click)="$event.stopPropagation()">
-      <!-- Modal Header -->
-      <div class="modal-header-custom">
-        <h2 class="modal-title-custom">
-          <svg class="modal-title-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-          </svg>
-          Chi tiết nhật ký hoạt động
-        </h2>
-        <button class="modal-close-btn-custom" (click)="closeDetailModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="close-icon-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-
-      <div class="modal-content-custom" *ngIf="selectedLog">
-        <!-- Top metadata grid -->
-        <div class="meta-info-grid">
-          <div class="meta-column">
-            <div class="meta-item">
-              <span class="meta-label">MÃ NHẬT KÝ</span>
-              <span class="meta-value-pill code-pill">{{ selectedLog.id }}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">TRẠNG THÁI</span>
-              <span class="meta-value-pill status-pill" [class.success]="selectedLog.status === 'Thành công'" [class.failed]="selectedLog.status === 'Thất bại'">
-                <svg *ngIf="selectedLog.status === 'Thành công'" class="pill-status-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+  <div class="modal-overlay" *ngIf="showDetailModal" (click)="closeDetailModal()">
+    <div class="detail-modal" (click)="$event.stopPropagation()" style="width: min(640px, 100%);">
+      <header class="modal-header">
+        <div>
+          <h2>Chi tiết nhật ký hoạt động</h2>
+        </div>
+        <button type="button" class="close-button" (click)="closeDetailModal()">x</button>
+      </header>
+      
+      <div class="detail-modal-body" *ngIf="selectedLog" style="grid-template-columns: 1fr; display: flex; flex-direction: column; gap: 16px; padding: 20px; overflow-y: auto;">
+        
+        <!-- Grey card container matching feedback details style -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+          <!-- 2-column Grid for metadata -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; margin-bottom: 8px; color: #334155;">
+            <div>Mã nhật ký: <strong class="code-pill" [title]="selectedLog.id" style="display: inline-block; padding: 2px 6px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #f0fdfa; color: #0d9488; font-family: monospace; cursor: help;">{{ selectedLog.id.slice(-8) }}</strong></div>
+            <div>Thời gian thực hiện: <strong>{{ selectedLog.time }}</strong></div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              Trạng thái: 
+              <span class="status-badge" [class.status-success]="selectedLog.status === 'Thành công'" [class.status-failed]="selectedLog.status === 'Thất bại'" style="padding: 2px 8px; font-size: 11px;">
+                <svg *ngIf="selectedLog.status === 'Thành công'" class="status-badge-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 11px; height: 11px; margin-right: 2px;">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                 </svg>
-                <svg *ngIf="selectedLog.status === 'Thất bại'" class="pill-status-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                <svg *ngIf="selectedLog.status === 'Thất bại'" class="status-badge-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 11px; height: 11px; margin-right: 2px;">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
                 {{ selectedLog.status }}
               </span>
             </div>
+            <div>Địa chỉ IP: <strong style="font-family: monospace;">{{ selectedLog.ip }}</strong></div>
           </div>
 
-          <div class="meta-column">
-            <div class="meta-item">
-              <span class="meta-label">THỜI GIAN THỰC HIỆN</span>
-              <span class="meta-value bold-text">{{ selectedLog.time }}</span>
+          <!-- Biến động trạng thái vé if available -->
+          <div *ngIf="isStateChange" style="border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">Biến động trạng thái vé:</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #e2e8f0; color: #334155;">{{ beforeStatus }}</span>
+              <span style="color: #94a3b8; font-weight: bold;">→</span>
+              <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #d1fae5; color: #065f46; font-weight: 700;">{{ afterStatus }}</span>
             </div>
-            <div class="meta-item">
-              <span class="meta-label">ĐỊA CHỈ IP</span>
-              <span class="meta-value bold-text">{{ selectedLog.ip }}</span>
-            </div>
           </div>
-        </div>
 
-        <!-- Conditional: State change visualization (dashed box) -->
-        <div class="state-variation-section" *ngIf="isStateChange">
-          <span class="section-title-gray">BIẾN ĐỘNG TRẠNG THÁI VÉ:</span>
-          <div class="state-variation-box">
-            <span class="state-box-pill before-pill">{{ beforeStatus }}</span>
-            <svg class="variation-arrow-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-            </svg>
-            <span class="state-box-pill after-pill">{{ afterStatus }}</span>
-          </div>
-        </div>
-
-        <!-- Section: Operator details -->
-        <div class="operator-section-header">
-          <svg class="section-header-icon-user" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-          </svg>
-          Thông tin người thực hiện
-        </div>
-
-        <div class="operator-profile-card">
-          <div class="operator-avatar-wrapper">
-            <svg class="avatar-user-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
-          </div>
-          <div class="operator-profile-details">
-            <span class="operator-profile-name">{{ selectedLog.name }}</span>
-            <span class="operator-profile-meta">Mã tài khoản: {{ selectedOperatorCode }}  •  SĐT: {{ selectedOperatorPhone }}</span>
-          </div>
-          <span class="operator-profile-role-pill" [class.role-admin]="selectedLog.role === 'QUẢN TRỊ VIÊN'"
-                                                 [class.role-manager]="selectedLog.role === 'BAN QUẢN LÝ'"
-                                                 [class.role-dispatcher]="selectedLog.role === 'ĐIỀU PHỐI'"
-                                                 [class.role-cashier]="selectedLog.role === 'BÁN VÉ'"
-                                                 [class.role-driver]="selectedLog.role === 'TÀI XẾ'">
-            {{ selectedLog.role }}
-          </span>
-        </div>
-
-        <!-- Section: Actions details -->
-        <div class="action-metadata-details">
-          <div class="metadata-row">
-            <span class="metadata-label-gray">Loại thao tác:</span>
-            <span class="action-type-pill">{{ selectedLog.action }}</span>
-          </div>
-          <div class="metadata-row">
-            <span class="metadata-label-gray">Thiết bị / Trình duyệt:</span>
-            <span class="device-value">
-              <svg class="device-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+          <!-- Operator Details -->
+          <div style="border-top: 1px dashed #cbd5e1; padding-top: 12px; margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: #475569; text-transform: uppercase;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" style="width: 15px; height: 15px; color: #64748b;">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
               </svg>
-              Web Client
-            </span>
+              <span>Thông tin người thực hiện</span>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background-color: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px; flex: 1;">
+                <strong style="font-size: 14px; color: #0f172a;">{{ selectedLog.name }}</strong>
+                <span style="font-size: 12px; color: #64748b;">Mã tài khoản: {{ selectedOperatorCode }}  •  SĐT: {{ selectedOperatorPhone }}</span>
+              </div>
+              <span class="role-pill" [class.role-admin]="selectedLog.role === 'QUẢN TRỊ VIÊN'"
+                                     [class.role-manager]="selectedLog.role === 'BAN QUẢN LÝ'"
+                                     [class.role-dispatcher]="selectedLog.role === 'ĐIỀU PHỐI'"
+                                     [class.role-cashier]="selectedLog.role === 'BÁN VÉ'"
+                                     [class.role-driver]="selectedLog.role === 'TÀI XẾ'">
+                {{ selectedLog.role }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Action Type and Device -->
+          <div style="border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #334155;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              Loại thao tác: 
+              <span style="background-color: #f3e8ff; color: #6b21a8; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+                {{ selectedLog.action }}
+              </span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              Thiết bị / Trình duyệt: 
+              <span style="display: flex; align-items: center; gap: 4px; font-weight: 700; color: #1e293b;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px; color: #64748b;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+                </svg>
+                Web Client
+              </span>
+            </div>
           </div>
         </div>
 
-        <div class="action-description-section">
-          <span class="section-title-gray">NỘI DUNG CHI TIẾT THAO TÁC:</span>
-          <div class="description-detail-box">
+        <!-- Description Box -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <h3 style="margin: 0; font-size: 12px; font-weight: 800; color: #1e3a8a; text-transform: uppercase;">NỘI DUNG CHI TIẾT THAO TÁC:</h3>
+          <div style="background-color: #f8fafc; border-left: 4px solid #0d9488; border-radius: 0 8px 8px 0; padding: 14px; font-size: 13px; color: #334155; line-height: 1.5; font-weight: 500;">
             {{ selectedLog.details }}
           </div>
         </div>
 
-        <!-- Section: Data changes detail table (Before / After) -->
-        <div class="data-variation-section" *ngIf="isStateChange">
-          <div class="data-variation-header">
-            <svg class="section-header-icon-shuffle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <!-- Before / After data variation table -->
+        <div *ngIf="isStateChange" style="display: flex; flex-direction: column; gap: 8px;">
+          <h3 style="margin: 0; font-size: 12px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px; color: #f97316;">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
             </svg>
             Chi tiết biến động dữ liệu (Before / After)
-          </div>
-          <table class="data-variation-table">
+          </h3>
+          <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; min-width: 100%;">
             <thead>
-              <tr>
-                <th>Trường thay đổi</th>
-                <th>Giá trị trước</th>
-                <th>Giá trị sau</th>
+              <tr style="background-color: #f8fafc;">
+                <th style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; border-bottom: 1px solid #e2e8f0; position: static; background: #f8fafc;">Trường thay đổi</th>
+                <th style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; border-bottom: 1px solid #e2e8f0; position: static; background: #f8fafc;">Giá trị trước</th>
+                <th style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; border-bottom: 1px solid #e2e8f0; position: static; background: #f8fafc;">Giá trị sau</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="field-name-cell">TrangThai</td>
-                <td>
-                  <span class="variation-value-pill before-value">{{ beforeStatus }}</span>
+                <td style="padding: 10px 14px; font-size: 13px; font-weight: 600; color: #0f172a; border-bottom: none;">TrangThai</td>
+                <td style="padding: 10px 14px; font-size: 13px; border-bottom: none;">
+                  <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #fee2e2; color: #991b1b;">{{ beforeStatus }}</span>
                 </td>
-                <td>
-                  <span class="variation-value-pill after-value">{{ afterStatus }}</span>
+                <td style="padding: 10px 14px; font-size: 13px; border-bottom: none;">
+                  <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #d1fae5; color: #065f46;">{{ afterStatus }}</span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-
-      <div class="modal-footer-custom">
-        <button class="btn-cancel-custom-primary" (click)="closeDetailModal()">Đóng cửa sổ</button>
-      </div>
+      
+      <footer class="modal-footer">
+        <button type="button" class="secondary-button" (click)="closeDetailModal()">Đóng cửa sổ</button>
+      </footer>
     </div>
   </div>
 </div>

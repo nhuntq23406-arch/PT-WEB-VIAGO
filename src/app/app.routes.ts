@@ -123,8 +123,8 @@ export const routes: Routes = [
       {
         path: 'baocao/hoan-huy',
         loadComponent: () =>
-          import('./featured/admin/bao-cao/hoan-huy/hoan-huy').then(
-            (m) => m.HoanHuyComponent
+          import('./featured/admin/bao-cao/bao-cao-hoan-huy/bao-cao-hoan-huy').then(
+            (m) => m.BaoCaoHoanHuyComponent
           ),
       },
       {

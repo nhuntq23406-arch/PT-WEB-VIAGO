@@ -1,833 +1,654 @@
-<div class="customer-container">
-  <!-- Breadcrumbs & Header Title -->
-  <div class="breadcrumbs-header">
-    <div class="breadcrumbs-path">Quản lý tài khoản / <span class="active-path">Danh sách tài khoản</span></div>
-    <h1 class="header-title">Danh sách tài khoản</h1>
-  </div>
-
-  <!-- Main Card Wrapper -->
-  <div class="main-card">
-    
-    <!-- Tab Bar -->
-    <div class="tabs-nav-bar">
-      <button class="tab-nav-btn" [class.active]="activeTab === 'all'" (click)="setTab('all')">Tất cả</button>
-      <button class="tab-nav-btn" [class.active]="activeTab === 'active'" (click)="setTab('active')">Đang hoạt động</button>
-      <button class="tab-nav-btn" [class.active]="activeTab === 'locked'" (click)="setTab('locked')">Đã khóa</button>
+<div class="ticket-list-page">
+  <section class="lookup-panel">
+    <div class="lookup-heading">
+      <div>
+        <span class="eyebrow">Quản lý hệ thống</span>
+        <h1>Quản lý tài khoản nhân viên</h1>
+      </div>
     </div>
 
-    <!-- Controls Bar -->
-    <div class="controls-bar-custom">
-      <!-- Search Input Box -->
-      <div class="search-input-wrapper-custom">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="search-icon-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-        </svg>
-        <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="applyFilter()" placeholder="Nhập ID/Tên truy cập/Tên hiển thị..." class="search-input-custom" />
-        <button *ngIf="searchQuery" class="clear-search-btn-custom" (click)="clearSearchQuery()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="clear-icon-custom">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
+    <!-- Summary Strip -->
+    <div class="lookup-summary-section" style="margin-bottom: 16px;">
+      <div class="summary-strip" style="grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%;">
+        <button type="button" class="summary-item" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+          <span>{{ employees.length }}</span>
+          <small>Tất cả tài khoản</small>
+        </button>
+        <button type="button" class="summary-item paid" [class.active]="activeTab === 'active'" (click)="setTab('active')">
+          <span>{{ activeCount }}</span>
+          <small>Đang hoạt động</small>
+        </button>
+        <button type="button" class="summary-item cancelled" [class.active]="activeTab === 'locked'" (click)="setTab('locked')">
+          <span>{{ lockedCount }}</span>
+          <small>Đã khóa</small>
         </button>
       </div>
+    </div>
 
-      <!-- Role Selector Dropdown -->
-      <div class="select-wrapper-custom">
-        <select class="role-select-custom" [(ngModel)]="searchRole" (change)="applyFilter()">
+    <!-- Filters Grid -->
+    <div class="filters-grid">
+      <!-- Search Input field -->
+      <div class="field">
+        <label>Tìm kiếm</label>
+        <div style="position: relative; display: flex; align-items: center; width: 100%;">
+          <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="applyFilter()" placeholder="Nhập ID/Tên truy cập/Tên hiển thị..." />
+          <button *ngIf="searchQuery" class="clear-search-btn-custom" (click)="clearSearchQuery()" style="position: absolute; right: 8px; border: none; background: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 14px; height: 14px;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Role selector dropdown field -->
+      <div class="field">
+        <label>Chức vụ mặc định</label>
+        <select [(ngModel)]="searchRole" (change)="applyFilter()">
           <option value="all">Tất cả chức vụ</option>
           <option value="Quản trị viên">Quản trị viên</option>
           <option value="Ban quản lý">Ban quản lý</option>
           <option value="Nhân viên điều phối">Nhân viên điều phối</option>
           <option value="Nhân viên bán vé">Nhân viên bán vé</option>
+          <option value="Nhân viên CSKH">Nhân viên CSKH</option>
         </select>
       </div>
 
-      <!-- Search Buttons -->
-      <button class="btn-search-custom" (click)="applyFilter()">Tìm kiếm</button>
-      
-      <!-- Add New Employee Button -->
-      <button class="btn-add-account-custom" (click)="openCreateModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="add-icon-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        <span>Thêm tài khoản mới</span>
-      </button>
+      <!-- Clear filter button field -->
+      <div class="field filter-action-field">
+        <label>&nbsp;</label>
+        <button type="button" class="secondary-button" (click)="clearAllFilters()" style="width: 100%; min-height: 40px;">Xóa bộ lọc</button>
+      </div>
+
+      <!-- Add New Account action button field -->
+      <div class="field filter-action-field">
+        <label>&nbsp;</label>
+        <button type="button" class="primary-blue-button" (click)="openCreateModal()" style="width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+          </svg>
+          <span>Thêm tài khoản mới</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-panel">
+    <div class="table-header">
+      <strong>Danh sách tài khoản nhân viên</strong>
+      <span>{{ filteredEmployees.length }} bản ghi</span>
     </div>
 
-    <!-- Table Container -->
-    <div class="table-responsive-custom">
-      <table class="data-table-custom">
+    <div class="table-scroll">
+      <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Tên truy cập</th>
-            <th>Tên hiển thị</th>
-            <th>Nhóm quyền hoạt động</th>
-            <th>Chức vụ mặc định</th>
-            <th>Trạng thái</th>
-            <th class="text-center">Chức năng</th>
+            <th style="width: 16%;">ID</th>
+            <th style="width: 12%;">Tên truy cập</th>
+            <th style="width: 20%;">Họ tên</th>
+            <th style="width: 18%;">Trạng thái</th>
+            <th style="width: 10%; text-align: center;">Số quyền</th>
+            <th style="width: 16%;">Chức vụ mặc định</th>
+            <th style="width: 8%; text-align: center; white-space: nowrap;">Chức năng</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of filteredEmployees">
-            <td class="employee-code-custom">
-              <span class="dot-indicator" [class.active]="item.status === 'Đang hoạt động'" [class.locked]="item.status === 'Đã khóa'"></span>
-              {{ item.code }}
+            <td class="name">
+              <strong style="color: #0f172a;">{{ item.code }}</strong>
             </td>
-            <td class="username-cell-custom">{{ item.username }}</td>
             <td>
-              <div class="employee-info-custom">
-                <div class="avatar-badge-custom">{{ item.initials }}</div>
-                <span class="employee-name-custom">{{ item.name }}</span>
+              <strong class="code" style="font-size: 13px;">{{ item.username }}</strong>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <img *ngIf="getEmployeeAvatar(item.code)" [src]="getEmployeeAvatar(item.code)" style="width: 32px; height: 32px; border-radius: 9999px; object-fit: cover; border: 1px solid #cbd5e1;" alt="avatar">
+                <div *ngIf="!getEmployeeAvatar(item.code)" class="avatar-badge" [style.background-color]="getEmployeeBgColor(item.code)" style="width: 32px; height: 32px; border-radius: 9999px; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; text-transform: uppercase;">
+                  {{ item.initials }}
+                </div>
+                <strong style="color: #0f172a; font-weight: 800;">{{ item.name }}</strong>
               </div>
             </td>
             <td>
-              <span class="role-group-badge">{{ item.roles }}</span>
-            </td>
-            <td>{{ item.defaultRole }}</td>
-            <td>
-              <span class="status-badge-custom" [class.active]="item.status === 'Đang hoạt động'" [class.locked]="item.status === 'Đã khóa'">
-                <svg *ngIf="item.status === 'Đang hoạt động'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="status-icon-svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-                <svg *ngIf="item.status === 'Đã khóa'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="status-icon-svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
-                </svg>
-                <span>{{ item.status }}</span>
+              <span class="badge payment {{ item.status === 'Đang hoạt động' ? 'da-thanh-toan' : 'cho-thanh-toan' }}">
+                {{ item.status }}
               </span>
             </td>
-            <td class="text-center">
-              <button class="btn-action-edit-custom" title="Chỉnh sửa tài khoản" (click)="openEditModal(item)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="edit-icon-svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.83 20.013a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                </svg>
+            <td style="text-align: center;">
+              <span class="badge payment da-thanh-toan" style="font-size: 12px; font-weight: 800; padding: 4px 10px; background-color: #eff6ff; color: #1E3A8A; border: 1px solid #dbe8ff;">
+                {{ item.permissions.length }}
+              </span>
+            </td>
+            <td>
+              <span style="font-size: 13px; color: #334155; font-weight: 500;">{{ item.defaultRole }}</span>
+            </td>
+            <td class="actions-col">
+              <button type="button" class="action-btn-icon edit" (click)="openEditModal(item)" title="Chỉnh sửa tài khoản">
+                <span class="material-symbols-outlined">edit_note</span>
               </button>
             </td>
           </tr>
           <!-- Empty State -->
           <tr *ngIf="filteredEmployees.length === 0">
-            <td colspan="7" class="empty-table-cell">
-              <div class="empty-state-container">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="empty-state-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                </svg>
-                <p class="empty-state-text">Không tìm thấy tài khoản nhân viên nào phù hợp.</p>
+            <td colspan="7">
+              <div class="empty-table">
+                <h3>Không tìm thấy tài khoản nhân viên nào phù hợp.</h3>
+                <p>Thử thay đổi từ khóa hoặc trạng thái lọc.</p>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-
-  </div>
+  </section>
 </div>
 
 <!-- ================= MODAL CHỈNH SỬA TÀI KHOẢN ================= -->
-<div class="modal-overlay-custom" *ngIf="showEditModal" (click)="closeEditModal()">
-  <div class="modal-container-custom" (click)="$event.stopPropagation()">
+<div class="modal-overlay" *ngIf="showEditModal && selectedEmployee" (click)="closeEditModal()">
+  <div class="edit-modal" (click)="$event.stopPropagation()">
     <!-- Modal Header -->
-    <div class="modal-header-custom">
-      <div class="header-user-profile-custom">
-        <h2 class="header-name-custom">Chỉnh sửa thông tin</h2>
-        <span class="header-status-badge-custom" [class.active]="selectedEmployee.status === 'Đang hoạt động'" [class.locked]="selectedEmployee.status === 'Đã khóa'">
-          <svg *ngIf="selectedEmployee.status === 'Đã khóa'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="badge-icon-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-          <svg *ngIf="selectedEmployee.status === 'Đang hoạt động'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="badge-icon-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-          <span>{{ selectedEmployee.status }}</span>
-        </span>
+    <header class="modal-header">
+      <div>
+        <h2>Chỉnh sửa thông tin - {{ selectedEmployee.code }}</h2>
       </div>
-      <button class="btn-close-modal-custom" (click)="closeEditModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="close-icon-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+      <button class="close-button" (click)="closeEditModal()">x</button>
+    </header>
 
     <!-- Tab Buttons (Horizontal at Top of Body) -->
-    <div class="modal-horizontal-tabs">
-      <button class="horizontal-tab-btn" [class.active]="editSubTab === 'profile'" (click)="setEditSubTab('profile')">Thông tin cơ bản</button>
-      <button class="horizontal-tab-btn" [class.active]="editSubTab === 'rbac'" (click)="setEditSubTab('rbac')">Phân quyền</button>
-      <button class="horizontal-tab-btn" [class.active]="editSubTab === 'contact'" (click)="setEditSubTab('contact')">Thông tin liên hệ</button>
+    <div class="modal-horizontal-tabs" style="display: flex; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+      <button type="button" class="horizontal-tab-btn" [class.active]="editSubTab === 'profile'" (click)="setEditSubTab('profile')" style="background: none; border: none; padding: 8px 12px; font-weight: 800; font-size: 13px; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent;" [style.border-bottom-color]="editSubTab === 'profile' ? '#1E3A8A' : 'transparent'" [style.color]="editSubTab === 'profile' ? '#1E3A8A' : '#64748b'">Thông tin cơ bản</button>
+      <button type="button" class="horizontal-tab-btn" [class.active]="editSubTab === 'rbac'" (click)="setEditSubTab('rbac')" style="background: none; border: none; padding: 8px 12px; font-weight: 800; font-size: 13px; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent;" [style.border-bottom-color]="editSubTab === 'rbac' ? '#1E3A8A' : 'transparent'" [style.color]="editSubTab === 'rbac' ? '#1E3A8A' : '#64748b'">Phân quyền</button>
+      <button type="button" class="horizontal-tab-btn" [class.active]="editSubTab === 'contact'" (click)="setEditSubTab('contact')" style="background: none; border: none; padding: 8px 12px; font-weight: 800; font-size: 13px; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent;" [style.border-bottom-color]="editSubTab === 'contact' ? '#1E3A8A' : 'transparent'" [style.color]="editSubTab === 'contact' ? '#1E3A8A' : '#64748b'">Thông tin liên hệ</button>
     </div>
 
     <!-- Modal Body Layout -->
-    <div class="modal-body-layout-custom single-panel-custom">
-      <!-- Main Content Panel Inside Modal -->
-      <div class="modal-main-scrollable-content">
-        
-        <!-- SUBTAB 1: Basic Info -->
-        <div class="content-panel-custom" *ngIf="editSubTab === 'profile'">
-          <form class="general-form-custom" (submit)="$event.preventDefault()">
-            <!-- Row 1: Username & Status -->
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Tên truy cập *</label>
-                <input type="text" [value]="selectedEmployee.username" class="form-input-custom input-disabled" disabled />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Trạng thái hoạt động</label>
-                <div class="status-activity-box" [class.active]="selectedEmployee.status === 'Đang hoạt động'" [class.locked]="selectedEmployee.status === 'Đã khóa'">
-                  <svg *ngIf="selectedEmployee.status === 'Đang hoạt động'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="status-check-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <svg *ngIf="selectedEmployee.status === 'Đã khóa'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="status-check-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
-                  </svg>
-                  <span>{{ selectedEmployee.status.toUpperCase() }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Row: Lock Reason (only shown when Locked) -->
-            <div class="form-field-item-custom" *ngIf="selectedEmployee.status === 'Đã khóa'">
-              <label class="form-label-custom label-locked-reason">Lý do khóa tài khoản</label>
-              <input type="text" class="form-input-custom reason-input-custom" disabled [value]="selectedEmployee.lockInfo?.reason || 'Chưa cập nhật lý do khóa'" />
-            </div>
-
-            <!-- Password Toggle Switch -->
-            <div class="password-toggle-row">
-              <label class="switch-control">
-                <input type="checkbox" [(ngModel)]="selectedEmployee.showPassword" name="showPassword" />
-                <span class="slider-round"></span>
-              </label>
-              <span class="switch-label-text">Hiển thị mật khẩu hiện tại</span>
-            </div>
-
-            <div class="password-input-reveal-container" *ngIf="selectedEmployee.showPassword">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Mật khẩu tài khoản</label>
-                <input type="text" [value]="selectedEmployee.username + '@2026'" class="form-input-custom input-disabled" disabled />
-              </div>
-            </div>
-
-            <!-- Row 3: First & Last Name -->
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Họ và tên đệm *</label>
-                <input type="text" [(ngModel)]="selectedEmployee.lastName" name="lastName" class="form-input-custom" />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Tên *</label>
-                <input type="text" [(ngModel)]="selectedEmployee.firstName" name="firstName" class="form-input-custom" />
-              </div>
-            </div>
-
-            <!-- Row 4: Display Name -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Tên hiển thị *</label>
-              <input type="text" [(ngModel)]="selectedEmployee.name" name="name" class="form-input-custom" />
-            </div>
-
-            <!-- Row 5: Position Dropdown -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Chức vụ mặc định *</label>
-              <select [(ngModel)]="selectedEmployee.defaultRole" name="defaultRole" class="form-select-custom">
-                <option value="Quản trị viên">Quản trị viên</option>
-                <option value="Ban quản lý">Ban quản lý</option>
-                <option value="Nhân viên điều phối">Nhân viên điều phối</option>
-                <option value="Nhân viên bán vé">Nhân viên bán vé</option>
-              </select>
-            </div>
-
-            <!-- Row 6: Gender & Birth Date -->
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Giới tính</label>
-                <select [(ngModel)]="selectedEmployee.gender" name="gender" class="form-select-custom">
-                  <option value="Nam">Nam</option>
-                  <option value="Nữ">Nữ</option>
-                  <option value="Khác">Khác</option>
-                </select>
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Ngày sinh</label>
-                <input type="date" [(ngModel)]="selectedEmployee.birthDate" name="birthDate" class="form-input-custom" />
-              </div>
-            </div>
-
-            <!-- Row 7: Avatar Upload -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Ảnh đại diện</label>
-              <div class="avatar-upload-box-custom">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="upload-icon-svg-large">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                </svg>
-                <span class="upload-text-custom">Tải ảnh lên</span>
-              </div>
-            </div>
-
-            <!-- Row 8: Notes -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Ghi chú</label>
-              <textarea [(ngModel)]="selectedEmployee.notes" name="notes" placeholder="Nhập ghi chú hoặc mô tả ngắn..." class="form-textarea-custom" rows="3"></textarea>
-            </div>
-          </form>
-        </div>
-
-        <!-- SUBTAB 2: Permissions (RBAC) -->
-        <div class="content-panel-custom" *ngIf="editSubTab === 'rbac'">
-          <div class="rbac-header-section">
-            <h3 class="rbac-section-title">Phân quyền chức năng linh hoạt (RBAC)</h3>
-            <p class="rbac-section-desc">Cấp quyền hạn thực tế cho tài khoản bằng cách chọn mẫu vai trò hoặc tự chọn các quyền cụ thể từng module.</p>
+    <div class="detail-modal-body" style="grid-template-columns: 1fr; display: flex; flex-direction: column; gap: 16px; padding: 20px; overflow-y: auto; max-height: 60vh;">
+      
+      <!-- SUBTAB 1: Basic Info -->
+      <div *ngIf="editSubTab === 'profile'" style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Row 1: Username & Status -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Tên truy cập *</label>
+            <input type="text" [value]="selectedEmployee.username" disabled style="background: #f1f5f9; color: #64748b; cursor: not-allowed;" />
           </div>
-
-          <!-- Suggested Roles -->
-          <div class="suggested-roles-box">
-            <span class="suggested-label">Mẫu vai trò gợi ý nhanh:</span>
-            <div class="suggested-pills-row">
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('admin')">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                </svg>
-                Quản trị viên
-              </button>
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('manager')">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h17.25c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125H3.375A1.125 1.125 0 0 1 2.25 16.875v-9.75Z" />
-                </svg>
-                Ban Quản lý
-              </button>
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('dispatcher')">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.129-1.125v-3.375c0-.621-.504-1.125-1.129-1.125h-9.75c-.621 0-1.125-.504-1.125-1.125v-9M3.375 3h1.5a1.125 1.125 0 0 1 1.125 1.125v1.5H19.5a1.125 1.125 0 0 1 1.125 1.125v3.75A3.375 3.375 0 0 1 17.25 12h-12" />
-                </svg>
-                Nhân viên Điều phối
-              </button>
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('cashier')">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-12h9c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-9a1.125 1.125 0 0 1-1.125-1.125v-9.75C6.375 6.504 6.879 6 7.5 6Z" />
-                </svg>
-                Nhân viên bán vé
-              </button>
-            </div>
-          </div>
-
-          <!-- Active Checked List Pills -->
-          <div class="active-granted-permissions-box">
-            <span class="granted-title">Các quyền đang được cấp (quan sát nhanh tại đây):</span>
-            <div class="granted-pills-row">
-              <span class="granted-pill" *ngFor="let key of selectedEmployee.permissions">
-                {{ getPermissionTitle(key) }}
-                <button class="remove-pill-btn" (click)="togglePermission(key)">×</button>
-              </span>
-              <span class="no-permissions-granted" *ngIf="selectedEmployee.permissions.length === 0">Chưa cấp quyền nào</span>
-            </div>
-          </div>
-
-          <!-- Search & Select All Header -->
-          <div class="rbac-search-header">
-            <div class="rbac-search-input-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="rbac-search-icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <input type="text" [(ngModel)]="permissionSearchQuery" placeholder="Tìm kiếm quyền hạn (ví dụ: bán vé, news...)" class="rbac-search-input" />
-            </div>
-
-            <label class="select-all-checkbox-wrapper">
-              <input type="checkbox" [checked]="isAllPermissionsChecked()" (change)="toggleSelectAllPermissions()" />
-              <span>Chọn tất cả</span>
-            </label>
-
-            <span class="checked-ratio-badge">Đã tích: {{ selectedEmployee.permissions.length }} / 9 quyền</span>
-          </div>
-
-          <!-- Accordion list of modules/permissions -->
-          <div class="accordion-permissions-list">
-            <div class="accordion-module-card" *ngFor="let mod of visiblePermissionModules">
-              <!-- Accordion Header -->
-              <div class="accordion-module-header" (click)="toggleModuleExpanded(mod)">
-                <div class="accordion-header-left">
-                  <input type="checkbox" [checked]="isPermissionChecked(mod.key)" (click)="$event.stopPropagation(); togglePermission(mod.key)" class="module-header-checkbox" />
-                  
-                  <!-- Icons based on key -->
-                  <svg *ngIf="mod.key === 'datve'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-12h9c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-9a1.125 1.125 0 0 1-1.125-1.125v-9.75C6.375 6.504 6.879 6 7.5 6Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'tintuc'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'dieuphoi'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.129-1.125v-3.375c0-.621-.504-1.125-1.129-1.125h-9.75c-.621 0-1.125-.504-1.125-1.125v-9M3.375 3h1.5a1.125 1.125 0 0 1 1.125 1.125v1.5H19.5a1.125 1.125 0 0 1 1.125 1.125v3.75A3.375 3.375 0 0 1 17.25 12h-12" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'khachhang'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766v-.109A12.318 12.318 0 0 1 8.624 19c2.33 0 4.512.645 6.374 1.766Zm-1.75-8.378c-.286-.307-.636-.567-1.033-.76a3.375 3.375 0 1 0-4.237 0 3.375 3.375 0 0 0-1.033.76M19 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'nhanvien'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'chinhsach'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.03 0 1.9.732 2.112 1.704m-12 17.5a2.25 2.25 0 0 1-2.25-2.25V4.664c0-1.135.845-2.098 1.976-2.192a48.4 48.4 0 0 1 5.802-.48M12 21H3.626M5.625 9h7.5" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'tukhoacam'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'baocao'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'nhatky'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                  </svg>
-                  
-                  <span class="module-title-text">{{ mod.title }}</span>
-                </div>
-
-                <div class="accordion-header-right">
-                  <span class="module-tally-pill" [class.tally-active]="isPermissionChecked(mod.key)">
-                    Đã tích: {{ isPermissionChecked(mod.key) ? '1' : '0' }} / 1
-                  </span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="accordion-chevron" [class.expanded]="mod.expanded">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Accordion Content -->
-              <div class="accordion-module-body" *ngIf="mod.expanded">
-                <div class="perm-desc-detail-card">
-                  <label class="perm-checkbox-row">
-                    <input type="checkbox" [checked]="isPermissionChecked(mod.key)" (change)="togglePermission(mod.key)" />
-                    <span class="perm-title-bold">{{ mod.title }}</span>
-                  </label>
-                  <p class="perm-text-desc">{{ mod.desc }}</p>
-                </div>
-              </div>
+          <div class="field">
+            <label>Trạng thái hoạt động</label>
+            <div style="display: flex; align-items: center; min-height: 40px; font-weight: 800; font-size: 13px;" [style.color]="selectedEmployee.status === 'Đang hoạt động' ? '#10B981' : '#EF4444'">
+              <span style="width: 8px; height: 8px; border-radius: 999px; background: currentColor; margin-right: 8px;"></span>
+              <span>{{ selectedEmployee.status.toUpperCase() }}</span>
             </div>
           </div>
         </div>
 
-        <!-- SUBTAB 3: Contact Info -->
-        <div class="content-panel-custom" *ngIf="editSubTab === 'contact'">
-          <form class="general-form-custom" (submit)="$event.preventDefault()">
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Số điện thoại *</label>
-                <input type="text" [(ngModel)]="selectedEmployee.phone" name="phone" class="form-input-custom" />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Địa chỉ Email</label>
-                <input type="email" [(ngModel)]="selectedEmployee.email" name="email" class="form-input-custom" />
-              </div>
-            </div>
-
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Địa chỉ thường trú</label>
-              <input type="text" [(ngModel)]="selectedEmployee.address" name="address" class="form-input-custom" placeholder="Nhập địa chỉ nhà..." />
-            </div>
-
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Ngày bắt đầu làm việc</label>
-                <input type="date" [value]="'2026-01-15'" class="form-input-custom" />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Loại hợp đồng lao động</label>
-                <select class="form-select-custom">
-                  <option selected>Hợp đồng không xác định thời hạn</option>
-                  <option>Hợp đồng xác định thời hạn 1 năm</option>
-                  <option>Hợp đồng thử việc</option>
-                </select>
-              </div>
-            </div>
-          </form>
+        <!-- Row: Lock Reason (only shown when Locked) -->
+        <div class="field" *ngIf="selectedEmployee.status === 'Đã khóa'">
+          <label style="color: #EF4444;">Lý do khóa tài khoản</label>
+          <input type="text" disabled [value]="selectedEmployee.lockInfo?.reason || 'Chưa cập nhật lý do khóa'" style="background: #fdf2f2; border-color: #fecaca; color: #b91c1c; cursor: not-allowed;" />
         </div>
 
+        <!-- Password Toggle Switch -->
+        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+          <input type="checkbox" [(ngModel)]="selectedEmployee.showPassword" name="showPassword" id="editShowPassword" style="width: 16px; height: 16px; cursor: pointer;" />
+          <label for="editShowPassword" style="font-size: 13px; font-weight: 700; color: #475569; cursor: pointer;">Hiển thị mật khẩu hiện tại</label>
+        </div>
+
+        <div class="field" *ngIf="selectedEmployee.showPassword">
+          <label>Mật khẩu tài khoản</label>
+          <input type="text" [value]="selectedEmployee.username + '@2026'" disabled style="background: #f1f5f9; color: #64748b; cursor: not-allowed;" />
+        </div>
+
+        <!-- Row 3: First & Last Name -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Họ và tên đệm *</label>
+            <input type="text" [(ngModel)]="selectedEmployee.lastName" name="lastName" />
+          </div>
+          <div class="field">
+            <label>Tên *</label>
+            <input type="text" [(ngModel)]="selectedEmployee.firstName" name="firstName" />
+          </div>
+        </div>
+
+        <!-- Row 4: Display Name -->
+        <div class="field">
+          <label>Tên hiển thị *</label>
+          <input type="text" [(ngModel)]="selectedEmployee.name" name="name" />
+        </div>
+
+        <!-- Row 5: Position Dropdown -->
+        <div class="field">
+          <label>Chức vụ mặc định *</label>
+          <select [(ngModel)]="selectedEmployee.defaultRole" name="defaultRole">
+            <option value="Quản trị viên">Quản trị viên</option>
+            <option value="Ban quản lý">Ban quản lý</option>
+            <option value="Nhân viên điều phối">Nhân viên điều phối</option>
+            <option value="Nhân viên bán vé">Nhân viên bán vé</option>
+            <option value="Nhân viên CSKH">Nhân viên CSKH</option>
+          </select>
+        </div>
+
+        <!-- Row 6: Gender & Birth Date -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Giới tính</label>
+            <select [(ngModel)]="selectedEmployee.gender" name="gender">
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Ngày sinh</label>
+            <input type="date" [(ngModel)]="selectedEmployee.birthDate" name="birthDate" />
+          </div>
+        </div>
+
+        <!-- Row 7: Avatar Upload -->
+        <div class="field">
+          <label>Ảnh đại diện</label>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <!-- Avatar Display -->
+            <img *ngIf="getEmployeeAvatar(selectedEmployee.code)" [src]="getEmployeeAvatar(selectedEmployee.code)" style="width: 80px; height: 80px; border-radius: 9999px; object-fit: cover; border: 2px solid #e2e8f0;" alt="avatar">
+            <div *ngIf="!getEmployeeAvatar(selectedEmployee.code)" class="avatar-badge" [style.background-color]="getEmployeeBgColor(selectedEmployee.code)" style="width: 80px; height: 80px; border-radius: 9999px; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; text-transform: uppercase;">
+              {{ selectedEmployee.initials }}
+            </div>
+
+            <!-- Upload Box -->
+            <div style="width: 80px; height: 80px; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; cursor: pointer;">
+              <span class="material-symbols-outlined" style="font-size: 20px; color: #64748b;">cloud_upload</span>
+              <span style="font-size: 10px; font-weight: 800; color: #64748b; margin-top: 2px; text-align: center;">Tải ảnh</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 8: Notes -->
+        <div class="field">
+          <label>Ghi chú</label>
+          <textarea [(ngModel)]="selectedEmployee.notes" name="notes" placeholder="Nhập ghi chú hoặc mô tả ngắn..." rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- SUBTAB 2: Permissions (RBAC) -->
+      <div *ngIf="editSubTab === 'rbac'" style="display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 900; color: #1e3a8a; text-transform: uppercase; margin-bottom: 4px;">Phân quyền chức năng linh hoạt (RBAC)</h3>
+          <p style="font-size: 12px; color: #64748b; margin: 0;">Cấp quyền hạn thực tế cho tài khoản bằng cách chọn mẫu vai trò hoặc tự chọn các quyền cụ thể từng module.</p>
+        </div>
+
+        <!-- Suggested Roles -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <strong style="font-size: 12px; color: #475569; display: block; margin-bottom: 8px;">Mẫu vai trò gợi ý nhanh:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('admin')" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Quản trị viên</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('manager')" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Ban Quản lý</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('dispatcher')" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Nhân viên Điều phối</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('cashier')" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Nhân viên bán vé</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('cskh')" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Nhân viên CSKH</button>
+          </div>
+        </div>
+
+        <!-- Active Checked List Pills -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <strong style="font-size: 12px; color: #475569; display: block; margin-bottom: 8px;">Các quyền đang được cấp:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span *ngFor="let key of selectedEmployee.permissions" class="badge payment da-thanh-toan" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;">
+              {{ getPermissionTitle(key) }}
+              <button type="button" (click)="togglePermission(key)" style="border: none; background: none; color: inherit; cursor: pointer; font-weight: 900; font-size: 14px; line-height: 1; padding: 0;">×</button>
+            </span>
+            <span *ngIf="selectedEmployee.permissions.length === 0" style="font-size: 12px; color: #64748b; font-style: italic;">Chưa cấp quyền nào</span>
+          </div>
+        </div>
+
+        <!-- Search & Select All Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+          <div class="field" style="flex: 1;">
+            <input type="text" [(ngModel)]="permissionSearchQuery" placeholder="Tìm kiếm quyền hạn (ví dụ: bán vé, news...)" style="min-height: 36px; padding: 6px 10px; font-size: 13px;" />
+          </div>
+          <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: #475569; cursor: pointer; user-select: none;">
+            <input type="checkbox" [checked]="isAllPermissionsChecked()" (change)="toggleSelectAllPermissions()" style="width: 16px; height: 16px;" />
+            <span>Chọn tất cả</span>
+          </label>
+          <span class="badge payment da-thanh-toan">Đã tích: {{ selectedEmployee.permissions.length }} / {{ permissionModules.length }} quyền</span>
+        </div>
+
+        <!-- Accordion list of modules/permissions -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div *ngFor="let mod of visiblePermissionModules" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #ffffff;">
+            <!-- Header -->
+            <div (click)="toggleModuleExpanded(mod)" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f8fafc; cursor: pointer; user-select: none;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" [checked]="isPermissionChecked(mod.key)" (click)="$event.stopPropagation(); togglePermission(mod.key)" style="width: 16px; height: 16px;" />
+                <strong style="font-size: 13px; color: #0f172a;">{{ mod.title }}</strong>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11px; color: #64748b; font-weight: 800;">Đã tích: {{ isPermissionChecked(mod.key) ? '1' : '0' }} / 1</span>
+                <span class="material-symbols-outlined" style="font-size: 18px; color: #64748b; transition: transform 0.2s;" [style.transform]="mod.expanded ? 'rotate(180deg)' : 'none'">expand_more</span>
+              </div>
+            </div>
+            <!-- Body -->
+            <div *ngIf="mod.expanded" style="padding: 12px 14px; border-top: 1px solid #e2e8f0; background: #ffffff; font-size: 13px; color: #475569; line-height: 1.5;">
+              {{ mod.desc }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 3: Contact Info -->
+      <div *ngIf="editSubTab === 'contact'" style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Số điện thoại *</label>
+            <input type="text" [(ngModel)]="selectedEmployee.phone" name="phone" />
+          </div>
+          <div class="field">
+            <label>Địa chỉ Email</label>
+            <input type="email" [(ngModel)]="selectedEmployee.email" name="email" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Địa chỉ thường trú</label>
+          <input type="text" [(ngModel)]="selectedEmployee.address" name="address" placeholder="Nhập địa chỉ nhà..." />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Ngày bắt đầu làm việc</label>
+            <input type="date" [value]="'2026-01-15'" />
+          </div>
+          <div class="field">
+            <label>Loại hợp đồng lao động</label>
+            <select>
+              <option selected>Hợp đồng không xác định thời hạn</option>
+              <option>Hợp đồng xác định thời hạn 1 năm</option>
+              <option>Hợp đồng thử việc</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Modal Footer Controls -->
-    <div class="modal-footer-custom">
+    <footer class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
       <!-- Danger Lock/Unlock action -->
-      <button class="btn-lock-account-custom" [class.btn-unlock]="selectedEmployee.status === 'Đã khóa'" (click)="toggleEmployeeStatus()">
-        <svg *ngIf="selectedEmployee.status === 'Đang hoạt động'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="lock-btn-icon-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-        </svg>
-        <svg *ngIf="selectedEmployee.status === 'Đã khóa'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="lock-btn-icon-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-        </svg>
-        <span>{{ selectedEmployee.status === 'Đang hoạt động' ? 'Khóa tài khoản' : 'Mở khóa tài khoản' }}</span>
+      <button type="button" class="danger-button" (click)="toggleEmployeeStatus()">
+        {{ selectedEmployee.status === 'Đang hoạt động' ? 'Khóa tài khoản' : 'Mở khóa tài khoản' }}
       </button>
 
       <!-- Standard Save/Close actions -->
-      <div class="footer-right-buttons">
-        <button class="btn-cancel-modal-custom" (click)="closeEditModal()">Hủy</button>
-        <button class="btn-save-modal-custom" (click)="saveEmployeeChanges()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="save-icon-btn">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-          </svg>
-          <span>Lưu</span>
-        </button>
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="secondary-button" (click)="closeEditModal()">Hủy</button>
+        <button type="button" class="primary-button" (click)="saveEmployeeChanges()">Lưu thay đổi</button>
       </div>
-    </div>
+    </footer>
   </div>
 </div>
 
 <!-- ================= MODAL XÁC NHẬN KHÓA TÀI KHOẢN ================= -->
-<div class="modal-overlay-sub-custom" *ngIf="showLockConfirmModal" (click)="closeLockConfirmModal()">
-  <div class="modal-sub-container-custom" (click)="$event.stopPropagation()">
-    <div class="sub-modal-header-custom">
-      <div class="warning-icon-wrapper-custom">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="warning-icon-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-        </svg>
-      </div>
-      <h3 class="sub-modal-title-custom">Xác nhận khóa tài khoản nhân viên?</h3>
-      <p class="sub-modal-subtitle-custom">
+<div class="modal-overlay top-layer" *ngIf="showLockConfirmModal" (click)="closeLockConfirmModal()">
+  <div class="confirm-modal" (click)="$event.stopPropagation()">
+    <header class="modal-header cancel-header">
+      <h2>Xác nhận khóa tài khoản?</h2>
+      <button type="button" class="close-button" (click)="closeLockConfirmModal()">x</button>
+    </header>
+    <div class="confirm-body" style="text-align: left;">
+      <p style="font-size: 14px; color: #334155; margin-bottom: 12px;">
         Tài khoản <strong>{{ selectedEmployee?.name }}</strong> sẽ bị vô hiệu hóa quyền đăng nhập hệ thống ngay lập tức.
       </p>
-    </div>
 
-    <div class="sub-modal-body-custom">
-      <label class="sub-modal-label-custom">Lý do khóa tài khoản</label>
-      <textarea [(ngModel)]="lockReason" placeholder="Nhập lý do khóa tài khoản nhân viên này (không bắt buộc)..." class="sub-modal-textarea-custom" rows="3"></textarea>
+      <div class="field">
+        <label>Lý do khóa tài khoản</label>
+        <textarea [(ngModel)]="lockReason" placeholder="Nhập lý do khóa tài khoản nhân viên này (không bắt buộc)..." rows="3"></textarea>
+      </div>
     </div>
-
-    <div class="sub-modal-footer-custom">
-      <button class="btn-sub-cancel-custom" (click)="closeLockConfirmModal()">Hủy thao tác</button>
-      <button class="btn-sub-confirm-custom" (click)="confirmLockEmployee()">Xác nhận khóa</button>
-    </div>
+    <footer class="modal-footer">
+      <button type="button" class="secondary-button" (click)="closeLockConfirmModal()">Hủy thao tác</button>
+      <button type="button" class="danger-button solid" (click)="confirmLockEmployee()">Xác nhận khóa</button>
+    </footer>
   </div>
 </div>
 
 <!-- ================= MODAL THÊM MỚI TÀI KHOẢN ================= -->
-<div class="modal-overlay-custom" *ngIf="showCreateModal" (click)="closeCreateModal()">
-  <div class="modal-container-custom" (click)="$event.stopPropagation()">
+<div class="modal-overlay" *ngIf="showCreateModal" (click)="closeCreateModal()">
+  <div class="edit-modal" (click)="$event.stopPropagation()">
     <!-- Modal Header -->
-    <div class="modal-header-custom">
-      <div class="header-user-profile-custom">
-        <h2 class="header-name-custom">Tạo tài khoản mới</h2>
-        <span class="header-status-badge-custom active">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="badge-icon-svg">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-          <span>Đang hoạt động</span>
-        </span>
+    <header class="modal-header">
+      <div>
+        <h2>Tạo tài khoản mới</h2>
       </div>
-      <button class="btn-close-modal-custom" (click)="closeCreateModal()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="close-icon-svg">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+      <button class="close-button" (click)="closeCreateModal()">x</button>
+    </header>
 
     <!-- Tab Buttons (Horizontal at Top of Body) -->
-    <div class="modal-horizontal-tabs">
-      <button class="horizontal-tab-btn" [class.active]="createSubTab === 'profile'" (click)="setCreateSubTab('profile')">Thông tin cơ bản</button>
-      <button class="horizontal-tab-btn" [class.active]="createSubTab === 'rbac'" (click)="setCreateSubTab('rbac')">Phân quyền</button>
-      <button class="horizontal-tab-btn" [class.active]="createSubTab === 'contact'" (click)="setCreateSubTab('contact')">Thông tin liên hệ</button>
+    <div class="modal-horizontal-tabs" style="display: flex; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+      <button type="button" class="horizontal-tab-btn" [class.active]="createSubTab === 'profile'" (click)="setCreateSubTab('profile')" style="background: none; border: none; padding: 8px 12px; font-weight: 800; font-size: 13px; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent;" [style.border-bottom-color]="createSubTab === 'profile' ? '#1E3A8A' : 'transparent'" [style.color]="createSubTab === 'profile' ? '#1E3A8A' : '#64748b'">Thông tin cơ bản</button>
+      <button type="button" class="horizontal-tab-btn" [class.active]="createSubTab === 'rbac'" (click)="setCreateSubTab('rbac')" style="background: none; border: none; padding: 8px 12px; font-weight: 800; font-size: 13px; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent;" [style.border-bottom-color]="createSubTab === 'rbac' ? '#1E3A8A' : 'transparent'" [style.color]="createSubTab === 'rbac' ? '#1E3A8A' : '#64748b'">Phân quyền</button>
+      <button type="button" class="horizontal-tab-btn" [class.active]="createSubTab === 'contact'" (click)="setCreateSubTab('contact')" style="background: none; border: none; padding: 8px 12px; font-weight: 800; font-size: 13px; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent;" [style.border-bottom-color]="createSubTab === 'contact' ? '#1E3A8A' : 'transparent'" [style.color]="createSubTab === 'contact' ? '#1E3A8A' : '#64748b'">Thông tin liên hệ</button>
     </div>
 
     <!-- Modal Body Layout -->
-    <div class="modal-body-layout-custom single-panel-custom">
-      <!-- Main Content Panel Inside Modal -->
-      <div class="modal-main-scrollable-content">
-        
-        <!-- SUBTAB 1: Basic Info -->
-        <div class="content-panel-custom" *ngIf="createSubTab === 'profile'">
-          <form class="general-form-custom" (submit)="$event.preventDefault()">
-            <!-- Row 1: Username & Status -->
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Tên truy cập *</label>
-                <input type="text" [(ngModel)]="newEmployee.username" name="username" class="form-input-custom" placeholder="Nhập tên truy cập..." />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Trạng thái hoạt động</label>
-                <div class="status-activity-box active">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="status-check-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  <span>ĐANG HOẠT ĐỘNG</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Password Toggle Switch -->
-            <div class="password-toggle-row">
-              <label class="switch-control">
-                <input type="checkbox" [(ngModel)]="newEmployee.showPassword" name="showPassword" />
-                <span class="slider-round"></span>
-              </label>
-              <span class="switch-label-text">Hiển thị mật khẩu</span>
-            </div>
-
-            <div class="password-input-reveal-container" *ngIf="newEmployee.showPassword">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Mật khẩu tài khoản *</label>
-                <input type="text" [(ngModel)]="newEmployee.password" name="password" class="form-input-custom" placeholder="Nhập mật khẩu..." />
-              </div>
-            </div>
-            <div class="password-input-reveal-container" *ngIf="!newEmployee.showPassword">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Mật khẩu tài khoản *</label>
-                <input type="password" [(ngModel)]="newEmployee.password" name="password" class="form-input-custom" placeholder="Nhập mật khẩu..." />
-              </div>
-            </div>
-
-            <!-- Row 3: Name split -->
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Họ và tên đệm *</label>
-                <input type="text" [(ngModel)]="newEmployee.lastName" name="lastName" class="form-input-custom" placeholder="Ví dụ: Nguyễn Văn" />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Tên *</label>
-                <input type="text" [(ngModel)]="newEmployee.firstName" name="firstName" class="form-input-custom" placeholder="Ví dụ: A" />
-              </div>
-            </div>
-
-            <!-- Row 4: Display Name -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Tên hiển thị *</label>
-              <input type="text" [(ngModel)]="newEmployee.name" name="name" class="form-input-custom" placeholder="Ví dụ: Nguyễn Văn A" />
-            </div>
-
-            <!-- Row 5: Role Select -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Chức vụ mặc định *</label>
-              <select [(ngModel)]="newEmployee.defaultRole" name="defaultRole" class="form-select-custom" (change)="updateCreateRolesCount()">
-                <option value="Quản trị viên">Quản trị viên</option>
-                <option value="Ban quản lý">Ban quản lý</option>
-                <option value="Nhân viên điều phối">Nhân viên điều phối</option>
-                <option value="Nhân viên bán vé">Nhân viên bán vé</option>
-              </select>
-            </div>
-
-            <!-- Row 6: Gender & Birth Date -->
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Giới tính</label>
-                <select [(ngModel)]="newEmployee.gender" name="gender" class="form-select-custom">
-                  <option value="Nam">Nam</option>
-                  <option value="Nữ">Nữ</option>
-                  <option value="Khác">Khác</option>
-                </select>
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Ngày sinh</label>
-                <input type="date" [(ngModel)]="newEmployee.birthDate" name="birthDate" class="form-input-custom" />
-              </div>
-            </div>
-
-            <!-- Row 7: Avatar Upload -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Ảnh đại diện</label>
-              <div class="avatar-upload-box-custom">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="upload-icon-svg-large">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                </svg>
-                <span class="upload-text-custom">Tải ảnh lên</span>
-              </div>
-            </div>
-
-            <!-- Row 8: Notes -->
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Ghi chú</label>
-              <textarea [(ngModel)]="newEmployee.notes" name="notes" placeholder="Nhập ghi chú hoặc mô tả ngắn..." class="form-textarea-custom"></textarea>
-            </div>
-          </form>
-        </div>
-
-        <!-- SUBTAB 2: Phân quyền (RBAC) -->
-        <div class="content-panel-custom" *ngIf="createSubTab === 'rbac'">
-          <div class="rbac-header-section">
-            <h3 class="rbac-section-title">Phân quyền chức năng linh hoạt (RBAC)</h3>
-            <p class="rbac-section-desc">Cấp quyền hạn thực tế cho tài khoản bằng cách chọn mẫu vai trò hoặc tự chọn các quyền cụ thể từng module.</p>
+    <div class="detail-modal-body" style="grid-template-columns: 1fr; display: flex; flex-direction: column; gap: 16px; padding: 20px; overflow-y: auto; max-height: 60vh;">
+      
+      <!-- SUBTAB 1: Basic Info -->
+      <div *ngIf="createSubTab === 'profile'" style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Row 1: Username & Status -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Tên truy cập *</label>
+            <input type="text" [(ngModel)]="newEmployee.username" name="username" placeholder="Nhập tên truy cập..." />
           </div>
-
-          <!-- Suggested Roles -->
-          <div class="suggested-roles-box">
-            <span class="suggested-label">Mẫu vai trò gợi ý nhanh:</span>
-            <div class="suggested-pills-row">
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('admin', true)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                </svg>
-                Quản trị viên
-              </button>
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('manager', true)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h17.25c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125H3.375A1.125 1.125 0 0 1 2.25 16.875v-9.75Z" />
-                </svg>
-                Ban Quản lý
-              </button>
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('dispatcher', true)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.129-1.125v-3.375c0-.621-.504-1.125-1.129-1.125h-9.75c-.621 0-1.125-.504-1.125-1.125v-9M3.375 3h1.5a1.125 1.125 0 0 1 1.125 1.125v1.5H19.5a1.125 1.125 0 0 1 1.125 1.125v3.75A3.375 3.375 0 0 1 17.25 12h-12" />
-                </svg>
-                Nhân viên Điều phối
-              </button>
-              <button class="suggested-pill-btn" (click)="applyRoleTemplate('cashier', true)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="pill-icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-12h9c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-9a1.125 1.125 0 0 1-1.125-1.125v-9.75C6.375 6.504 6.879 6 7.5 6Z" />
-                </svg>
-                Nhân viên bán vé
-              </button>
-            </div>
-          </div>
-
-          <!-- Active Checked List Pills -->
-          <div class="active-granted-permissions-box">
-            <span class="granted-title">Các quyền đang được cấp (quan sát nhanh tại đây):</span>
-            <div class="granted-pills-row">
-              <span class="granted-pill" *ngFor="let key of newEmployee.permissions">
-                {{ getPermissionTitle(key) }}
-                <button class="remove-pill-btn" (click)="togglePermission(key, true)">×</button>
-              </span>
-              <span class="no-permissions-granted" *ngIf="!newEmployee.permissions || newEmployee.permissions.length === 0">Chưa cấp quyền nào</span>
-            </div>
-          </div>
-
-          <!-- Search & Select All Header -->
-          <div class="rbac-search-header">
-            <div class="rbac-search-input-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="rbac-search-icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              <input type="text" [(ngModel)]="permissionSearchQuery" placeholder="Tìm kiếm quyền hạn (ví dụ: bán vé, news...)" class="rbac-search-input" />
-            </div>
-
-            <label class="select-all-checkbox-wrapper">
-              <input type="checkbox" [checked]="isAllPermissionsChecked(true)" (change)="toggleSelectAllPermissions(true)" />
-              <span>Chọn tất cả</span>
-            </label>
-
-            <span class="checked-ratio-badge">Đã tích: {{ newEmployee.permissions?.length || 0 }} / 9 quyền</span>
-          </div>
-
-          <!-- Accordion list of modules/permissions -->
-          <div class="accordion-permissions-list">
-            <div class="accordion-module-card" *ngFor="let mod of visiblePermissionModules">
-              <!-- Accordion Header -->
-              <div class="accordion-module-header" (click)="toggleModuleExpanded(mod)">
-                <div class="accordion-header-left">
-                  <input type="checkbox" [checked]="isPermissionChecked(mod.key, true)" (click)="$event.stopPropagation(); togglePermission(mod.key, true)" class="module-header-checkbox" />
-                  
-                  <!-- Icons based on key -->
-                  <svg *ngIf="mod.key === 'datve'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-12h9c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-9a1.125 1.125 0 0 1-1.125-1.125v-9.75C6.375 6.504 6.879 6 7.5 6Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'tintuc'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'dieuphoi'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.129-1.125v-3.375c0-.621-.504-1.125-1.129-1.125h-9.75c-.621 0-1.125-.504-1.125-1.125v-9M3.375 3h1.5a1.125 1.125 0 0 1 1.125 1.125v1.5H19.5a1.125 1.125 0 0 1 1.125 1.125v3.75A3.375 3.375 0 0 1 17.25 12h-12" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'khachhang'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766v-.109A12.318 12.318 0 0 1 8.624 19c2.33 0 4.512.645 6.374 1.766Zm-1.75-8.378c-.286-.307-.636-.567-1.033-.76a3.375 3.375 0 1 0-4.237 0 3.375 3.375 0 0 0-1.033.76M19 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'nhanvien'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'chinhsach'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.03 0 1.9.732 2.112 1.704m-12 17.5a2.25 2.25 0 0 1-2.25-2.25V4.664c0-1.135.845-2.098 1.976-2.192a48.4 48.4 0 0 1 5.802-.48M12 21H3.626M5.625 9h7.5" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'tukhoacam'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'baocao'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
-                  </svg>
-                  <svg *ngIf="mod.key === 'nhatky'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="module-icon">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                  </svg>
-
-                  <span class="module-title-text">{{ mod.title }}</span>
-                </div>
-
-                <div class="accordion-header-right">
-                  <span class="module-tally-pill" [class.tally-active]="isPermissionChecked(mod.key, true)">
-                    Đã tích: {{ isPermissionChecked(mod.key, true) ? '1' : '0' }} / 1
-                  </span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="accordion-chevron" [class.expanded]="mod.expanded">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </div>
-              </div>
-
-              <!-- Accordion Content -->
-              <div class="accordion-module-body" *ngIf="mod.expanded">
-                <div class="perm-desc-detail-card">
-                  <label class="perm-checkbox-row">
-                    <input type="checkbox" [checked]="isPermissionChecked(mod.key, true)" (change)="togglePermission(mod.key, true)" />
-                    <span class="perm-title-bold">{{ mod.title }}</span>
-                  </label>
-                  <p class="perm-text-desc">{{ mod.desc }}</p>
-                </div>
-              </div>
+          <div class="field">
+            <label>Trạng thái hoạt động</label>
+            <div style="display: flex; align-items: center; min-height: 40px; font-weight: 800; font-size: 13px; color: #10B981;">
+              <span style="width: 8px; height: 8px; border-radius: 999px; background: currentColor; margin-right: 8px;"></span>
+              <span>ĐANG HOẠT ĐỘNG</span>
             </div>
           </div>
         </div>
 
-        <!-- SUBTAB 3: Contact Info -->
-        <div class="content-panel-custom" *ngIf="createSubTab === 'contact'">
-          <form class="general-form-custom" (submit)="$event.preventDefault()">
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Số điện thoại liên hệ *</label>
-                <input type="text" [(ngModel)]="newEmployee.phone" name="phone" class="form-input-custom" placeholder="Nhập số điện thoại di động..." />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Địa chỉ Email</label>
-                <input type="email" [(ngModel)]="newEmployee.email" name="email" class="form-input-custom" placeholder="Nhập địa chỉ thư điện tử..." />
-              </div>
-            </div>
-
-            <div class="form-field-item-custom">
-              <label class="form-label-custom">Địa chỉ thường trú</label>
-              <input type="text" [(ngModel)]="newEmployee.address" name="address" class="form-input-custom" placeholder="Nhập địa chỉ nhà..." />
-            </div>
-
-            <div class="form-fields-grid-custom">
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Ngày bắt đầu làm việc</label>
-                <input type="date" class="form-input-custom" />
-              </div>
-              <div class="form-field-item-custom">
-                <label class="form-label-custom">Loại hợp đồng lao động</label>
-                <select class="form-select-custom">
-                  <option selected>Hợp đồng không xác định thời hạn</option>
-                  <option>Hợp đồng xác định thời hạn 1 năm</option>
-                  <option>Hợp đồng thử việc</option>
-                </select>
-              </div>
-            </div>
-          </form>
+        <!-- Password Toggle Switch -->
+        <div style="display: flex; align-items: center; gap: 8px; margin: 8px 0;">
+          <input type="checkbox" [(ngModel)]="newEmployee.showPassword" name="showPassword" id="createShowPassword" style="width: 16px; height: 16px; cursor: pointer;" />
+          <label for="createShowPassword" style="font-size: 13px; font-weight: 700; color: #475569; cursor: pointer;">Hiển thị mật khẩu</label>
         </div>
 
+        <div class="field" *ngIf="newEmployee.showPassword">
+          <label>Mật khẩu tài khoản *</label>
+          <input type="text" [(ngModel)]="newEmployee.password" name="password" placeholder="Nhập mật khẩu..." />
+        </div>
+        <div class="field" *ngIf="!newEmployee.showPassword">
+          <label>Mật khẩu tài khoản *</label>
+          <input type="password" [(ngModel)]="newEmployee.password" name="password" placeholder="Nhập mật khẩu..." />
+        </div>
+
+        <!-- Row 3: Name split -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Họ và tên đệm *</label>
+            <input type="text" [(ngModel)]="newEmployee.lastName" name="lastName" placeholder="Ví dụ: Nguyễn Văn" />
+          </div>
+          <div class="field">
+            <label>Tên *</label>
+            <input type="text" [(ngModel)]="newEmployee.firstName" name="firstName" placeholder="Ví dụ: A" />
+          </div>
+        </div>
+
+        <!-- Row 4: Display Name -->
+        <div class="field">
+          <label>Tên hiển thị *</label>
+          <input type="text" [(ngModel)]="newEmployee.name" name="name" placeholder="Ví dụ: Nguyễn Văn A" />
+        </div>
+
+        <!-- Row 5: Role Select -->
+        <div class="field">
+          <label>Chức vụ mặc định *</label>
+          <select [(ngModel)]="newEmployee.defaultRole" name="defaultRole" (change)="updateCreateRolesCount()">
+            <option value="Quản trị viên">Quản trị viên</option>
+            <option value="Ban quản lý">Ban quản lý</option>
+            <option value="Nhân viên điều phối">Nhân viên điều phối</option>
+            <option value="Nhân viên bán vé">Nhân viên bán vé</option>
+            <option value="Nhân viên CSKH">Nhân viên CSKH</option>
+          </select>
+        </div>
+
+        <!-- Row 6: Gender & Birth Date -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Giới tính</label>
+            <select [(ngModel)]="newEmployee.gender" name="gender">
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Ngày sinh</label>
+            <input type="date" [(ngModel)]="newEmployee.birthDate" name="birthDate" />
+          </div>
+        </div>
+
+        <!-- Row 7: Avatar Upload -->
+        <div class="field">
+          <label>Ảnh đại diện</label>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="avatar-badge" style="width: 80px; height: 80px; border-radius: 9999px; background-color: #cbd5e1; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; text-transform: uppercase;">
+              {{ newEmployee.initials || 'NV' }}
+            </div>
+
+            <!-- Upload Box -->
+            <div style="width: 80px; height: 80px; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; cursor: pointer;">
+              <span class="material-symbols-outlined" style="font-size: 20px; color: #64748b;">cloud_upload</span>
+              <span style="font-size: 10px; font-weight: 800; color: #64748b; margin-top: 2px; text-align: center;">Tải ảnh</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 8: Notes -->
+        <div class="field">
+          <label>Ghi chú</label>
+          <textarea [(ngModel)]="newEmployee.notes" name="notes" placeholder="Nhập ghi chú..." rows="3"></textarea>
+        </div>
       </div>
-    </div>
 
-    <!-- Modal Footer Controls -->
-    <div class="modal-footer-custom justify-end-custom">
-      <button class="btn-cancel-modal-custom" (click)="closeCreateModal()">Hủy</button>
-      <button class="btn-save-modal-custom" (click)="createEmployee()">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="save-icon-btn">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-        </svg>
-        <span>Tạo tài khoản</span>
-      </button>
+      <!-- SUBTAB 2: Permissions (RBAC) -->
+      <div *ngIf="createSubTab === 'rbac'" style="display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 900; color: #1e3a8a; text-transform: uppercase; margin-bottom: 4px;">Phân quyền chức năng linh hoạt (RBAC)</h3>
+          <p style="font-size: 12px; color: #64748b; margin: 0;">Cấp quyền hạn thực tế cho tài khoản bằng cách chọn mẫu vai trò hoặc tự chọn các quyền cụ thể từng module.</p>
+        </div>
+
+        <!-- Suggested Roles -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <strong style="font-size: 12px; color: #475569; display: block; margin-bottom: 8px;">Mẫu vai trò gợi ý nhanh:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('admin', true)" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Quản trị viên</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('manager', true)" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Ban Quản lý</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('dispatcher', true)" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Nhân viên Điều phối</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('cashier', true)" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Nhân viên bán vé</button>
+            <button type="button" class="secondary-button" (click)="applyRoleTemplate('cskh', true)" style="min-height: 32px; padding: 6px 12px; font-size: 12px;">Nhân viên CSKH</button>
+          </div>
+        </div>
+
+        <!-- Active Checked List Pills -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+          <strong style="font-size: 12px; color: #475569; display: block; margin-bottom: 8px;">Các quyền đang được cấp:</strong>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span *ngFor="let key of newEmployee.permissions" class="badge payment da-thanh-toan" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;">
+              {{ getPermissionTitle(key) }}
+              <button type="button" (click)="togglePermission(key, true)" style="border: none; background: none; color: inherit; cursor: pointer; font-weight: 900; font-size: 14px; line-height: 1; padding: 0;">×</button>
+            </span>
+            <span *ngIf="!newEmployee.permissions || newEmployee.permissions.length === 0" style="font-size: 12px; color: #64748b; font-style: italic;">Chưa cấp quyền nào</span>
+          </div>
+        </div>
+
+        <!-- Search & Select All Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+          <div class="field" style="flex: 1;">
+            <input type="text" [(ngModel)]="permissionSearchQuery" placeholder="Tìm kiếm quyền hạn (ví dụ: bán vé, news...)" style="min-height: 36px; padding: 6px 10px; font-size: 13px;" />
+          </div>
+          <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: #475569; cursor: pointer; user-select: none;">
+            <input type="checkbox" [checked]="isAllPermissionsChecked(true)" (change)="toggleSelectAllPermissions(true)" style="width: 16px; height: 16px;" />
+            <span>Chọn tất cả</span>
+          </label>
+          <span class="badge payment da-thanh-toan">Đã tích: {{ newEmployee.permissions?.length || 0 }} / {{ permissionModules.length }} quyền</span>
+        </div>
+
+        <!-- Accordion list of modules/permissions -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div *ngFor="let mod of visiblePermissionModules" style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: #ffffff;">
+            <!-- Header -->
+            <div (click)="toggleModuleExpanded(mod)" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f8fafc; cursor: pointer; user-select: none;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" [checked]="isPermissionChecked(mod.key, true)" (click)="$event.stopPropagation(); togglePermission(mod.key, true)" style="width: 16px; height: 16px;" />
+                <strong style="font-size: 13px; color: #0f172a;">{{ mod.title }}</strong>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11px; color: #64748b; font-weight: 800;">Đã tích: {{ isPermissionChecked(mod.key, true) ? '1' : '0' }} / 1</span>
+                <span class="material-symbols-outlined" style="font-size: 18px; color: #64748b; transition: transform 0.2s;" [style.transform]="mod.expanded ? 'rotate(180deg)' : 'none'">expand_more</span>
+              </div>
+            </div>
+            <!-- Body -->
+            <div *ngIf="mod.expanded" style="padding: 12px 14px; border-top: 1px solid #e2e8f0; background: #ffffff; font-size: 13px; color: #475569; line-height: 1.5;">
+              {{ mod.desc }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBTAB 3: Contact Info -->
+      <div *ngIf="createSubTab === 'contact'" style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Số điện thoại liên hệ *</label>
+            <input type="text" [(ngModel)]="newEmployee.phone" name="phone" placeholder="Nhập số điện thoại di động..." />
+          </div>
+          <div class="field">
+            <label>Địa chỉ Email</label>
+            <input type="email" [(ngModel)]="newEmployee.email" name="email" placeholder="Nhập địa chỉ thư điện tử..." />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Địa chỉ thường trú</label>
+          <input type="text" [(ngModel)]="newEmployee.address" name="address" placeholder="Nhập địa chỉ nhà..." />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Ngày bắt đầu làm việc</label>
+            <input type="date" />
+          </div>
+          <div class="field">
+            <label>Loại hợp đồng lao động</label>
+            <select>
+              <option selected>Hợp đồng không xác định thời hạn</option>
+              <option>Hợp đồng xác định thời hạn 1 năm</option>
+              <option>Hợp đồng thử việc</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
     </div>
+    <footer class="modal-footer">
+      <button type="button" class="secondary-button" (click)="closeCreateModal()">Hủy</button>
+      <button type="button" class="primary-button" (click)="createEmployee()">Tạo tài khoản</button>
+    </footer>
   </div>
 </div>
 
 <!-- ================= POPUP ALERT: CẬP NHẬT TRẠNG THÁI ================= -->
-<div class="modal-overlay-alert" *ngIf="showStatusUpdateAlert" (click)="closeStatusUpdateAlert()">
-  <div class="modal-alert-container" (click)="$event.stopPropagation()">
-    <div class="alert-content-row">
-      <div class="alert-icon-orange">
-        <span class="exclamation-text">!</span>
-      </div>
-      <div class="alert-text-block">
-        <h3 class="alert-title">Cập nhật trạng thái</h3>
-        <p class="alert-description" [innerHTML]="statusUpdateAlertMessage"></p>
-      </div>
+<div class="modal-overlay alert-overlay" *ngIf="showStatusUpdateAlert" (click)="closeStatusUpdateAlert()">
+  <div class="confirm-modal" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2>Cập nhật trạng thái</h2>
+      <button type="button" class="close-button" (click)="closeStatusUpdateAlert()">x</button>
+    </header>
+    <div class="confirm-body" style="text-align: left;">
+      <p [innerHTML]="statusUpdateAlertMessage"></p>
     </div>
-    <div class="alert-footer">
-      <button class="btn-alert-ok" (click)="closeStatusUpdateAlert()">OK</button>
-    </div>
+    <footer class="modal-footer">
+      <button type="button" class="primary-button" (click)="closeStatusUpdateAlert()">OK</button>
+    </footer>
   </div>
 </div>

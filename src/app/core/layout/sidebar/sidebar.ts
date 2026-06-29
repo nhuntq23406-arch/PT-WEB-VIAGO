@@ -19,6 +19,8 @@ export class SidebarComponent {
   showContentMenu = false;
   showUserMenu = false;
   showProfileModal = false;
+  avatarUrl = '/asset/img/admin/user_avartar.png';
+  tempAvatarUrl = '';
 
   // Change password modal state
   showPasswordModal = false;
@@ -71,10 +73,17 @@ export class SidebarComponent {
     event.stopPropagation();
     this.showUserMenu = false;
     this.showProfileModal = true;
+    this.tempAvatarUrl = this.avatarUrl; // initialize temp preview
   }
 
   closeProfileModal() {
     this.showProfileModal = false;
+  }
+
+  saveProfile() {
+    this.avatarUrl = this.tempAvatarUrl; // apply temp preview to official avatar on save
+    alert('Lưu thông tin cá nhân thành công!');
+    this.closeProfileModal();
   }
 
   logout(event: Event) {
@@ -125,5 +134,26 @@ export class SidebarComponent {
     }
     alert('Đổi mật khẩu thành công!');
     this.showPasswordModal = false;
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      
+      // Constraint: only allow image files
+      if (!file.type.startsWith('image/')) {
+        alert('Vui lòng chỉ chọn tệp hình ảnh!');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          this.tempAvatarUrl = e.target.result as string; // update temp preview
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }
