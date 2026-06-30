@@ -376,11 +376,41 @@ export class TicketLookupComponent implements OnInit {
     this.currentOrder = null;
     this.searchError = '';
 
-    // Tra cứu ngay lập tức - không cần delay vì đây là mock data
-    const order = this.DanhSachVeMock.find(o => o.SoDienThoai === phone && o.MaDonHang === code);
+    // Merge localStorage orders with the mock list
+    let allOrders = [...this.DanhSachVeMock];
+    try {
+      const stored = localStorage.getItem('viago_orders');
+      if (stored) {
+        const storedOrders = JSON.parse(stored);
+        if (Array.isArray(storedOrders)) {
+          storedOrders.forEach(so => {
+            if (!allOrders.some(ao => ao.MaDonHang === so.MaDonHang)) {
+              allOrders.push(so);
+            }
+          });
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    const order = allOrders.find(o => o.SoDienThoai === phone && o.MaDonHang === code);
     if (order) {
       this.currentOrder = JSON.parse(JSON.stringify(order));
       this.currentStep = 'results';
+
+      // Scroll to the first ticket card
+      setTimeout(() => {
+        const ticketEl = document.getElementById('ticket-0');
+        if (ticketEl) {
+          ticketEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          const sectionEl = document.getElementById('tickets-section');
+          if (sectionEl) {
+            sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      }, 200);
     } else {
       this.searchError = 'Không tìm thấy đơn hàng nào khớp với số điện thoại và mã đã nhập!';
       this.currentStep = 'search';
@@ -893,6 +923,24 @@ export class TicketLookupComponent implements OnInit {
           const dbTicket = dbOrder.Tickets.find(ticket => ticket.MaVe === ticketCode);
           if (dbTicket) {
             dbTicket.TrangThaiVe = 'Đã hủy';
+            
+            // Cascading cancellation: if outbound leg is canceled, auto-cancel same-day return leg tickets
+            const isOutbound = dbTicket.DiemDon === dbOrder.DiemDon;
+            if (isOutbound) {
+              const parts = dbTicket.DiemDonThoiGian.split(' - ');
+              const cancelDate = parts.length > 1 ? parts[1] : '';
+              if (cancelDate) {
+                dbOrder.Tickets.forEach(t => {
+                  if (t.MaVe !== dbTicket.MaVe && t.DiemDon === dbOrder.DiemTra) {
+                    const tParts = t.DiemDonThoiGian.split(' - ');
+                    const tDate = tParts.length > 1 ? tParts[1] : '';
+                    if (tDate === cancelDate) {
+                      t.TrangThaiVe = 'Đã hủy';
+                    }
+                  }
+                });
+              }
+            }
           }
           this.syncOrderStatusAfterTicketCancel(dbOrder);
           this.currentOrder = JSON.parse(JSON.stringify(dbOrder));

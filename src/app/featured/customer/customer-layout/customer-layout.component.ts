@@ -41,4 +41,9 @@ export class CustomerLayoutComponent {
     this.isServicesOpen = false;
     this.isAboutOpen = false;
   }
+
+  onHomeClick(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/'], { queryParams: { reset: Date.now() } });
+  }
 }
