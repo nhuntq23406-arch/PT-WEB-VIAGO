@@ -176,10 +176,11 @@
         </section>
 
         <!-- ====== SECTION 2: ELECTRONIC TICKETS ====== -->
-        <section class="space-y-4">
+        <section id="tickets-section" class="space-y-4">
           <h2 class="text-primary text-xl font-bold uppercase tracking-wide">Thông tin vé điện tử</h2>
 
           <div *ngFor="let ticket of currentOrder.Tickets; let idx = index"
+               [id]="'ticket-' + idx"
                class="bg-white rounded-xl custom-shadow border border-border-divider overflow-hidden flex flex-col md:flex-row">
             <!-- Left Side Route Info -->
             <div class="flex-grow p-8 flex flex-col justify-between">

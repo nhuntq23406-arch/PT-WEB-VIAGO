@@ -74,14 +74,27 @@ export class HomeComponent implements OnInit, OnDestroy {
   trips: any[] = [];
 
   // Booking process states
+  activeTab: 'outbound' | 'return' = 'outbound';
+  activeSeatTab: 'outbound' | 'return' = 'outbound';
+  outboundTrips: any[] = [];
+  returnTrips: any[] = [];
+  selectedOutboundTrip: any = null;
+  selectedReturnTrip: any = null;
   selectedTrip: any = null;
   selectedSeats: string[] = [];
+  selectedReturnSeats: string[] = [];
   passengerName = '';
   passengerPhone = '';
   passengerEmail = '';
   acceptedTerms = false;
   pickupPoint = '';
   dropoffPoint = '';
+  returnPickupPoint = '';
+  returnDropoffPoint = '';
+  pickupType: 'station' | 'shuttle' = 'station';
+  dropoffType: 'station' | 'shuttle' = 'station';
+  returnPickupType: 'station' | 'shuttle' = 'station';
+  returnDropoffType: 'station' | 'shuttle' = 'station';
   promoCode = '';
   appliedPromo: any = null;
   showSeatLimitToast = false;
@@ -91,13 +104,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   toastTimeout: any = null;
   showPickupDropdown = false;
   showDropoffDropdown = false;
+  showReturnPickupDropdown = false;
+  showReturnDropoffDropdown = false;
   searchPickupText = '';
   searchDropoffText = '';
+  searchReturnPickupText = '';
+  searchReturnDropoffText = '';
   showPayment = false;
   showSuccessScreen = false;
   orderCode = '';
   ticketCode = '';
   showTicketModal = false;
+  pendingOrder: any = null;
+  pendingOrderTimeLeft = 0;
+  pendingOrderTimerInterval: any = null;
   passengerNameTouched = false;
   passengerPhoneTouched = false;
   passengerEmailTouched = false;
@@ -157,6 +177,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   destinationCities: string[] = [];
 
   ngOnInit() {
+    this.checkPendingOrder();
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
@@ -233,6 +254,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   onDestinationChange(val: string) {
     this.destination = val;
     this.updateCitiesLists();
+  }
+
+  onDepartureDateChange() {
+    if (this.returnDate && this.departureDate && this.returnDate < this.departureDate) {
+      this.returnDate = this.departureDate;
+    }
+  }
+
+  onReturnDateChange() {
+    if (this.returnDate && this.departureDate && this.returnDate < this.departureDate) {
+      this.returnDate = this.departureDate;
+    }
   }
 
   updateCitiesLists() {
@@ -326,6 +359,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.searchReturnDate = this.returnDate;
     this.searchTicketCount = this.ticketCount;
 
+    // Reset selection and active tab
+    this.activeTab = 'outbound';
+    this.selectedOutboundTrip = null;
+    this.selectedReturnTrip = null;
+
     // Generate mock trips
     this.generateTrips();
 
@@ -333,20 +371,37 @@ export class HomeComponent implements OnInit, OnDestroy {
     history.pushState({ step: 'results' }, '');
     this.showResults = true;
     this.selectedTrip = null;
-    window.scrollTo(0, 0);
+    this.scrollToResults();
   }
 
   generateTrips() {
+    this.outboundTrips = this.generateTripsForRoute(
+      this.searchDeparture,
+      this.searchDestination,
+      this.searchDepartureDate
+    );
+
+    if (this.searchTripType === 'round-trip') {
+      this.returnTrips = this.generateTripsForRoute(
+        this.searchDestination,
+        this.searchDeparture,
+        this.searchReturnDate
+      );
+    } else {
+      this.returnTrips = [];
+    }
+
+    this.trips = this.activeTab === 'outbound' ? this.outboundTrips : this.returnTrips;
+  }
+
+  generateTripsForRoute(dep: string, dest: string, dateStrYYYYMMDD: string): any[] {
     let dateStr = '';
-    if (this.searchDepartureDate) {
-      const parts = this.searchDepartureDate.split('-');
+    if (dateStrYYYYMMDD) {
+      const parts = dateStrYYYYMMDD.split('-');
       if (parts.length === 3) {
         dateStr = `${parts[2]}/${parts[1]}/${parts[0]}`;
       }
     }
-
-    const dep = this.searchDeparture;
-    const dest = this.searchDestination;
 
     // Find matching route
     const route = this.routesData.find(r => 
@@ -359,13 +414,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     const distanceVal = route ? route.distance : '150 km';
     const vehicleTypes = route ? route.types : ['Limousine 20 chỗ'];
 
-    // Helper to generate trips
     const timeSlots = ['08:00', '13:30', '19:30', '22:15'];
-    this.trips = timeSlots.map((time, idx) => {
+    return timeSlots.map((time, idx) => {
       const typeStr = vehicleTypes[idx % vehicleTypes.length];
       
-      // Calculate arrival time based on duration
-      // e.g. durationVal can be: "3.5 tiếng", "2 tiếng", "8.5 tiếng"
       const depHours = parseInt(time.split(':')[0], 10);
       const depMins = parseInt(time.split(':')[1], 10);
       
@@ -384,7 +436,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       
       const arrTimeStr = `${String(arrHours).padStart(2, '0')}:${String(arrMins).padStart(2, '0')}`;
 
-      // Determine seats and utilities
       let availableSeats = 15;
       let soldOutSeatsList: string[] = [];
       if (typeStr.includes('9 chỗ')) {
@@ -394,12 +445,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         availableSeats = 12;
         soldOutSeatsList = ['1A', '2A', '5A', '6A', '10A', '1B', '2B', '5B', '6B', '10B'];
       } else {
-        // 34 chỗ
         availableSeats = 20;
         soldOutSeatsList = ['1A', '2A', '3A', '4A', '5A', '10A', '11A', '12A', '1B', '2B', '3B', '4B', '5B', '10B'];
       }
 
-      // Pick points
       const depSpots = this.detailedSpots[dep] || [`Bến xe ${dep}`];
       const destSpots = this.detailedSpots[dest] || [`Bến xe ${dest}`];
 
@@ -421,8 +470,52 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  switchActiveTab(tab: 'outbound' | 'return') {
+    this.activeTab = tab;
+    this.trips = tab === 'outbound' ? this.outboundTrips : this.returnTrips;
+    this.scrollToResults();
+  }
+
+  getFormattedDateLong(dateStr: string): string {
+    if (!dateStr) return '';
+    const dateObj = new Date(dateStr);
+    const weekdays = ['CHỦ NHẬT', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
+    const weekday = weekdays[dateObj.getDay()];
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      return `${weekday}, ${parts[2]}/${parts[1]}`;
+    }
+    return dateStr;
+  }
+
+  timeToMinutes(timeStr: string): number {
+    if (!timeStr) return 0;
+    const parts = timeStr.split(':');
+    if (parts.length < 2) return 0;
+    return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+  }
+
   getFilteredTrips() {
     let result = [...this.trips];
+
+    // Same-day return time constraint: Giờ đi lượt về phải lớn hơn Giờ đến lượt đi + 60 phút
+    if (this.searchTripType === 'round-trip' && this.activeTab === 'return' && this.selectedOutboundTrip) {
+      if (this.searchDepartureDate === this.searchReturnDate) {
+        let outboundArrMinutes = this.timeToMinutes(this.selectedOutboundTrip.arrTime);
+        const outboundDepMinutes = this.timeToMinutes(this.selectedOutboundTrip.depTime);
+        
+        // If arrival time is on the next day (wrapped past midnight)
+        if (outboundArrMinutes < outboundDepMinutes) {
+          outboundArrMinutes += 24 * 60;
+        }
+
+        const minReturnDepMinutes = outboundArrMinutes + 60; // 60 minutes buffer
+        result = result.filter(trip => {
+          const returnDepMinutes = this.timeToMinutes(trip.depTime);
+          return returnDepMinutes >= minReturnDepMinutes;
+        });
+      }
+    }
 
     // Filter by Time
     const hasTimeFilter = this.timeFilters.early || this.timeFilters.morning || this.timeFilters.afternoon || this.timeFilters.night;
@@ -495,9 +588,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   selectTrip(trip: any) {
+    if (this.searchTripType === 'round-trip') {
+      if (this.activeTab === 'outbound') {
+        this.selectedOutboundTrip = trip;
+        this.selectedSeats = [];
+        this.showNotification('Đã chọn chuyến đi. Vui lòng chọn chuyến về.', 'success');
+        this.switchActiveTab('return');
+        return;
+      } else {
+        this.selectedReturnTrip = trip;
+        this.selectedReturnSeats = [];
+      }
+    }
+
+    // Process to next step
     history.pushState({ step: 'booking' }, '');
-    this.selectedTrip = trip;
-    this.selectedSeats = [];
+    this.selectedTrip = this.selectedOutboundTrip || trip;
+    this.activeSeatTab = 'outbound';
     this.passengerName = '';
     this.passengerPhone = '';
     this.passengerEmail = '';
@@ -507,6 +614,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.acceptedTerms = false;
     this.pickupPoint = '';
     this.dropoffPoint = '';
+    this.returnPickupPoint = '';
+    this.returnDropoffPoint = '';
+    this.pickupType = 'station';
+    this.dropoffType = 'station';
+    this.returnPickupType = 'station';
+    this.returnDropoffType = 'station';
     this.promoCode = '';
     this.appliedPromo = null;
     this.showSeatLimitToast = false;
@@ -515,8 +628,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.toastType = '';
     this.showPickupDropdown = false;
     this.showDropoffDropdown = false;
+    this.showReturnPickupDropdown = false;
+    this.showReturnDropoffDropdown = false;
     this.searchPickupText = '';
     this.searchDropoffText = '';
+    this.searchReturnPickupText = '';
+    this.searchReturnDropoffText = '';
     this.showPayment = false;
     this.selectedPaymentMethod = 'vietqr';
     this.stopPaymentTimer();
@@ -536,7 +653,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.passengerEmailTouched = true;
 
     if (this.selectedSeats.length === 0) {
-      this.showNotification('Vui lòng chọn ít nhất một ghế.', 'warning');
+      this.showNotification('Vui lòng chọn ít nhất một ghế cho chuyến đi.', 'warning');
+      return;
+    }
+    if (this.searchTripType === 'round-trip' && this.selectedReturnSeats.length === 0) {
+      this.showNotification('Vui lòng chọn ít nhất một ghế cho chuyến về.', 'warning');
       return;
     }
     if (this.getNameError()) {
@@ -556,12 +677,56 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     if (!this.pickupPoint) {
-      this.showNotification('Vui lòng chọn điểm đón.', 'warning');
+      this.showNotification('Vui lòng chọn điểm đón cho chuyến đi.', 'warning');
       return;
     }
     if (!this.dropoffPoint) {
-      this.showNotification('Vui lòng chọn điểm trả.', 'warning');
+      this.showNotification('Vui lòng chọn điểm trả cho chuyến đi.', 'warning');
       return;
+    }
+    if (this.searchTripType === 'round-trip') {
+      if (!this.returnPickupPoint) {
+        this.showNotification('Vui lòng chọn điểm đón cho chuyến về.', 'warning');
+        return;
+      }
+      if (!this.returnDropoffPoint) {
+        this.showNotification('Vui lòng chọn điểm trả cho chuyến về.', 'warning');
+        return;
+      }
+    }
+
+    // Pre-generate order and ticket codes
+    this.orderCode = 'VIG' + Math.floor(100000 + Math.random() * 900000);
+    this.ticketCode = 'VE' + Math.floor(100000 + Math.random() * 900000);
+
+    const pendingOrderObj = {
+      orderCode: this.orderCode,
+      ticketCode: this.ticketCode,
+      passengerName: this.passengerName,
+      passengerPhone: this.passengerPhone,
+      passengerEmail: this.passengerEmail || 'khachhang@gmail.com',
+      tripType: this.searchTripType,
+      departure: this.searchDeparture,
+      destination: this.searchDestination,
+      departureDate: this.searchDepartureDate,
+      returnDate: this.searchReturnDate,
+      pickupPoint: this.pickupPoint,
+      dropoffPoint: this.dropoffPoint,
+      returnPickupPoint: this.returnPickupPoint,
+      returnDropoffPoint: this.returnDropoffPoint,
+      selectedSeats: [...this.selectedSeats],
+      selectedReturnSeats: [...this.selectedReturnSeats],
+      totalAmount: this.getBookingTotal(),
+      outboundTime: this.selectedOutboundTrip?.depTime || this.selectedTrip?.depTime || '',
+      returnTime: this.selectedReturnTrip?.depTime || '',
+      tripName: `${this.selectedOutboundTrip?.depLocation || this.selectedTrip?.depLocation || this.searchDeparture} - ${this.selectedOutboundTrip?.arrLocation || this.selectedTrip?.arrLocation || this.searchDestination}`,
+      expiresAt: Date.now() + 600000
+    };
+
+    try {
+      localStorage.setItem('viago_pending_order', JSON.stringify(pendingOrderObj));
+    } catch (e) {
+      console.error(e);
     }
 
     history.pushState({ step: 'payment' }, '');
@@ -570,33 +735,43 @@ export class HomeComponent implements OnInit, OnDestroy {
     window.scrollTo(0, 0);
   }
 
-  toggleSeat(seatId: string) {
-    if (this.isSeatSoldOut(seatId)) {
+  toggleSeat(seatId: string, isReturn: boolean = false) {
+    if (this.isSeatSoldOut(seatId, isReturn)) {
       return;
     }
 
-    const index = this.selectedSeats.indexOf(seatId);
+    const seats = isReturn ? this.selectedReturnSeats : this.selectedSeats;
+    const index = seats.indexOf(seatId);
     if (index > -1) {
-      this.selectedSeats.splice(index, 1);
+      seats.splice(index, 1);
       this.showToast = false;
     } else {
-      if (this.selectedSeats.length >= 5) {
+      if (seats.length >= 5) {
         this.showNotification('Đã chọn đủ số ghế.', 'warning');
         return;
       }
-      this.selectedSeats.push(seatId);
+      seats.push(seatId);
     }
   }
 
-  isSeatSoldOut(seatId: string): boolean {
-    if (!this.selectedTrip || !this.selectedTrip.soldOutSeats) {
+  isSeatSoldOut(seatId: string, isReturn: boolean = false): boolean {
+    const trip = isReturn ? this.selectedReturnTrip : (this.selectedOutboundTrip || this.selectedTrip);
+    if (!trip || !trip.soldOutSeats) {
       return false;
     }
-    return this.selectedTrip.soldOutSeats.includes(seatId);
+    return trip.soldOutSeats.includes(seatId);
   }
 
-  isSeatSelected(seatId: string): boolean {
-    return this.selectedSeats.includes(seatId);
+  isSeatSelected(seatId: string, isReturn: boolean = false): boolean {
+    const seats = isReturn ? this.selectedReturnSeats : this.selectedSeats;
+    return seats.includes(seatId);
+  }
+
+  getCurrentSeatTrip(isReturn: boolean = false): any {
+    if (this.searchTripType === 'round-trip') {
+      return isReturn ? this.selectedReturnTrip : this.selectedOutboundTrip;
+    }
+    return this.selectedTrip;
   }
 
   applyPromoCode(code: string) {
@@ -639,22 +814,88 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.promoCode = '';
   }
 
-  getBookingSubtotal(): number {
-    if (!this.selectedTrip) return 0;
-    if (this.selectedTrip.type.includes('22 chỗ')) {
-      let subtotal = 0;
+  getOutboundSubtotal(): number {
+    const outboundTrip = this.selectedOutboundTrip || this.selectedTrip;
+    if (!outboundTrip) return 0;
+    let outboundSubtotal = 0;
+    if (outboundTrip.type.includes('22 chỗ')) {
       for (const seat of this.selectedSeats) {
-        if (seat.endsWith('A')) {
-          subtotal += 600000;
-        } else if (seat.endsWith('B')) {
-          subtotal += 390000;
-        } else {
-          subtotal += 390000;
-        }
+        if (seat.endsWith('A')) outboundSubtotal += 600000;
+        else outboundSubtotal += (outboundTrip.price || 390000);
       }
-      return subtotal;
+    } else {
+      outboundSubtotal = this.selectedSeats.length * (outboundTrip.price || 390000);
     }
-    return this.selectedSeats.length * (this.selectedTrip.price || 390000);
+    return outboundSubtotal;
+  }
+
+  getReturnSubtotal(): number {
+    if (this.searchTripType !== 'round-trip' || !this.selectedReturnTrip) return 0;
+    let returnSubtotal = 0;
+    if (this.selectedReturnTrip.type.includes('22 chỗ')) {
+      for (const seat of this.selectedReturnSeats) {
+        if (seat.endsWith('A')) returnSubtotal += 600000;
+        else returnSubtotal += (this.selectedReturnTrip.price || 390000);
+      }
+    } else {
+      returnSubtotal = this.selectedReturnSeats.length * (this.selectedReturnTrip.price || 390000);
+    }
+    return returnSubtotal;
+  }
+
+  getBookingSubtotal(): number {
+    return this.getOutboundSubtotal() + this.getReturnSubtotal();
+  }
+
+  getFormattedDateShort(dateStr: string): string {
+    if (!dateStr) return '';
+    const dateObj = new Date(dateStr);
+    const weekdays = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
+    // In javascript dateObj.getDay() returns 0 for Sunday, 1 for Monday, etc.
+    const day = dateObj.getDay();
+    const weekday = day === 0 ? 'Chủ nhật' : weekdays[day - 1];
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      return `${weekday}, ${parts[2]}/${parts[1]}`;
+    }
+    return dateStr;
+  }
+
+  getFormattedDateDDMMYYYY(dateStr: string): string {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return dateStr;
+  }
+
+  getDisplaySeatLabel(seat: string): string {
+    if (!seat) return '';
+    const match = seat.match(/^(\d+)([AB])$/);
+    if (match) {
+      const num = match[1];
+      const char = match[2];
+      return `${char}${num.padStart(2, '0')}`;
+    }
+    return seat;
+  }
+
+  getPickupDisplayName(point: string): string {
+    if (!point) return '';
+    const idx = point.indexOf(' - ');
+    return idx > -1 ? point.substring(idx + 3) : point;
+  }
+
+  getPickupPriorTime(point: string, defaultTime: string): string {
+    let timePart = defaultTime;
+    if (point) {
+      const idx = point.indexOf(' - ');
+      if (idx > -1) {
+        timePart = point.substring(0, idx);
+      }
+    }
+    return this.addMinutesToTime(timePart, -15);
   }
 
   getDiscountAmount(): number {
@@ -749,11 +990,83 @@ export class HomeComponent implements OnInit, OnDestroy {
   togglePickupDropdown() {
     this.showPickupDropdown = !this.showPickupDropdown;
     this.showDropoffDropdown = false;
+    this.showReturnPickupDropdown = false;
+    this.showReturnDropoffDropdown = false;
   }
 
   toggleDropoffDropdown() {
     this.showDropoffDropdown = !this.showDropoffDropdown;
     this.showPickupDropdown = false;
+    this.showReturnPickupDropdown = false;
+    this.showReturnDropoffDropdown = false;
+  }
+
+  getReturnPickupPointsList(): { time: string, name: string }[] {
+    if (!this.selectedReturnTrip) return [];
+    const spots = this.detailedSpots[this.searchDestination] || [
+      `Văn phòng ${this.searchDestination}`,
+      `Bến xe trung tâm ${this.searchDestination}`,
+      `Đón tận nơi nội thành ${this.searchDestination}`
+    ];
+    return spots.map((spot, index) => {
+      return {
+        time: this.addMinutesToTime(this.selectedReturnTrip.depTime, index * 20),
+        name: spot
+      };
+    });
+  }
+
+  getReturnDropoffPointsList(): { time: string, name: string }[] {
+    if (!this.selectedReturnTrip) return [];
+    const spots = this.detailedSpots[this.searchDeparture] || [
+      `Văn phòng ${this.searchDeparture}`,
+      `Bến xe trung tâm ${this.searchDeparture}`,
+      `Trả tận nơi nội thành ${this.searchDeparture}`
+    ];
+    return spots.map((spot, index) => {
+      return {
+        time: this.addMinutesToTime(this.selectedReturnTrip.arrTime, index * 20),
+        name: spot
+      };
+    });
+  }
+
+  getFilteredReturnPickupPoints(): { time: string, name: string }[] {
+    const list = this.getReturnPickupPointsList();
+    if (!this.searchReturnPickupText) return list;
+    const query = this.searchReturnPickupText.toLowerCase();
+    return list.filter(p => p.name.toLowerCase().includes(query) || p.time.includes(query));
+  }
+
+  getFilteredReturnDropoffPoints(): { time: string, name: string }[] {
+    const list = this.getReturnDropoffPointsList();
+    if (!this.searchReturnDropoffText) return list;
+    const query = this.searchReturnDropoffText.toLowerCase();
+    return list.filter(p => p.name.toLowerCase().includes(query) || p.time.includes(query));
+  }
+
+  toggleReturnPickupDropdown() {
+    this.showReturnPickupDropdown = !this.showReturnPickupDropdown;
+    this.showReturnDropoffDropdown = false;
+    this.showPickupDropdown = false;
+    this.showDropoffDropdown = false;
+  }
+
+  toggleReturnDropoffDropdown() {
+    this.showReturnDropoffDropdown = !this.showReturnDropoffDropdown;
+    this.showReturnPickupDropdown = false;
+    this.showPickupDropdown = false;
+    this.showDropoffDropdown = false;
+  }
+
+  selectReturnPickupPoint(point: { time: string, name: string }) {
+    this.returnPickupPoint = `${point.time} - ${point.name}`;
+    this.showReturnPickupDropdown = false;
+  }
+
+  selectReturnDropoffPoint(point: { time: string, name: string }) {
+    this.returnDropoffPoint = `${point.time} - ${point.name}`;
+    this.showReturnDropoffDropdown = false;
   }
 
   getFormattedTripDate(): string {
@@ -788,18 +1101,46 @@ export class HomeComponent implements OnInit, OnDestroy {
     return `${weekday}, ${dd}/${mm}/${yyyy}`;
   }
 
+  scrollToTop() {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 50);
+  }
+
+  scrollToResults() {
+    setTimeout(() => {
+      const element = document.getElementById('results-container');
+      const header = document.querySelector('header');
+      if (element) {
+        const headerHeight = header ? header.getBoundingClientRect().height : 130;
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - headerHeight;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'instant'
+        });
+      }
+    }, 50);
+  }
+
   goBackHome() {
     history.back();
+    this.scrollToTop();
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     this.showPickupDropdown = false;
     this.showDropoffDropdown = false;
+    this.showReturnPickupDropdown = false;
+    this.showReturnDropoffDropdown = false;
   }
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event: PopStateEvent) {
+    this.checkPendingOrder();
     const state = event.state;
     this.showTicketModal = false;
     if (!state) {
@@ -832,7 +1173,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.showSuccessScreen = true;
       this.stopPaymentTimer();
     }
-    window.scrollTo(0, 0);
+    this.scrollToTop();
   }
 
   getQRColor(): string {
@@ -880,6 +1221,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   cancelPayment() {
     this.stopPaymentTimer();
     this.showPayment = false;
+    this.checkPendingOrder();
     history.back();
   }
 
@@ -905,18 +1247,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showSuccessScreen = false;
     this.showTicketModal = false;
     this.stopPaymentTimer();
+    this.checkPendingOrder();
     history.pushState(null, '');
-    window.scrollTo(0, 0);
+    this.scrollToTop();
   }
 
   resetAllStates() {
     this.showResults = false;
     this.selectedTrip = null;
+    this.selectedOutboundTrip = null;
+    this.selectedReturnTrip = null;
     this.showPayment = false;
     this.showSuccessScreen = false;
     this.showTicketModal = false;
     this.stopPaymentTimer();
     this.selectedSeats = [];
+    this.selectedReturnSeats = [];
     this.passengerName = '';
     this.passengerPhone = '';
     this.passengerEmail = '';
@@ -926,19 +1272,105 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.acceptedTerms = false;
     this.pickupPoint = '';
     this.dropoffPoint = '';
+    this.returnPickupPoint = '';
+    this.returnDropoffPoint = '';
+    this.showReturnPickupDropdown = false;
+    this.showReturnDropoffDropdown = false;
+    this.searchReturnPickupText = '';
+    this.searchReturnDropoffText = '';
     this.promoCode = '';
     this.appliedPromo = null;
-    window.scrollTo(0, 0);
+    this.checkPendingOrder();
+    this.scrollToTop();
   }
 
   viewTicketDetails() {
-    this.showTicketModal = true;
+    this.router.navigate(['/tra-cuu-ve'], {
+      queryParams: {
+        phone: this.passengerPhone,
+        code: this.orderCode
+      }
+    });
   }
 
   confirmPayment() {
     this.stopPaymentTimer();
-    this.orderCode = 'VIG' + Math.floor(100000 + Math.random() * 900000);
-    this.ticketCode = 'VE' + Math.floor(100000 + Math.random() * 900000);
+    if (!this.orderCode) {
+      this.orderCode = 'VIG' + Math.floor(100000 + Math.random() * 900000);
+    }
+    if (!this.ticketCode) {
+      this.ticketCode = 'VE' + Math.floor(100000 + Math.random() * 900000);
+    }
+
+    try {
+      localStorage.removeItem('viago_pending_order');
+      this.pendingOrder = null;
+    } catch (e) {}
+
+    const newOrder = {
+      MaDonHang: this.orderCode,
+      MaKhachHang: 'KH' + Math.floor(100000 + Math.random() * 900000),
+      HoTenNguoiDi: this.passengerName,
+      SoDienThoai: this.passengerPhone,
+      Email: this.passengerEmail || 'khachhang@gmail.com',
+      ThoiGianDat: new Date().toLocaleString('vi-VN'),
+      SoLuongVeDaDat: this.selectedSeats.length + (this.searchTripType === 'round-trip' ? this.selectedReturnSeats.length : 0),
+      TenTuyen: `${this.selectedOutboundTrip?.depLocation || this.selectedTrip?.depLocation || this.searchDeparture} - ${this.selectedOutboundTrip?.arrLocation || this.selectedTrip?.arrLocation || this.searchDestination}`,
+      GioKhoiHanh: this.selectedOutboundTrip?.depTime || this.selectedTrip?.depTime || '',
+      GioTra: this.selectedOutboundTrip?.arrTime || this.selectedTrip?.arrTime || '',
+      DepartureDate: this.searchDepartureDate,
+      DiemDon: this.getPickupDisplayName(this.pickupPoint) || (this.selectedOutboundTrip?.depLocation || this.selectedTrip?.depLocation || this.searchDeparture),
+      DiemTra: this.getPickupDisplayName(this.dropoffPoint) || (this.selectedOutboundTrip?.arrLocation || this.selectedTrip?.arrLocation || this.searchDestination),
+      ThoiGianCoMatTruoc: '15 phút',
+      GioCanCoMat: this.getPickupPriorTime(this.pickupPoint, this.selectedOutboundTrip?.depTime || this.selectedTrip?.depTime || ''),
+      TongGiaVe: this.getBookingTotal(),
+      PhuongThucThanhToan: this.getPaymentMethodName(),
+      TrangThaiDonHang: 'Chờ khởi hành',
+      BienSoXe: '51B-123.45',
+      MaDiemDon: 'MD01',
+      MaDiemTra: 'MD04',
+      SoLanDaSua: 0,
+      GioiHanChinhSua: 2,
+      MaLichTrinh: 'LT' + Math.floor(100 + Math.random() * 900),
+      Tickets: [
+        ...this.selectedSeats.map((seat, idx) => ({
+          MaVe: `${this.ticketCode}-${idx + 1}`,
+          SoGhe: seat,
+          BienSoXe: '51B-123.45',
+          DiemDon: this.getPickupDisplayName(this.pickupPoint) || (this.selectedOutboundTrip?.depLocation || this.selectedTrip?.depLocation || this.searchDeparture),
+          DiemDonThoiGian: `${this.selectedOutboundTrip?.depTime || this.selectedTrip?.depTime || ''} - ${this.getFormattedDateDDMMYYYY(this.searchDepartureDate)}`,
+          DiemTra: this.getPickupDisplayName(this.dropoffPoint) || (this.selectedOutboundTrip?.arrLocation || this.selectedTrip?.arrLocation || this.searchDestination),
+          DiemTraThoiGian: `${this.selectedOutboundTrip?.arrTime || this.selectedTrip?.arrTime || ''} - ${this.getFormattedDateDDMMYYYY(this.searchDepartureDate)}`,
+          GiaVe: this.selectedOutboundTrip?.price || this.selectedTrip?.price || 390000,
+          TrangThaiVe: 'Chờ khởi hành',
+          MaQRVe: `QR-${this.ticketCode}-${seat}`
+        })),
+        ...(this.searchTripType === 'round-trip' && this.selectedReturnTrip ? this.selectedReturnSeats.map((seat, idx) => ({
+          MaVe: `${this.ticketCode}-V-${idx + 1}`,
+          SoGhe: seat,
+          BienSoXe: '51B-888.88',
+          DiemDon: this.getPickupDisplayName(this.returnPickupPoint) || (this.selectedReturnTrip?.depLocation || this.searchDestination),
+          DiemDonThoiGian: `${this.selectedReturnTrip.depTime} - ${this.getFormattedDateDDMMYYYY(this.searchReturnDate)}`,
+          DiemTra: this.getPickupDisplayName(this.returnDropoffPoint) || (this.selectedReturnTrip?.arrLocation || this.searchDeparture),
+          DiemTraThoiGian: `${this.selectedReturnTrip.arrTime} - ${this.getFormattedDateDDMMYYYY(this.searchReturnDate)}`,
+          GiaVe: this.selectedReturnTrip.price || 390000,
+          TrangThaiVe: 'Chờ khởi hành',
+          MaQRVe: `QR-${this.ticketCode}-V-${seat}`
+        })) : [])
+      ]
+    };
+
+    try {
+      const savedOrdersStr = localStorage.getItem('viago_orders') || '[]';
+      const savedOrders = JSON.parse(savedOrdersStr);
+      if (Array.isArray(savedOrders)) {
+        savedOrders.push(newOrder);
+        localStorage.setItem('viago_orders', JSON.stringify(savedOrders));
+      }
+    } catch (e) {
+      console.error('Error saving order to localStorage:', e);
+    }
+
     this.showSuccessScreen = true;
     this.showPayment = false;
     history.pushState({ step: 'success' }, '');
@@ -987,12 +1419,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getEmailError(): string {
     const val = this.passengerEmail.trim();
-    if (!val) return '';
+    if (!val) {
+      if (this.passengerEmailTouched) {
+        return 'Email không được để trống';
+      }
+      return '';
+    }
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(val)) {
-      if (this.passengerEmailTouched || val.includes('@')) {
-        return 'Địa chỉ email không đúng định dạng';
-      }
+      return 'Địa chỉ email không đúng định dạng';
     }
     return '';
   }
@@ -1002,5 +1437,158 @@ export class HomeComponent implements OnInit, OnDestroy {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
+  }
+
+  checkPendingOrder() {
+    try {
+      const stored = localStorage.getItem('viago_pending_order');
+      if (stored) {
+        const order = JSON.parse(stored);
+        const expiresAt = order.expiresAt;
+        if (expiresAt) {
+          const timeLeft = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+          if (timeLeft > 0) {
+            this.pendingOrder = order;
+            this.pendingOrderTimeLeft = timeLeft;
+            this.startPendingOrderTimer(expiresAt);
+          } else {
+            localStorage.removeItem('viago_pending_order');
+            this.pendingOrder = null;
+            this.stopPendingOrderTimer();
+          }
+        } else {
+          order.expiresAt = Date.now() + 600000;
+          localStorage.setItem('viago_pending_order', JSON.stringify(order));
+          this.pendingOrder = order;
+          this.pendingOrderTimeLeft = 600;
+          this.startPendingOrderTimer(order.expiresAt);
+        }
+      } else {
+        this.pendingOrder = null;
+        this.stopPendingOrderTimer();
+      }
+    } catch (e) {
+      this.pendingOrder = null;
+      this.stopPendingOrderTimer();
+    }
+  }
+
+  startPendingOrderTimer(expiresAt: number) {
+    this.stopPendingOrderTimer();
+    this.pendingOrderTimerInterval = setInterval(() => {
+      const timeLeft = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+      if (timeLeft > 0) {
+        this.pendingOrderTimeLeft = timeLeft;
+      } else {
+        localStorage.removeItem('viago_pending_order');
+        this.pendingOrder = null;
+        this.stopPendingOrderTimer();
+        this.showNotification('Giao dịch giữ chỗ đã hết hạn.', 'warning');
+      }
+    }, 1000);
+  }
+
+  stopPendingOrderTimer() {
+    if (this.pendingOrderTimerInterval) {
+      clearInterval(this.pendingOrderTimerInterval);
+      this.pendingOrderTimerInterval = null;
+    }
+  }
+
+  getFormattedPendingTime(): string {
+    const minutes = Math.floor(this.pendingOrderTimeLeft / 60);
+    const seconds = this.pendingOrderTimeLeft % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+
+  continuePendingPayment() {
+    if (!this.pendingOrder) return;
+
+    // Restore states
+    this.orderCode = this.pendingOrder.orderCode;
+    this.ticketCode = this.pendingOrder.ticketCode;
+    this.passengerName = this.pendingOrder.passengerName;
+    this.passengerPhone = this.pendingOrder.passengerPhone;
+    this.passengerEmail = this.pendingOrder.passengerEmail;
+    this.tripType = this.pendingOrder.tripType;
+    this.searchTripType = this.pendingOrder.tripType;
+    this.departure = this.pendingOrder.departure;
+    this.searchDeparture = this.pendingOrder.departure;
+    this.destination = this.pendingOrder.destination;
+    this.searchDestination = this.pendingOrder.destination;
+    this.departureDate = this.pendingOrder.departureDate;
+    this.searchDepartureDate = this.pendingOrder.departureDate;
+    this.returnDate = this.pendingOrder.returnDate;
+    this.searchReturnDate = this.pendingOrder.returnDate;
+    this.pickupPoint = this.pendingOrder.pickupPoint;
+    this.dropoffPoint = this.pendingOrder.dropoffPoint;
+    this.returnPickupPoint = this.pendingOrder.returnPickupPoint;
+    this.returnDropoffPoint = this.pendingOrder.returnDropoffPoint;
+    this.selectedSeats = [...this.pendingOrder.selectedSeats];
+    this.selectedReturnSeats = [...this.pendingOrder.selectedReturnSeats];
+
+    const totalSeats = (this.selectedSeats.length || 1) + (this.searchTripType === 'round-trip' ? this.selectedReturnSeats.length : 0);
+    this.selectedTrip = {
+      depLocation: this.pendingOrder.departure,
+      arrLocation: this.pendingOrder.destination,
+      depTime: this.pendingOrder.outboundTime,
+      price: this.pendingOrder.totalAmount / totalSeats,
+      type: 'Giường nằm 34 chỗ'
+    };
+    if (this.tripType === 'round-trip') {
+      this.selectedOutboundTrip = this.selectedTrip;
+      this.selectedReturnTrip = {
+        depLocation: this.pendingOrder.destination,
+        arrLocation: this.pendingOrder.departure,
+        depTime: this.pendingOrder.returnTime,
+        price: this.pendingOrder.totalAmount / totalSeats,
+        type: 'Giường nằm 34 chỗ'
+      };
+    }
+
+    const expiresAt = this.pendingOrder.expiresAt || (Date.now() + 600000);
+    const timeLeft = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+
+    this.stopPendingOrderTimer();
+    this.paymentTimeLeft = timeLeft;
+
+    this.showResults = true;
+    this.showPayment = true;
+    this.showSuccessScreen = false;
+    history.pushState({ step: 'payment' }, '');
+
+    this.stopPaymentTimer();
+    this.paymentTimerInterval = setInterval(() => {
+      if (this.paymentTimeLeft > 0) {
+        this.paymentTimeLeft--;
+        try {
+          const stored = localStorage.getItem('viago_pending_order');
+          if (stored) {
+            const orderObj = JSON.parse(stored);
+            orderObj.expiresAt = Date.now() + (this.paymentTimeLeft * 1000);
+            localStorage.setItem('viago_pending_order', JSON.stringify(orderObj));
+          }
+        } catch (e) {}
+      } else {
+        this.stopPaymentTimer();
+        this.showNotification('Hết thời gian giữ chỗ! Vui lòng thực hiện đặt vé lại.', 'warning');
+        setTimeout(() => {
+          this.cancelPayment();
+        }, 3000);
+      }
+    }, 1000);
+
+    window.scrollTo(0, 0);
+  }
+
+  cancelPendingOrder() {
+    try {
+      localStorage.removeItem('viago_pending_order');
+      this.pendingOrder = null;
+      this.stopPendingOrderTimer();
+      this.showNotification('Đã hủy vé chờ thanh toán thành công.', 'success');
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
