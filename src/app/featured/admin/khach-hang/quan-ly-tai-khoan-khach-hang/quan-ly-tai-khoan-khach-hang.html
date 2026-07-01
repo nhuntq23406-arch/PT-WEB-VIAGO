@@ -80,17 +80,18 @@
       <table>
         <thead>
           <tr>
-            <th style="width: 16%;">Mã KH</th>
-            <th style="width: 28%;">Họ và tên</th>
-            <th style="width: 16%;">Số điện thoại</th>
-            <th style="width: 18%;">Email</th>
-            <th style="width: 12%;">Ngày đăng ký</th>
-            <th style="width: 10%; text-align: center;">Vé đã đặt</th>
+            <th style="width: 12%;">Mã KH</th>
+            <th style="width: 22%;">Họ và tên</th>
+            <th style="width: 13%;">Số điện thoại</th>
+            <th style="width: 15%;">Email</th>
+            <th style="width: 12%;">Hạng thành viên</th>
+            <th style="width: 10%;">Ngày đăng ký</th>
+            <th style="width: 8%; text-align: center;">Vé đã đặt</th>
             <th style="width: 8%; text-align: center; white-space: nowrap;">Chức năng</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of filteredCustomers">
+          <tr *ngFor="let item of paginatedCustomers">
             <td class="name">
               <strong style="color: #0f172a;">{{ item.code }}</strong>
               <span class="badge payment {{ item.status === 'Đang hoạt động' ? 'da-thanh-toan' : 'cho-thanh-toan' }}" style="margin-top: 4px;">
@@ -112,6 +113,16 @@
               <span style="font-size: 13px; color: #475569;">{{ item.email }}</span>
             </td>
             <td>
+              <span *ngIf="getMemberTier(item) !== 'Không có'" class="tier-badge" [ngClass]="{
+                'diamond': getMemberTier(item) === 'Kim cương',
+                'gold': getMemberTier(item) === 'Vàng',
+                'silver': getMemberTier(item) === 'Bạc',
+                'bronze': getMemberTier(item) === 'Đồng'
+              }">
+                {{ getMemberTier(item).toUpperCase() }}
+              </span>
+            </td>
+            <td>
               <span style="font-size: 13px; color: #334155; font-weight: 500;">{{ item.date }}</span>
             </td>
             <td style="text-align: center;">
@@ -127,7 +138,7 @@
           </tr>
           <!-- Empty State -->
           <tr *ngIf="filteredCustomers.length === 0">
-            <td colspan="7">
+            <td colspan="8">
               <div class="empty-table">
                 <h3>Không tìm thấy tài khoản khách hàng nào phù hợp.</h3>
                 <p>Thử thay đổi từ khóa hoặc trạng thái lọc.</p>
@@ -136,6 +147,30 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Pagination Bar -->
+    <div class="pagination-bar">
+      <span>
+        Hiển thị {{ startIndex }}-{{ endIndex }} / {{ filteredCustomers.length }} khách hàng
+      </span>
+      <div class="pagination-controls">
+        <label>
+          Số dòng
+          <select [ngModel]="pageSize" (ngModelChange)="updatePageSize($event)">
+            <option [value]="8">8</option>
+            <option [value]="12">12</option>
+            <option [value]="20">20</option>
+          </select>
+        </label>
+        <button type="button" class="page-button" [disabled]="validCurrentPage <= 1" (click)="changePage(validCurrentPage - 1)">
+          Trước
+        </button>
+        <strong>{{ validCurrentPage }} / {{ totalPages }}</strong>
+        <button type="button" class="page-button" [disabled]="validCurrentPage >= totalPages" (click)="changePage(validCurrentPage + 1)">
+          Sau
+        </button>
+      </div>
     </div>
   </section>
 </div>
@@ -209,6 +244,23 @@
               <option value="Nữ">Nữ</option>
               <option value="Khác">Khác</option>
             </select>
+          </div>
+        </div>
+
+        <!-- Row: Hạng thành viên & Nghề nghiệp -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="field">
+            <label>Hạng thành viên</label>
+            <select [(ngModel)]="selectedCustomer.memberTier" name="memberTier">
+              <option value="Không có">Không có</option>
+              <option value="Bạc">Bạc</option>
+              <option value="Vàng">Vàng</option>
+              <option value="Kim cương">Kim cương</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Nghề nghiệp</label>
+            <input type="text" [(ngModel)]="selectedCustomer.occupation" name="occupation" placeholder="Nhập nghề nghiệp..." />
           </div>
         </div>
 
@@ -408,6 +460,23 @@
             <option value="Nữ">Nữ</option>
             <option value="Khác">Khác</option>
           </select>
+        </div>
+      </div>
+
+      <!-- Row: Hạng thành viên & Nghề nghiệp -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="field">
+          <label>Hạng thành viên</label>
+          <select [(ngModel)]="newCustomer.memberTier" name="memberTier">
+            <option value="Không có">Không có</option>
+            <option value="Bạc">Bạc</option>
+            <option value="Vàng">Vàng</option>
+            <option value="Kim cương">Kim cương</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nghề nghiệp</label>
+          <input type="text" [(ngModel)]="newCustomer.occupation" name="occupation" placeholder="Nhập nghề nghiệp..." />
         </div>
       </div>
 

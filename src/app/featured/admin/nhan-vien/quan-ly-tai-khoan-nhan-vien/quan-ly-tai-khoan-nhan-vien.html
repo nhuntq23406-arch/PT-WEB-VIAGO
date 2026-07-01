@@ -92,7 +92,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of filteredEmployees">
+          <tr *ngFor="let item of paginatedEmployees">
             <td class="name">
               <strong style="color: #0f172a;">{{ item.code }}</strong>
             </td>
@@ -138,6 +138,30 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Pagination Bar -->
+    <div class="pagination-bar" *ngIf="filteredEmployees.length > 0">
+      <span>
+        Hiển thị {{ startIndex }}-{{ endIndex }} / {{ filteredEmployees.length }} nhân viên
+      </span>
+      <div class="pagination-controls">
+        <label>
+          Số dòng
+          <select [ngModel]="pageSize" (ngModelChange)="updatePageSize($event)">
+            <option [value]="8">8</option>
+            <option [value]="12">12</option>
+            <option [value]="20">20</option>
+          </select>
+        </label>
+        <button type="button" class="page-button" [disabled]="validCurrentPage <= 1" (click)="changePage(validCurrentPage - 1)">
+          Trước
+        </button>
+        <strong>{{ validCurrentPage }} / {{ totalPages }}</strong>
+        <button type="button" class="page-button" [disabled]="validCurrentPage >= totalPages" (click)="changePage(validCurrentPage + 1)">
+          Sau
+        </button>
+      </div>
     </div>
   </section>
 </div>
