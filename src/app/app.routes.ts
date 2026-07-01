@@ -172,8 +172,8 @@ export const routes: Routes = [
       {
         path: 'nhatky',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-nhat-ky/quan-ly-nhat-ky').then(
-            (m) => m.QuanLyNhatKy
+          import('./featured/admin/nhat-ky/nhat-ky').then(
+            (m) => m.NhatKy
           ),
       },
       {

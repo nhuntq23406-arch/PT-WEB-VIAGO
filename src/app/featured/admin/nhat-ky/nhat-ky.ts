@@ -16,13 +16,13 @@ interface LogItem {
 }
 
 @Component({
-  selector: 'app-quan-ly-nhat-ky',
+  selector: 'app-nhat-ky',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './quan-ly-nhat-ky.html',
-  styleUrl: './quan-ly-nhat-ky.css',
+  templateUrl: './nhat-ky.html',
+  styleUrl: './nhat-ky.css',
 })
-export class QuanLyNhatKy implements OnInit {
+export class NhatKy implements OnInit {
   // Stats
   totalLogsToday = 24;
   successfulLogins = 3;
