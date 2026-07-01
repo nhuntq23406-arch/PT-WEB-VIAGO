@@ -76,7 +76,7 @@ export const routes: Routes = [
       {
         path: 'dieuphoi/tai-xe',
         loadComponent: () =>
-          import('./featured/admin/tai-xe/tai-xe').then((m) => m.TaiXeComponent),
+          import('./featured/admin/tai-xe-phu-xe/tai-xe').then((m) => m.TaiXeComponent),
       },
       {
         path: 'datve/moi',
@@ -102,7 +102,7 @@ export const routes: Routes = [
       {
         path: 'baocao/khach-hang',
         loadComponent: () =>
-          import('./featured/admin/baocao-khachhang/baocao-khachhang').then(
+          import('./featured/admin/bao-cao-khach-hang/baocao-khachhang').then(
             (m) => m.BaoCaoKhachHangComponent
           ),
       },

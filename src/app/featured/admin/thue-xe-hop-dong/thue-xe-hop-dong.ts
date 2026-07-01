@@ -291,4 +291,9 @@ export class ThueXeHopDongComponent {
     this.contractStatus = 'Tất cả';
     this.contractDateFilter = '';
   }
+
+  openCreateAction() {
+    console.log('Mở modal thêm mới cho tab:', this.activeMainTab);
+    // Logic mở modal sẽ được bổ sung sau
+  }
 }

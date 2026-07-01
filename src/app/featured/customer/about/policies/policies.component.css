@@ -118,11 +118,12 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  position: sticky;
+  top: 150px;
+  align-self: start;
 }
 
 .nav-sticky-card {
-  position: sticky;
-  top: 150px;
   background-color: var(--surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--outline-variant);
@@ -188,6 +189,42 @@
 .nav-item.active .nav-dot {
   background-color: #1E3A8A;
   transform: scale(1.2);
+}
+
+/* Help Card */
+.help-card {
+  margin-top: 24px;
+  padding: 24px;
+  background-color: var(--secondary-light);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--secondary);
+}
+
+.help-card h3 {
+  color: var(--secondary-active);
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.help-card p {
+  color: var(--navy-light);
+  line-height: 1.5;
+}
+
+.help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  color: var(--secondary);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.help-link:hover {
+  color: var(--secondary-active);
 }
 
 /* Content Area - Synchronized */

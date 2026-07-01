@@ -204,11 +204,12 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  position: sticky;
+  top: 150px;
+  align-self: start;
 }
 
 .category-sticky {
-  position: sticky;
-  top: 150px;
   background-color: var(--surface);
   border-radius: var(--radius-lg);
   border: 1px solid var(--outline-variant);
@@ -238,7 +239,7 @@
   gap: 12px;
 }
 
-.faq-category-button {
+.nav-item {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -255,31 +256,64 @@
   cursor: pointer;
 }
 
-.faq-category-button:hover {
+.nav-item:hover {
   background-color: #F3F4F6;
   color: #1E3A8A;
 }
 
-.faq-category-button.active {
+.nav-item.active {
   background-color: #EEF2FF;
   color: #1E3A8A;
   font-weight: 600;
 }
 
-.category-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  opacity: 0.7;
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #9CA3AF;
   transition: all 0.2s ease;
 }
 
-.faq-category-button.active .category-icon {
-  opacity: 1;
-  color: #1E3A8A;
-  transform: scale(1.1);
+.nav-item.active .nav-dot {
+  background-color: #1E3A8A;
+  transform: scale(1.2);
+}
+
+/* Help Card */
+.help-card {
+  margin-top: 24px;
+  padding: 24px;
+  background-color: var(--secondary-light);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--secondary);
+}
+
+.help-card h3 {
+  color: var(--secondary-active);
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.help-card p {
+  color: var(--navy-light);
+  line-height: 1.5;
+}
+
+.help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  color: var(--secondary);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.help-link:hover {
+  color: var(--secondary-active);
 }
 
 /* Content Area - Synchronized */

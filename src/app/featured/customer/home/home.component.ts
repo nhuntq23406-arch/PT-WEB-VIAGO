@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -176,13 +176,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   departureCities: string[] = [];
   destinationCities: string[] = [];
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit() {
     this.checkPendingOrder();
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
-    history.replaceState(null, '');
-
     // Set todayDate to YYYY-MM-DD
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -190,13 +190,33 @@ export class HomeComponent implements OnInit, OnDestroy {
     const dd = String(today.getDate()).padStart(2, '0');
     this.todayDate = `${yyyy}-${mm}-${dd}`;
 
-    // Reset customer view state when user clicks "TRANG CHỦ" or Logo (navigates to "/" or "/?...")
+    // Reset customer view state when user clicks home or logo.
     this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       const url = event.urlAfterRedirects || event.url;
-      if (url === '/' || url.startsWith('/?')) {
+      if (url === '/' || (url.startsWith('/?') && !url.includes('from=') && !url.includes('to='))) {
         this.resetAllStates();
+      }
+    });
+
+    // Handle query parameters from the schedule page.
+    this.route.queryParams.subscribe(params => {
+      if (params['from']) this.departure = params['from'];
+      if (params['to']) this.destination = params['to'];
+      if (params['date']) this.departureDate = params['date'];
+      
+      if (params['from'] || params['to']) {
+        this.updateCitiesLists();
+      }
+
+      if (params['scroll']) {
+        setTimeout(() => {
+          const element = document.getElementById(params['scroll']);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
       }
     });
   }

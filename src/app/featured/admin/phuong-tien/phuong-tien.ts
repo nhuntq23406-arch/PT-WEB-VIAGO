@@ -42,28 +42,27 @@ export class PhuongTienComponent implements OnInit {
 
   amenitiesList = [
     { id: 'wifi', label: 'Wifi', icon: 'wifi' },
-    { id: 'water', label: 'Nước uống', icon: 'local_drink' },
-    { id: 'usb', label: 'Cổng sạc USB', icon: 'usb' },
-    { id: 'massage', label: 'Ghế massage', icon: 'airline_seat_recline_extra' },
-    { id: 'entertainment', label: 'Màn hình giải trí', icon: 'tv' },
-    { id: 'wc', label: 'WC', icon: 'wc' },
-    { id: 'blanket', label: 'Chăn gối', icon: 'hotel' }
+    { id: 'tv', label: 'Tivi', icon: 'tv' },
+    { id: 'usb', label: 'Ổ sạc USB', icon: 'usb' },
+    { id: 'water', label: 'Nước uống & khăn ướt', icon: 'local_drink' },
+    { id: 'gps', label: 'GPS', icon: 'gps_fixed' },
+    { id: 'ac', label: 'Điều hòa', icon: 'ac_unit' }
   ];
 
-  vehicleTypes = ['Tất cả loại xe', 'Limousine', 'Giường nằm', 'Cabin đôi'];
+  vehicleTypes = ['Tất cả loại xe', 'Limousine', 'Giường nằm', 'Cabin'];
   statusOptions = ['Tất cả trạng thái', 'Đang hoạt động', 'Bảo trì', 'Đã khóa'];
 
   allVehicles: Vehicle[] = [
-    { id: 1, name: 'VIAGO Limousine 01', licensePlate: '51B-123.45', type: 'Limousine', seats: 9, registrationExpiry: '15/12/2026', amenities: ['Wifi', 'Nước uống', 'Cổng sạc USB'], status: 'Đang hoạt động' },
-    { id: 2, name: 'VIAGO Limousine 02', licensePlate: '51B-234.56', type: 'Limousine', seats: 9, registrationExpiry: '28/09/2026', amenities: ['Wifi', 'Ghế massage', 'Cổng sạc USB'], status: 'Đang hoạt động' },
-    { id: 3, name: 'VIAGO Limousine 03', licensePlate: '51B-345.67', type: 'Limousine', seats: 9, registrationExpiry: '10/03/2027', amenities: ['Wifi', 'Nước uống', 'Màn hình giải trí'], status: 'Bảo trì' },
-    { id: 4, name: 'VIAGO Giường Nằm 01', licensePlate: '51F-456.78', type: 'Giường nằm', seats: 34, registrationExpiry: '22/11/2026', amenities: ['Wifi', 'Chăn gối', 'WC'], status: 'Đang hoạt động' },
-    { id: 5, name: 'VIAGO Giường Nằm 02', licensePlate: '51F-567.89', type: 'Giường nằm', seats: 34, registrationExpiry: '05/01/2027', amenities: ['Wifi', 'Màn hình giải trí', 'WC'], status: 'Đang hoạt động' },
-    { id: 6, name: 'VIAGO Giường Nằm 03', licensePlate: '51F-678.90', type: 'Giường nằm', seats: 40, registrationExpiry: '18/08/2026', amenities: ['Wifi', 'Chăn gối', 'Cổng sạc USB'], status: 'Bảo trì' },
-    { id: 7, name: 'VIAGO Cabin Đôi 01', licensePlate: '51F-789.12', type: 'Cabin đôi', seats: 24, registrationExpiry: '30/04/2027', amenities: ['Wifi', 'TV riêng', 'WC'], status: 'Đang hoạt động' },
-    { id: 8, name: 'VIAGO Cabin Đôi 02', licensePlate: '51F-890.23', type: 'Cabin đôi', seats: 24, registrationExpiry: '12/06/2027', amenities: ['Wifi', 'TV riêng', 'Cổng sạc USB'], status: 'Đang hoạt động' },
-    { id: 9, name: 'VIAGO Cabin Đôi 03', licensePlate: '51F-901.34', type: 'Cabin đôi', seats: 22, registrationExpiry: '25/10/2026', amenities: ['Wifi', 'TV riêng', 'Chăn gối', 'WC'], status: 'Đã khóa' },
-    { id: 10, name: 'VIAGO Giường Nằm 04', licensePlate: '51F-112.45', type: 'Giường nằm', seats: 40, registrationExpiry: '14/02/2027', amenities: ['Wifi', 'Chăn gối', 'Màn hình giải trí'], status: 'Đang hoạt động' },
+    { id: 1, name: 'VIAGO Limousine 01', licensePlate: '51B-123.45', type: 'Limousine', seats: 9, registrationExpiry: '15/12/2026', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đang hoạt động' },
+    { id: 2, name: 'VIAGO Limousine 02', licensePlate: '51B-234.56', type: 'Limousine', seats: 9, registrationExpiry: '28/09/2026', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đang hoạt động' },
+    { id: 3, name: 'VIAGO Limousine 03', licensePlate: '51B-345.67', type: 'Limousine', seats: 9, registrationExpiry: '10/03/2027', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Bảo trì' },
+    { id: 4, name: 'VIAGO Giường Nằm 01', licensePlate: '51F-456.78', type: 'Giường nằm', seats: 34, registrationExpiry: '22/11/2026', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đang hoạt động' },
+    { id: 5, name: 'VIAGO Giường Nằm 02', licensePlate: '51F-567.89', type: 'Giường nằm', seats: 34, registrationExpiry: '05/01/2027', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đang hoạt động' },
+    { id: 6, name: 'VIAGO Giường Nằm 03', licensePlate: '51F-678.90', type: 'Giường nằm', seats: 34, registrationExpiry: '18/08/2026', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Bảo trì' },
+    { id: 7, name: 'VIAGO Cabin 01', licensePlate: '51F-789.12', type: 'Cabin', seats: 22, registrationExpiry: '30/04/2027', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đang hoạt động' },
+    { id: 8, name: 'VIAGO Cabin 02', licensePlate: '51F-890.23', type: 'Cabin', seats: 22, registrationExpiry: '12/06/2027', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đang hoạt động' },
+    { id: 9, name: 'VIAGO Cabin 03', licensePlate: '51F-901.34', type: 'Cabin', seats: 22, registrationExpiry: '25/10/2026', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đã khóa' },
+    { id: 10, name: 'VIAGO Giường Nằm 04', licensePlate: '51F-112.45', type: 'Giường nằm', seats: 34, registrationExpiry: '14/02/2027', amenities: ['Wifi', 'Tivi', 'Ổ sạc USB', 'Nước uống & khăn ướt', 'GPS', 'Điều hòa'], status: 'Đang hoạt động' },
   ];
 
   filteredVehicles: Vehicle[] = [];
@@ -72,6 +71,15 @@ export class PhuongTienComponent implements OnInit {
 
   ngOnInit() {
     this.filterVehicles();
+  }
+
+  // Helper methods for tab counts
+  getTotalCount(): number {
+    return this.allVehicles.length;
+  }
+
+  getCountByStatus(status: string): number {
+    return this.allVehicles.filter(v => v.status === status).length;
   }
 
   setTab(tab: 'Tất cả' | 'Đang hoạt động' | 'Bảo trì' | 'Đã khóa') {
@@ -105,9 +113,14 @@ export class PhuongTienComponent implements OnInit {
     this.currentVehicle = {
       status: 'Đang hoạt động',
       type: '',
+      name: '',
+      licensePlate: '',
+      registrationExpiry: '',
+      insuranceExpiry: '',
+      floors: 1,
+      rows: 0,
       seats: 0,
       amenities: [],
-      registrationExpiry: '',
       registrationImage: null,
       insuranceImage: null,
       vehicleImage: null
@@ -131,7 +144,13 @@ export class PhuongTienComponent implements OnInit {
       name: !this.currentVehicle.name,
       licensePlate: !this.currentVehicle.licensePlate,
       type: !this.currentVehicle.type,
-      registrationExpiry: !this.currentVehicle.registrationExpiry
+      registrationExpiry: !this.currentVehicle.registrationExpiry,
+      insuranceExpiry: !this.currentVehicle.insuranceExpiry,
+      floors: !this.currentVehicle.floors,
+      rows: !this.currentVehicle.rows,
+      seats: !this.currentVehicle.seats,
+      amenities: !this.currentVehicle.amenities || this.currentVehicle.amenities.length === 0,
+      vehicleImage: !this.currentVehicle.vehicleImage
     };
 
     if (Object.values(this.errors).some(Boolean)) return;

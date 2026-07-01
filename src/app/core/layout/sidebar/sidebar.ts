@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'app-sidebar-admin',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, FormsModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
 export class SidebarComponent {
+  @Input() isCollapsed: boolean = false;
+
   showReportMenu = false;
   showBookingMenu = false;
   showDispatchMenu = false;

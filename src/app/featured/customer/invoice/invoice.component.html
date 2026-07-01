@@ -130,28 +130,19 @@
 
         <!-- Result View -->
         <div class="p-8" *ngIf="viewState === 'result'">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-2">
-            <span class="inline-flex items-center px-4 py-2 rounded-full bg-success-light text-success-text font-label-bold border border-success/20">
-              <span class="material-symbols-outlined mr-2">check_circle</span>
-              Hợp lệ
-            </span>
-            <p class="text-caption text-outline">Cập nhật lần cuối: 24/06/2026</p>
-          </div>
+
 
           <div class="invoice-preview mb-6 bg-surface-container-low rounded-lg border border-outline-variant p-4 flex justify-center">
             <img [src]="mockInvoiceImg" alt="Hóa đơn điện tử" class="max-w-full h-auto rounded">
           </div>
 
           <div class="flex flex-wrap gap-3 justify-center mb-6">
-            <button class="px-6 py-2 border border-primary text-primary rounded-lg font-label-bold hover:bg-primary hover:text-on-primary transition-all">
+            <button class="px-6 py-2 border border-primary text-primary rounded-lg font-label-bold hover:bg-primary hover:text-on-primary transition-all" (click)="downloadXml()">
               <span class="material-symbols-outlined align-middle mr-2 text-lg">download</span>
               Tải XML
             </button>
-            <button class="px-6 py-2 border border-primary text-primary rounded-lg font-label-bold hover:bg-primary hover:text-on-primary transition-all">
-              <span class="material-symbols-outlined align-middle mr-2 text-lg">mail</span>
-              Gửi Email
-            </button>
-            <button class="px-6 py-2 border border-primary text-primary rounded-lg font-label-bold hover:bg-primary hover:text-on-primary transition-all">
+
+            <button class="px-6 py-2 border border-primary text-primary rounded-lg font-label-bold hover:bg-primary hover:text-on-primary transition-all" (click)="printInvoice()">
               <span class="material-symbols-outlined align-middle mr-2 text-lg">print</span>
               In hóa đơn
             </button>
@@ -171,12 +162,12 @@
         <div class="p-8" *ngIf="viewState === 'form'">
           <div class="text-center mb-8">
             <h2 class="text-headline-md font-vanh text-primary mb-2">Xác thực Hóa đơn điện tử</h2>
-            <p class="text-on-surface-variant text-body-md">Tải lên tệp hóa đơn định dạng .XML để kiểm tra tính hợp lệ, tính toàn vẹn và xác minh giá trị pháp lý của hóa đơn điện tử.</p>
+            <p class="text-on-surface-variant text-body-md">Tải lên tệp hóa đơn định dạng .PDF để kiểm tra tính hợp lệ, tính toàn vẹn và xác minh giá trị pháp lý của hóa đơn điện tử.</p>
           </div>
           <form class="space-y-6" (submit)="onVerifyInvoice()">
             <div class="space-y-2">
               <label class="block font-label-bold text-primary">
-                Tải tệp hóa đơn XML <span class="text-danger">*</span>
+                Tải tệp hóa đơn PDF <span class="text-danger">*</span>
               </label>
               <div 
                 class="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center gap-4 bg-surface-container-low hover:bg-surface-container-high transition-colors cursor-pointer"
@@ -189,7 +180,7 @@
                   <p class="text-body-md text-on-surface-variant">Kéo và thả tệp vào đây hoặc</p>
                   <label class="mt-2 inline-flex px-6 py-2 border border-primary text-primary rounded-lg font-label-bold hover:bg-primary hover:text-on-primary transition-all cursor-pointer">
                     Chọn tệp
-                    <input type="file" accept=".xml" (change)="onFileChange($event)" hidden>
+                    <input type="file" accept=".pdf" (change)="onFileChange($event)" hidden>
                   </label>
                 </div>
                 <div class="text-center" *ngIf="verifyData.file">
@@ -197,7 +188,7 @@
                   <button type="button" class="mt-2 text-danger text-body-sm hover:underline" (click)="verifyData.file = null">Xóa tệp</button>
                 </div>
               </div>
-              <p class="text-caption text-outline">Chỉ chấp nhận tệp .xml, dung lượng tối đa 5MB</p>
+              <p class="text-caption text-outline">Chỉ chấp nhận tệp .pdf, dung lượng tối đa 5MB</p>
               <p class="text-danger text-body-sm mt-1" *ngIf="errors.verifyFile">{{ errors.verifyFile }}</p>
             </div>
 
@@ -282,32 +273,15 @@
 
         <!-- Result View -->
         <div class="p-8" *ngIf="viewState === 'result'">
-          <div class="bg-success-light border border-success/30 rounded-lg p-4 mb-6">
-            <ul class="space-y-2 text-success-text">
-              <li class="flex items-center">
-                <span class="material-symbols-outlined mr-2">check_circle</span>
-                Chữ ký số hợp lệ
-              </li>
-              <li class="flex items-center">
-                <span class="material-symbols-outlined mr-2">check_circle</span>
-                Dữ liệu XML toàn vẹn
-              </li>
-              <li class="flex items-center">
-                <span class="material-symbols-outlined mr-2">check_circle</span>
-                Hóa đơn tồn tại trên hệ thống
-              </li>
-            </ul>
+          <div class="bg-success-light border border-success/30 rounded-lg p-4 mb-6" *ngIf="modalType === 'success'">
+            <p class="text-success-text font-label-bold text-center">Hóa đơn hợp lệ</p>
+          </div>
+          <div class="bg-danger-light border border-danger/30 rounded-lg p-4 mb-6" *ngIf="modalType === 'fail'">
+            <p class="text-danger-text font-label-bold text-center">Hóa đơn không hợp lệ</p>
           </div>
 
           <div class="invoice-preview mb-6 bg-surface-container-low rounded-lg border border-outline-variant p-4 flex justify-center">
             <img [src]="mockInvoiceImg" alt="Hóa đơn điện tử" class="max-w-full h-auto rounded">
-          </div>
-
-          <div class="flex flex-wrap gap-3 justify-center mb-6">
-            <button class="px-6 py-2 border border-primary text-primary rounded-lg font-label-bold hover:bg-primary hover:text-on-primary transition-all">
-              <span class="material-symbols-outlined align-middle mr-2 text-lg">download</span>
-              Tải XML
-            </button>
           </div>
 
           <div class="flex justify-center">

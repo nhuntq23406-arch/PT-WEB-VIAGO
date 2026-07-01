@@ -13,6 +13,53 @@
   left: 0;
   background-color: #002664;
   z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.aside-leftsidebar.collapsed {
+  width: 72px;
+}
+
+.aside-leftsidebar.collapsed .text-wrapper-4,
+.aside-leftsidebar.collapsed .text-wrapper-5,
+.aside-leftsidebar.collapsed .chevron-icon {
+  display: none;
+}
+
+.aside-leftsidebar.collapsed .item-link,
+.aside-leftsidebar.collapsed .item-link-2 {
+  justify-content: center;
+  padding: 12px 0px;
+  border-left-width: 4px;
+}
+
+.aside-leftsidebar.collapsed .logo-section-updated {
+  padding: 0;
+  justify-content: center;
+}
+
+.aside-leftsidebar.collapsed .VIAGO-logo {
+  width: 40px;
+  height: 20px;
+}
+
+.aside-leftsidebar.collapsed .user-profile-logout {
+  padding: 16px 0px 32px;
+  align-items: center;
+}
+
+.aside-leftsidebar.collapsed .container-4 {
+  justify-content: center;
+  padding: 0;
+}
+
+.aside-leftsidebar.collapsed .container-wrapper,
+.aside-leftsidebar.collapsed .logout-icon {
+  display: none;
+}
+
+.aside-leftsidebar.collapsed .submenu-list {
+  display: none; /* Ẩn submenu khi collapsed để gọn */
 }
 
 /* Logo Section */

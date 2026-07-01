@@ -21,7 +21,7 @@ export interface DiemDonTra {
   styleUrls: ['./don-tra.css']
 })
 export class DonTraComponent implements OnInit {
-  activeTab: 'don-tra' | 'trung-chuyen' | 'dung' | 'locked' = 'don-tra';
+  activeTab: 'don-tra' | 'dung' | 'locked' = 'don-tra';
   
   // Mock data
   allPoints: DiemDonTra[] = [];
@@ -30,21 +30,18 @@ export class DonTraComponent implements OnInit {
   
   searchQueries: { [key: string]: string } = {
     'don-tra': '',
-    'trung-chuyen': '',
     'dung': '',
     'locked': ''
   };
 
   cityFilters: { [key: string]: string } = {
     'don-tra': 'all',
-    'trung-chuyen': 'all',
     'dung': 'all',
     'locked': 'all'
   };
 
   typeFilters: { [key: string]: string } = {
     'don-tra': 'all',
-    'trung-chuyen': 'all',
     'dung': 'all',
     'locked': 'all'
   };
@@ -116,7 +113,16 @@ export class DonTraComponent implements OnInit {
     this.filterPoints();
   }
 
-  setTab(tab: 'don-tra' | 'trung-chuyen' | 'dung' | 'locked') {
+  // Helper methods for tab counts
+  getLockedCount(): number {
+    return this.allPoints.filter(p => p.status === 'locked').length;
+  }
+
+  getCountByType(type: 'don-tra' | 'dung'): number {
+    return this.allPoints.filter(p => p.status === 'active' && p.type === type).length;
+  }
+
+  setTab(tab: 'don-tra' | 'dung' | 'locked') {
     this.activeTab = tab;
     this.filterPoints();
   }
@@ -130,8 +136,6 @@ export class DonTraComponent implements OnInit {
       let matchesTab = false;
       if (this.activeTab === 'don-tra') {
         matchesTab = p.status === 'active' && p.type === 'don-tra';
-      } else if (this.activeTab === 'trung-chuyen') {
-        matchesTab = p.status === 'active' && p.type === 'trung-chuyen';
       } else if (this.activeTab === 'dung') {
         matchesTab = p.status === 'active' && p.type === 'dung';
       } else if (this.activeTab === 'locked') {
@@ -163,9 +167,8 @@ export class DonTraComponent implements OnInit {
     this.isEditMode = false;
     this.errors = {};
     
-    let defaultType: 'don-tra' | 'trung-chuyen' | 'dung' = 'don-tra';
-    if (this.activeTab === 'trung-chuyen') defaultType = 'trung-chuyen';
-    else if (this.activeTab === 'dung') defaultType = 'dung';
+    let defaultType: 'don-tra' | 'dung' = 'don-tra';
+    if (this.activeTab === 'dung') defaultType = 'dung';
 
     this.currentPoint = {
       status: 'active',

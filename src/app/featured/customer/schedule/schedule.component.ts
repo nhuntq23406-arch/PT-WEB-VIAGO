@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface Route {
   id: number;
@@ -27,6 +28,8 @@ interface Route {
 export class ScheduleComponent implements OnInit {
   searchTerm: string = '';
   
+  constructor(private router: Router) {}
+
   featuredRoutes: Route[] = [
     {
       id: 1,
@@ -106,7 +109,7 @@ allRoutes: Route[] = [
     to: 'Nha Trang',
     distance: '140km',
     duration: '3 tiếng',
-    price: 170000,
+    price: 220000,
     image: 'asset/images/customer/nha_trang.jpg',
     vehicleTypes: ['Limousine', 'Cabin'],
     tripsPerDay: 15
@@ -117,7 +120,7 @@ allRoutes: Route[] = [
     to: 'Rạch Giá',
     distance: '115km',
     duration: '2.5 tiếng',
-    price: 150000,
+    price: 180000,
     image: 'asset/images/customer/rach_gia.jpg',
     vehicleTypes: ['Giường nằm', 'Limousine'],
     tripsPerDay: 10
@@ -128,7 +131,7 @@ allRoutes: Route[] = [
     to: 'Phan Thiết',
     distance: '200km',
     duration: '4 tiếng',
-    price: 200000,
+    price: 220000,
     image: 'asset/images/customer/phan_thiet.jpg',
     vehicleTypes: ['Giường nằm', 'Cabin'],
     tripsPerDay: 18
@@ -139,7 +142,7 @@ allRoutes: Route[] = [
     to: 'Đà Lạt',
     distance: '310km',
     duration: '7 tiếng',
-    price: 250000,
+    price: 320000,
     image: 'asset/images/customer/da_lat.jpg',
     vehicleTypes: ['Cabin', 'Limousine'],
     tripsPerDay: 25
@@ -150,7 +153,7 @@ allRoutes: Route[] = [
     to: 'Nha Trang',
     distance: '435km',
     duration: '8.5 tiếng',
-    price: 300000,
+    price: 420000,
     image: 'asset/images/customer/nha_trang.jpg',
     vehicleTypes: ['Limousine', 'Giường nằm'],
     tripsPerDay: 22
@@ -161,7 +164,7 @@ allRoutes: Route[] = [
     to: 'Đà Nẵng',
     distance: '530km',
     duration: '11 tiếng',
-    price: 350000,
+    price: 380000,
     image: 'asset/images/customer/da_nang.jpg',
     vehicleTypes: ['Limousine', 'Cabin'],
     tripsPerDay: 14
@@ -228,5 +231,17 @@ allRoutes: Route[] = [
 
   formatPrice(price: number): string {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  }
+
+  handleViewSchedule(route: Route) {
+    const today = new Date().toISOString().split('T')[0];
+    this.router.navigate(['/'], { 
+      queryParams: { 
+        from: route.from, 
+        to: route.to, 
+        date: today,
+        scroll: 'search-section'
+      } 
+    });
   }
 }
