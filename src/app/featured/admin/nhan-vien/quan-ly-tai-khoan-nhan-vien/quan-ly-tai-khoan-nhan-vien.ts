@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class QuanLyTaiKhoanNhanVien implements OnInit {
   activeTab = 'all';
+  currentPage = 1;
+  pageSize = 8;
 
   get activeCount(): number {
     return this.employees.filter(e => e.status === 'Đang hoạt động').length;
@@ -57,10 +59,11 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
       // Ensure we remove any driver roles/accounts from storage
       parsed = parsed.filter((e: any) => e.defaultRole !== 'Tài xế' && !e.code.startsWith('TX'));
       
-      // If the cache contains old logs (e.g. less logs than the new default for NVDP100001)
+      // If the cache contains old logs (e.g. less logs than the new default for NVDP100001) or is missing new mock records
       const cachedAdmin = parsed.find((e: any) => e.code === 'NVDP100001');
-      if (!cachedAdmin || !cachedAdmin.logs || cachedAdmin.logs.length < 5) {
-        // Force refresh cache with new logs
+      const hasNewMock = parsed.some((e: any) => e.code === 'QTV100001');
+      if (!cachedAdmin || !cachedAdmin.logs || cachedAdmin.logs.length < 5 || !hasNewMock) {
+        // Force refresh cache with new logs and new mock records
         localStorage.setItem('viago_employees', JSON.stringify(this.employees));
         return;
       }
@@ -140,6 +143,192 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
   ];
 
   employees = [
+    {
+      code: 'CSKH100001',
+      username: 'lannt',
+      name: 'Nguyễn Thị Lan',
+      initials: 'TL',
+      phone: '0919876543',
+      email: 'lan.nt@viago.vn',
+      date: '10/04/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1995-10-12',
+      defaultRole: 'Nhân viên CSKH',
+      roles: 'NHÂN VIÊN CSKH (5 QUYỀN)',
+      permissions: ['khachhang', 'tukhoacam', 'danhgiaphanhoi', 'dothatlac', 'baocao'],
+      address: 'Văn phòng VIAGO, TP.HCM',
+      notes: 'Hỗ trợ khách hàng xuất sắc',
+      logs: []
+    },
+    {
+      code: 'NVBV100125',
+      username: 'hoangnv',
+      name: 'Nguyễn Việt Hoàng',
+      initials: 'VH',
+      phone: '0981122334',
+      email: 'hoang.nv@gmail.com',
+      date: '05/04/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1996-03-22',
+      defaultRole: 'Nhân viên bán vé',
+      roles: 'NHÂN VIÊN BÁN VÉ (2 QUYỀN)',
+      permissions: ['datve', 'baocao'],
+      address: 'Văn phòng VIAGO, Hà Nội',
+      notes: '',
+      logs: []
+    },
+    {
+      code: 'NVDP100003',
+      username: 'haiph',
+      name: 'Phan Huy Hải',
+      initials: 'HH',
+      phone: '0979988776',
+      email: 'hai.ph@viago.vn',
+      date: '12/04/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1993-07-09',
+      defaultRole: 'Nhân viên điều phối',
+      roles: 'NHÂN VIÊN ĐIỀU PHỐI (3 QUYỀN)',
+      permissions: ['dieuphoi', 'baocao', 'nhatky'],
+      address: 'Văn phòng VIAGO, Đà Nẵng',
+      notes: '',
+      logs: []
+    },
+    {
+      code: 'QTV100001',
+      username: 'admin_viago',
+      name: 'Trần Minh Đức',
+      initials: 'MD',
+      phone: '0909090909',
+      email: 'duc.tm@viago.vn',
+      date: '01/01/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1989-12-12',
+      defaultRole: 'Quản trị viên',
+      roles: 'QUẢN TRỊ VIÊN (13 QUYỀN)',
+      permissions: ['datve', 'tintuc', 'dieuphoi', 'khachhang', 'nhanvien', 'chinhsach', 'tukhoacam', 'baocao', 'nhatky', 'danhgiaphanhoi', 'dothatlac', 'thuexehopdong', 'khuyenmai'],
+      address: 'VIAGO Headquarter, TP.HCM',
+      notes: 'Super admin',
+      logs: []
+    },
+    {
+      code: 'CSKH100002',
+      username: 'huongvy',
+      name: 'Đặng Vy Hương',
+      initials: 'VH',
+      phone: '0938877665',
+      email: 'huong.vd@viago.vn',
+      date: '18/04/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1997-05-15',
+      defaultRole: 'Nhân viên CSKH',
+      roles: 'NHÂN VIÊN CSKH (5 QUYỀN)',
+      permissions: ['khachhang', 'danhgiaphanhoi', 'dothatlac'],
+      address: 'Văn phòng VIAGO, Cần Thơ',
+      notes: '',
+      logs: []
+    },
+    {
+      code: 'NVBV100124',
+      username: 'ngocth',
+      name: 'Trần Hồng Ngọc',
+      initials: 'HN',
+      phone: '0945566778',
+      email: 'ngoc.th@gmail.com',
+      date: '20/04/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1994-08-30',
+      defaultRole: 'Nhân viên bán vé',
+      roles: 'NHÂN VIÊN BÁN VÉ (2 QUYỀN)',
+      permissions: ['datve', 'baocao'],
+      address: 'Văn phòng VIAGO, Hải Phòng',
+      notes: '',
+      logs: []
+    },
+    {
+      code: 'NVDP100004',
+      username: 'quocvn',
+      name: 'Vũ Ngọc Quốc',
+      initials: 'NQ',
+      phone: '0912233445',
+      email: 'quoc.vn@viago.vn',
+      date: '25/04/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1991-01-20',
+      defaultRole: 'Nhân viên điều phối',
+      roles: 'NHÂN VIÊN ĐIỀU PHỐI (3 QUYỀN)',
+      permissions: ['dieuphoi', 'baocao', 'nhatky'],
+      address: 'Văn phòng VIAGO, Nha Trang',
+      notes: '',
+      logs: []
+    },
+    {
+      code: 'BQL100002',
+      username: 'khanhph',
+      name: 'Phan Huy Khánh',
+      initials: 'HK',
+      phone: '0966554433',
+      email: 'khanh.ph@viago.vn',
+      date: '15/01/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1985-04-18',
+      defaultRole: 'Ban quản lý',
+      roles: 'BAN QUẢN LÝ (1 QUYỀN)',
+      permissions: ['baocao'],
+      address: 'Văn phòng VIAGO, TP.HCM',
+      notes: '',
+      logs: []
+    },
+    {
+      code: 'CSKH100003',
+      username: 'yennp',
+      name: 'Nguyễn Phương Yến',
+      initials: 'PY',
+      phone: '0901122334',
+      email: 'yen.np@viago.vn',
+      date: '02/05/2026',
+      status: 'Đã khóa',
+      gender: 'Nữ',
+      birthDate: '1998-11-02',
+      defaultRole: 'Nhân viên CSKH',
+      roles: 'NHÂN VIÊN CSKH (5 QUYỀN)',
+      permissions: ['khachhang', 'danhgiaphanhoi'],
+      address: '15 Lê Duẩn, Quận 1, TP.HCM',
+      notes: '',
+      logs: [
+        { type: 'lock', title: 'Quản lý tài khoản', time: '2026-05-30 09:00:00', desc: 'Khóa tài khoản nhân viên do vi phạm bảo mật thông tin khách hàng.', ip: '127.0.0.1', code: 'VIAGO_LOG_1781200000004_LK2' }
+      ],
+      lockInfo: {
+        date: '2026-05-30 09:00',
+        reason: 'Vi phạm bảo mật thông tin khách hàng'
+      }
+    },
+    {
+      code: 'NVBV100123',
+      username: 'tuanlm',
+      name: 'Lê Minh Tuấn',
+      initials: 'MT',
+      phone: '0937788990',
+      email: 'tuan.lm@gmail.com',
+      date: '10/05/2026',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1995-02-14',
+      defaultRole: 'Nhân viên bán vé',
+      roles: 'NHÂN VIÊN BÁN VÉ (2 QUYỀN)',
+      permissions: ['datve', 'baocao'],
+      address: 'Văn phòng VIAGO, Vũng Tàu',
+      notes: '',
+      logs: []
+    },
     {
       code: 'NVDP100001',
       username: 'NVDP100001',
@@ -472,13 +661,46 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
     return list;
   }
 
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredEmployees.length / this.pageSize));
+  }
+
+  get validCurrentPage(): number {
+    return Math.min(Math.max(this.currentPage, 1), this.totalPages);
+  }
+
+  get paginatedEmployees(): any[] {
+    const start = (this.validCurrentPage - 1) * this.pageSize;
+    return this.filteredEmployees.slice(start, start + this.pageSize);
+  }
+
+  get startIndex(): number {
+    if (this.filteredEmployees.length === 0) return 0;
+    return (this.validCurrentPage - 1) * this.pageSize + 1;
+  }
+
+  get endIndex(): number {
+    return Math.min(this.validCurrentPage * this.pageSize, this.filteredEmployees.length);
+  }
+
+  changePage(page: number) {
+    this.currentPage = page;
+  }
+
+  updatePageSize(size: any) {
+    this.pageSize = parseInt(size, 10);
+    this.currentPage = 1;
+  }
+
   setTab(tab: string) {
     this.activeTab = tab;
+    this.currentPage = 1;
   }
 
   applyFilter() {
     this.appliedSearchQuery = this.searchQuery;
     this.appliedSearchRole = this.searchRole;
+    this.currentPage = 1;
   }
 
   clearSearchQuery() {

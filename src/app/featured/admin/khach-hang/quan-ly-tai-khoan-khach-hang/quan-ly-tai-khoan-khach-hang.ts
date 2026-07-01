@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,8 +9,37 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './quan-ly-tai-khoan-khach-hang.html',
   styleUrl: './quan-ly-tai-khoan-khach-hang.css',
 })
-export class QuanLyTaiKhoanKhachHang {
+export class QuanLyTaiKhoanKhachHang implements OnInit {
   activeTab = 'all';
+  currentPage = 1;
+  pageSize = 8;
+
+  ngOnInit() {
+    this.customers.forEach((c: any) => {
+      if (c.memberTier === undefined) {
+        c.memberTier = this.getInitialMemberTier(c.tickets);
+      }
+      if (c.occupation === undefined) {
+        c.occupation = this.getInitialOccupation(c.code);
+      }
+    });
+  }
+
+  getInitialMemberTier(ticketsStr: string): string {
+    if (!ticketsStr) return 'Không có';
+    const num = parseInt(ticketsStr.replace(/[^0-9]/g, ''), 10) || 0;
+    if (num >= 30) return 'Kim cương';
+    if (num >= 15) return 'Vàng';
+    if (num >= 4) return 'Bạc';
+    return 'Không có';
+  }
+
+  getInitialOccupation(code: string): string {
+    if (code === 'KH100133') return 'Kỹ sư';
+    if (code === 'KH100132') return 'Nhân viên văn phòng';
+    if (code === 'KH100129') return 'Kinh doanh tự do';
+    return '';
+  }
 
   get activeCount(): number {
     return this.customers.filter(c => c.status === 'Đang hoạt động').length;
@@ -45,7 +74,9 @@ export class QuanLyTaiKhoanKhachHang {
     tickets: '0-vé',
     date: '',
     bookings: [],
-    logs: []
+    logs: [],
+    memberTier: 'Không có',
+    occupation: ''
   };
 
   // Lock Confirmation Modal State
@@ -60,7 +91,7 @@ export class QuanLyTaiKhoanKhachHang {
       phone: '0976262546',
       email: 'minh.nv@gmail.com',
       date: '18/06/2026',
-      tickets: '1 vé',
+      tickets: '6 vé',
       status: 'Đang hoạt động',
       gender: 'Nam',
       birthDate: '1990-05-12',
@@ -72,13 +103,221 @@ export class QuanLyTaiKhoanKhachHang {
       ]
     },
     {
+      code: 'KH100125',
+      name: 'Phạm Hoàng Huy',
+      initials: 'HH',
+      phone: '0971234567',
+      email: 'huy.ph@gmail.com',
+      date: '25/05/2026',
+      tickets: '5 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1991-03-14',
+      memberTier: 'Bạc',
+      occupation: 'Kỹ sư IT',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100124',
+      name: 'Vũ Thị Hương',
+      initials: 'VH',
+      phone: '0961234567',
+      email: 'huong.vt@yahoo.com',
+      date: '24/05/2026',
+      tickets: '15 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1994-07-22',
+      memberTier: 'Vàng',
+      occupation: 'Kế toán',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100123',
+      name: 'Nguyễn Tiến Dũng',
+      initials: 'TD',
+      phone: '0951234567',
+      email: 'dung.nt@gmail.com',
+      date: '23/05/2026',
+      tickets: '31 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1989-11-02',
+      memberTier: 'Kim cương',
+      occupation: 'Giám đốc',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100122',
+      name: 'Trần Thu Thủy',
+      initials: 'TT',
+      phone: '0941234567',
+      email: 'thuy.tt@gmail.com',
+      date: '22/05/2026',
+      tickets: '0 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1996-05-30',
+      memberTier: 'Không có',
+      occupation: 'Sinh viên',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100121',
+      name: 'Lê Anh Tuấn',
+      initials: 'AT',
+      phone: '0931234567',
+      email: 'tuan.la@gmail.com',
+      date: '21/05/2026',
+      tickets: '2 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1992-09-18',
+      memberTier: 'Không có',
+      occupation: 'Nhân viên kinh doanh',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100120',
+      name: 'Hoàng Quốc Việt',
+      initials: 'QV',
+      phone: '0921234567',
+      email: 'viet.hq@outlook.com',
+      date: '20/05/2026',
+      tickets: '8 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1987-12-25',
+      memberTier: 'Bạc',
+      occupation: 'Bác sĩ',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100119',
+      name: 'Bùi Thị Hà',
+      initials: 'TH',
+      phone: '0911234567',
+      email: 'ha.bt@gmail.com',
+      date: '19/05/2026',
+      tickets: '22 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1993-01-10',
+      memberTier: 'Vàng',
+      occupation: 'Giáo viên',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100118',
+      name: 'Phan Huy Khánh',
+      initials: 'HK',
+      phone: '0901234567',
+      email: 'khanh.ph@gmail.com',
+      date: '18/05/2026',
+      tickets: '45 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1985-04-05',
+      memberTier: 'Kim cương',
+      occupation: 'Trưởng phòng',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100117',
+      name: 'Vũ Hồng Ngọc',
+      initials: 'HN',
+      phone: '0891234567',
+      email: 'ngoc.vh@gmail.com',
+      date: '17/05/2026',
+      tickets: '3 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1998-08-12',
+      memberTier: 'Không có',
+      occupation: 'Học sinh',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100116',
+      name: 'Nguyễn Hải Đăng',
+      initials: 'HD',
+      phone: '0881234567',
+      email: 'dang.nh@gmail.com',
+      date: '16/05/2026',
+      tickets: '12 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1990-02-28',
+      memberTier: 'Bạc',
+      occupation: 'Kiến trúc sư',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100115',
+      name: 'Đặng Kim Chi',
+      initials: 'KC',
+      phone: '0871234567',
+      email: 'chi.dk@gmail.com',
+      date: '15/05/2026',
+      tickets: '0 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nữ',
+      birthDate: '1995-06-15',
+      memberTier: 'Không có',
+      occupation: 'Nhân viên bán hàng',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100114',
+      name: 'Trần Lâm Viên',
+      initials: 'LV',
+      phone: '0861234567',
+      email: 'vien.tl@gmail.com',
+      date: '14/05/2026',
+      tickets: '16 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1992-10-10',
+      memberTier: 'Vàng',
+      occupation: 'Nhà báo',
+      bookings: [],
+      logs: []
+    },
+    {
+      code: 'KH100113',
+      name: 'Lý Quốc Bảo',
+      initials: 'QB',
+      phone: '0851234567',
+      email: 'bao.lq@gmail.com',
+      date: '13/05/2026',
+      tickets: '35 vé',
+      status: 'Đang hoạt động',
+      gender: 'Nam',
+      birthDate: '1988-03-24',
+      memberTier: 'Kim cương',
+      occupation: 'Luật sư',
+      bookings: [],
+      logs: []
+    },
+    {
       code: 'KH100132',
       name: 'Nguyễn Mỹ Mỹ',
       initials: 'MM',
       phone: '0900234567',
       email: 'mymy.nguyen@yahoo.com',
       date: '31/05/2026',
-      tickets: '1-vé',
+      tickets: '18-vé',
       status: 'Đang hoạt động',
       gender: 'Nữ',
       birthDate: '1995-10-20',
@@ -275,7 +514,7 @@ export class QuanLyTaiKhoanKhachHang {
       phone: '0912345678',
       email: 'tuychon.dt@gmail.com',
       date: '28/05/2026',
-      tickets: '3-vé',
+      tickets: '32-vé',
       status: 'Đang hoạt động',
       gender: 'Nữ',
       birthDate: '1985-02-14',
@@ -361,14 +600,48 @@ export class QuanLyTaiKhoanKhachHang {
     return list;
   }
 
+  // Pagination Getter Properties
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.filteredCustomers.length / this.pageSize));
+  }
+
+  get validCurrentPage(): number {
+    return Math.min(Math.max(this.currentPage, 1), this.totalPages);
+  }
+
+  get paginatedCustomers(): any[] {
+    const start = (this.validCurrentPage - 1) * this.pageSize;
+    return this.filteredCustomers.slice(start, start + this.pageSize);
+  }
+
+  get startIndex(): number {
+    if (this.filteredCustomers.length === 0) return 0;
+    return (this.validCurrentPage - 1) * this.pageSize + 1;
+  }
+
+  get endIndex(): number {
+    return Math.min(this.validCurrentPage * this.pageSize, this.filteredCustomers.length);
+  }
+
+  changePage(page: number) {
+    this.currentPage = page;
+  }
+
+  updatePageSize(size: any) {
+    this.pageSize = parseInt(size, 10);
+    this.currentPage = 1;
+  }
+
   setTab(tab: string) {
     this.activeTab = tab;
+    this.currentPage = 1;
   }
 
   // Trigger search action
   applyFilter() {
     this.appliedSearchQuery = this.searchQuery;
     this.appliedSearchGender = this.searchGender;
+    this.currentPage = 1;
   }
 
   clearSearchQuery() {
@@ -552,4 +825,9 @@ export class QuanLyTaiKhoanKhachHang {
     this.customers.unshift(JSON.parse(JSON.stringify(this.newCustomer)));
     this.closeCreateModal();
   }
+
+  getMemberTier(item: any): string {
+    return item.memberTier || 'Không có';
+  }
 }
+

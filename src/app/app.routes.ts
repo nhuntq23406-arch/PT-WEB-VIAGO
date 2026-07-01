@@ -144,7 +144,7 @@ export const routes: Routes = [
       {
         path: 'khachhang/tai-khoan',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang').then(
+          import('./featured/admin/khach-hang/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang').then(
             (m) => m.QuanLyTaiKhoanKhachHang
           ),
       },
@@ -165,7 +165,7 @@ export const routes: Routes = [
       {
         path: 'nhanvien/tai-khoan',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien').then(
+          import('./featured/admin/nhan-vien/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien').then(
             (m) => m.QuanLyTaiKhoanNhanVien
           ),
       },
