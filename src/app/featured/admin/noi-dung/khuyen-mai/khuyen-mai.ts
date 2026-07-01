@@ -414,6 +414,9 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
   // Selected Voucher for stats and details monitoring
   selectedVoucherForStats: Voucher | null = null;
   showStatsModal = false;
+  voucherPendingDelete: Voucher | null = null;
+  formFeedbackMessage = '';
+  formFeedbackType: 'error' | 'success' = 'success';
 
   get mostUsedVoucher(): string {
     if (!this.vouchers || this.vouchers.length === 0) return 'Không có';
@@ -531,7 +534,7 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
 
   saveVoucher() {
     if (!this.newVoucher.code || !this.newVoucher.name) {
-      alert('Vui lòng nhập đầy đủ Mã voucher và Tên khuyến mãi!');
+      this.showFormFeedback('Vui lòng nhập đầy đủ Mã voucher và Tên khuyến mãi!', 'error');
       return;
     }
 
@@ -607,10 +610,10 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
 
     if (index >= 0) {
       this.vouchers[index] = voucherToSave;
-      alert(`Đã cập nhật mã voucher ${voucherToSave.code} thành công!`);
+      this.showFormFeedback(`Đã cập nhật mã voucher ${voucherToSave.code} thành công!`, 'success');
     } else {
       this.vouchers.unshift(voucherToSave);
-      alert(`Đã tạo mã voucher ${voucherToSave.code} thành công!`);
+      this.showFormFeedback(`Đã tạo mã voucher ${voucherToSave.code} thành công!`, 'success');
     }
 
     // Select this saved voucher to view
@@ -622,6 +625,7 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
   }
 
   resetForm() {
+    this.formFeedbackMessage = '';
     this.newVoucher = {
       code: '',
       name: '',
@@ -695,12 +699,24 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
   }
 
   deleteVoucher(voucher: Voucher) {
-    if (confirm(`Bạn có chắc chắn muốn xóa mã voucher ${voucher.code}?`)) {
-      this.vouchers = this.vouchers.filter(v => v.code !== voucher.code);
-      if (this.selectedVoucherForStats?.code === voucher.code) {
-        this.selectedVoucherForStats = this.vouchers.length > 0 ? this.vouchers[0] : null;
-      }
+    this.voucherPendingDelete = voucher;
+  }
+
+  cancelDeleteVoucher() {
+    this.voucherPendingDelete = null;
+  }
+
+  confirmDeleteVoucher() {
+    if (!this.voucherPendingDelete) {
+      return;
     }
+
+    const voucher = this.voucherPendingDelete;
+    this.vouchers = this.vouchers.filter(v => v.code !== voucher.code);
+    if (this.selectedVoucherForStats?.code === voucher.code) {
+      this.selectedVoucherForStats = this.vouchers.length > 0 ? this.vouchers[0] : null;
+    }
+    this.voucherPendingDelete = null;
   }
 
   viewStats(voucher: Voucher) {
@@ -744,6 +760,11 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
 
   get totalVoucherRevenue(): number {
     return this.vouchers.reduce((acc, v) => acc + v.revenueGenerated, 0);
+  }
+
+  private showFormFeedback(message: string, type: 'error' | 'success') {
+    this.formFeedbackMessage = message;
+    this.formFeedbackType = type;
   }
 
   getReasonLabel(reason: string): string {

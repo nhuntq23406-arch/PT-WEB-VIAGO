@@ -9,14 +9,14 @@
       </div>
       <!-- Switcher Button Group -->
       <div style="background-color: #f1f5f9; border-radius: 8px; padding: 4px; display: flex; gap: 4px; border: 1px solid #e2e8f0; align-items: center;">
-        <button (click)="activeReportTab = 'charts'" 
-                [style.background-color]="activeReportTab === 'charts' ? '#0f172a' : 'transparent'" 
+        <button (click)="activeReportTab = 'charts'"
+                [style.background-color]="activeReportTab === 'charts' ? '#1E3A8A' : 'transparent'"
                 [style.color]="activeReportTab === 'charts' ? '#ffffff' : '#64748b'"
                 style="border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; outline: none; line-height: 1;">
           Xem biểu đồ
         </button>
-        <button (click)="activeReportTab = 'table'" 
-                [style.background-color]="activeReportTab === 'table' ? '#0f172a' : 'transparent'" 
+        <button (click)="activeReportTab = 'table'"
+                [style.background-color]="activeReportTab === 'table' ? '#1E3A8A' : 'transparent'"
                 [style.color]="activeReportTab === 'table' ? '#ffffff' : '#64748b'"
                 style="border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; outline: none; line-height: 1;">
           Xem danh sách
@@ -126,7 +126,7 @@
             Làm mới bộ lọc
           </button>
         </div>
-        <button class="btn" style="background-color: #2563EB; color: #ffffff; border-color: #2563EB;" (click)="onExportExcel()">
+        <button class="btn" style="background-color: #FF6A00; color: #ffffff; border-color: #FF6A00;" (click)="onExportExcel()">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
@@ -152,7 +152,7 @@
       </div>
       
       <div class="progress-list">
-        <div class="progress-item" *ngFor="let item of filteredRoutes; let i = index">
+        <div class="progress-item interactive-chart-item" *ngFor="let item of filteredRoutes; let i = index" tabindex="0" [attr.data-tip]="item.tenTuyen + ': ' + formatCurrency(item.doanhThu.tongDoanhThu) + ' · ' + getPercentage(item.doanhThu.tongDoanhThu, summary.totalRevenue) + '%'">
           <div class="progress-label-row">
             <span class="progress-label-name">{{ item.tenTuyen }}</span>
             <span class="progress-label-val">
@@ -178,10 +178,10 @@
 
       <div class="financial-widget">
         <div class="ratio-metric">
-          <div class="ratio-circle-container">
+          <div class="ratio-circle-container interactive-chart-item" tabindex="0" [attr.data-tip]="'Tỷ lệ chuyến đúng giờ: ' + summary.onTimeRate + '%'">
             <svg class="progress-ring" width="120" height="120">
               <circle class="progress-ring__background" stroke="#f1f5f9" stroke-width="10" fill="transparent" r="50" cx="60" cy="60"/>
-              <circle class="progress-ring__circle" stroke="#6366f1" stroke-width="10" fill="transparent" r="50" cx="60" cy="60"
+              <circle class="progress-ring__circle" stroke="#1E3A8A" stroke-width="10" fill="transparent" r="50" cx="60" cy="60"
                       [attr.stroke-dashoffset]="314 - (314 * summary.onTimeRate / 100)"
                       stroke-dasharray="314"/>
             </svg>
@@ -193,8 +193,8 @@
         </div>
         
         <div class="cost-ratio-badge-blue">
-          <span style="font-size: 13px; color: #1e3a8a; font-weight: 500; display: block; margin-bottom: 2px;">Tỷ lệ lấp đầy ghế trung bình</span>
-          <strong style="color: #2563eb; font-size: 18px; font-weight: 800;">{{ summary.averageFillRate }}%</strong>
+          <span style="font-size: 13px; color: #1E3A8A; font-weight: 500; display: block; margin-bottom: 2px;">Tỷ lệ lấp đầy ghế trung bình</span>
+          <strong style="color: #10B981; font-size: 18px; font-weight: 800;">{{ summary.averageFillRate }}%</strong>
         </div>
       </div>
     </div>
@@ -209,7 +209,7 @@
       </div>
 
       <div class="progress-list">
-        <div class="progress-item" *ngFor="let item of filteredRoutes; let i = index">
+        <div class="progress-item interactive-chart-item" *ngFor="let item of filteredRoutes; let i = index" tabindex="0" [attr.data-tip]="item.tenTuyen + ': lấp đầy ' + item.lapDay.tyLeLapDayTrungBinh + '%'">
           <div class="progress-label-row">
             <span class="progress-label-name">{{ item.tenTuyen }}</span>
             <span class="progress-label-val text-teal-val">{{ item.lapDay.tyLeLapDayTrungBinh }}%</span>
@@ -235,7 +235,7 @@
       </div>
 
       <div class="financial-breakdown-list">
-        <div class="breakdown-item" *ngFor="let item of filteredRoutes">
+        <div class="breakdown-item interactive-chart-item" *ngFor="let item of filteredRoutes" tabindex="0" [attr.data-tip]="item.tenTuyen + ': doanh thu ' + formatCurrency(item.doanhThu.tongDoanhThu) + ' · chi phí 55% · lợi nhuận 45%'">
           <div class="breakdown-label-row">
             <span class="breakdown-name">{{ item.tenTuyen }}</span>
             <span class="breakdown-values">
@@ -269,12 +269,12 @@
       </div>
 
       <div class="service-quality-list">
-        <div class="quality-item" *ngFor="let item of filteredRoutes">
+        <div class="quality-item interactive-chart-item" *ngFor="let item of filteredRoutes" tabindex="0" [attr.data-tip]="item.tenTuyen + ': đúng giờ ' + item.hieuSuat.soChuyenDungGio + ' · trễ ' + item.hieuSuat.soChuyenTre + ' · hủy ' + item.hieuSuat.soChuyenHuy">
           <div class="quality-label-row">
             <span class="quality-name">{{ item.tenTuyen }}</span>
             <span class="quality-status">
               Trễ: <strong class="text-orange-val">{{ item.hieuSuat.soChuyenTre }}</strong> | 
-              Hủy: <strong style="color: #ef4444;">{{ item.hieuSuat.soChuyenHuy }}</strong>
+              Hủy: <strong style="color: #EF4444;">{{ item.hieuSuat.soChuyenHuy }}</strong>
             </span>
           </div>
           <div class="quality-track">
@@ -334,12 +334,12 @@
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <strong style="color: #0f766e;">{{ item.lapDay.tyLeLapDayTrungBinh }}%</strong>
                   <div style="width: 50px; height: 6px; background-color: #f1f5f9; border-radius: 3px; overflow: hidden; display: inline-block;">
-                    <div style="height: 100%; background-color: #0d9488;" [style.width.%]="item.lapDay.tyLeLapDayTrungBinh"></div>
+                    <div style="height: 100%; background-color: #10B981;" [style.width.%]="item.lapDay.tyLeLapDayTrungBinh"></div>
                   </div>
                 </div>
               </td>
               <td style="font-weight: 700; color: #0f172a;">{{ formatCurrency(item.doanhThu.tongDoanhThu) }}</td>
-              <td style="font-weight: 700; color: #ea580c;">{{ formatCurrency(item.doanhThu.tongDoanhThu * 0.55) }}</td>
+              <td style="font-weight: 700; color: #FF6A00;">{{ formatCurrency(item.doanhThu.tongDoanhThu * 0.55) }}</td>
               <td style="font-weight: 700; color: #10b981;">{{ formatCurrency(item.doanhThu.tongDoanhThu * 0.45) }}</td>
               <td>
                 <span class="badge-status" 
@@ -462,7 +462,7 @@
         <button (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; color: #1e293b; font-weight: bold; transition: all 0.2s;">
           ‹
         </button>
-        <button *ngFor="let page of getVisiblePages()" (click)="setPage(page)" [style.background-color]="currentPage === page ? '#2563EB' : 'white'" [style.color]="currentPage === page ? 'white' : '#1e293b'" [style.border-color]="currentPage === page ? '#2563EB' : '#e2e8f0'" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+        <button *ngFor="let page of getVisiblePages()" (click)="setPage(page)" [style.background-color]="currentPage === page ? '#1E3A8A' : 'white'" [style.color]="currentPage === page ? 'white' : '#1e293b'" [style.border-color]="currentPage === page ? '#1E3A8A' : '#e2e8f0'" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; transition: all 0.2s;">
           {{ page }}
         </button>
         <button (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; color: #1e293b; font-weight: bold; transition: all 0.2s;">

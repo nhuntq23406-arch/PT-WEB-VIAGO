@@ -12,7 +12,7 @@
 <!-- Tabs are now managed purely by router query parameters (Tab header selection) -->
 
 <!-- TAB 1: CAR RENTAL CONTENT -->
-<div *ngIf="activeTab === 'thue-xe'" class="container mx-auto px-4 md:px-10 lg:px-16 py-12 tab-content">
+<div *ngIf="activeTab === 'thue-xe'" class="services-page-container container mx-auto px-4 md:px-10 lg:px-16 py-12 tab-content">
 
     <!-- STEP 1: FLEET SELECTOR (Only show if no car is selected) -->
     <div *ngIf="!selectedCar" id="fleet-selector-section" class="fleet-section mb-12">
@@ -56,24 +56,30 @@
             <h3 class="text-2xl font-black text-[#123063] tracking-tight">Dịch vụ cho mọi hành trình</h3>
             <p class="text-xs text-gray-500 mt-1">Đáp ứng hoàn hảo mọi nhu cầu di chuyển đa dạng của khách hàng.</p>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
-                <span class="text-xs font-bold text-[#123063]">Du lịch</span>
+        <div class="journey-tags-grid grid grid-cols-2 md:grid-cols-6 gap-4">
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm">
+                <span class="journey-title text-xs font-bold text-[#123063]">Du lịch</span>
+                <small>Nghỉ dưỡng, tham quan</small>
             </div>
-            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
-                <span class="text-xs font-bold text-[#123063]">Công tác</span>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm">
+                <span class="journey-title text-xs font-bold text-[#123063]">Công tác</span>
+                <small>Lịch trình linh hoạt</small>
             </div>
-            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
-                <span class="text-xs font-bold text-[#123063]">Sân bay</span>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm">
+                <span class="journey-title text-xs font-bold text-[#123063]">Sân bay</span>
+                <small>Đón tiễn đúng giờ</small>
             </div>
-            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
-                <span class="text-xs font-bold text-[#123063]">Đám cưới</span>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm">
+                <span class="journey-title text-xs font-bold text-[#123063]">Đám cưới</span>
+                <small>Xe đoàn trang trọng</small>
             </div>
-            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
-                <span class="text-xs font-bold text-[#123063]">Sự kiện</span>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm">
+                <span class="journey-title text-xs font-bold text-[#123063]">Sự kiện</span>
+                <small>Phục vụ theo đoàn</small>
             </div>
-            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
-                <span class="text-xs font-bold text-[#123063]">Team Building</span>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm">
+                <span class="journey-title text-xs font-bold text-[#123063]">Team Building</span>
+                <small>Di chuyển nhóm lớn</small>
             </div>
         </div>
     </div>
@@ -299,7 +305,7 @@
 </div>
 
 <!-- TAB 2: LOST & FOUND CONTENT -->
-<div *ngIf="activeTab === 'that-lac'" class="container mx-auto px-4 md:px-10 lg:px-16 py-6 tab-content">
+<div *ngIf="activeTab === 'that-lac'" class="lost-found-page container mx-auto px-4 md:px-10 lg:px-16 py-8 tab-content">
 
     <!-- Claiming workflow moved to the top -->
     <div class="workflow-section mb-10 border-b border-[#eef2f7] pb-10">

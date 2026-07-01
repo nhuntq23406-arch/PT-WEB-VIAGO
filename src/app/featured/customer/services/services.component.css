@@ -1,4 +1,12 @@
 /* Services component styles (Car Rental & Lost and Found) */
+:host {
+    display: block;
+    width: 100%;
+    background: #f8fafc;
+    color: #0f172a;
+    font-family: Inter, Arial, sans-serif;
+}
+
 .service-hero {
     position: relative;
     background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1600&q=80');
@@ -57,6 +65,12 @@
     animation: fadeIn 0.4s ease-in-out;
 }
 
+.services-page-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    box-sizing: border-box;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
@@ -74,6 +88,103 @@
     border: 1px solid #eef2f7;
     border-radius: 32px;
     box-shadow: 0 20px 40px rgba(18, 48, 99, 0.04);
+}
+
+.fleet-section,
+.services-journey-section,
+.selected-car-panel {
+    width: 100%;
+}
+
+.fleet-section > .flex,
+.services-journey-section > .text-center {
+    max-width: 1120px;
+    margin-inline: auto;
+}
+
+.fleet-grid {
+    max-width: 1120px !important;
+}
+
+.fleet-section {
+    margin-bottom: 28px !important;
+}
+
+.fleet-card,
+.selected-car-panel,
+.selected-car-info,
+.specs-section,
+.brochure-section,
+.suitable-section,
+.booking-sidebar {
+    border-radius: 18px !important;
+}
+
+.services-journey-section {
+    margin-top: 28px !important;
+    padding-top: 26px !important;
+    margin-bottom: 0 !important;
+}
+
+.journey-tags-grid {
+    max-width: 1120px;
+    margin-inline: auto;
+    gap: 12px !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+}
+
+.journey-item {
+    min-height: 76px;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center;
+    border-color: #e6edf6 !important;
+    border-radius: 18px !important;
+    padding: 16px 14px !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%) !important;
+    box-shadow: none !important;
+    cursor: default;
+    user-select: none;
+    transition: none !important;
+}
+
+.journey-item:hover {
+    border-color: #e6edf6 !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.journey-item .journey-title {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #123063 !important;
+}
+
+.journey-item small {
+    display: block;
+    margin-top: 5px;
+    color: #7b8aa3;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+@media (max-width: 1100px) {
+    .journey-tags-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .services-journey-section {
+        margin-top: 22px !important;
+        padding-top: 22px !important;
+    }
+
+    .journey-tags-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 
 /* Fleet Selector styles */
@@ -342,8 +453,149 @@
 }
 
 /* Lost and Found styling */
+.lost-found-page {
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+.lost-found-page .workflow-section {
+    margin-bottom: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+.lost-found-page .workflow-section h2 {
+    font-size: 28px !important;
+    line-height: 1.2;
+    margin-bottom: 28px !important;
+    letter-spacing: -0.02em;
+}
+
+.lost-found-page .workflow-grid {
+    gap: 18px !important;
+}
+
+.lost-found-page .workflow-step {
+    border-radius: 18px !important;
+    padding: 22px !important;
+    text-align: left !important;
+}
+
+.lost-found-page .workflow-step .workflow-icon {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 18px !important;
+}
+
+.lost-found-page .workflow-step h4 {
+    font-size: 16px !important;
+    line-height: 1.3;
+    margin-top: 16px !important;
+}
+
+.lost-found-page .workflow-step p {
+    font-size: 13px !important;
+    line-height: 1.6;
+}
+
 .lost-filter-wrapper {
     box-shadow: 0 10px 30px rgba(18, 48, 99, 0.03);
+    border-radius: 18px !important;
+    padding: 18px !important;
+    margin-bottom: 32px !important;
+    align-items: stretch !important;
+    display: grid !important;
+    grid-template-columns: minmax(360px, 1fr) minmax(190px, 220px) minmax(190px, 220px);
+    gap: 14px !important;
+}
+
+.lost-filter-wrapper input,
+.lost-filter-wrapper select {
+    min-height: 46px;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+    width: 100% !important;
+}
+
+.lost-filter-wrapper select {
+    padding-right: 38px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lost-filter-wrapper > div {
+    width: 100% !important;
+    min-width: 0;
+}
+
+.lost-found-page .rental-layout {
+    grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.95fr) !important;
+    gap: 28px !important;
+}
+
+.lost-found-page .rental-layout h3 {
+    font-size: 18px !important;
+}
+
+.lost-found-page .lostfound-grid {
+    gap: 18px !important;
+}
+
+.lost-found-page .lost-item-card {
+    border-radius: 18px !important;
+}
+
+.lost-found-page .lost-item-card h4 {
+    font-size: 15px !important;
+    line-height: 1.35;
+}
+
+.lost-found-page .lost-item-meta {
+    font-size: 12px !important;
+    line-height: 1.45;
+}
+
+.lost-found-page .btn-claim {
+    font-size: 13px !important;
+    min-height: 42px;
+    border-radius: 12px !important;
+}
+
+.report-sidebar-form {
+    border-radius: 20px !important;
+    padding: 24px !important;
+    background: #ffffff !important;
+}
+
+.report-sidebar-form h3 {
+    font-size: 20px !important;
+    line-height: 1.25;
+}
+
+.report-sidebar-form p {
+    font-size: 13px !important;
+    line-height: 1.6;
+}
+
+.report-sidebar-form label {
+    font-size: 11px !important;
+    letter-spacing: 0.04em;
+}
+
+.report-sidebar-form input,
+.report-sidebar-form select,
+.report-sidebar-form textarea {
+    min-height: 44px;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+}
+
+.report-sidebar-form .btn-submit {
+    min-height: 46px;
+    font-size: 13px !important;
+    border-radius: 12px !important;
 }
 
 .status-unclaimed {
@@ -390,9 +642,29 @@
 }
 
 .workflow-step:hover {
-    transform: translateY(-3px);
-    border-color: #cbd5e1;
-    box-shadow: 0 10px 25px rgba(18, 48, 99, 0.05);
+    transform: none;
+    border-color: #eef2f7;
+    box-shadow: none;
+}
+
+@media (max-width: 1024px) {
+    .lost-found-page .rental-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .lost-filter-wrapper {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .lost-found-page .workflow-section h2 {
+        font-size: 22px !important;
+    }
+
+    .report-sidebar-form .grid.grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
 }
 
 /* Floating Success Toast (Top Right) */

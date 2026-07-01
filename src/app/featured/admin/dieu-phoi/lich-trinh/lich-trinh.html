@@ -68,48 +68,6 @@
   <!-- Main Dashboard Card -->
   <div class="dashboard-card">
 
-    <!-- Premium Filter Container -->
-    <div class="calendar-strip-container" style="padding: 16px 24px; border-bottom: 1px solid #f1f5f9;">
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 16px; align-items: flex-end;">
-        <!-- Chọn Ngày -->
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 12px; font-weight: 700; color: #475569;">Chọn ngày khởi hành</label>
-          <input type="date" [(ngModel)]="selectedDateFilter" (change)="filterTrips()" style="padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; background: white; width: 100%; box-sizing: border-box;" />
-        </div>
-        
-        <!-- Chọn Điểm Đi -->
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 12px; font-weight: 700; color: #475569;">Điểm đi</label>
-          <select [(ngModel)]="startPointFilter" (change)="filterTrips()" style="padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; background: white; width: 100%; box-sizing: border-box;">
-            <option value="">Tất cả điểm đi</option>
-            <option *ngFor="let point of startPointsList" [value]="point">{{ point }}</option>
-          </select>
-        </div>
-
-        <!-- Chọn Điểm Đến -->
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 12px; font-weight: 700; color: #475569;">Điểm đến</label>
-          <select [(ngModel)]="endPointFilter" (change)="filterTrips()" style="padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; background: white; width: 100%; box-sizing: border-box;">
-            <option value="">Tất cả điểm đến</option>
-            <option *ngFor="let point of endPointsList" [value]="point">{{ point }}</option>
-          </select>
-        </div>
-        
-        <!-- Button Reset/All -->
-        <div style="display: flex; gap: 8px;">
-          <button class="btn-all-days" 
-                  [class.active]="selectedDateFilter === '' && startPointFilter === '' && endPointFilter === ''" 
-                  (click)="clearRouteFilters()" 
-                  [style.background-color]="(selectedDateFilter === '' && startPointFilter === '' && endPointFilter === '') ? '#1e3a8a' : '#ffffff'" 
-                  [style.color]="(selectedDateFilter === '' && startPointFilter === '' && endPointFilter === '') ? '#ffffff' : '#475569'" 
-                  [style.border-color]="(selectedDateFilter === '' && startPointFilter === '' && endPointFilter === '') ? '#1e3a8a' : '#cbd5e1'" 
-                  style="padding: 10px 16px; font-size: 14px; font-weight: 600; border-radius: 8px; border: 1px solid; cursor: pointer; transition: all 0.2s; width: 100%; height: 42px; display: flex; align-items: center; justify-content: center;">
-            Tất cả các ngày
-          </button>
-        </div>
-      </div>
-    </div>
-    
     <!-- Filter Bar & View Options -->
     <div class="dashboard-control-panel">
       <!-- Clean Pill Tabs (Style of the screenshot) -->
@@ -135,26 +93,40 @@
     <!-- Filters Area (styled like input boxes in screenshot) -->
     <div class="search-filters-row">
       <!-- Search Input -->
-      <div class="filter-input-wrapper col-4">
+      <div class="filter-input-wrapper filter-search">
         <label class="input-mini-label">Tìm kiếm thông tin</label>
         <div class="search-input-container">
           <input type="text" [(ngModel)]="searchQuery" (input)="filterTrips()" placeholder="Tìm theo tài xế, tuyến, biển số..." />
         </div>
       </div>
 
-      <!-- Route Dropdown -->
-      <div class="filter-input-wrapper col-4">
-        <label class="input-mini-label">Tuyến đường vận hành</label>
+      <div class="filter-input-wrapper filter-date">
+        <label class="input-mini-label">Ngày khởi hành</label>
+        <input class="filter-control" type="date" [(ngModel)]="selectedDateFilter" (change)="filterTrips()" />
+      </div>
+
+      <div class="filter-input-wrapper">
+        <label class="input-mini-label">Điểm đi</label>
         <div class="custom-select-container">
-          <select [(ngModel)]="routeFilter" (change)="filterTrips()">
-            <option value="">Lọc theo tuyến xe (Tất cả)</option>
-            <option *ngFor="let route of routesList" [value]="route">{{ route }}</option>
+          <select [(ngModel)]="startPointFilter" (change)="filterTrips()">
+            <option value="">Tất cả điểm đi</option>
+            <option *ngFor="let point of startPointsList" [value]="point">{{ point }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-input-wrapper">
+        <label class="input-mini-label">Điểm đến</label>
+        <div class="custom-select-container">
+          <select [(ngModel)]="endPointFilter" (change)="filterTrips()">
+            <option value="">Tất cả điểm đến</option>
+            <option *ngFor="let point of endPointsList" [value]="point">{{ point }}</option>
           </select>
         </div>
       </div>
 
       <!-- Sort Dropdown -->
-      <div class="filter-input-wrapper col-4">
+      <div class="filter-input-wrapper filter-sort">
         <label class="input-mini-label">Sắp xếp theo</label>
         <div class="custom-select-container">
           <select [(ngModel)]="sortBy" (change)="filterTrips()">

@@ -16,9 +16,15 @@
       <!-- Overall rating left column -->
       <div class="flex flex-col items-center justify-center text-center border-b lg:border-b-0 lg:border-r border-[#e8ebf3] pb-6 lg:pb-0 lg:pr-8">
         <h2 class="text-xs uppercase tracking-[0.25em] text-gray-500 font-bold mb-3">Đánh giá chung</h2>
-        <div class="flex items-baseline gap-2">
-          <span class="text-5xl font-black text-[#123063]">{{ averageRating }}</span>
-          <span class="text-xl font-bold text-gray-500">/ 5 điểm</span>
+        <div class="overall-rating-highlight">
+          <div class="flex items-baseline justify-center gap-2">
+            <span class="text-5xl font-black text-[#123063]">{{ averageRating }}</span>
+            <span class="text-xl font-bold text-gray-500">/ 5</span>
+          </div>
+          <div class="overall-stars" aria-label="Đánh giá trung bình {{ averageRating }} trên 5 sao">
+            <div class="stars-base">★★★★★</div>
+            <div class="stars-fill" [style.width.%]="averageRating * 20">★★★★★</div>
+          </div>
         </div>
         <p class="text-xs text-slate-400 font-semibold mt-2">Dựa trên {{ totalReviews }} đánh giá hành khách</p>
       </div>

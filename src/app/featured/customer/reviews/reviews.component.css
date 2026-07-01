@@ -1,6 +1,9 @@
 :host {
   display: block;
   width: 100%;
+  font-family: Inter, Arial, sans-serif;
+  color: #0f172a;
+  background: #f6f8fb;
 }
 
 .reviews-hero {
@@ -66,16 +69,115 @@
 }
 
 .feedback-section {
-  padding: 48px 0 80px;
-  background: linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(255, 255, 255, 0.95) 100%);
+  width: 100%;
+  max-width: 1200px;
+  margin: 32px auto 64px !important;
+  padding: 0 24px 48px !important;
+  background: transparent;
+  box-sizing: border-box;
 }
 
 .feedback-header {
   gap: 20px;
 }
 
+.feedback-section > section,
+.review-toolbar,
+.active-tags,
+.review-card,
+.filter-panel {
+  border-radius: 18px !important;
+}
+
+.feedback-section > section,
+.filter-panel,
+.review-toolbar,
+.review-card {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  backdrop-filter: none;
+}
+
+.feedback-section > section:first-of-type {
+  background: #f8fafc !important;
+}
+
+.feedback-section > section:nth-of-type(2),
+.review-toolbar {
+  background: #f8fafc !important;
+}
+
+.feedback-section > section {
+  margin-bottom: 24px !important;
+}
+
+.review-filters {
+  grid-template-columns: 260px minmax(0, 1fr);
+  align-items: start;
+}
+
+.review-list-panel {
+  min-width: 0;
+}
+
+.review-card {
+  padding: 24px !important;
+}
+
+.review-card p,
+.review-card span,
+.review-card button,
+.filter-panel,
+.review-toolbar,
+.feedback-section select,
+.feedback-section input {
+  font-family: inherit;
+}
+
+.feedback-section h1,
+.feedback-section h2,
+.feedback-section h3,
+.feedback-section h4,
+.feedback-section .font-bold,
+.feedback-section .font-black {
+  letter-spacing: 0;
+}
+
 .feedback-title-main {
   max-width: 680px;
+}
+
+.overall-rating-highlight {
+  width: 100%;
+  max-width: 178px;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.overall-stars {
+  position: relative;
+  width: max-content;
+  margin-top: 8px;
+  margin-inline: auto;
+  color: #d7dee9;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.stars-base,
+.stars-fill {
+  white-space: nowrap;
+}
+
+.stars-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  color: #ff9800;
 }
 
 .btn-reset-filter {
@@ -136,8 +238,8 @@
 }
 
 .filter-panel {
-  border-radius: 32px;
-  padding: 32px;
+  border-radius: 18px;
+  padding: 22px;
 }
 
 .filter-section {
@@ -198,12 +300,13 @@
 }
 
 .review-toolbar {
-  border-radius: 32px;
+  border-radius: 18px;
 }
 
 .review-card {
-  border-radius: 32px;
+  border-radius: 18px;
   border: 1px solid #edf2f7;
+  background: #f8fafc !important;
 }
 
 .review-card-header {
@@ -230,7 +333,9 @@
 }
 
 .review-content {
-  line-height: 1.85;
+  color: #1e293b;
+  font-size: 15px;
+  line-height: 1.75;
 }
 
 .read-more {
@@ -290,7 +395,9 @@
 }
 
 .reply-box {
-  border-radius: 30px;
+  border-radius: 18px;
+  background-color: #f4f8fc !important;
+  border-color: #dde8f3 !important;
 }
 
 .pagination {
@@ -310,6 +417,10 @@
 }
 
 @media (max-width: 1280px) {
+  .feedback-section {
+    max-width: 1120px;
+  }
+
   .review-dashboard,
   .review-filters {
     grid-template-columns: 1fr;
@@ -330,7 +441,8 @@
 
 @media (max-width: 768px) {
   .feedback-section {
-    padding-top: 28px;
+    margin-top: 20px !important;
+    padding: 0 16px 36px !important;
   }
 
   .filter-panel,
@@ -356,8 +468,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #f8fafc;
-  border: 1px solid #f1f5f9;
+  background-color: #f3f8fc;
+  border: 1px solid #e4edf7;
   border-radius: 12px;
   padding: 6px 12px;
   font-size: 10px;
@@ -454,6 +566,22 @@
 
 .three-dots-btn:hover {
   background-color: #f1f5f9;
+}
+
+.filter-panel input,
+.filter-panel select,
+.review-toolbar select,
+.feedback-section > section:nth-of-type(2) select {
+  background-color: #f4f8fc !important;
+  border-color: #d9e5f0 !important;
+}
+
+.filter-panel input:focus,
+.filter-panel select:focus,
+.review-toolbar select:focus,
+.feedback-section > section:nth-of-type(2) select:focus {
+  background-color: #ffffff !important;
+  border-color: #123063 !important;
 }
 
 

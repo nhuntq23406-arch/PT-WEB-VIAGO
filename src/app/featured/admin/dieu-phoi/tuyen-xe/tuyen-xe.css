@@ -1070,3 +1070,171 @@
   color: #64748b;
   line-height: 1.5;
 }
+
+/* Align route management layout with khuyen-mai. */
+.management-container {
+  gap: 12px;
+  min-height: calc(100vh - 78px);
+  padding: 12px;
+  background: #f6f8fb;
+}
+
+.header-card-container,
+.dashboard-card {
+  border: 1px solid #d9e2ef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.header-card-container {
+  margin: 0;
+  padding: 24px 30px;
+}
+
+.dashboard-card {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.dashboard-control-panel {
+  border-bottom: 1px solid #e2e8f0;
+  padding: 20px 24px;
+}
+
+.pill-tabs {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.search-filters-row {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 0;
+  padding: 14px 24px;
+  background: #f8fafc;
+}
+
+.routes-grid-container {
+  gap: 12px;
+  padding: 24px;
+}
+
+.route-premium-card {
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.route-premium-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+.header-action-banner {
+  min-width: min(452px, 100%);
+}
+
+@media (max-width: 900px) {
+  .header-card-container,
+  .search-filters-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-control-panel {
+    align-items: stretch;
+  }
+
+  .pill-tabs {
+    overflow-x: auto;
+  }
+}
+
+/* Unify route page colors with the admin palette. */
+.btn-clear-filters {
+  min-height: 42px;
+  border: 1px solid #1e3a8a;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background: #ffffff;
+  color: #1e3a8a;
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.btn-clear-filters:hover {
+  border-color: #1e3a8a;
+  background: #eff6ff;
+  color: #1e3a8a;
+}
+
+.price-cell .cell-value,
+.route-details-grid .price-cell .cell-value,
+.detail-cell.price-cell .cell-value {
+  color: #ff6a00 !important;
+}
+
+.btn-save {
+  border: 1px solid #ff6a00;
+  background: #ff6a00;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(255, 106, 0, 0.18);
+}
+
+.btn-save:hover {
+  border-color: #f97316;
+  background: #f97316;
+  box-shadow: 0 6px 14px rgba(255, 106, 0, 0.24);
+}
+
+.btn-cancel {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-weight: 800;
+}
+
+.btn-cancel:hover {
+  border-color: #1e3a8a;
+  background: #eff6ff;
+  color: #1e3a8a;
+}
+
+.card-action-btn {
+  border: 1px solid #dbeafe !important;
+  background-color: #eff6ff !important;
+  color: #1e3a8a !important;
+}
+
+.card-action-btn:hover {
+  border-color: #bfdbfe !important;
+  background-color: #dbeafe !important;
+}
+
+.metrics-dist {
+  color: #1e3a8a;
+  background-color: #eff6ff;
+}
+
+.road-node.end-node .node-dot {
+  background-color: #ff6a00;
+  box-shadow: 0 0 0 2px #fff3eb;
+}
+
+.stop-badge svg,
+.action-icon-circle svg {
+  color: #1e3a8a;
+}
+
+.centered-icon-wrapper {
+  background-color: #fff3eb;
+  color: #ff6a00;
+}
+
+.centered-icon-wrapper svg {
+  fill: #ff6a00;
+}

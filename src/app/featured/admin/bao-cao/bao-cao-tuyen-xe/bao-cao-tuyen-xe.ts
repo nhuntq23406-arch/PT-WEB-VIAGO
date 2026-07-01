@@ -167,14 +167,14 @@ export class BaoCaoTuyenXeComponent implements OnInit {
   activeReportTab: 'charts' | 'table' = 'charts';
 
   chartColors = [
-    '#FF6A00', // Cam thương hiệu
-    '#1E3A8A', // Xanh dương đậm
-    '#10B981', // Xanh ngọc lục bảo
-    '#8B5CF6', // Tím hoa tử đinh hương
-    '#EC4899', // Hồng cánh sen
-    '#06B6D4', // Xanh cyan nước biển
-    '#F59E0B', // Vàng hổ phách
-    '#14B8A6'  // Xanh teal lục ngọc
+    '#1E3A8A',
+    '#FF6A00',
+    '#10B981',
+    '#F59E0B',
+    '#EF4444',
+    '#3053B3',
+    '#FF8126',
+    '#152C68'
   ];
 
   // Summary KPI values
