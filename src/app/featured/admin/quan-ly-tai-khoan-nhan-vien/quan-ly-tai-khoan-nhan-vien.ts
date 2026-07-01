@@ -12,34 +12,6 @@ import { FormsModule } from '@angular/forms';
 export class QuanLyTaiKhoanNhanVien implements OnInit {
   activeTab = 'all';
 
-  get activeCount(): number {
-    return this.employees.filter(e => e.status === 'Đang hoạt động').length;
-  }
-
-  get lockedCount(): number {
-    return this.employees.filter(e => e.status === 'Đã khóa').length;
-  }
-
-  getEmployeeAvatar(code: string): string {
-    const avatars: {[key: string]: string} = {
-      'NVDP100001': 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80',
-      'CL100303': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80',
-      'NVDP100069': 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80',
-      'NVBV100126': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&h=100&q=80'
-    };
-    return avatars[code] || '';
-  }
-
-  getEmployeeBgColor(code: string): string {
-    const colors: {[key: string]: string} = {
-      'BQL100001': '#8B5CF6',
-      'CL100301': '#F59E0B',
-      'NVDP100002': '#0D9488',
-      'NVBV100127': '#EC4899'
-    };
-    return colors[code] || '#1E3A8A';
-  }
-
   // Filters State
   searchQuery = '';
   searchRole = 'all';
@@ -133,10 +105,6 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
     { key: 'tukhoacam', title: 'Quản lý từ khóa cấm', desc: 'Cho phép cấu hình các từ khóa cấm trong đánh giá.', expanded: false, icon: 'ban' },
     { key: 'baocao', title: 'Báo cáo', desc: 'Cho phép xem báo cáo doanh thu, sản lượng, vận hành.', expanded: false, icon: 'report' },
     { key: 'nhatky', title: 'Quản lý nhật ký', desc: 'Cho phép xem nhật ký hoạt động hệ thống.', expanded: false, icon: 'log' },
-    { key: 'danhgiaphanhoi', title: 'Quản lý đánh giá và phản hồi', desc: 'Cho phép quản lý, phản hồi các đánh giá của khách hàng.', expanded: false, icon: 'feedback' },
-    { key: 'dothatlac', title: 'Quản lý đồ thất lạc', desc: 'Cho phép tìm kiếm, cập nhật thông tin đồ đạc thất lạc.', expanded: false, icon: 'lost_found' },
-    { key: 'thuexehopdong', title: 'Quản lý yêu cầu thuê xe hợp đồng', desc: 'Cho phép xử lý các yêu cầu thuê xe du lịch, hợp đồng.', expanded: false, icon: 'charter' },
-    { key: 'khuyenmai', title: 'Quản lý khuyến mãi', desc: 'Cho phép quản lý các chương trình ưu đãi, mã giảm giá.', expanded: false, icon: 'promo' },
   ];
 
   employees = [
@@ -486,12 +454,6 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
     this.applyFilter();
   }
 
-  clearAllFilters() {
-    this.searchQuery = '';
-    this.searchRole = 'all';
-    this.applyFilter();
-  }
-
   generateNextEmployeeCode(prefix: string): string {
     let maxNum = 100000;
     this.employees.forEach(e => {
@@ -511,18 +473,16 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
       case 'Ban quản lý': return 'BQL';
       case 'Nhân viên bán vé': return 'NVBV';
       case 'Nhân viên điều phối': return 'NVDP';
-      case 'Nhân viên CSKH': return 'CSKH';
       default: return 'NV';
     }
   }
 
   getRolesGroupForRole(role: string): string {
     switch (role) {
-      case 'Quản trị viên': return 'QUẢN TRỊ VIÊN (13 QUYỀN)';
+      case 'Quản trị viên': return 'QUẢN TRỊ VIÊN (9 QUYỀN)';
       case 'Ban quản lý': return 'BAN QUẢN LÝ (1 QUYỀN)';
       case 'Nhân viên bán vé': return 'NHÂN VIÊN BÁN VÉ (2 QUYỀN)';
       case 'Nhân viên điều phối': return 'NHÂN VIÊN ĐIỀU PHỐI (3 QUYỀN)';
-      case 'Nhân viên CSKH': return 'NHÂN VIÊN CSKH (5 QUYỀN)';
       default: return 'NHÂN VIÊN (0 QUYỀN)';
     }
   }
@@ -797,7 +757,7 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
     const target = isCreate ? this.newEmployee : this.selectedEmployee;
     if (!target) return;
     if (roleType === 'admin') {
-      target.permissions = ['datve', 'tintuc', 'dieuphoi', 'khachhang', 'nhanvien', 'chinhsach', 'tukhoacam', 'baocao', 'nhatky', 'danhgiaphanhoi', 'dothatlac', 'thuexehopdong', 'khuyenmai'];
+      target.permissions = ['datve', 'tintuc', 'dieuphoi', 'khachhang', 'nhanvien', 'chinhsach', 'tukhoacam', 'baocao', 'nhatky'];
       target.defaultRole = 'Quản trị viên';
     } else if (roleType === 'manager') {
       target.permissions = ['baocao'];
@@ -808,9 +768,6 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
     } else if (roleType === 'cashier') {
       target.permissions = ['datve', 'baocao'];
       target.defaultRole = 'Nhân viên bán vé';
-    } else if (roleType === 'cskh') {
-      target.permissions = ['khachhang', 'danhgiaphanhoi', 'dothatlac', 'thuexehopdong', 'khuyenmai'];
-      target.defaultRole = 'Nhân viên CSKH';
     }
     if (isCreate) {
       this.updateCreateRolesCount();
@@ -862,10 +819,5 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
   getPermissionTitle(key: string): string {
     const found = this.permissionModules.find(m => m.key === key);
     return found ? found.title : key;
-  }
-
-  getCleanRoleGroup(roles: string): string {
-    if (!roles) return '';
-    return roles.split(' (')[0];
   }
 }

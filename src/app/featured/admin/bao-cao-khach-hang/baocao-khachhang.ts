@@ -110,6 +110,12 @@ export class BaoCaoKhachHangComponent implements OnInit {
   };
 
   filteredCustomers: CustomerReportItem[] = [];
+  paginatedCustomers: CustomerReportItem[] = [];
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
 
   // Stats
   stats = {
@@ -153,6 +159,29 @@ export class BaoCaoKhachHangComponent implements OnInit {
     });
 
     this.calculateStats();
+    this.currentPage = 1;
+    this.updatePaginatedCustomers();
+  }
+
+  updatePaginatedCustomers() {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredCustomers.length / this.pageSize));
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedCustomers = this.filteredCustomers.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedCustomers();
+    }
+  }
+
+  getVisiblePages(): number[] {
+    const pages = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   private parseDate(dateStr: string): Date {

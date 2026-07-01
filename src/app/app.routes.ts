@@ -48,14 +48,14 @@ export const routes: Routes = [
       {
         path: 'dieuphoi/tuyen',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-tuyen-xe/quan-ly-tuyen-xe').then(
+          import('./featured/admin/dieu-phoi/tuyen-xe/tuyen-xe').then(
             (m) => m.QuanLyTuyenXeComponent
           ),
       },
       {
         path: 'dieuphoi/lich-trinh',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-lich-trinh/quan-ly-lich-trinh').then(
+          import('./featured/admin/dieu-phoi/lich-trinh/lich-trinh').then(
             (m) => m.QuanLyLichTrinhComponent
           ),
       },
@@ -107,16 +107,16 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'baocao/chi-tiet',
+        path: 'baocao/doanh-thu',
         loadComponent: () =>
-          import('./featured/admin/bao-cao-chi-tiet/bao-cao-chi-tiet').then(
+          import('./featured/admin/bao-cao/bao-cao-chi-tiet/bao-cao-chi-tiet').then(
             (m) => m.BaoCaoChiTietComponent
           ),
       },
       {
         path: 'baocao/tuyen',
         loadComponent: () =>
-          import('./featured/admin/bao-cao-tuyen-xe/bao-cao-tuyen-xe').then(
+          import('./featured/admin/bao-cao/bao-cao-tuyen-xe/bao-cao-tuyen-xe').then(
             (m) => m.BaoCaoTuyenXeComponent
           ),
       },
@@ -130,21 +130,14 @@ export const routes: Routes = [
       {
         path: 'khuyenmai',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-khuyen-mai/quan-ly-khuyen-mai').then(
+          import('./featured/admin/noi-dung/khuyen-mai/khuyen-mai').then(
             (m) => m.QuanLyKhuyenMaiComponent
-          ),
-      },
-      {
-        path: 'noidung/tin-tuc',
-        loadComponent: () =>
-          import('./featured/admin/quan-ly-tin-tuc/quan-ly-tin-tuc').then(
-            (m) => m.QuanLyTinTuc
           ),
       },
       {
         path: 'khachhang/tai-khoan',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang').then(
+          import('./featured/admin/khach-hang/quan-ly-tai-khoan-khach-hang/quan-ly-tai-khoan-khach-hang').then(
             (m) => m.QuanLyTaiKhoanKhachHang
           ),
       },
@@ -165,7 +158,7 @@ export const routes: Routes = [
       {
         path: 'nhanvien/tai-khoan',
         loadComponent: () =>
-          import('./featured/admin/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien').then(
+          import('./featured/admin/nhan-vien/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien').then(
             (m) => m.QuanLyTaiKhoanNhanVien
           ),
       },

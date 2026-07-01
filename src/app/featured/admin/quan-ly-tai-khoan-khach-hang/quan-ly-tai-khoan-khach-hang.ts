@@ -12,14 +12,6 @@ import { FormsModule } from '@angular/forms';
 export class QuanLyTaiKhoanKhachHang {
   activeTab = 'all';
 
-  get activeCount(): number {
-    return this.customers.filter(c => c.status === 'Đang hoạt động').length;
-  }
-
-  get lockedCount(): number {
-    return this.customers.filter(c => c.status === 'Đã khóa').length;
-  }
-
   // Filters State
   searchQuery = '';
   searchGender = 'all';
@@ -373,12 +365,6 @@ export class QuanLyTaiKhoanKhachHang {
 
   clearSearchQuery() {
     this.searchQuery = '';
-    this.applyFilter();
-  }
-
-  clearAllFilters() {
-    this.searchQuery = '';
-    this.searchGender = 'all';
     this.applyFilter();
   }
 
