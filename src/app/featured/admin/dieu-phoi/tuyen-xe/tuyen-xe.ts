@@ -25,11 +25,11 @@ export interface ToastMessage {
 }
 
 @Component({
-  selector: 'app-quan-ly-tuyen-xe',
+  selector: 'app-tuyen-xe',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './quan-ly-tuyen-xe.html',
-  styleUrls: ['./quan-ly-tuyen-xe.css']
+  templateUrl: './tuyen-xe.html',
+  styleUrls: ['./tuyen-xe.css']
 })
 export class QuanLyTuyenXeComponent implements OnInit {
   activeTab: 'all' | 'active' | 'locked' = 'all';

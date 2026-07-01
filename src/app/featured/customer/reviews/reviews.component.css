@@ -434,4 +434,26 @@
   color: white !important;
 }
 
+/* Custom report menu and button styles */
+.interaction-btn-flat {
+  transition: opacity 0.2s ease;
+}
+.interaction-btn-flat:hover {
+  opacity: 0.8;
+}
+
+.three-dots-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.three-dots-btn:hover {
+  background-color: #f1f5f9;
+}
+
 

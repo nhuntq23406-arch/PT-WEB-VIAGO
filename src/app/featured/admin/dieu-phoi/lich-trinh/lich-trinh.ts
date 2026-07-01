@@ -30,11 +30,11 @@ export interface RouteDetail {
 }
 
 @Component({
-  selector: 'app-quan-ly-lich-trinh',
+  selector: 'app-lich-trinh',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './quan-ly-lich-trinh.html',
-  styleUrls: ['./quan-ly-lich-trinh.css']
+  templateUrl: './lich-trinh.html',
+  styleUrls: ['./lich-trinh.css']
 })
 export class QuanLyLichTrinhComponent implements OnInit {
   activeTab: 'all' | 'running' | 'waiting' | 'completed' | 'locked' = 'all';
@@ -46,6 +46,12 @@ export class QuanLyLichTrinhComponent implements OnInit {
   selectedDateFilter = '';
   dateStripDays: { label: string; dateStr: string; dayNum: string; monthStr: string }[] = [];
 
+  // Route filters
+  startPointFilter = '';
+  endPointFilter = '';
+  startPointsList: string[] = [];
+  endPointsList: string[] = [];
+
   // Month filter
   selectedMonthFilter = '';
 
@@ -54,6 +60,12 @@ export class QuanLyLichTrinhComponent implements OnInit {
   allTrips: LichTrinh[] = [];
   baseFilteredTrips: LichTrinh[] = [];
   filteredTrips: LichTrinh[] = [];
+  paginatedTrips: LichTrinh[] = [];
+
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
 
   // Modal control
   isModalOpen = false;
@@ -118,8 +130,14 @@ export class QuanLyLichTrinhComponent implements OnInit {
     this.initMockData();
     this.extractRoutesList();
     this.initDateStrip();
+    this.extractPointsList();
     this.filterTrips();
     this.generateSeatMap(22);
+  }
+
+  extractPointsList() {
+    this.startPointsList = Array.from(new Set(this.routesDb.map(r => r.startPoint)));
+    this.endPointsList = Array.from(new Set(this.routesDb.map(r => r.endPoint)));
   }
 
   initDateStrip() {
@@ -140,11 +158,18 @@ export class QuanLyLichTrinhComponent implements OnInit {
     const cars = this.carsList;
     const drivers = this.driversList;
     const codrivers = this.codriversList;
-    const dates = ['2026-06-25', '2026-06-26', '2026-06-27', '2026-06-28', '2026-06-29', '2026-06-30', '2026-07-01'];
-    const times = ['05:00', '07:30', '09:00', '11:15', '13:30', '15:00', '17:45', '19:30', '21:00', '22:30', '23:45'];
-
+    
+    // Generate dates from 2026-06-01 to 2026-07-15 (45 days)
+    const dates: string[] = [];
+    const start = new Date('2026-06-01');
+    const end = new Date('2026-07-15');
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      dates.push(d.toISOString().substring(0, 10));
+    }
+    
+    const times = ['05:00', '09:00', '13:30', '17:45', '21:00'];
     let id = 1;
-    // Generate 77 trips (11 trips per day)
+    
     dates.forEach((date, dateIdx) => {
       times.forEach((time, timeIdx) => {
         const route = routes[(dateIdx * 3 + timeIdx) % routes.length];
@@ -154,22 +179,14 @@ export class QuanLyLichTrinhComponent implements OnInit {
         const plate = this.platesDb[car].plate;
         const seats = this.platesDb[car].seats;
 
-        // Determine status realistically relative to local current time (2026-06-26 21:28)
+        // Determine status realistically relative to local current time (2026-06-29)
         let status: 'running' | 'waiting' | 'completed' | 'locked' = 'waiting';
-        if (date < '2026-06-26') {
+        if (date < '2026-06-29') {
           status = 'completed';
-        } else if (date === '2026-06-26') {
-          const [h, m] = time.split(':').map(Number);
-          if (h < 19) {
-            status = 'completed';
-          } else if (h >= 19 && h <= 21) {
-            status = 'running';
-          } else {
-            status = 'waiting';
-          }
+        } else if (date === '2026-06-29') {
+          status = 'running';
         } else {
-          // Future dates
-          status = (id % 12 === 0) ? 'locked' : 'waiting'; // occasional locked vehicle/trip
+          status = (id % 15 === 0) ? 'locked' : 'waiting';
         }
 
         this.allTrips.push({
@@ -208,8 +225,14 @@ export class QuanLyLichTrinhComponent implements OnInit {
       // Route dropdown filter
       if (this.routeFilter && t.routeName !== this.routeFilter) return false;
 
-      // Date strip filter
+      // Date filter
       if (this.selectedDateFilter && t.departureDate !== this.selectedDateFilter) return false;
+
+      // Departure (startPoint) filter
+      if (this.startPointFilter && t.startPoint !== this.startPointFilter) return false;
+
+      // Destination (endPoint) filter
+      if (this.endPointFilter && t.endPoint !== this.endPointFilter) return false;
 
       // Month filter
       if (this.selectedMonthFilter && !t.departureDate.startsWith(this.selectedMonthFilter)) return false;
@@ -243,6 +266,43 @@ export class QuanLyLichTrinhComponent implements OnInit {
     } else if (this.sortBy === 'price-desc') {
       this.filteredTrips.sort((a, b) => b.price - a.price);
     }
+
+    this.currentPage = 1;
+    this.updatePaginatedTrips();
+  }
+
+  updatePaginatedTrips() {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredTrips.length / this.pageSize));
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedTrips = this.filteredTrips.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  setPage(page: number | string) {
+    if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedTrips();
+    }
+  }
+
+  getPaginationItems(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    
+    if (total <= 6) {
+      const pages = [];
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+
+    if (current <= 3) {
+      return [1, 2, 3, 4, '...', total - 2, total - 1, total];
+    } else if (current >= total - 2) {
+      return [1, 2, 3, '...', total - 3, total - 2, total - 1, total];
+    } else {
+      return [1, '...', current - 1, current, current + 1, '...', total];
+    }
   }
 
   onMonthChange() {
@@ -268,12 +328,21 @@ export class QuanLyLichTrinhComponent implements OnInit {
     this.filterTrips();
   }
 
+  clearRouteFilters() {
+    this.selectedDateFilter = '';
+    this.startPointFilter = '';
+    this.endPointFilter = '';
+    this.filterTrips();
+  }
+
   clearFilters() {
     this.routeFilter = '';
     this.searchQuery = '';
     this.sortBy = 'default';
     this.selectedDateFilter = '';
     this.selectedMonthFilter = '';
+    this.startPointFilter = '';
+    this.endPointFilter = '';
     this.initDateStrip();
     this.filterTrips();
     this.addToast('Đã xóa tất cả bộ lọc tìm kiếm!', 'success');
@@ -305,6 +374,24 @@ export class QuanLyLichTrinhComponent implements OnInit {
     return this.baseFilteredTrips
       .filter(t => t.status !== 'locked')
       .reduce((sum, t) => sum + (t.price * t.seatsCount), 0);
+  }
+
+  // Calculate most booked route dynamically based on active filtered trips
+  getMostBookedRoute(): string {
+    if (this.baseFilteredTrips.length === 0) return 'Không có';
+    const routeCounts: { [key: string]: number } = {};
+    this.baseFilteredTrips.forEach(t => {
+      routeCounts[t.routeName] = (routeCounts[t.routeName] || 0) + 1;
+    });
+    let mostBooked = '';
+    let maxCount = -1;
+    for (const route in routeCounts) {
+      if (routeCounts[route] > maxCount) {
+        maxCount = routeCounts[route];
+        mostBooked = route;
+      }
+    }
+    return mostBooked ? `${mostBooked} (${maxCount} chuyến)` : 'Không có';
   }
 
   // Dispatched drivers active count in baseFilteredTrips
