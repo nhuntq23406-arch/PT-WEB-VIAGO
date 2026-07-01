@@ -23,6 +23,9 @@ interface CustomerReportItem {
   styleUrls: ['./baocao-khachhang.css']
 })
 export class BaoCaoKhachHangComponent implements OnInit {
+  // View Mode
+  cheDoXem: 'bieu-do' | 'danh-sach' = 'bieu-do';
+
   // Mock Data
   customers: CustomerReportItem[] = [
     { maKH: 'KH0001', hoTen: 'Nguyễn Minh Anh', sdt: '0901234567', email: 'minhanh@gmail.com', ngayDangKy: '15/01/2025', loaiKH: 'Hội viên', hangThanhVien: 'Bạc', tongChiTieu: 4500000, tongVeDat: 8, trangThai: 'Đang hoạt động' },
@@ -46,6 +49,55 @@ export class BaoCaoKhachHangComponent implements OnInit {
     { maKH: 'KH0019', hoTen: 'Phan Nhật Nam', sdt: '0379012345', email: 'nhatnam@gmail.com', ngayDangKy: '12/12/2025', loaiKH: 'Hội viên', hangThanhVien: 'Kim cương', tongChiTieu: 19800000, tongVeDat: 34, trangThai: 'Đang hoạt động' },
     { maKH: 'KH0020', hoTen: 'Bùi Thanh Tùng', sdt: '0360123456', email: 'thanhtung@gmail.com', ngayDangKy: '20/12/2025', loaiKH: 'Khách vãng lai', hangThanhVien: 'Không có', tongChiTieu: 700000, tongVeDat: 1, trangThai: 'Đang hoạt động' }
   ];
+
+  // Dashboard Mock Data
+  dashboard = {
+    coCauKH: [
+      { label: 'Hội viên', pct: 75, tone: 'primary' },
+      { label: 'Khách vãng lai', pct: 25, tone: 'warning' }
+    ],
+    dangKyTheoThang: [
+      { month: 'Tháng 1', count: 12, x: 0, y: 80 },
+      { month: 'Tháng 2', count: 18, x: 20, y: 60 },
+      { month: 'Tháng 3', count: 15, x: 40, y: 70 },
+      { month: 'Tháng 4', count: 25, x: 60, y: 30 },
+      { month: 'Tháng 5', count: 32, x: 80, y: 10 },
+      { month: 'Tháng 6', count: 28, x: 100, y: 20 }
+    ],
+    phanBoHangTV: [
+      { label: 'Bạc', count: 10, pct: 52, tone: 'silver' },
+      { label: 'Vàng', count: 5, pct: 26, tone: 'gold' },
+      { label: 'Kim cương', count: 4, pct: 22, tone: 'diamond' }
+    ],
+    chiTieuTheoHangTV: [
+      { label: 'Bạc', value: 18900000, pct: 18 },
+      { label: 'Vàng', value: 45800000, pct: 42 },
+      { label: 'Kim cương', value: 106200000, pct: 100 }
+    ],
+    topKhachHang: [
+      { name: 'Phạm Thanh Hằng', spending: 25600000, pct: 100 },
+      { name: 'Phan Ngọc Linh', spending: 22300000, pct: 87 },
+      { name: 'Phan Nhật Nam', spending: 19800000, pct: 77 },
+      { name: 'Phạm Gia Hưng', spending: 18500000, pct: 72 },
+      { name: 'Võ Đức Minh', spending: 11300000, pct: 44 }
+    ],
+    khachHangMoi: [
+      { name: 'Bùi Thanh Tùng', date: '20/12/2025', type: 'Khách vãng lai' },
+      { name: 'Phan Nhật Nam', date: '12/12/2025', type: 'Hội viên' },
+      { name: 'Đỗ Minh Châu', date: '30/11/2025', type: 'Hội viên' },
+      { name: 'Mai Quốc Thịnh', date: '18/11/2025', type: 'Hội viên' },
+      { name: 'Đặng Thảo Nhi', date: '05/11/2025', type: 'Khách vãng lai' }
+    ],
+    trangThaiKH: [
+      { label: 'Đang hoạt động', count: 18, pct: 90, tone: 'success' },
+      { label: 'Đã khóa', count: 2, pct: 10, tone: 'danger' }
+    ],
+    insights: {
+      hangNhieuNhat: 'Bạc',
+      thangNhieuNhat: 'Tháng 5',
+      khachChiTieuCao: 'Phạm Thanh Hằng'
+    }
+  };
 
   // Filters
   filters = {
@@ -127,6 +179,10 @@ export class BaoCaoKhachHangComponent implements OnInit {
       totalMembers: 0,
       totalSpending: 0
     });
+  }
+
+  ChuyenCheDoXem(mode: 'bieu-do' | 'danh-sach') {
+    this.cheDoXem = mode;
   }
 
   onResetFilters() {

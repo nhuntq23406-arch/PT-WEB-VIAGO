@@ -16,6 +16,11 @@
     linear-gradient(0deg,
       rgba(255, 255, 255, 1) 0%,
       rgba(255, 255, 255, 1) 100%);
+  transition: padding-left 0.3s ease;
+}
+
+.trang-ch-amin.sidebar-collapsed {
+  padding-left: 72px;
 }
 
 .main-content {

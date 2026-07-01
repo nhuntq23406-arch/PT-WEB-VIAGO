@@ -59,6 +59,23 @@ export class TaiXeComponent implements OnInit {
     this.filterPersonnel();
   }
 
+  // Helper methods for tab counts
+  getTotalCount(): number {
+    return this.allPersonnel.length;
+  }
+
+  getDriverCount(): number {
+    return this.allPersonnel.filter(p => p.role === 'Tài xế' && p.status !== 'Đã khóa').length;
+  }
+
+  getAssistantCount(): number {
+    return this.allPersonnel.filter(p => p.role === 'Phụ xe' && p.status !== 'Đã khóa').length;
+  }
+
+  getLockedCount(): number {
+    return this.allPersonnel.filter(p => p.status === 'Đã khóa').length;
+  }
+
   setTab(tab: 'Tất cả' | 'Tài xế' | 'Phụ xe' | 'Đã khóa') {
     this.activeTab = tab;
     this.filterPersonnel();

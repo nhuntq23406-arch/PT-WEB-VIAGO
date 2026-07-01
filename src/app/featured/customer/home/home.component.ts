@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
 
 @Component({
@@ -31,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   allCities = [
-    'TP. Hồ Chí Minh',
+    'TP.HCM',
     'Đà Lạt',
     'Nha Trang',
     'Cần Thơ',
@@ -44,10 +45,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   departureCities: string[] = [];
   destinationCities: string[] = [];
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit() {
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
+
+    // Xử lý query parameters từ trang lịch trình
+    this.route.queryParams.subscribe(params => {
+      if (params['from']) this.departure = params['from'];
+      if (params['to']) this.destination = params['to'];
+      if (params['date']) this.departureDate = params['date'];
+      
+      if (params['from'] || params['to']) {
+        this.updateDestinationCities();
+      }
+
+      if (params['scroll']) {
+        setTimeout(() => {
+          const element = document.getElementById(params['scroll']);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
+    });
   }
 
   ngOnDestroy() {

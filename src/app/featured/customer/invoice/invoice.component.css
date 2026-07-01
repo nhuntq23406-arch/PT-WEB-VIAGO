@@ -32,3 +32,48 @@
   transform: rotate(-18deg);
   color: #2563EB;
 }
+
+@media print {
+  body > *:not(.invoice-page) {
+    display: none !important;
+  }
+
+  .invoice-page {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  .invoice-hero,
+  .invoice-tabs,
+  .invoice-page .flex.flex-wrap.gap-3.justify-center.mb-6,
+  .invoice-page .flex.justify-center,
+  .modal {
+    display: none !important;
+  }
+
+  /* Ensure content is visible */
+  .invoice-page .max-w-[600px] {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .invoice-page .bg-surface,
+  .invoice-page .bg-surface-container-low {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .invoice-page .p-8 {
+    padding: 0 !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+

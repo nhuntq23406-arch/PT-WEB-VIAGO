@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -10,6 +10,13 @@ import { CommonModule } from '@angular/common';
 })
 export class TopbarComponent {
   today: string = this.getVietnameseDate();
+
+  @Output() toggleSidebar = new EventEmitter<void>();
+
+  onToggleClick(event: Event): void {
+    event.preventDefault();
+    this.toggleSidebar.emit();
+  }
 
   private getVietnameseDate(): string {
     const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];

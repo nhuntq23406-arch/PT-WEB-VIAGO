@@ -52,7 +52,7 @@
   margin-top: -60px;
   padding: 0 20px;
   position: relative;
-  z-index: 100; /* Đảm bảo nổi lên trên Hero */
+  z-index: 10; /* Chỉ cần nổi lên trên Hero (z-index: 2) */
 }
 
 .search-container {
@@ -184,7 +184,7 @@
 .featured-section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 24px;
+  padding: 80px 24px 32px;
 }
 
 .featured-grid {
@@ -309,7 +309,7 @@
 .all-routes-section {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 24px;
+  padding: 32px 24px 80px;
 }
 
 .routes-grid {
@@ -468,8 +468,12 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  .featured-section, .all-routes-section {
-    padding: 60px 24px;
+  .featured-section {
+    padding: 60px 24px 24px;
+  }
+
+  .all-routes-section {
+    padding: 24px 24px 60px;
   }
   .hero-title {
     font-size: 32px;

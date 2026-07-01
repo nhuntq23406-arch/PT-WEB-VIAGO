@@ -6,6 +6,33 @@ type InvoiceTab = 'search' | 'verify';
 type ViewState = 'form' | 'loading' | 'result';
 type ModalType = 'success' | 'fail' | 'system_error' | null;
 
+interface Invoice {
+  lookupCode: string;
+  invoiceNumber: string;
+  symbol: string;
+  issueDate: string;
+  companyInfo: {
+    name: string;
+    address: string;
+    taxId: string;
+  };
+  customerInfo: {
+    name: string;
+    address: string;
+    taxId: string;
+  };
+  tripInfo: {
+    route: string;
+    departureTime: string;
+    arrivalTime: string;
+    price: number;
+  };
+  totalAmount: number;
+  status: 'valid' | 'invalid';
+  imageUrl: string;
+}
+
+
 @Component({
   selector: 'app-invoice',
   standalone: true,
@@ -44,6 +71,86 @@ export class InvoiceComponent {
 
   // Mock Invoice Data
   mockInvoiceImg = 'asset/images/customer/hoadon.png';
+
+  mockInvoices: Invoice[] = [
+    {
+      lookupCode: 'VIAGO12345',
+      invoiceNumber: '0000001',
+      symbol: 'AA/2024',
+      issueDate: '2024-06-25',
+      companyInfo: {
+        name: 'Công ty TNHH ViAGO',
+        address: '123 Đường ABC, Quận 1, TP.HCM',
+        taxId: '0312345678',
+      },
+      customerInfo: {
+        name: 'Nguyễn Văn A',
+        address: '456 Đường XYZ, Quận 2, TP.HCM',
+        taxId: '0109876543',
+      },
+      tripInfo: {
+        route: 'TP.HCM - Đà Lạt',
+        departureTime: '2024-07-01 08:00',
+        arrivalTime: '2024-07-01 14:00',
+        price: 300000,
+      },
+      totalAmount: 300000,
+      status: 'valid',
+      imageUrl: 'asset/images/customer/hoadon.png',
+    },
+    {
+      lookupCode: 'VIAGO67890',
+      invoiceNumber: '0000002',
+      symbol: 'BB/2024',
+      issueDate: '2024-06-26',
+      companyInfo: {
+        name: 'Công ty TNHH ViAGO',
+        address: '123 Đường ABC, Quận 1, TP.HCM',
+        taxId: '0312345678',
+      },
+      customerInfo: {
+        name: 'Trần Thị B',
+        address: '789 Đường QWE, Quận 3, TP.HCM',
+        taxId: '0101122334',
+      },
+      tripInfo: {
+        route: 'Hà Nội - Sapa',
+        departureTime: '2024-07-05 20:00',
+        arrivalTime: '2024-07-06 06:00',
+        price: 500000,
+      },
+      totalAmount: 500000,
+      status: 'valid',
+      imageUrl: 'asset/images/customer/hoadon.png',
+    },
+    {
+      lookupCode: 'VIAGOINVALID',
+      invoiceNumber: '0000003',
+      symbol: 'CC/2024',
+      issueDate: '2024-06-27',
+      companyInfo: {
+        name: 'Công ty TNHH ViAGO',
+        address: '123 Đường ABC, Quận 1, TP.HCM',
+        taxId: '0312345678',
+      },
+      customerInfo: {
+        name: 'Lê Văn C',
+        address: '101 Đường RTY, Quận 4, TP.HCM',
+        taxId: '0105566778',
+      },
+      tripInfo: {
+        route: 'Đà Nẵng - Huế',
+        departureTime: '2024-07-10 10:00',
+        arrivalTime: '2024-07-10 12:00',
+        price: 150000,
+      },
+      totalAmount: 150000,
+      status: 'invalid',
+      imageUrl: 'asset/images/customer/hoadon.png',
+    }
+  ];
+
+  foundInvoice: Invoice | null = null;
   
   setActiveTab(tab: InvoiceTab) {
     this.activeTab = tab;
@@ -55,6 +162,7 @@ export class InvoiceComponent {
     this.modalType = null;
     this.captchaInput = '';
     this.errors = { searchCaptcha: '', verifyFile: '', verifyCaptcha: '' };
+    this.foundInvoice = null; // Clear found invoice
     this.refreshCaptcha();
   }
 
@@ -81,9 +189,75 @@ export class InvoiceComponent {
     }
 
     this.viewState = 'loading';
+    this.foundInvoice = null; // Reset found invoice
+
     setTimeout(() => {
-      this.viewState = 'result';
+      const invoice = this.mockInvoices.find(inv => inv.lookupCode === this.searchData.invoiceCode);
+      if (invoice) {
+        this.foundInvoice = invoice;
+        this.mockInvoiceImg = invoice.imageUrl; // Update image based on found invoice
+        this.viewState = 'result';
+      } else {
+        // Handle not found case, maybe show an error modal or message
+        this.showModal('fail'); // Using fail modal for not found for now
+        this.viewState = 'form'; // Go back to form or show a specific not-found view
+      }
     }, 1500);
+  }
+
+  downloadXml() {
+    if (!this.foundInvoice) return;
+
+    const invoice = this.foundInvoice;
+    const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+<Invoice>
+  <LookupCode>${invoice.lookupCode}</LookupCode>
+  <InvoiceNumber>${invoice.invoiceNumber}</InvoiceNumber>
+  <Symbol>${invoice.symbol}</Symbol>
+  <IssueDate>${invoice.issueDate}</IssueDate>
+  <CompanyInfo>
+    <Name>${invoice.companyInfo.name}</Name>
+    <Address>${invoice.companyInfo.address}</Address>
+    <TaxId>${invoice.companyInfo.taxId}</TaxId>
+  </CompanyInfo>
+  <CustomerInfo>
+    <Name>${invoice.customerInfo.name}</Name>
+    <Address>${invoice.customerInfo.address}</Address>
+    <TaxId>${invoice.customerInfo.taxId}</TaxId>
+  </CustomerInfo>
+  <TripInfo>
+    <Route>${invoice.tripInfo.route}</Route>
+    <DepartureTime>${invoice.tripInfo.departureTime}</DepartureTime>
+    <ArrivalTime>${invoice.tripInfo.arrivalTime}</ArrivalTime>
+    <Price>${invoice.tripInfo.price}</Price>
+  </TripInfo>
+  <TotalAmount>${invoice.totalAmount}</TotalAmount>
+  <Status>${invoice.status}</Status>
+</Invoice>`;
+
+    const filename = `HD_${invoice.invoiceNumber}.xml`;
+    const blob = new Blob([xmlContent], { type: 'application/xml' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
+  printInvoice() {
+    if (this.foundInvoice && this.foundInvoice.imageUrl) {
+      const printWindow = window.open(this.foundInvoice.imageUrl, '_blank');
+      if (printWindow) {
+        printWindow.onload = () => {
+          printWindow.print();
+        };
+      }
+    } else {
+      window.print(); // Fallback to printing the whole page if no image found
+    }
   }
 
   // --- Verify Tab Logic ---
@@ -102,8 +276,8 @@ export class InvoiceComponent {
     this.errors.verifyFile = '';
     this.verifyData.file = null;
 
-    if (!file.name.toLowerCase().endsWith('.xml')) {
-      this.errors.verifyFile = 'Chỉ chấp nhận tệp định dạng .XML';
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      this.errors.verifyFile = 'Chỉ chấp nhận tệp định dạng .PDF';
       return;
     }
 
@@ -127,11 +301,27 @@ export class InvoiceComponent {
       return;
     }
 
-    this.showModal('success');
-    
+    if (!this.verifyData.file) {
+      this.errors.verifyFile = 'Vui lòng tải lên tệp hóa đơn PDF.';
+      return;
+    }
+
+    this.viewState = 'loading';
+
     setTimeout(() => {
-      this.modalType = null;
-      this.viewState = 'result';
+      // Simulate reading data from PDF file name
+      // const fileName = this.verifyData.file?.name || '';
+      // const lookupCodeFromPdf = fileName.split('_')[0]; // Assuming format like VIAGO12345_invoice.pdf
+
+      // const foundInvoice = this.mockInvoices.find(inv => inv.lookupCode === lookupCodeFromPdf);
+
+      // Always show success for now, as per requirement
+      this.showModal('success');
+      
+      setTimeout(() => {
+        this.modalType = null;
+        this.viewState = 'result';
+      }, 1500);
     }, 1500);
   }
 
