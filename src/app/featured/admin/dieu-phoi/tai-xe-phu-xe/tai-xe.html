@@ -3,11 +3,11 @@
   <div class="header-card-container">
     <div class="header-titles">
       <span class="category-tag">QUẢN LÝ ĐIỀU PHỐI</span>
-      <h1 class="main-title">Nhân sự & Tài xế</h1>
+      <h1 class="main-title">Tài xế & phụ xe</h1>
     </div>
     
     <!-- Action Banner & Create Button Box -->
-    <div class="header-action-banner" (click)="openAddModal()" title="Nhấp để thêm nhân sự mới">
+    <div class="header-action-banner" (click)="openAddModal()" title="Nhấp để thêm tài xế & phụ xe">
       <div class="action-icon-circle">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -16,7 +16,7 @@
         </svg>
       </div>
       <div class="action-banner-text">
-        <h3>Thêm nhân sự</h3>
+        <h3>Thêm tài xế & phụ xe</h3>
         <p>Thiết lập thông tin tài xế, phụ xe, bằng lái và hồ sơ nhân sự.</p>
       </div>
     </div>
@@ -126,6 +126,7 @@
                 <span class="status-indicator" 
                   [class.active]="p.status === 'Đang làm việc'"
                   [class.maintenance]="p.status === 'Nghỉ phép'"
+                  [class.expiring]="getDisplayStatus(p) === 'Sắp hết hạn'"
                   [class.locked]="p.status === 'Đã khóa'"></span>
                 <span class="text-semibold">{{ p.name }}</span>
               </div>
@@ -143,10 +144,11 @@
             <td class="col-expiry text-center">{{ p.licenseExpiry }}</td>
             <td class="col-status text-center">
               <span class="status-badge" 
-                [class.status-active]="p.status === 'Đang làm việc'"
-                [class.status-leave]="p.status === 'Nghỉ phép'"
+                [class.status-active]="getDisplayStatus(p) === 'Đang làm việc'"
+                [class.status-leave]="getDisplayStatus(p) === 'Nghỉ phép'"
+                [class.status-expiring]="getDisplayStatus(p) === 'Sắp hết hạn'"
                 [class.status-locked]="p.status === 'Đã khóa'">
-                {{ p.status }}
+                {{ getDisplayStatus(p) }}
               </span>
             </td>
             <td class="col-actions text-center">
@@ -157,17 +159,6 @@
                     <line x1="3" y1="13" x2="13" y2="13"></line>
                     <line x1="3" y1="18" x2="9" y2="18"></line>
                     <path d="M16 14l4.5-4.5a1.5 1.5 0 0 1 2.1 2.1L18 16.5H16V14z"></path>
-                  </svg>
-                </button>
-                <button class="btn-icon" [title]="p.status === 'Đã khóa' ? 'Mở khóa' : 'Khóa'" (click)="toggleLock(p)">
-                  <svg *ngIf="p.status !== 'Đã khóa'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                  </svg>
-                  <svg *ngIf="p.status === 'Đã khóa'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M12 15v3"></path>
                   </svg>
                 </button>
               </div>
@@ -182,7 +173,7 @@
   <div class="modal-overlay" *ngIf="isModalOpen">
     <div class="modal-container custom-scrollbar">
       <div class="modal-header">
-        <h2 class="modal-title">{{ isEditMode ? 'Cập nhật nhân sự' : 'Thêm nhân sự mới' }}</h2>
+        <h2 class="modal-title">{{ isEditMode ? 'Cập nhật tài xế & phụ xe' : 'Thêm tài xế & phụ xe' }}</h2>
         <button class="btn-close" (click)="closeModal()">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -192,27 +183,7 @@
       </div>
 
       <div class="modal-body">
-        <!-- Avatar Section -->
-        <div class="avatar-upload-section">
-          <div class="avatar-box" (click)="avatarInput.click()">
-            <img *ngIf="currentPersonnel.avatar" [src]="currentPersonnel.avatar" class="avatar-img">
-            <div *ngIf="!currentPersonnel.avatar" class="avatar-placeholder">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-              <span>Ảnh đại diện</span>
-            </div>
-            <input type="file" #avatarInput hidden (change)="onImageUpload($event, 'avatar')" accept="image/*">
-          </div>
-        </div>
-
         <div class="form-row">
-          <div class="form-item col-8" [class.has-error]="errors.name">
-            <label>Họ và tên <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="currentPersonnel.name" placeholder="Nhập tên nhân sự">
-            <span class="error-msg" *ngIf="errors.name">Vui lòng nhập tên</span>
-          </div>
           <div class="form-item col-4" [class.has-error]="errors.role">
             <label>Vai trò <span class="required">*</span></label>
             <select [(ngModel)]="currentPersonnel.role">
@@ -220,56 +191,130 @@
               <option value="Phụ xe">Phụ xe</option>
             </select>
           </div>
+          <div class="form-item col-4" [class.has-error]="errors.name">
+            <label>Họ và tên <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="currentPersonnel.name" placeholder="Nhập Họ và tên">
+            <span class="error-msg" *ngIf="errors.name">Vui lòng nhập tên</span>
+          </div>
+          <div class="form-item col-4">
+            <label>Ngày sinh <span class="required">*</span></label>
+            <input type="date" [(ngModel)]="currentPersonnel.dob">
+          </div>
         </div>
 
         <div class="form-row">
-          <div class="form-item col-6">
-            <label>Ngày sinh</label>
-            <input type="text" [(ngModel)]="currentPersonnel.dob" placeholder="DD/MM/YYYY">
-          </div>
           <div class="form-item col-6" [class.has-error]="errors.phone">
             <label>Số điện thoại <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="currentPersonnel.phone" placeholder="Nhập số điện thoại">
+            <input type="text" [(ngModel)]="currentPersonnel.phone" placeholder="Nhập Số điện thoại">
             <span class="error-msg" *ngIf="errors.phone">Vui lòng nhập SĐT</span>
+          </div>
+          <div class="form-item col-6" [class.has-error]="errors.identityNumber">
+            <label>Số CCCD/CMND <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="currentPersonnel.identityNumber" placeholder="Nhập số CCCD/CMND">
+            <span class="error-msg" *ngIf="errors.identityNumber">Vui lòng nhập CCCD/CMND</span>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-item col-6" [class.has-error]="errors.licenseClass">
             <label>Hạng bằng lái <span class="required">*</span></label>
-            <select [(ngModel)]="currentPersonnel.licenseClass">
-              <option value="">Chọn hạng bằng</option>
-              <option value="B2">B2</option>
-              <option value="C">C</option>
-              <option value="D">D</option>
-              <option value="E">E</option>
-            </select>
+            <input type="text" [(ngModel)]="currentPersonnel.licenseClass" placeholder="VD: A1, B2, C...">
           </div>
           <div class="form-item col-6" [class.has-error]="errors.licenseExpiry">
-            <label>Ngày hết hạn <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="currentPersonnel.licenseExpiry" placeholder="DD/MM/YYYY">
+            <label>Hạn bằng lái <span class="required">*</span></label>
+            <input type="date" [(ngModel)]="currentPersonnel.licenseExpiry">
           </div>
         </div>
 
-        <div class="form-item col-12">
-          <label>Hình ảnh bằng lái</label>
-          <div class="license-upload-box" (click)="licenseInput.click()">
-            <img *ngIf="currentPersonnel.licenseImage" [src]="currentPersonnel.licenseImage" class="license-preview">
-            <div *ngIf="!currentPersonnel.licenseImage" class="upload-placeholder">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-              <span>Tải ảnh bằng lái lên</span>
+        <div class="upload-grid">
+          <div class="upload-field upload-field-large">
+            <label>Ảnh chân dung <span class="required">*</span></label>
+            <div class="document-upload-box portrait-upload" (click)="avatarInput.click()">
+              <img *ngIf="currentPersonnel.avatar" [src]="currentPersonnel.avatar" class="document-preview">
+              <div *ngIf="!currentPersonnel.avatar" class="upload-placeholder">
+                <span class="upload-plus">+</span>
+                <span>Tải ảnh lên</span>
+              </div>
+              <button *ngIf="currentPersonnel.avatar" class="btn-remove-license" (click)="$event.stopPropagation(); removeImage('avatar')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <input type="file" #avatarInput hidden (change)="onImageUpload($event, 'avatar')" accept="image/*">
             </div>
-            <button *ngIf="currentPersonnel.licenseImage" class="btn-remove-license" (click)="$event.stopPropagation(); removeImage('licenseImage')">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-            <input type="file" #licenseInput hidden (change)="onImageUpload($event, 'licenseImage')" accept="image/*">
+          </div>
+
+          <div class="upload-field">
+            <label>Bằng lái xe mặt trước <span class="required">*</span></label>
+            <div class="document-upload-box" (click)="licenseFrontInput.click()">
+              <img *ngIf="currentPersonnel.licenseFrontImage" [src]="currentPersonnel.licenseFrontImage" class="document-preview">
+              <div *ngIf="!currentPersonnel.licenseFrontImage" class="upload-placeholder">
+                <span class="upload-plus">+</span>
+                <span>Tải ảnh lên</span>
+              </div>
+              <button *ngIf="currentPersonnel.licenseFrontImage" class="btn-remove-license" (click)="$event.stopPropagation(); removeImage('licenseFrontImage')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <input type="file" #licenseFrontInput hidden (change)="onImageUpload($event, 'licenseFrontImage')" accept="image/*">
+            </div>
+          </div>
+
+          <div class="upload-field">
+            <label>Bằng lái xe mặt sau <span class="required">*</span></label>
+            <div class="document-upload-box" (click)="licenseBackInput.click()">
+              <img *ngIf="currentPersonnel.licenseBackImage" [src]="currentPersonnel.licenseBackImage" class="document-preview">
+              <div *ngIf="!currentPersonnel.licenseBackImage" class="upload-placeholder">
+                <span class="upload-plus">+</span>
+                <span>Tải ảnh lên</span>
+              </div>
+              <button *ngIf="currentPersonnel.licenseBackImage" class="btn-remove-license" (click)="$event.stopPropagation(); removeImage('licenseBackImage')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <input type="file" #licenseBackInput hidden (change)="onImageUpload($event, 'licenseBackImage')" accept="image/*">
+            </div>
+          </div>
+
+          <div class="upload-field">
+            <label>CCCD mặt trước <span class="required">*</span></label>
+            <div class="document-upload-box" (click)="identityFrontInput.click()">
+              <img *ngIf="currentPersonnel.identityFrontImage" [src]="currentPersonnel.identityFrontImage" class="document-preview">
+              <div *ngIf="!currentPersonnel.identityFrontImage" class="upload-placeholder">
+                <span class="upload-plus">+</span>
+                <span>Tải ảnh lên</span>
+              </div>
+              <button *ngIf="currentPersonnel.identityFrontImage" class="btn-remove-license" (click)="$event.stopPropagation(); removeImage('identityFrontImage')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <input type="file" #identityFrontInput hidden (change)="onImageUpload($event, 'identityFrontImage')" accept="image/*">
+            </div>
+          </div>
+
+          <div class="upload-field">
+            <label>CCCD mặt sau <span class="required">*</span></label>
+            <div class="document-upload-box" (click)="identityBackInput.click()">
+              <img *ngIf="currentPersonnel.identityBackImage" [src]="currentPersonnel.identityBackImage" class="document-preview">
+              <div *ngIf="!currentPersonnel.identityBackImage" class="upload-placeholder">
+                <span class="upload-plus">+</span>
+                <span>Tải ảnh lên</span>
+              </div>
+              <button *ngIf="currentPersonnel.identityBackImage" class="btn-remove-license" (click)="$event.stopPropagation(); removeImage('identityBackImage')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <input type="file" #identityBackInput hidden (change)="onImageUpload($event, 'identityBackImage')" accept="image/*">
+            </div>
           </div>
         </div>
       </div>
@@ -286,7 +331,7 @@
         </div>
         <div class="footer-right">
           <button class="btn-cancel" (click)="closeModal()">Hủy bỏ</button>
-          <button class="btn-save" (click)="savePersonnel()">{{ isEditMode ? 'Lưu thay đổi' : 'Thêm nhân sự' }}</button>
+          <button class="btn-save" (click)="savePersonnel()">{{ isEditMode ? 'Lưu thay đổi' : 'Lưu' }}</button>
         </div>
       </div>
     </div>

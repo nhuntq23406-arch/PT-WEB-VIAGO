@@ -135,18 +135,27 @@
             <span>Tỷ lệ Hội viên vs Khách vãng lai</span>
           </div>
           <div class="chart-content flex-center">
-            <div class="donut-chart-mini">
+            <div class="donut-chart-mini interactive-donut-mini">
               <svg viewBox="0 0 100 100">
-                <circle class="donut-ring" cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" stroke-width="12"></circle>
-                <circle class="donut-segment primary" cx="50" cy="50" r="40" fill="transparent" stroke="var(--viago-primary)" stroke-width="12" stroke-dasharray="75 25" stroke-dashoffset="25"></circle>
+                <circle class="donut-track" cx="50" cy="50" r="40" pathLength="100" fill="transparent" stroke-width="12" transform="rotate(-90 50 50)"></circle>
+                <circle class="donut-segment warning donut-segment-mini" tabindex="0" cx="50" cy="50" r="40" pathLength="100" fill="transparent" stroke="var(--viago-warning)" stroke-width="12" stroke-dasharray="25 75" stroke-dashoffset="-75" transform="rotate(-90 50 50)"></circle>
+                <circle class="donut-segment primary donut-segment-mini" tabindex="0" cx="50" cy="50" r="40" pathLength="100" fill="transparent" stroke="var(--viago-primary)" stroke-width="12" stroke-dasharray="75 25" stroke-dashoffset="0" transform="rotate(-90 50 50)"></circle>
               </svg>
               <div class="donut-label">
                 <strong>75%</strong>
                 <small>Hội viên</small>
               </div>
+              <div class="donut-tooltip-mini primary">
+                <strong>Hội viên</strong>
+                <span>75% khách hàng</span>
+              </div>
+              <div class="donut-tooltip-mini warning">
+                <strong>Khách vãng lai</strong>
+                <span>25% khách hàng</span>
+              </div>
             </div>
             <div class="chart-legend-v">
-              <div class="legend-item" *ngFor="let item of dashboard.coCauKH">
+              <div class="legend-item interactive-tip" *ngFor="let item of dashboard.coCauKH" tabindex="0" [attr.data-tip]="item.label + ': ' + item.pct + '%'">
                 <span class="dot" [style.background]="item.tone === 'primary' ? 'var(--viago-primary)' : 'var(--viago-warning)'"></span>
                 <span class="label">{{item.label}}</span>
                 <span class="val">{{item.pct}}%</span>
@@ -163,9 +172,18 @@
           </div>
           <div class="chart-content">
             <div class="line-chart-simple">
-              <svg viewBox="0 0 200 100" preserveAspectRatio="none">
-                <path d="M0,80 L40,60 L80,70 L120,30 L160,10 L200,20" fill="none" stroke="var(--viago-primary)" stroke-width="3"></path>
-                <circle *ngFor="let p of dashboard.dangKyTheoThang" [attr.cx]="p.x*2" [attr.cy]="p.y" r="4" fill="white" stroke="var(--viago-primary)" stroke-width="2"></circle>
+              <svg viewBox="0 0 600 100">
+                <path d="M50,80 L150,60 L250,70 L350,30 L450,10 L550,20" fill="none" stroke="var(--viago-primary)" stroke-width="3"></path>
+                <g class="line-point-group" *ngFor="let p of dashboard.dangKyTheoThang" tabindex="0">
+                  <line class="line-hover-guide" [attr.x1]="p.x * 5 + 50" [attr.x2]="p.x * 5 + 50" y1="8" y2="88"></line>
+                  <circle class="line-point-hit" [attr.cx]="p.x * 5 + 50" [attr.cy]="p.y" r="12"></circle>
+                  <circle class="line-point" [attr.cx]="p.x * 5 + 50" [attr.cy]="p.y" r="4"></circle>
+                  <g class="line-tooltip" [attr.transform]="'translate(' + (p.x * 5 + 50) + ',' + (p.y > 35 ? p.y - 26 : p.y + 30) + ')'">
+                    <rect x="-45" y="-18" width="90" height="32" rx="7"></rect>
+                    <text y="-6">{{p.month}}</text>
+                    <text y="8">{{p.count}} khách</text>
+                  </g>
+                </g>
               </svg>
               <div class="line-labels">
                 <span *ngFor="let p of dashboard.dangKyTheoThang">{{p.month}}</span>
@@ -183,13 +201,15 @@
             <h3 class="chart-title">Phân bố hạng thành viên</h3>
             <span>Số lượng khách theo từng hạng</span>
           </div>
-          <div class="chart-content vertical-bars">
-            <div class="v-bar-item" *ngFor="let item of dashboard.phanBoHangTV">
-              <div class="v-bar-track">
-                <div class="v-bar-fill" [style.height.%]="item.pct" [class]="item.tone"></div>
+          <div class="chart-content membership-bars">
+            <div class="membership-bar-row interactive-tip" *ngFor="let item of dashboard.phanBoHangTV" tabindex="0" [attr.data-tip]="item.label + ': ' + item.count + ' khách · ' + item.pct + '%'">
+              <div class="membership-bar-head">
+                <span class="membership-label">{{item.label}}</span>
+                <strong class="membership-val">{{item.count}}</strong>
               </div>
-              <span class="v-bar-label">{{item.label}}</span>
-              <strong class="v-bar-val">{{item.count}}</strong>
+              <div class="membership-bar-track">
+                <div class="membership-bar-fill" [style.width.%]="item.pct" [class]="item.tone"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -201,7 +221,7 @@
             <span>Tổng giá trị giao dịch (VNĐ)</span>
           </div>
           <div class="chart-content compact-bars">
-            <div class="chart-row" *ngFor="let item of dashboard.chiTieuTheoHangTV">
+            <div class="chart-row interactive-tip" *ngFor="let item of dashboard.chiTieuTheoHangTV" tabindex="0" [attr.data-tip]="item.label + ': ' + formatCurrency(item.value)">
               <div class="chart-label-row">
                 <span class="chart-row-label">{{item.label}}</span>
                 <strong class="chart-row-val">{{formatCurrency(item.value)}}</strong>
@@ -220,7 +240,7 @@
             <span>Khách hàng thân thiết nhất</span>
           </div>
           <div class="chart-content compact-bars">
-            <div class="chart-row" *ngFor="let item of dashboard.topKhachHang">
+            <div class="chart-row interactive-tip" *ngFor="let item of dashboard.topKhachHang" tabindex="0" [attr.data-tip]="item.name + ': ' + formatCurrency(item.spending)">
               <div class="chart-label-row">
                 <span class="chart-row-label">{{item.name}}</span>
                 <strong class="chart-row-val">{{formatCurrency(item.spending)}}</strong>
@@ -242,7 +262,7 @@
             <span>5 khách hàng vừa gia nhập</span>
           </div>
           <div class="recent-list-mini">
-            <div class="recent-item-mini" *ngFor="let item of dashboard.khachHangMoi">
+            <div class="recent-item-mini interactive-tip" *ngFor="let item of dashboard.khachHangMoi" tabindex="0" [attr.data-tip]="item.name + ' Â· ' + item.type + ' Â· ' + item.date">
               <div class="item-info">
                 <strong>{{item.name}}</strong>
                 <small>{{item.type}}</small>
@@ -259,18 +279,27 @@
             <span>Đang hoạt động vs Đã khóa</span>
           </div>
           <div class="chart-content flex-center">
-            <div class="donut-chart-mini">
+            <div class="donut-chart-mini interactive-donut-mini">
               <svg viewBox="0 0 100 100">
-                <circle class="donut-ring" cx="50" cy="50" r="40" fill="transparent" stroke="#f1f5f9" stroke-width="12"></circle>
-                <circle class="donut-segment success" cx="50" cy="50" r="40" fill="transparent" stroke="var(--viago-success)" stroke-width="12" stroke-dasharray="90 10" stroke-dashoffset="25"></circle>
+                <circle class="donut-track" cx="50" cy="50" r="40" pathLength="100" fill="transparent" stroke-width="12" transform="rotate(-90 50 50)"></circle>
+                <circle class="donut-segment danger donut-segment-mini" tabindex="0" cx="50" cy="50" r="40" pathLength="100" fill="transparent" stroke="var(--viago-error)" stroke-width="12" stroke-dasharray="10 90" stroke-dashoffset="-90" transform="rotate(-90 50 50)"></circle>
+                <circle class="donut-segment success donut-segment-mini" tabindex="0" cx="50" cy="50" r="40" pathLength="100" fill="transparent" stroke="var(--viago-success)" stroke-width="12" stroke-dasharray="90 10" stroke-dashoffset="0" transform="rotate(-90 50 50)"></circle>
               </svg>
               <div class="donut-label">
                 <strong>90%</strong>
                 <small>Hoạt động</small>
               </div>
+              <div class="donut-tooltip-mini success">
+                <strong>Đang hoạt động</strong>
+                <span>18 khách · 90%</span>
+              </div>
+              <div class="donut-tooltip-mini danger">
+                <strong>Đã khóa</strong>
+                <span>2 khách · 10%</span>
+              </div>
             </div>
             <div class="chart-legend-v">
-              <div class="legend-item" *ngFor="let item of dashboard.trangThaiKH">
+              <div class="legend-item interactive-tip" *ngFor="let item of dashboard.trangThaiKH" tabindex="0" [attr.data-tip]="item.label + ': ' + item.count + ' khách · ' + item.pct + '%'">
                 <span class="dot" [style.background]="item.tone === 'success' ? 'var(--viago-success)' : 'var(--viago-error)'"></span>
                 <span class="label">{{item.label}}</span>
                 <span class="val">{{item.count}}</span>

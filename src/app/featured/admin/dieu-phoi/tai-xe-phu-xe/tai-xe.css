@@ -223,6 +223,10 @@
 .col-search { flex: 2; }
 .col-role, .col-license, .col-status { flex: 1; }
 
+.search-filters-row .col-status {
+  text-align: left;
+}
+
 .input-mini-label {
   font-size: 11px;
   font-weight: 800;
@@ -296,6 +300,8 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  table-layout: fixed;
+  min-width: 1060px;
 }
 
 .data-table th {
@@ -322,15 +328,15 @@
   background-color: var(--slate-light);
 }
 
-.col-stt { width: 60px; text-align: center; }
-.col-name { min-width: 200px; }
-.col-role { width: 120px; text-align: center; }
+.col-stt { width: 56px; text-align: center; }
+.col-name { width: 170px; }
+.col-role { width: 110px; text-align: center; }
 .col-dob { width: 120px; text-align: center; }
-.col-phone { width: 140px; text-align: center; }
-.col-license { width: 100px; text-align: center; }
+.col-phone { width: 130px; text-align: center; }
+.col-license { width: 105px; text-align: center; }
 .col-expiry { width: 130px; text-align: center; }
-.col-status { width: 150px; text-align: center; }
-.col-actions { width: 120px; text-align: center; }
+.col-status { width: 140px; text-align: center; }
+.col-actions { width: 80px; text-align: center; }
 
 .text-center { text-align: center; }
 .text-semibold { font-weight: 600; color: var(--navy); }
@@ -352,6 +358,7 @@
 
 .status-indicator.active { background-color: var(--success); }
 .status-indicator.maintenance { background-color: var(--warning); }
+.status-indicator.expiring { background-color: var(--secondary); }
 .status-indicator.locked { background-color: var(--danger); }
 
 /* Role Badges */
@@ -409,6 +416,11 @@
   color: var(--danger);
 }
 
+.status-expiring {
+  background-color: var(--secondary-light);
+  color: var(--secondary);
+}
+
 /* Action Icons */
 .btn-icon {
   background: none;
@@ -446,7 +458,7 @@
 .modal-container {
   background-color: var(--surface);
   width: 90%;
-  max-width: 650px;
+  max-width: 720px;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-modal);
   display: flex;
@@ -593,6 +605,66 @@
 .form-item.has-error input,
 .form-item.has-error select {
   border-color: var(--danger);
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px 22px;
+  align-items: start;
+}
+
+.upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.upload-field-large {
+  grid-row: span 2;
+}
+
+.upload-field label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.document-upload-box {
+  border: 1.5px dashed #cbd5e1;
+  border-radius: var(--radius-lg);
+  min-height: 104px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: var(--slate-light);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.portrait-upload {
+  min-height: 244px;
+}
+
+.document-upload-box:hover {
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.document-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+
+.upload-plus {
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 500;
 }
 
 /* License Upload */

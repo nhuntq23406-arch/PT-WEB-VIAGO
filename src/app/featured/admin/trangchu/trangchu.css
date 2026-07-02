@@ -203,7 +203,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 16px 32px;
+  padding: 16px;
   position: relative;
   flex: 1;
   flex-grow: 1;
@@ -249,7 +249,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: fit-content;
+  width: 100%;
   font-family: "Montserrat-Regular", Helvetica;
   font-weight: 400;
   color: #6b7280;
@@ -262,7 +262,7 @@
 
 .text-wrapper-3 {
   position: relative;
-  width: fit-content;
+  width: 100%;
   margin-top: -1px;
   font-family: "Montserrat-Regular", Helvetica;
   font-weight: 400;
@@ -271,32 +271,36 @@
   text-align: center;
   letter-spacing: 0;
   line-height: 16px;
+  white-space: nowrap;
 }
 
 /* Wrapper containers for card descriptions */
 .qu-n-l-tuy-n-xe-l-ch-wrapper {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 11.28px;
+  width: 100%;
+  padding: 0;
   position: relative;
   flex: 0 0 auto;
 }
 
 .qu-n-l-kh-ch-h-ng-nh-wrapper {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 5.17px 0px 5.16px;
+  width: 100%;
+  padding: 0;
   position: relative;
   flex: 0 0 auto;
 }
 
 .xem-b-o-c-o-th-ng-k-wrapper {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 0.98px;
+  width: 100%;
+  padding: 0;
   position: relative;
   flex: 0 0 auto;
 }

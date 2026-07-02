@@ -8,9 +8,16 @@ export interface Personnel {
   role: 'Tài xế' | 'Phụ xe';
   dob: string;
   phone: string;
+  identityNumber?: string;
   licenseClass: string;
   licenseExpiry: string;
   status: 'Đang làm việc' | 'Nghỉ phép' | 'Đã khóa';
+  avatar?: string | null;
+  licenseImage?: string | null;
+  licenseFrontImage?: string | null;
+  licenseBackImage?: string | null;
+  identityFrontImage?: string | null;
+  identityBackImage?: string | null;
 }
 
 @Component({
@@ -36,7 +43,7 @@ export class TaiXeComponent implements OnInit {
 
   roleOptions = ['Tất cả', 'Tài xế', 'Phụ xe'];
   licenseOptions = ['Tất cả', 'B2', 'C', 'D', 'E'];
-  statusOptions = ['Tất cả', 'Đang làm việc', 'Nghỉ phép', 'Đã khóa'];
+  statusOptions = ['Tất cả', 'Đang làm việc', 'Nghỉ phép', 'Sắp hết hạn', 'Đã khóa'];
 
   allPersonnel: Personnel[] = [
     { id: 1, name: 'Nguyễn Văn Minh', role: 'Tài xế', dob: '15/03/1985', phone: '0901234567', licenseClass: 'E', licenseExpiry: '20/08/2028', status: 'Đang làm việc' },
@@ -92,11 +99,13 @@ export class TaiXeComponent implements OnInit {
 
       const matchesSearch = !this.searchQuery || 
         p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-        p.phone.includes(this.searchQuery);
+        p.phone.includes(this.searchQuery) ||
+        !!p.identityNumber?.includes(this.searchQuery);
 
       const matchesRole = this.roleFilter === 'Tất cả' || p.role === this.roleFilter;
       const matchesLicense = this.licenseFilter === 'Tất cả' || p.licenseClass === this.licenseFilter;
-      const matchesStatus = this.statusFilter === 'Tất cả' || p.status === this.statusFilter;
+      const matchesStatus = this.statusFilter === 'Tất cả' ||
+        (this.statusFilter === 'Sắp hết hạn' ? this.isLicenseExpiringSoon(p) : p.status === this.statusFilter);
 
       return matchesTab && matchesSearch && matchesRole && matchesLicense && matchesStatus;
     });
@@ -117,8 +126,13 @@ export class TaiXeComponent implements OnInit {
       status: 'Đang làm việc',
       role: this.activeTab === 'Phụ xe' ? 'Phụ xe' : 'Tài xế',
       licenseClass: '',
+      identityNumber: '',
       avatar: null,
-      licenseImage: null
+      licenseImage: null,
+      licenseFrontImage: null,
+      licenseBackImage: null,
+      identityFrontImage: null,
+      identityBackImage: null
     };
     this.isModalOpen = true;
   }
@@ -126,7 +140,11 @@ export class TaiXeComponent implements OnInit {
   openEditModal(p: Personnel) {
     this.isEditMode = true;
     this.errors = {};
-    this.currentPersonnel = { ...p };
+    this.currentPersonnel = {
+      ...p,
+      dob: this.toDateInput(p.dob),
+      licenseExpiry: this.toDateInput(p.licenseExpiry)
+    };
     this.isModalOpen = true;
   }
 
@@ -138,6 +156,7 @@ export class TaiXeComponent implements OnInit {
     this.errors = {
       name: !this.currentPersonnel.name,
       phone: !this.currentPersonnel.phone,
+      identityNumber: !this.currentPersonnel.identityNumber,
       role: !this.currentPersonnel.role,
       licenseClass: !this.currentPersonnel.licenseClass,
       licenseExpiry: !this.currentPersonnel.licenseExpiry
@@ -170,6 +189,52 @@ export class TaiXeComponent implements OnInit {
 
   removeImage(field: string) {
     this.currentPersonnel[field] = null;
+  }
+
+  isLicenseExpiringSoon(p: Personnel): boolean {
+    if (p.status === 'Đã khóa') return false;
+
+    const expiry = this.parseDate(p.licenseExpiry);
+    if (!expiry) return false;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    expiry.setHours(0, 0, 0, 0);
+
+    const daysUntilExpiry = Math.ceil((expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    return daysUntilExpiry >= 0 && daysUntilExpiry <= 30;
+  }
+
+  getDisplayStatus(p: Personnel): string {
+    return this.isLicenseExpiringSoon(p) ? 'Sắp hết hạn' : p.status;
+  }
+
+  private parseDate(value: string): Date | null {
+    if (!value) return null;
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    const parts = value.split('/');
+    if (parts.length !== 3) return null;
+
+    const [day, month, year] = parts.map(Number);
+    if (!day || !month || !year) return null;
+
+    const parsed = new Date(year, month - 1, day);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  private toDateInput(value: string): string {
+    const parsed = this.parseDate(value);
+    if (!parsed) return value;
+
+    const year = parsed.getFullYear();
+    const month = String(parsed.getMonth() + 1).padStart(2, '0');
+    const day = String(parsed.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   toggleLock(p: Personnel) {

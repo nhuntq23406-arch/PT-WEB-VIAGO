@@ -62,21 +62,21 @@ export const routes: Routes = [
       {
         path: 'dieuphoi/don-tra',
         loadComponent: () =>
-          import('./featured/admin/don-tra/don-tra').then(
+          import('./featured/admin/dieu-phoi/don-tra/don-tra').then(
             (m) => m.DonTraComponent
           ),
       },
       {
         path: 'dieuphoi/phuong-tien',
         loadComponent: () =>
-          import('./featured/admin/phuong-tien/phuong-tien').then(
+          import('./featured/admin/dieu-phoi/phuong-tien/phuong-tien').then(
             (m) => m.PhuongTienComponent
           ),
       },
       {
         path: 'dieuphoi/tai-xe',
         loadComponent: () =>
-          import('./featured/admin/tai-xe-phu-xe/tai-xe').then((m) => m.TaiXeComponent),
+          import('./featured/admin/dieu-phoi/tai-xe-phu-xe/tai-xe').then((m) => m.TaiXeComponent),
       },
       {
         path: 'datve/moi',
@@ -102,7 +102,7 @@ export const routes: Routes = [
       {
         path: 'baocao/khach-hang',
         loadComponent: () =>
-          import('./featured/admin/bao-cao-khach-hang/baocao-khachhang').then(
+          import('./featured/admin/bao-cao/bao-cao-khach-hang/baocao-khachhang').then(
             (m) => m.BaoCaoKhachHangComponent
           ),
       },
