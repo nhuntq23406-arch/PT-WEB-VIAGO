@@ -119,8 +119,8 @@
           </tr>
           
           <!-- Data Rows -->
-          <tr *ngFor="let p of filteredPersonnel; let i = index">
-            <td class="col-stt text-center">{{ i + 1 }}</td>
+          <tr *ngFor="let p of paginatedPersonnel; let i = index">
+            <td class="col-stt text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
             <td class="col-name">
               <div class="name-with-status">
                 <span class="status-indicator" 
@@ -166,6 +166,29 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="pagination-footer">
+      <div>
+        Hiển thị {{ filteredPersonnel.length > 0 ? (currentPage - 1) * pageSize + 1 : 0 }} -
+        {{ currentPage * pageSize > filteredPersonnel.length ? filteredPersonnel.length : currentPage * pageSize }}
+        của {{ filteredPersonnel.length }} nhân sự
+      </div>
+      <div class="pagination-controls">
+        <button class="pagination-btn" (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>
+        <ng-container *ngFor="let page of getPaginationItems()">
+          <span *ngIf="page === '...'" class="pagination-ellipsis">...</span>
+          <button
+            *ngIf="page !== '...'"
+            class="pagination-btn"
+            [class.active]="currentPage === page"
+            (click)="setPage(page)"
+          >
+            {{ page }}
+          </button>
+        </ng-container>
+        <button class="pagination-btn" (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages">›</button>
+      </div>
     </div>
   </div>
 

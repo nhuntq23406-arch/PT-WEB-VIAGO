@@ -66,6 +66,10 @@ export class PhuongTienComponent implements OnInit {
   ];
 
   filteredVehicles: Vehicle[] = [];
+  paginatedVehicles: Vehicle[] = [];
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -98,6 +102,35 @@ export class PhuongTienComponent implements OnInit {
 
       return matchesTab && matchesSearch && matchesType && matchesStatus;
     });
+    this.currentPage = 1;
+    this.updatePaginatedVehicles();
+  }
+
+  updatePaginatedVehicles() {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredVehicles.length / this.pageSize));
+    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedVehicles = this.filteredVehicles.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  setPage(page: number | string) {
+    if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePaginatedVehicles();
+    }
+  }
+
+  getPaginationItems(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 6) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    if (current <= 3) return [1, 2, 3, 4, '...', total - 2, total - 1, total];
+    if (current >= total - 2) return [1, 2, 3, '...', total - 3, total - 2, total - 1, total];
+    return [1, '...', current - 1, current, current + 1, '...', total];
   }
 
   clearFilters() {

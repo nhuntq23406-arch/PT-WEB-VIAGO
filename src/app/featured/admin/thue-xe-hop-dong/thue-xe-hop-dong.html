@@ -207,8 +207,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of filteredRequests; let i = index">
-            <td class="col-stt text-center">{{i + 1}}</td>
+          <tr *ngFor="let item of paginatedRequests; let i = index">
+            <td class="col-stt text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
             <td class="col-code text-semibold">{{item.code}}</td>
             <td class="col-customer">
               <div class="name-with-status">
@@ -252,8 +252,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of filteredStandardPrices; let i = index">
-            <td class="col-stt text-center">{{i + 1}}</td>
+          <tr *ngFor="let item of paginatedStandardPrices; let i = index">
+            <td class="col-stt text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
             <td class="col-type text-semibold">{{item.vehicleType}}</td>
             <td class="col-number text-center">{{item.seats}} chỗ</td>
             <td class="col-price text-secondary">{{item.inland}}</td>
@@ -287,8 +287,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of filteredCustomerQuotes; let i = index">
-            <td class="col-stt text-center">{{i + 1}}</td>
+          <tr *ngFor="let item of paginatedCustomerQuotes; let i = index">
+            <td class="col-stt text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
             <td class="col-code text-semibold">{{item.code}}</td>
             <td class="col-customer">
               <div class="name-with-status">
@@ -332,8 +332,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of filteredContracts; let i = index">
-            <td class="col-stt text-center">{{i + 1}}</td>
+          <tr *ngFor="let item of paginatedContracts; let i = index">
+            <td class="col-stt text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
             <td class="col-code text-semibold">{{item.code}}</td>
             <td class="col-customer">
               <div class="name-with-status">
@@ -370,6 +370,28 @@
           </svg>
           <span>Không tìm thấy dữ liệu phù hợp.</span>
         </div>
+      </div>
+    </div>
+
+    <div class="pagination-footer">
+      <div>
+        Hiển thị {{ visibleStart }} - {{ visibleEnd }}
+        của {{ activeTotalItems }} {{ activeListLabel }}
+      </div>
+      <div class="pagination-controls">
+        <button class="pagination-btn" (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>
+        <ng-container *ngFor="let page of getPaginationItems()">
+          <span *ngIf="page === '...'" class="pagination-ellipsis">...</span>
+          <button
+            *ngIf="page !== '...'"
+            class="pagination-btn"
+            [class.active]="currentPage === page"
+            (click)="setPage(page)"
+          >
+            {{ page }}
+          </button>
+        </ng-container>
+        <button class="pagination-btn" (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages">›</button>
       </div>
     </div>
   </div>

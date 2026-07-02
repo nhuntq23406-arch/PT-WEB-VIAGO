@@ -9,6 +9,7 @@ type ContractStatus = 'Chờ thực hiện' | 'Đang thực hiện' | 'Hoàn th�
 type MainTab = 'request' | 'quote' | 'contract';
 type QuoteSubTab = 'standard' | 'customer';
 type DrawerType = 'request' | 'quote' | 'contract' | null;
+type PageKey = 'request' | 'standard' | 'customer' | 'contract';
 
 interface RequestItem {
   code: string;
@@ -89,6 +90,13 @@ export class ThueXeHopDongComponent {
   // Tabs State
   activeMainTab: MainTab = 'request';
   activeQuoteSubTab: QuoteSubTab = 'standard';
+  pageSize = 10;
+  currentPages: Record<PageKey, number> = {
+    request: 1,
+    standard: 1,
+    customer: 1,
+    contract: 1
+  };
 
   // Filters State
   requestSearch = '';
@@ -256,9 +264,83 @@ export class ThueXeHopDongComponent {
     );
   }
 
+  get paginatedRequests() {
+    return this.paginateItems(this.filteredRequests);
+  }
+
+  get paginatedStandardPrices() {
+    return this.paginateItems(this.filteredStandardPrices);
+  }
+
+  get paginatedCustomerQuotes() {
+    return this.paginateItems(this.filteredCustomerQuotes);
+  }
+
+  get paginatedContracts() {
+    return this.paginateItems(this.filteredContracts);
+  }
+
+  get currentPage(): number {
+    return this.currentPages[this.activePageKey];
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.activeTotalItems / this.pageSize));
+  }
+
+  get activeTotalItems(): number {
+    return this.getActiveFilteredItems().length;
+  }
+
+  get visibleStart(): number {
+    return this.activeTotalItems > 0 ? (this.currentPage - 1) * this.pageSize + 1 : 0;
+  }
+
+  get visibleEnd(): number {
+    return Math.min(this.currentPage * this.pageSize, this.activeTotalItems);
+  }
+
+  get activeListLabel(): string {
+    if (this.activeMainTab === 'request') return 'yêu cầu';
+    if (this.activeMainTab === 'quote' && this.activeQuoteSubTab === 'standard') return 'bảng giá';
+    if (this.activeMainTab === 'quote') return 'báo giá';
+    return 'hợp đồng';
+  }
+
+  getPaginationItems(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 6) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    if (current <= 3) return [1, 2, 3, 4, '...', total - 2, total - 1, total];
+    if (current >= total - 2) return [1, 2, 3, '...', total - 3, total - 2, total - 1, total];
+    return [1, '...', current - 1, current, current + 1, '...', total];
+  }
+
+  setPage(page: number | string) {
+    if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
+      this.currentPages[this.activePageKey] = page;
+    }
+  }
+
+  resetActivePagination() {
+    this.currentPages[this.activePageKey] = 1;
+  }
+
   // Actions
-  setTab(tab: MainTab) { this.activeMainTab = tab; this.closeDrawer(); }
-  setSubTab(tab: QuoteSubTab) { this.activeQuoteSubTab = tab; }
+  setTab(tab: MainTab) {
+    this.activeMainTab = tab;
+    this.resetActivePagination();
+    this.closeDrawer();
+  }
+
+  setSubTab(tab: QuoteSubTab) {
+    this.activeQuoteSubTab = tab;
+    this.resetActivePagination();
+  }
 
   viewDetail(item: any, type: DrawerType) {
     this.selectedItem = item;
@@ -290,10 +372,41 @@ export class ThueXeHopDongComponent {
     this.contractSearch = '';
     this.contractStatus = 'Tất cả';
     this.contractDateFilter = '';
+    this.currentPages = {
+      request: 1,
+      standard: 1,
+      customer: 1,
+      contract: 1
+    };
   }
 
   openCreateAction() {
     console.log('Mở modal thêm mới cho tab:', this.activeMainTab);
     // Logic mở modal sẽ được bổ sung sau
+  }
+
+  private get activePageKey(): PageKey {
+    if (this.activeMainTab === 'quote') {
+      return this.activeQuoteSubTab === 'standard' ? 'standard' : 'customer';
+    }
+    return this.activeMainTab;
+  }
+
+  private getActiveFilteredItems(): unknown[] {
+    if (this.activeMainTab === 'request') return this.filteredRequests;
+    if (this.activeMainTab === 'quote') {
+      return this.activeQuoteSubTab === 'standard' ? this.filteredStandardPrices : this.filteredCustomerQuotes;
+    }
+    return this.filteredContracts;
+  }
+
+  private paginateItems<T>(items: T[]): T[] {
+    const totalPages = Math.max(1, Math.ceil(items.length / this.pageSize));
+    const key = this.activePageKey;
+    const safePage = Math.min(Math.max(this.currentPages[key], 1), totalPages);
+    this.currentPages[key] = safePage;
+
+    const startIndex = (safePage - 1) * this.pageSize;
+    return items.slice(startIndex, startIndex + this.pageSize);
   }
 }
