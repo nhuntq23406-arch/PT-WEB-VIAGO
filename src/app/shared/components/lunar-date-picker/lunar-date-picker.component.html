@@ -1,0 +1,152 @@
+<div 
+  [ngClass]="variant === 'search' ? 'rounded-lg px-4 py-3.5' : 'rounded-xl px-3 py-2.5'"
+  [class]="'relative flex items-center justify-between border bg-slate-50 border-slate-200 focus-within:border-[#00236F] focus-within:bg-white text-gray-800 transition-all duration-200 shadow-sm w-full ' + 
+    (disabled ? 'opacity-60 cursor-not-allowed select-none bg-slate-100' : '')"
+>
+  <!-- Segmented inputs for typing -->
+  <div class="flex items-center gap-1 flex-1 min-w-0">
+    <input 
+      #inputDay
+      type="text" 
+      pattern="[0-9]*"
+      inputmode="numeric"
+      maxLength="2"
+      placeholder="dd"
+      [(ngModel)]="dayVal"
+      (input)="onDayInput($event)"
+      (keydown)="onDayKeyDown($event)"
+      (blur)="onInputBlur()"
+      [disabled]="disabled"
+      [ngClass]="variant === 'search' ? 'w-8 text-base font-semibold' : 'w-6 text-xs font-semibold'"
+      class="text-center bg-transparent border-0 outline-none text-slate-800 p-0 focus:ring-0 placeholder:text-slate-400 placeholder:font-normal"
+    />
+    <span [ngClass]="variant === 'search' ? 'text-base font-bold' : 'text-xs font-bold'" class="text-slate-350 select-none">/</span>
+    
+    <input 
+      #inputMonth
+      type="text" 
+      pattern="[0-9]*"
+      inputmode="numeric"
+      maxLength="2"
+      placeholder="mm"
+      [(ngModel)]="monthVal"
+      (input)="onMonthInput($event)"
+      (keydown)="onMonthKeyDown($event)"
+      (blur)="onInputBlur()"
+      [disabled]="disabled"
+      [ngClass]="variant === 'search' ? 'w-8 text-base font-semibold' : 'w-6 text-xs font-semibold'"
+      class="text-center bg-transparent border-0 outline-none text-slate-800 p-0 focus:ring-0 placeholder:text-slate-400 placeholder:font-normal"
+    />
+    <span [ngClass]="variant === 'search' ? 'text-base font-bold' : 'text-xs font-bold'" class="text-slate-350 select-none">/</span>
+
+    <input 
+      #inputYear
+      type="text" 
+      pattern="[0-9]*"
+      inputmode="numeric"
+      maxLength="4"
+      placeholder="yyyy"
+      [(ngModel)]="yearVal"
+      (input)="onYearInput($event)"
+      (keydown)="onYearKeyDown($event)"
+      (blur)="onInputBlur()"
+      [disabled]="disabled"
+      [ngClass]="variant === 'search' ? 'w-12 text-base font-semibold' : 'w-10 text-xs font-semibold'"
+      class="text-center bg-transparent border-0 outline-none text-slate-800 p-0 focus:ring-0 placeholder:text-slate-400 placeholder:font-normal"
+    />
+  </div>
+
+  <!-- Calendar Icon toggle -->
+  <button 
+    type="button" 
+    [disabled]="disabled"
+    (click)="toggleCalendar($event)"
+    class="text-slate-400 hover:text-[#00236F] outline-none border-0 bg-transparent flex items-center justify-center p-0 cursor-pointer transition-colors"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" [ngClass]="variant === 'search' ? 'w-5 h-5' : 'w-4 h-4'" class="shrink-0">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+    </svg>
+  </button>
+
+  <!-- Calendar Popover (Vietnamese Lunar Calendar) -->
+  <div 
+    *ngIf="showCalendar" 
+    [ngClass]="popoverPosition === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'"
+    class="absolute right-0 w-[290px] sm:w-[310px] bg-white border border-slate-200 rounded-2xl shadow-xl z-50 p-3 select-none flex flex-col gap-3.5"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header: Selectors and Prev/Next buttons -->
+    <div class="flex items-center justify-between gap-1 border-b border-slate-100 pb-2">
+      <button 
+        type="button"
+        (click)="prevMonth($event)"
+        class="w-7 h-7 rounded-lg border border-slate-150 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-[#00236F] cursor-pointer transition-all border-0"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+
+      <!-- Month & Year Select containers -->
+      <div class="flex items-center gap-1.5 flex-1 justify-center">
+        <!-- Month Select -->
+        <select 
+          [(ngModel)]="currentCalMonth" 
+          (change)="onMonthSelectChange()"
+          class="border border-slate-200 rounded-lg text-xs font-bold text-[#00236F] px-2 py-1 outline-none bg-white cursor-pointer select-none"
+        >
+          <option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="m">Tháng {{ m }}</option>
+        </select>
+
+        <!-- Year Select -->
+        <select 
+          [(ngModel)]="currentCalYear" 
+          (change)="onYearSelectChange()"
+          class="border border-slate-200 rounded-lg text-xs font-bold text-[#00236F] px-2 py-1 outline-none bg-white cursor-pointer select-none"
+        >
+          <option *ngFor="let y of yearsList" [value]="y">Năm {{ y }}</option>
+        </select>
+      </div>
+
+      <button 
+        type="button"
+        (click)="nextMonth($event)"
+        class="w-7 h-7 rounded-lg border border-slate-150 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-[#00236F] cursor-pointer transition-all border-0"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Weekday headers -->
+    <div class="grid grid-cols-7 text-center text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+      <span *ngFor="let w of weekDays">{{ w }}</span>
+    </div>
+
+    <!-- Calendar days grid -->
+    <div class="grid grid-cols-7 gap-1">
+      <div 
+        *ngFor="let d of calendarDays" 
+        (click)="selectDay(d)"
+        [class]="'h-11 sm:h-12 rounded-xl flex flex-col justify-center items-center cursor-pointer select-none transition-all relative border border-transparent ' +
+          (!d.isCurrentMonth ? 'opacity-30 hover:opacity-65 ' : 'hover:bg-slate-50 ') +
+          (d.isToday ? 'border-orange-200 bg-orange-50/20 ' : '') +
+          (d.isSelected ? '!bg-[#00236F] !text-white ' : '')"
+      >
+        <!-- Solar day number -->
+        <span class="text-xs sm:text-sm font-bold leading-none select-none">
+          {{ d.day }}
+        </span>
+
+        <!-- Lunar day number (displays as small text at bottom) -->
+        <span 
+          [class]="'text-[8px] font-medium leading-none select-none mt-1 ' + 
+            (d.isSelected ? 'text-[#FFD0A8] ' : 'text-blue-500 ')"
+        >
+          {{ getLunarLabel(d) }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

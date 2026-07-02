@@ -1,0 +1,302 @@
+<div class="news-page-container">
+  <!-- Premium Header Card Container -->
+  <div class="header-card-container">
+    <div class="header-titles">
+      <span class="category-tag">QUẢN LÝ NỘI DUNG</span>
+      <h1 class="main-title">Từ khóa cấm</h1>
+    </div>
+    
+    <!-- Info Banner & Create Button Box -->
+    <div class="header-action-banner" (click)="openCreateModal()" title="Nhấp để thêm từ khóa cấm mới">
+      <div class="action-icon-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+      </div>
+      <div class="action-banner-text">
+        <h3>Tạo từ khóa cấm mới</h3>
+        <p>Thêm các từ khóa vi phạm để tự động kiểm duyệt nội dung.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Dashboard Cards -->
+  <div class="stats-row">
+    <div class="stats-card purple-card">
+      <span class="stats-card-value">{{ totalKeywords }}</span>
+      <span class="stats-card-label">Tổng số từ khóa</span>
+    </div>
+    <div class="stats-card green-card">
+      <span class="stats-card-value">{{ totalActive }}</span>
+      <span class="stats-card-label">Đang áp dụng</span>
+    </div>
+    <div class="stats-card red-card">
+      <span class="stats-card-value">{{ totalNang }}</span>
+      <span class="stats-card-label">Mức độ: Nặng</span>
+    </div>
+    <div class="stats-card orange-card">
+      <span class="stats-card-value">{{ totalTrungBinh }}</span>
+      <span class="stats-card-label">Mức độ: Trung bình</span>
+    </div>
+    <div class="stats-card blue-card">
+      <span class="stats-card-value">{{ totalNhe }}</span>
+      <span class="stats-card-label">Mức độ: Nhẹ</span>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Card -->
+  <div class="dashboard-card">
+    <!-- Dashboard Control Panel with Pill Tabs -->
+    <div class="dashboard-control-panel">
+      <div class="pill-tabs">
+        <button class="pill-tab-item" [class.active]="currentTab === 'Tất cả'" (click)="selectTab('Tất cả')">
+          Tất cả ({{ totalKeywords }})
+        </button>
+        <button class="pill-tab-item" [class.active]="currentTab === 'Đang áp dụng'" (click)="selectTab('Đang áp dụng')">
+          Đang áp dụng ({{ totalActive }})
+        </button>
+        <button class="pill-tab-item" [class.active]="currentTab === 'Đã khóa'" (click)="selectTab('Đã khóa')">
+          Đã khóa ({{ totalLocked }})
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Card with Data Table -->
+    <div class="news-content-card">
+      <!-- Search & Filters -->
+      <div class="controls-row">
+        <!-- Search Input -->
+        <div class="search-box-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" [(ngModel)]="searchText" (ngModelChange)="filterData()" placeholder="Tìm kiếm theo từ khóa hoặc mã số..." class="search-input" />
+        </div>
+
+        <!-- Filter Dropdown -->
+        <div class="filter-box-wrapper">
+          <select [(ngModel)]="filterMucDo" (ngModelChange)="filterData()" class="filter-select">
+            <option value="Tất cả mức độ">Tất cả mức độ</option>
+            <option value="Nặng">Nặng</option>
+            <option value="Trung bình">Trung bình</option>
+            <option value="Nhẹ">Nhẹ</option>
+          </select>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="filter-box-wrapper" style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 13.5px; font-weight: 700; color: #475569; white-space: nowrap;">Sắp xếp:</span>
+          <select [(ngModel)]="filterSort" (ngModelChange)="filterData()" class="filter-select" style="min-width: 170px;">
+            <option value="Mới nhất tạo trước">Mới nhất tạo trước</option>
+            <option value="Cũ nhất tạo trước">Cũ nhất tạo trước</option>
+            <option value="Theo từ khóa A-Z">Theo từ khóa A-Z</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-outer-wrapper">
+        <table class="news-table">
+          <thead>
+            <tr>
+              <th width="12%">MÃ TỪ KHÓA</th>
+              <th width="25%">NỘI DUNG TỪ KHÓA</th>
+              <th width="15%" class="text-center">MỨC ĐỘ VI PHẠM</th>
+              <th width="12%" class="text-center">TRẠNG THÁI</th>
+              <th width="15%">CẬP NHẬT CUỐI</th>
+              <th width="15%">NGƯỜI THỰC HIỆN</th>
+              <th width="6%" class="text-center">CHỨC NĂNG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let kw of paginatedKeywords">
+              <td class="font-medium text-slate-700">{{ kw.maTuKhoa }}</td>
+              <td><span class="font-bold text-slate-800">{{ kw.noiDung }}</span></td>
+              <td class="text-center">
+                <span class="badge" [ngClass]="{'badge-danger': kw.mucDoViPham === 'Nặng', 'badge-warning': kw.mucDoViPham === 'Trung bình', 'badge-info': kw.mucDoViPham === 'Nhẹ'}">
+                  {{ kw.mucDoViPham }}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="status-pill" [ngClass]="kw.trangThai === 'Đang áp dụng' ? 'status-active' : 'status-inactive'">
+                  <span>{{ kw.trangThai }}</span>
+                </div>
+              </td>
+              <td class="text-slate-600">{{ kw.capNhatCuoi }}</td>
+              <td>
+                <div class="actor-cell">
+                  <span class="text-slate-700 font-medium">{{ kw.nguoiThucHien }}</span>
+                </div>
+              </td>
+              <td class="text-center">
+                <button class="btn-action-edit" (click)="openEditModal(kw)" title="Chỉnh sửa">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedKeywords.length === 0">
+              <td colspan="7" class="empty-row-text">
+                <div class="empty-state-content">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <p>Không tìm thấy từ khóa nào phù hợp với bộ lọc hiện tại.</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="pagination-footer">
+        <div class="pagination-info">
+          Hiển thị {{ filteredKeywords.length === 0 ? 0 : startIndex + 1 }} - {{ endIndex }} của {{ filteredKeywords.length }} từ khóa
+        </div>
+        <div class="pagination-controls" *ngIf="totalPages > 1">
+          <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="prevPage()" aria-label="Trang trước">
+            <svg class="pagination-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button class="page-btn number-btn" *ngFor="let p of getPages()" [class.active-page]="p === currentPage" (click)="setPage(p)">
+            {{ p }}
+          </button>
+          <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="nextPage()" aria-label="Trang sau">
+            <svg class="pagination-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================
+     CREATE MODAL
+     ========================================== -->
+<div class="modal-backdrop-overlay" *ngIf="showCreateModal">
+  <div class="modal-main-container modal-sm">
+    <div class="modal-header-panel">
+      <h2 class="modal-title-txt">Thêm từ khóa cấm mới</h2>
+      <button class="btn-close-modal" (click)="closeCreateModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    
+    <div class="modal-body-content">
+      <div class="form-group-unified">
+        <label class="field-label-lbl">Nội dung từ khóa <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="newKeyword.noiDung" placeholder="Ví dụ: lừa đảo, giả tạo, quảng cáo..." class="form-input-control" [class.border-red]="createFormSubmitted && !newKeyword.noiDung" />
+        <span class="desc-helper-txt">Hệ thống sẽ thực hiện kiểm tra không phân biệt chữ hoa, chữ thường.</span>
+      </div>
+
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Mức độ vi phạm</label>
+        <select [(ngModel)]="newKeyword.mucDoViPham" class="form-input-control">
+          <option value="Nặng">Nặng - Chặn gửi, bắt buộc nhập lại</option>
+          <option value="Trung bình">Trung bình - Yêu cầu chỉnh sửa nội dung</option>
+          <option value="Nhẹ">Nhẹ - Nhắc nhở vi phạm (không chặn)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer-panel modal-footer-actions">
+      <button class="btn-footer-secondary" (click)="closeCreateModal()">Hủy bỏ</button>
+      <button class="btn-footer-primary" (click)="saveNewKeyword()">
+        <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        <span>Lưu thông tin</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================
+     EDIT MODAL
+     ========================================== -->
+<div class="modal-backdrop-overlay" *ngIf="showEditModal && editingKeyword">
+  <div class="modal-main-container modal-sm">
+    <div class="modal-header-panel">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <h2 class="modal-title-txt">Chỉnh sửa từ khóa cấm</h2>
+        <div class="status-pill" [ngClass]="editingKeyword.trangThai === 'Đang áp dụng' ? 'status-active' : 'status-inactive'">
+          <span>{{ editingKeyword.trangThai }}</span>
+        </div>
+      </div>
+      <button class="btn-close-modal" (click)="closeEditModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    
+    <div class="modal-body-content" *ngIf="editingKeyword">
+      <div class="form-group-unified">
+        <label class="field-label-lbl">Nội dung từ khóa <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="editingKeyword.noiDung" class="form-input-control" [class.border-red]="editFormSubmitted && !editingKeyword.noiDung" />
+        <span class="desc-helper-txt">Hệ thống sẽ thực hiện kiểm tra không phân biệt chữ hoa, chữ thường.</span>
+      </div>
+
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Mức độ vi phạm</label>
+        <select [(ngModel)]="editingKeyword.mucDoViPham" class="form-input-control">
+          <option value="Nặng">Nặng - Chặn gửi, bắt buộc nhập lại</option>
+          <option value="Trung bình">Trung bình - Yêu cầu chỉnh sửa nội dung</option>
+          <option value="Nhẹ">Nhẹ - Nhắc nhở vi phạm (không chặn)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer-panel" style="justify-content: space-between; padding: 20px 24px; border-top: 1px solid #f1f5f9; background-color: #f8fafc;">
+      <!-- Toggle button -->
+      <button 
+        type="button" 
+        class="btn-footer-lock-red" 
+        (click)="toggleKeywordStatus()" 
+        *ngIf="editingKeyword" 
+        title="Nhấp để thay đổi trạng thái áp dụng">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px; vertical-align: middle;">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>{{ editingKeyword.trangThai === 'Đang áp dụng' ? 'Khóa từ khóa' : 'Mở khóa từ khóa' }}</span>
+      </button>
+
+      <div style="display: flex; gap: 12px;">
+        <button class="btn-footer-secondary" (click)="closeEditModal()">Hủy bỏ</button>
+        <button class="btn-footer-primary" (click)="saveEditKeyword()">
+          <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span>Lưu thông tin</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================
+     SUCCESS OVERLAY ALERT DIALOG
+     ========================================== -->
+<div class="modal-backdrop-overlay flex-centered z-index-200" *ngIf="showSuccessModal">
+  <div class="success-alert-card" style="position: relative;">
+    <button (click)="closeSuccessModal()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; color: #64748b;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="success-icon-ring">
+      <svg class="check-success-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h3 class="success-alert-title font-bold">{{ successMessageTitle }}</h3>
+    <p class="success-alert-body font-medium">
+      {{ successMessageBody }}
+    </p>
+  </div>
+</div>

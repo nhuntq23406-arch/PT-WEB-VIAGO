@@ -1,16 +1,20 @@
-import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router, NavigationEnd } from '@angular/router';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
-import { Router, NavigationEnd } from '@angular/router';
+import { AuthService } from '../../../auth/auth.service';
+import { VoucherService, Voucher } from '../../../core/services/voucher.service';
+import { VoucherCardComponent } from '../../../shared/components/voucher-card/voucher-card.component';
+import { ToastService } from '../../../shared/toast.service';
+import { LunarDatePickerComponent } from '../../../shared/components/lunar-date-picker/lunar-date-picker.component';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchableDropdownComponent, RouterLink],
+  imports: [CommonModule, FormsModule, SearchableDropdownComponent, VoucherCardComponent, LunarDatePickerComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -19,6 +23,38 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private router = inject(Router);
   private routerSubscription!: Subscription;
+
+  // Checkout & Voucher Simulation State (Obsolete, kept for safety)
+  ticketPrice = 250000;
+  appliedVoucher: Voucher | null = null;
+  voucherCodeInput = '';
+  showVoucherModal = false;
+  selectedModalVoucher: Voucher | null = null;
+  bestVoucherRecommended: Voucher | null = null;
+
+  // Homepage Voucher Pagination State
+  currentPromoPage = 1;
+
+  get totalPromoPages(): number {
+    return Math.ceil(this.voucherService.publicVouchers.length / 3);
+  }
+
+  get paginatedPromos(): Voucher[] {
+    const startIndex = (this.currentPromoPage - 1) * 3;
+    return this.voucherService.publicVouchers.slice(startIndex, startIndex + 3);
+  }
+
+  prevPromoPage(): void {
+    if (this.currentPromoPage > 1) {
+      this.currentPromoPage--;
+    }
+  }
+
+  nextPromoPage(): void {
+    if (this.currentPromoPage < this.totalPromoPages) {
+      this.currentPromoPage++;
+    }
+  }
 
   heroImages = [
     '/asset/images/customer/hero_banner_1.png',
@@ -176,13 +212,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   departureCities: string[] = [];
   destinationCities: string[] = [];
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    public authService: AuthService,
+    public voucherService: VoucherService,
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.checkPendingOrder();
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
+    
     // Set todayDate to YYYY-MM-DD
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -200,16 +243,27 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Handle query parameters from the schedule page.
+    // Read query parameters to auto-fill search panel or apply voucher
     this.route.queryParams.subscribe(params => {
-      if (params['from']) this.departure = params['from'];
-      if (params['to']) this.destination = params['to'];
-      if (params['date']) this.departureDate = params['date'];
-      
-      if (params['from'] || params['to']) {
+      if (params['departure']) {
+        this.departure = params['departure'];
         this.updateCitiesLists();
       }
-
+      if (params['destination']) {
+        this.destination = params['destination'];
+        this.updateCitiesLists();
+      }
+      if (params['from']) {
+        this.departure = params['from'];
+        this.updateCitiesLists();
+      }
+      if (params['to']) {
+        this.destination = params['to'];
+        this.updateCitiesLists();
+      }
+      if (params['date']) {
+        this.departureDate = params['date'];
+      }
       if (params['scroll']) {
         setTimeout(() => {
           const element = document.getElementById(params['scroll']);
@@ -218,14 +272,21 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
         }, 100);
       }
+      if (params['applyVoucher']) {
+        const code = params['applyVoucher'];
+        if (code === 'WELCOME50') {
+          const user = this.authService.currentUser();
+          if (user) {
+            const isFirstTime = user.rank === 'Không có' && (user.tickets || 0) === 0 && (user.spent || 0) === 0;
+            if (!isFirstTime) {
+              this.toastService.showError('Mã WELCOME50 chỉ áp dụng cho chuyến đi đầu tiên của tài khoản mới.');
+              return;
+            }
+          }
+        }
+        this.toastService.showSuccess(`Đã chọn áp dụng mã ${code} cho chuyến đi tiếp theo!`);
+      }
     });
-  }
-
-  formatDateToShort(dateStr: string): string {
-    if (!dateStr) return '';
-    const parts = dateStr.split('-');
-    if (parts.length !== 3) return dateStr;
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
   ngOnDestroy() {
@@ -276,25 +337,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.updateCitiesLists();
   }
 
-  onDepartureDateChange() {
-    if (this.returnDate && this.departureDate && this.returnDate < this.departureDate) {
-      this.returnDate = this.departureDate;
-    }
-  }
-
-  onReturnDateChange() {
-    if (this.returnDate && this.departureDate && this.returnDate < this.departureDate) {
-      this.returnDate = this.departureDate;
-    }
-  }
-
   updateCitiesLists() {
-    // 1. Filter destination cities based on selected departure
-    if (this.departure) {
-      const connected = this.routesData
-        .filter(r => r.cities.includes(this.departure))
-        .map(r => r.cities.find(c => c !== this.departure) || '');
-      this.destinationCities = connected.filter(c => c !== '');
+    if (this.departure === 'TP.HCM' || this.departure === 'TP. Hồ Chí Minh') {
+      // If Departure is TP.HCM / TP. Hồ Chí Minh, Destination is limited to: Đà Lạt, Nha Trang, Cần Thơ, Vũng Tàu
+      this.destinationCities = ['Đà Lạt', 'Nha Trang', 'Cần Thơ', 'Vũng Tàu'];
+    } else if (this.departure) {
+      // Exclude departure city
+      this.destinationCities = this.allCities.filter(city => city !== this.departure);
     } else {
       this.destinationCities = [...this.allCities];
     }
@@ -1457,6 +1506,136 @@ export class HomeComponent implements OnInit, OnDestroy {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
+  }
+
+  // --- CHECKOUT & VOUCHER SIMULATION ---
+
+  get checkoutSubtotal(): number {
+    return this.ticketPrice * this.ticketCount;
+  }
+
+  get discountAmount(): number {
+    if (!this.appliedVoucher) return 0;
+    const subtotal = this.checkoutSubtotal;
+    if (this.appliedVoucher.type === 'percentage') {
+      return subtotal * (this.appliedVoucher.value / 100);
+    } else {
+      return Math.min(this.appliedVoucher.value, subtotal);
+    }
+  }
+
+  get finalTotal(): number {
+    return Math.max(0, this.checkoutSubtotal - this.discountAmount);
+  }
+
+  applyGuestVoucher(): void {
+    if (!this.voucherCodeInput) {
+      this.toastService.showError('Vui lòng nhập mã giảm giá.');
+      return;
+    }
+    const code = this.voucherCodeInput.toUpperCase().trim();
+    // Validate from public list
+    const found = this.voucherService.publicVouchers.find(v => v.code === code);
+    if (found) {
+      this.appliedVoucher = found;
+      this.toastService.showSuccess(`Áp dụng mã ${code} thành công!`);
+    } else {
+      const user = this.authService.currentUser();
+      if (user) {
+        const memberVouchers = this.voucherService.getWalletVouchers(user.id);
+        const memberFound = memberVouchers.find(v => v.code === code);
+        if (memberFound) {
+          this.appliedVoucher = memberFound;
+          this.toastService.showSuccess(`Áp dụng mã ${code} thành công!`);
+          return;
+        }
+      }
+      this.toastService.showError('Mã giảm giá không hợp lệ hoặc đã hết hạn.');
+    }
+  }
+
+  openMemberVoucherModal(): void {
+    const user = this.authService.currentUser();
+    if (!user) return;
+    const wallet = this.voucherService.getWalletVouchers(user.id);
+    if (wallet.length === 0) {
+      this.toastService.showError('Ví của bạn chưa có voucher nào. Hãy lưu mã từ trang chủ!');
+      return;
+    }
+    
+    // Find the best voucher for auto-recommendation
+    const best = this.getBestVoucher(wallet, this.checkoutSubtotal);
+    this.bestVoucherRecommended = best;
+    this.selectedModalVoucher = best; // select best by default
+    this.showVoucherModal = true;
+  }
+
+  getBestVoucher(wallet: Voucher[], subtotal: number): Voucher | null {
+    if (wallet.length === 0) return null;
+    let bestVoucher: Voucher | null = null;
+    let maxDiscount = 0;
+    
+    wallet.forEach(v => {
+      let discount = 0;
+      if (v.type === 'percentage') {
+        discount = subtotal * (v.value / 100);
+      } else {
+        discount = v.value;
+      }
+      if (discount > maxDiscount) {
+        maxDiscount = discount;
+        bestVoucher = v;
+      }
+    });
+    
+    return bestVoucher;
+  }
+
+  confirmMemberVoucher(): void {
+    if (this.selectedModalVoucher) {
+      this.appliedVoucher = this.selectedModalVoucher;
+      this.toastService.showSuccess(`Áp dụng mã ${this.appliedVoucher.code} thành công!`);
+    }
+    this.showVoucherModal = false;
+  }
+
+  removeVoucher(): void {
+    this.appliedVoucher = null;
+    this.voucherCodeInput = '';
+    this.toastService.showSuccess('Đã hủy áp dụng mã giảm giá.');
+  }
+
+  simulatePaymentSuccess(): void {
+    this.toastService.showSuccess('Thanh toán giả lập thành công! Cảm ơn bạn đã lựa chọn VIAGO.');
+    this.appliedVoucher = null;
+    this.voucherCodeInput = '';
+  }
+
+  bookRoute(dep: string, dest: string): void {
+    this.departure = dep;
+    this.updateCitiesLists();
+    this.destination = dest;
+    this.cdr.detectChanges();
+
+    const element = document.getElementById('searchPanel');
+    if (element) {
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : 80;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - headerHeight - 20;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  formatDateToShort(dateStr: string): string {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
   checkPendingOrder() {

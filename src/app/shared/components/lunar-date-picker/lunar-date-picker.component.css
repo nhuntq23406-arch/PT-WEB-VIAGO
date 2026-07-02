@@ -1,0 +1,5 @@
+/* Custom styles for Lunar Date Picker */
+:host {
+  display: block;
+  width: 100%;
+}
