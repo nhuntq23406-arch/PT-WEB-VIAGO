@@ -1,11 +1,3 @@
-<section class="reviews-hero">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <span class="hero-badge">Đánh giá chất lượng</span>
-    <h1 class="hero-title">Đánh giá & Nhận xét</h1>
-    <p class="hero-subtitle">Xem tổng hợp điểm, bộ lọc chi tiết và phản hồi thật từ những hành khách đã trải nghiệm các chuyến xe VIAGO.</p>
-  </div>
-</section>
 
 <main class="container mx-auto px-4 md:px-10 lg:px-16 my-8 feedback-section">
   
@@ -339,13 +331,19 @@
       </div>
 
       <!-- Pagination -->
-      <div class="pagination flex flex-wrap justify-center items-center gap-2 mt-8" *ngIf="totalPages > 1">
-        <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="page-btn rounded-xl border border-[#dce1e7] bg-white px-4 py-2 text-xs font-bold text-gray-700 transition hover:border-[#123063] hover:text-[#123063] disabled:opacity-50 disabled:pointer-events-none cursor-pointer">Trước</button>
+      <div class="viago-pagination-container" *ngIf="totalPages > 1">
+        <button type="button" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="viago-page-btn">
+          ‹
+        </button>
         <ng-container *ngFor="let p of getVisiblePages()">
-          <button *ngIf="p !== '...'" (click)="setPage(p)" class="page-btn rounded-xl border px-3.5 py-2 text-xs font-bold transition cursor-pointer" [ngClass]="{ 'border-[#123063] bg-[#123063] text-white': currentPage === p, 'border-[#dce1e7] bg-white text-gray-700 hover:border-[#123063] hover:text-[#123063]': currentPage !== p }">{{ p }}</button>
-          <span *ngIf="p === '...'" class="page-dot inline-flex h-9 w-9 items-center justify-center text-gray-400">...</span>
+          <button *ngIf="p !== '...'" type="button" (click)="setPage(p)" class="viago-page-btn" [class.active]="currentPage === p">
+            {{ p }}
+          </button>
+          <span *ngIf="p === '...'" class="viago-page-dot">...</span>
         </ng-container>
-        <button [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)" class="page-btn rounded-xl border border-[#dce1e7] bg-white px-4 py-2 text-xs font-bold text-gray-700 transition hover:border-[#123063] hover:text-[#123063] disabled:opacity-50 disabled:pointer-events-none cursor-pointer">Tiếp</button>
+        <button type="button" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)" class="viago-page-btn">
+          ›
+        </button>
       </div>
     </div>
   </section>

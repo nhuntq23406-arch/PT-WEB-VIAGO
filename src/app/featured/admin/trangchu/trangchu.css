@@ -331,14 +331,16 @@
 }
 
 /* Decorative Wave */
-.decorative-wave-SVG {
+334: .decorative-wave-SVG {
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: 1152px;
   align-items: flex-start;
   position: absolute;
-  left: 0;
+  left: 50%;
   bottom: 0;
+  transform: translateX(-50%);
   z-index: 0;
   opacity: 0.6;
   pointer-events: none;

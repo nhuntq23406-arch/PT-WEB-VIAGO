@@ -67,3 +67,63 @@ a {
     width: 100% !important;
   }
 }
+
+/* Unified Viago Pagination Styles */
+.viago-pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.viago-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #123063;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.viago-page-btn:hover:not(:disabled):not(.active) {
+  border-color: #123063;
+  background-color: #f1f5f9;
+}
+
+.viago-page-btn.active {
+  color: #ffffff;
+  background-color: #123063;
+  border-color: #123063;
+  font-weight: 700;
+  cursor: default;
+}
+
+.viago-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.viago-page-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+

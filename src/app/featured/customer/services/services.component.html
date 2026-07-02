@@ -1,12 +1,17 @@
-<!-- HERO BANNER -->
-<section class="service-hero">
-    <div class="container mx-auto px-4 md:px-10 lg:px-16 text-center">
-        <div class="service-hero-content">
-            <span class="pill-label inline-flex items-center justify-center rounded-full bg-[#f96d00]/20 text-[#f96d00] px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.24em] mb-3">Dịch vụ vận tải 5 sao</span>
-            <h1 class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Thuê xe hợp đồng toàn quốc</h1>
-            <p class="text-xs md:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">Dịch vụ thuê xe Limousine, Giường nằm và Cabin đôi phục vụ du lịch, công tác, sự kiện và đưa đón sân bay. Đẳng cấp trên mọi hành trình.</p>
-        </div>
-    </div>
+<!-- Modern Minimalist Header -->
+<section class="services-header-flat">
+  <div class="container mx-auto px-4 md:px-10 lg:px-16 text-center">
+    <ng-container *ngIf="activeTab === 'thue-xe'">
+      <span class="services-header-badge">Dịch vụ đặc quyền</span>
+      <h1 class="services-header-title">Trải nghiệm dịch vụ vận tải 5 sao của VIAGO</h1>
+      <p class="services-header-slogan">Cam kết mang lại sự an tâm, an toàn và đẳng cấp trên mọi hành trình.</p>
+    </ng-container>
+    <ng-container *ngIf="activeTab === 'that-lac'">
+      <span class="services-header-badge" style="background-color: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2);">Hỗ trợ hành khách</span>
+      <h1 class="services-header-title">Tìm kiếm & Nhận lại tài sản thất lạc</h1>
+      <p class="services-header-slogan">Hỗ trợ tìm kiếm, đối soát camera hành trình và trao trả nhanh chóng tài sản thất lạc.</p>
+    </ng-container>
+  </div>
 </section>
 
 <!-- Tabs are now managed purely by router query parameters (Tab header selection) -->
@@ -307,31 +312,6 @@
 <!-- TAB 2: LOST & FOUND CONTENT -->
 <div *ngIf="activeTab === 'that-lac'" class="lost-found-page container mx-auto px-4 md:px-10 lg:px-16 py-8 tab-content">
 
-    <!-- Claiming workflow moved to the top -->
-    <div class="workflow-section mb-10 border-b border-[#eef2f7] pb-10">
-        <h2 class="text-xl font-extrabold text-[#123063] text-center mb-8">Quy trình nhận lại tài sản khi thất lạc</h2>
-        <div class="workflow-grid grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Step 1 -->
-            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
-                <div class="workflow-icon w-12 h-12 bg-[#123063]/5 rounded-full flex items-center justify-center mx-auto text-[#123063] text-xl font-bold">1</div>
-                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Xác minh thông tin</h4>
-                <p class="text-xs text-gray-500 leading-relaxed">Cung cấp thông tin vé hoặc mô tả đặc điểm tài sản để xác minh quyền sở hữu.</p>
-            </div>
-            <!-- Step 2 -->
-            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
-                <div class="workflow-icon w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600 text-xl font-bold">2</div>
-                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Đối soát thông tin hành trình</h4>
-                <p class="text-xs text-gray-500 leading-relaxed">Nhà xe rà soát danh sách bàn giao từ tài xế hoặc camera để kiểm tra vật phẩm phù hợp.</p>
-            </div>
-            <!-- Step 3 -->
-            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
-                <div class="workflow-icon w-12 h-12 bg-[#f96d00]/10 rounded-full flex items-center justify-center mx-auto text-[#f96d00] text-xl font-bold">3</div>
-                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Bàn giao tài sản</h4>
-                <p class="text-xs text-gray-500 leading-relaxed">Hành khách ký biên bản bàn giao và nhận lại đồ tại văn phòng hoặc trạm trung chuyển gần nhất.</p>
-            </div>
-        </div>
-    </div>
-
     <!-- SEARCH & FILTER BAR -->
     <div class="lost-filter-wrapper bg-white border border-[#eef2f7] rounded-[24px] p-6 shadow-sm mb-10 flex flex-col md:flex-row gap-4 items-center">
             <input type="text" [(ngModel)]="lostSearchText" (ngModelChange)="onLostFilterChange()" placeholder="Tìm nhanh: điện thoại, ví, balo..." class="w-full px-4 py-3 bg-slate-50 border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition">
@@ -397,23 +377,20 @@
             </div>
 
             <!-- Lost items pagination -->
-            <div class="pagination flex justify-center items-center gap-2 mt-8" *ngIf="lostTotalPages > 1">
-                <button class="w-8 h-8 flex items-center justify-center border border-[#eef2f7] rounded-full text-xs font-bold hover:bg-[#123063] hover:text-white transition disabled:opacity-30 disabled:pointer-events-none" 
-                        [disabled]="lostCurrentPage === 1" 
-                        (click)="setLostPage(lostCurrentPage - 1)">
-                    ❮
+            <div class="viago-pagination-container" *ngIf="lostTotalPages > 1">
+                <button type="button" [disabled]="lostCurrentPage === 1" (click)="setLostPage(lostCurrentPage - 1)" class="viago-page-btn">
+                    ‹
                 </button>
-                <button *ngFor="let p of lostPagesArray" 
-                        class="w-9 h-9 rounded-full text-xs font-bold transition flex items-center justify-center cursor-pointer"
-                        [ngClass]="lostCurrentPage === p 
-                            ? 'bg-[#123063] text-white border border-[#123063]' 
-                            : 'bg-white border border-[#e8ebf3] text-[#123063] hover:bg-[#f0f3f8]'"
-                        (click)="setLostPage(p)">
+                <button
+                    type="button"
+                    *ngFor="let p of lostPagesArray"
+                    [class.active]="lostCurrentPage === p"
+                    (click)="setLostPage(p)"
+                    class="viago-page-btn"
+                >
                     {{ p }}
                 </button>
-                <button class="w-9 h-9 rounded-full border border-[#e8ebf3] bg-white text-xs font-bold text-[#123063] hover:bg-[#123063] hover:text-white hover:border-[#123063] transition disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center cursor-pointer" 
-                        [disabled]="lostCurrentPage === lostTotalPages" 
-                        (click)="setLostPage(lostCurrentPage + 1)">
+                <button type="button" [disabled]="lostCurrentPage === lostTotalPages" (click)="setLostPage(lostCurrentPage + 1)" class="viago-page-btn">
                     ›
                 </button>
             </div>
@@ -486,7 +463,30 @@
         </div>
     </div>
 
-    <!-- Old workflow section removed from the bottom -->
+    <!-- Claiming workflow moved to the bottom -->
+    <div class="workflow-section mt-16 border-t border-[#eef2f7] pt-10">
+        <h2 class="text-xl font-extrabold text-[#123063] text-center mb-8">Quy trình nhận lại tài sản khi thất lạc</h2>
+        <div class="workflow-grid grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Step 1 -->
+            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
+                <div class="workflow-icon w-12 h-12 bg-[#123063]/5 rounded-full flex items-center justify-center mx-auto text-[#123063] text-xl font-bold">1</div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Xác minh thông tin</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Cung cấp thông tin vé hoặc mô tả đặc điểm tài sản để xác minh quyền sở hữu.</p>
+            </div>
+            <!-- Step 2 -->
+            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
+                <div class="workflow-icon w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600 text-xl font-bold">2</div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Đối soát thông tin hành trình</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Nhà xe rà soát danh sách bàn giao từ tài xế hoặc camera để kiểm tra vật phẩm phù hợp.</p>
+            </div>
+            <!-- Step 3 -->
+            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
+                <div class="workflow-icon w-12 h-12 bg-[#f96d00]/10 rounded-full flex items-center justify-center mx-auto text-[#f96d00] text-xl font-bold">3</div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Bàn giao tài sản</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Hành khách ký biên bản bàn giao và nhận lại đồ tại văn phòng hoặc trạm trung chuyển gần nhất.</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- SUCCESS TOAST NOTIFICATION (Top Right corner) -->
@@ -503,7 +503,7 @@
 </div>
 
 <!-- CLAIM ITEM VERIFICATION MODAL -->
-<div class="claim-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs" *ngIf="showClaimVerificationModal && selectedClaimItem">
+<div class="claim-modal-overlay fixed inset-0 z-[10001] flex items-center justify-center bg-black/50 backdrop-blur-xs" *ngIf="showClaimVerificationModal && selectedClaimItem">
     <div class="claim-modal-card bg-white rounded-[28px] p-6 shadow-2xl max-w-md w-full mx-4 border border-slate-100 flex flex-col gap-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <h3 class="text-sm font-bold text-[#123063]">Xác minh sở hữu tài sản</h3>
