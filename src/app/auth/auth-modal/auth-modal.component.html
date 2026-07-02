@@ -6,7 +6,7 @@
   <div [class]="currentStep === 'register-profile' ? 'relative bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,35,111,0.15)] max-w-2xl w-full mx-4 p-8 border border-slate-100 overflow-hidden transition-all transform scale-100' : 'relative bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,35,111,0.15)] max-w-[460px] w-full mx-4 p-8 md:p-10 border border-slate-100 overflow-hidden transition-all transform scale-100'" (click)="$event.stopPropagation()">
     
     <!-- Close Button -->
-    <button *ngIf="currentStep !== 'success-status'" (click)="handleClose()" class="absolute top-6 right-6 p-1.5 rounded-full text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all cursor-pointer z-10">
+    <button *ngIf="currentStep !== 'success-status' && currentStep !== 'register-profile'" (click)="handleClose()" class="absolute top-6 right-6 p-1.5 rounded-full text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all cursor-pointer z-10">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
       </svg>
@@ -529,11 +529,11 @@
             <div>
               <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
                 <img src="/asset/images/customer/icon_personal.svg" class="w-3.5 h-3.5" alt="user icon" />
-                Họ và tên
+                Họ và tên <span class="text-red-500">*</span>
               </label>
               <input type="text" formControlName="name" autocomplete="off" placeholder="Nhập họ và tên" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium" />
               <div *ngIf="profileForm.get('name')?.touched && profileForm.get('name')?.invalid" class="text-red-500 text-[10px] mt-1 pl-1.5">
-                Vui lòng nhập họ và tên.
+                Nhập Họ và tên để tiếp tục
               </div>
             </div>
 
@@ -563,9 +563,6 @@
                 <option value="Nữ">Nữ</option>
                 <option value="Khác">Khác</option>
               </select>
-              <div *ngIf="profileForm.get('gender')?.touched && profileForm.get('gender')?.invalid" class="text-red-500 text-[10px] mt-1 pl-1.5">
-                Vui lòng chọn giới tính.
-              </div>
             </div>
 
             <!-- Email -->
@@ -591,9 +588,6 @@
                   formControlName="birthday"
                 ></app-lunar-date-picker>
               </div>
-              <div *ngIf="profileForm.get('birthday')?.touched && profileForm.get('birthday')?.invalid" class="text-red-500 text-[10px] mt-1 pl-1.5">
-                Vui lòng chọn ngày sinh.
-              </div>
             </div>
 
             <!-- Nghề nghiệp -->
@@ -609,9 +603,6 @@
                 <option value="Kinh doanh tự do">Kinh doanh tự do</option>
                 <option value="Khác">Khác</option>
               </select>
-              <div *ngIf="profileForm.get('occupation')?.touched && profileForm.get('occupation')?.invalid" class="text-red-500 text-[10px] mt-1 pl-1.5">
-                Vui lòng chọn nghề nghiệp.
-              </div>
             </div>
 
           </div>
@@ -635,13 +626,10 @@
 
 
 
-        <!-- Action Buttons (Để sau / Hoàn tất) -->
+        <!-- Action Buttons -->
         <div class="flex justify-end gap-3 pt-2">
-          <button type="button" (click)="skipProfile()" class="px-6 py-3 border border-[#00236F] hover:bg-slate-50 text-[#00236F] rounded-xl font-bold text-sm transition-all cursor-pointer">
-            Để sau
-          </button>
           <button type="submit" class="px-6 py-3 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer">
-            Hoàn tất
+            Lưu thông tin
           </button>
         </div>
       </form>

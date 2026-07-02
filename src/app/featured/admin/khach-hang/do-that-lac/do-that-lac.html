@@ -1,0 +1,490 @@
+<div class="news-page-container">
+  <!-- Premium Header Card Container -->
+  <div class="header-card-container">
+    <div class="header-titles">
+      <span class="category-tag">KHÁCH HÀNG</span>
+      <h1 class="main-title">Quản lý đồ thất lạc</h1>
+    </div>
+    
+    <!-- Info Banner & Create Button Box -->
+    <div class="header-action-banner" (click)="openCreateModal()" title="Nhấp để tiếp nhận yêu cầu mới">
+      <div class="action-icon-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="16"></line>
+          <line x1="8" y1="12" x2="16" y2="12"></line>
+        </svg>
+      </div>
+      <div class="action-banner-text">
+        <h3>Tiếp nhận yêu cầu</h3>
+        <p>Ghi nhận thông tin hành lý thất lạc mới từ khách hàng báo mất.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Dashboard Cards -->
+  <div class="stats-row" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+    <div class="stats-card purple-card">
+      <span class="stats-card-value">{{ totalItemsCount }}</span>
+      <span class="stats-card-label">Tổng số báo mất</span>
+    </div>
+    <div class="stats-card blue-card">
+      <span class="stats-card-value">{{ activeSearchingCount }}</span>
+      <span class="stats-card-label">Đang tìm kiếm</span>
+    </div>
+    <div class="stats-card green-card">
+      <span class="stats-card-value">{{ activeFoundCount }}</span>
+      <span class="stats-card-label">Đã tìm thấy</span>
+    </div>
+    <div class="stats-card orange-card">
+      <span class="stats-card-value">{{ activeReturnedCount }}</span>
+      <span class="stats-card-label">Đã trả khách</span>
+    </div>
+    <div class="stats-card red-card">
+      <span class="stats-card-value">{{ activeClosedCount }}</span>
+      <span class="stats-card-label">Đóng yêu cầu</span>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Card -->
+  <div class="dashboard-card" style="margin-top: 24px;">
+    <!-- Main Content Card with Data Table -->
+    <div class="news-content-card" style="padding-top: 24px;">
+      <!-- Search & Filters -->
+      <div class="controls-row">
+        <!-- Search Input -->
+        <div class="search-box-wrapper" style="max-width: 450px; flex: 1;">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            [(ngModel)]="searchText" 
+            (ngModelChange)="filterData()" 
+            placeholder="Tìm theo tên, SĐT, mô tả..." 
+            class="search-input" />
+        </div>
+
+        <div style="flex: 1;"></div>
+
+        <!-- Filter Status Dropdown -->
+        <div class="filter-box-wrapper" style="flex: 1 1 200px; max-width: 250px;">
+          <select [(ngModel)]="filterTrangThai" (ngModelChange)="filterData()" class="filter-select">
+            <option value="Tất cả trạng thái">Tất cả trạng thái</option>
+            <option value="Đang tìm kiếm">Đang tìm kiếm</option>
+            <option value="Đã tìm thấy">Đã tìm thấy</option>
+            <option value="Đã trả khách">Đã trả khách</option>
+            <option value="Đóng yêu cầu">Đóng yêu cầu</option>
+          </select>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="filter-box-wrapper" style="display: flex; align-items: center; gap: 8px; flex: 1 1 200px; max-width: 250px;">
+          <span style="font-size: 13.5px; font-weight: 700; color: #475569; white-space: nowrap;">Sắp xếp:</span>
+          <select [(ngModel)]="filterSort" (ngModelChange)="filterData()" class="filter-select" style="min-width: 160px;">
+            <option value="Mới nhất tạo trước">Mới nhất tạo trước</option>
+            <option value="Cũ nhất tạo trước">Cũ nhất tạo trước</option>
+            <option value="Theo mô tả A-Z">Theo mô tả A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-outer-wrapper">
+        <table class="news-table">
+          <thead>
+            <tr>
+              <th width="10%">Mã số</th>
+              <th width="10%" class="text-center">HÌNH ẢNH</th>
+              <th width="14%">KHÁCH HÀNG</th>
+              <th width="11%">SỐ ĐIỆN THOẠI</th>
+              <th width="12%">TUYẾN XE</th>
+              <th width="22%">MÔ TẢ VẬT PHẨM</th>
+              <th width="12%">BÁO MẤT LÚC</th>
+              <th width="13%" class="text-center">TRẠNG THÁI</th>
+              <th width="6%" class="text-center">CHỨC NĂNG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of paginatedItems">
+              <td class="font-medium text-slate-700">{{ item.ma_do_that_lac }}</td>
+              <td class="text-center" style="vertical-align: middle; padding: 8px;">
+                <div style="width: 46px; height: 46px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; background-color: #f8fafc;">
+                  <img [src]="item.hinh_anh" alt="Vật phẩm" style="width: 100%; height: 100%; object-fit: cover;" *ngIf="item.hinh_anh" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" *ngIf="!item.hinh_anh">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+              </td>
+              <td><span class="font-bold text-slate-800">{{ item.ten_khach_hang }}</span></td>
+              <td class="text-slate-700 font-medium">{{ item.so_dien_thoai }}</td>
+              <td><span class="category-badge">{{ item.tuyen_xe }}</span></td>
+              <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" [title]="item.mo_ta_vat_pham">
+                <span class="text-slate-600">{{ item.mo_ta_vat_pham }}</span>
+              </td>
+              <td class="text-slate-600">{{ item.ngay_di_chuyen }}</td>
+              <td class="text-center">
+                <div class="status-pill" [ngClass]="{
+                  'status-active': item.trang_thai === 'Đang tìm kiếm',
+                  'status-scheduled': item.trang_thai === 'Đã tìm thấy',
+                  'status-inactive': item.trang_thai === 'Đã trả khách',
+                  'status-draft': item.trang_thai === 'Đóng yêu cầu'
+                }">
+                  <span>{{ item.trang_thai }}</span>
+                </div>
+              </td>
+              <td class="text-center">
+                <button class="btn-action-edit" (click)="openEditModal(item)" title="Chỉnh sửa cập nhật">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedItems.length === 0">
+              <td colspan="9" class="empty-row-text">
+                <div class="empty-state-content">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <p>Không tìm thấy yêu cầu thất lạc nào phù hợp với bộ lọc hiện tại.</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="pagination-footer">
+        <div class="pagination-info">
+          Hiển thị {{ filteredItems.length === 0 ? 0 : startIndex + 1 }} - {{ endIndex }} của {{ filteredItems.length }} yêu cầu
+        </div>
+        <div class="pagination-controls" *ngIf="totalPages > 1">
+          <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="prevPage()" aria-label="Trang trước">
+            <svg class="pagination-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button class="page-btn number-btn" *ngFor="let p of getPages()" [class.active-page]="p === currentPage" (click)="setPage(p)">
+            {{ p }}
+          </button>
+          <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="nextPage()" aria-label="Trang sau">
+            <svg class="pagination-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================
+     CREATE MODAL (Form khai báo mất đồ đồng nhất Customer)
+     ========================================== -->
+<div class="modal-backdrop-overlay" *ngIf="showCreateModal">
+  <div class="modal-main-container modal-md">
+    <div class="modal-header-panel">
+      <h2 class="modal-title-txt">Tiếp nhận yêu cầu tìm đồ thất lạc</h2>
+      <button class="btn-close-modal" (click)="closeCreateModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    
+    <div class="modal-body-content" style="max-height: calc(85vh - 140px); overflow-y: auto;">
+      <p class="desc-helper-txt" style="margin-bottom: 20px; font-size: 12px; color: #64748b; line-height: 1.5;">
+        Điền chi tiết biểu mẫu khai báo dưới đây để bộ phận đối soát trích xuất camera hành trình hỗ trợ hành khách tìm kiếm.
+      </p>
+
+      <!-- 1. Mô tả vật phẩm thất lạc -->
+      <div class="form-group-unified">
+        <label class="field-label-lbl">Mô tả vật phẩm thất lạc <span class="required">*</span></label>
+        <input 
+          type="text" 
+          [(ngModel)]="newItem.mo_ta_vat_pham" 
+          placeholder="Ví dụ: Ví da cá sấu đen, iPhone 14 Pro màu tím..." 
+          class="form-input-control" 
+          [class.border-red]="createFormSubmitted && !newItem.mo_ta_vat_pham" />
+      </div>
+
+      <!-- 2. Tuyến xe & Ngày di chuyển -->
+      <div style="display: flex; gap: 16px; margin-top: 20px;">
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Tuyến xe <span class="required">*</span></label>
+          <select 
+            [(ngModel)]="newItem.tuyen_xe" 
+            class="form-input-control"
+            [class.border-red]="createFormSubmitted && !newItem.tuyen_xe">
+            <option value="" disabled selected>Chọn tuyến</option>
+            <option *ngFor="let r of routesList" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Ngày di chuyển <span class="required">*</span></label>
+          <input 
+            type="date" 
+            [(ngModel)]="newItem.ngay_di_chuyen" 
+            class="form-input-control" 
+            [class.border-red]="createFormSubmitted && !newItem.ngay_di_chuyen" />
+        </div>
+      </div>
+
+      <!-- 3. Số ghế / vị trí phòng -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Số ghế / vị trí phòng (nếu nhớ)</label>
+        <input 
+          type="text" 
+          [(ngModel)]="newItem.vi_tri_ghe" 
+          placeholder="Ví dụ: Phòng A12, số ghế 5..." 
+          class="form-input-control" />
+      </div>
+
+      <!-- 4. Họ tên hành khách -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Họ tên hành khách <span class="required">*</span></label>
+        <input 
+          type="text" 
+          [(ngModel)]="newItem.ten_khach_hang" 
+          placeholder="Nguyễn Văn A" 
+          class="form-input-control" 
+          [class.border-red]="createFormSubmitted && !newItem.ten_khach_hang" />
+      </div>
+
+      <!-- 5. Số điện thoại & Email -->
+      <div style="display: flex; gap: 16px; margin-top: 20px;">
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Số điện thoại <span class="required">*</span></label>
+          <input 
+            type="tel" 
+            [(ngModel)]="newItem.so_dien_thoai" 
+            placeholder="0987xxxxxx" 
+            class="form-input-control" 
+            [class.border-red]="createFormSubmitted && !newItem.so_dien_thoai" />
+        </div>
+        
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Địa chỉ Email <span class="required">*</span></label>
+          <input 
+            type="email" 
+            [(ngModel)]="newItem.email" 
+            placeholder="name@example.com" 
+            class="form-input-control" 
+            [class.border-red]="createFormSubmitted && !newItem.email" />
+        </div>
+      </div>
+
+      <!-- 6. Hình ảnh vật phẩm (đường dẫn URL mẫu) -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Hình ảnh vật phẩm (Đường dẫn ảnh mẫu)</label>
+        <input 
+          type="text" 
+          [(ngModel)]="newItem.hinh_anh" 
+          placeholder="Nhập đường dẫn ảnh ví dụ: /asset/images/... hoặc liên kết web" 
+          class="form-input-control" />
+      </div>
+
+      <!-- 7. Ghi chú thêm -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Ghi chú đối soát</label>
+        <textarea 
+          [(ngModel)]="newItem.ghi_chu" 
+          placeholder="Các thông tin lưu ý khác..." 
+          class="form-input-control" 
+          rows="2"
+          style="padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 13.5px; width: 100%; box-sizing: border-box;"></textarea>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions - Aligned Right -->
+    <div class="modal-footer-panel modal-footer-actions" style="justify-content: flex-end; gap: 12px; padding: 20px 24px; border-top: 1px solid #f1f5f9; background-color: #f8fafc;">
+      <button class="btn-footer-secondary" (click)="closeCreateModal()">Hủy bỏ</button>
+      <button class="btn-footer-primary" (click)="saveNewItem()">Lưu thông tin</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================
+     EDIT / UPDATE MODAL
+     ========================================== -->
+<div class="modal-backdrop-overlay" *ngIf="showEditModal && editingItem">
+  <div class="modal-main-container modal-md">
+    <div class="modal-header-panel">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <h2 class="modal-title-txt">Chi tiết yêu cầu thất lạc</h2>
+        <div class="status-pill" [ngClass]="{
+          'status-active': editingItem.trang_thai === 'Đang tìm kiếm',
+          'status-scheduled': editingItem.trang_thai === 'Đã tìm thấy',
+          'status-inactive': editingItem.trang_thai === 'Đã trả khách',
+          'status-draft': editingItem.trang_thai === 'Đóng yêu cầu'
+        }">
+          <span>{{ editingItem.trang_thai }}</span>
+        </div>
+      </div>
+      <button class="btn-close-modal" (click)="closeEditModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    
+    <div class="modal-body-content" style="max-height: calc(85vh - 140px); overflow-y: auto;">
+      <!-- Mô tả vật phẩm -->
+      <div class="form-group-unified">
+        <label class="field-label-lbl">Mô tả vật phẩm thất lạc <span class="required">*</span></label>
+        <input 
+          type="text" 
+          [(ngModel)]="editingItem.mo_ta_vat_pham" 
+          class="form-input-control" 
+          [class.border-red]="editFormSubmitted && !editingItem.mo_ta_vat_pham" />
+      </div>
+
+      <!-- Tuyến xe & Ngày di chuyển -->
+      <div style="display: flex; gap: 16px; margin-top: 20px;">
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Tuyến xe <span class="required">*</span></label>
+          <select 
+            [(ngModel)]="editingItem.tuyen_xe" 
+            class="form-input-control"
+            [class.border-red]="editFormSubmitted && !editingItem.tuyen_xe">
+            <option *ngFor="let r of routesList" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Ngày di chuyển <span class="required">*</span></label>
+          <input 
+            type="date" 
+            [(ngModel)]="editingItem.ngay_di_chuyen" 
+            class="form-input-control" 
+            [class.border-red]="editFormSubmitted && !editingItem.ngay_di_chuyen" />
+        </div>
+      </div>
+
+      <!-- Số ghế -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Số ghế / vị trí phòng (nếu nhớ)</label>
+        <input 
+          type="text" 
+          [(ngModel)]="editingItem.vi_tri_ghe" 
+          class="form-input-control" />
+      </div>
+
+      <!-- Tên khách hàng -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Họ tên hành khách <span class="required">*</span></label>
+        <input 
+          type="text" 
+          [(ngModel)]="editingItem.ten_khach_hang" 
+          class="form-input-control" 
+          [class.border-red]="editFormSubmitted && !editingItem.ten_khach_hang" />
+      </div>
+
+      <!-- SĐT & Email -->
+      <div style="display: flex; gap: 16px; margin-top: 20px;">
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Số điện thoại <span class="required">*</span></label>
+          <input 
+            type="tel" 
+            [(ngModel)]="editingItem.so_dien_thoai" 
+            class="form-input-control" 
+            [class.border-red]="editFormSubmitted && !editingItem.so_dien_thoai" />
+        </div>
+        
+        <div class="form-group-unified" style="flex: 1;">
+          <label class="field-label-lbl">Địa chỉ Email <span class="required">*</span></label>
+          <input 
+            type="email" 
+            [(ngModel)]="editingItem.email" 
+            class="form-input-control" 
+            [class.border-red]="editFormSubmitted && !editingItem.email" />
+        </div>
+      </div>
+
+      <!-- Trạng thái xử lý -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Trạng thái xử lý <span class="required">*</span></label>
+        <select 
+          [(ngModel)]="editingItem.trang_thai" 
+          (ngModelChange)="onStatusChange()"
+          class="form-input-control">
+          <option value="Đang tìm kiếm">Đang tìm kiếm</option>
+          <option value="Đã tìm thấy">Đã tìm thấy</option>
+          <option value="Đã trả khách">Đã trả khách</option>
+          <option value="Đóng yêu cầu">Đóng yêu cầu</option>
+        </select>
+      </div>
+
+      <!-- Khung thông tin tìm thấy (hiển thị khi trạng thái là Đã tìm thấy hoặc Đã trả khách) -->
+      <div 
+        class="timeline-rules-container" 
+        *ngIf="editingItem.trang_thai === 'Đã tìm thấy' || editingItem.trang_thai === 'Đã trả khách'">
+        <div class="timeline-rules-header">Thông tin tìm thấy vật phẩm</div>
+        <div class="timeline-rules-body" style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="rule-field">
+            <label class="field-label-lbl">Vị trí tìm thấy <span class="required">*</span></label>
+            <input 
+              type="text" 
+              [(ngModel)]="editingItem.vi_tri_tim_thay" 
+              placeholder="Ví dụ: Ghế số 4, Cốp xe..."
+              class="form-input-control" 
+              [class.border-red]="editFormSubmitted && !editingItem.vi_tri_tim_thay" />
+          </div>
+          <div class="rule-field">
+            <label class="field-label-lbl">Thời gian tìm thấy <span class="required">*</span></label>
+            <input 
+              type="text" 
+              [(ngModel)]="editingItem.thoi_gian_tim_thay" 
+              placeholder="YYYY-MM-DD HH:mm"
+              class="form-input-control" 
+              [class.border-red]="editFormSubmitted && !editingItem.thoi_gian_tim_thay" />
+          </div>
+          <div class="rule-field">
+            <label class="field-label-lbl">Đường dẫn hình ảnh minh chứng</label>
+            <input 
+              type="text" 
+              [(ngModel)]="editingItem.hinh_anh" 
+              class="form-input-control" />
+            <div *ngIf="editingItem.hinh_anh" style="margin-top: 8px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); max-width: 200px;">
+              <img [src]="editingItem.hinh_anh" alt="Minh chứng" style="width: 100%; display: block;" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ghi chú -->
+      <div class="form-group-unified" style="margin-top: 20px;">
+        <label class="field-label-lbl">Ghi chú / Nhật ký xử lý</label>
+        <textarea 
+          [(ngModel)]="editingItem.ghi_chu" 
+          placeholder="Lịch sử liên hệ, bàn giao..." 
+          class="form-input-control" 
+          rows="2"
+          style="padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 13.5px; width: 100%; box-sizing: border-box;"></textarea>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions - Aligned Right -->
+    <div class="modal-footer-panel modal-footer-actions" style="justify-content: flex-end; gap: 12px; padding: 20px 24px; border-top: 1px solid #f1f5f9; background-color: #f8fafc;">
+      <button class="btn-footer-secondary" (click)="closeEditModal()">Hủy bỏ</button>
+      <button class="btn-footer-primary" (click)="saveEditItem()">Lưu thông tin</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==========================================
+     SUCCESS OVERLAY ALERT DIALOG
+     ========================================== -->
+<div class="modal-backdrop-overlay flex-centered z-index-200" *ngIf="showSuccessModal">
+  <div class="success-alert-card" style="position: relative;">
+    <button (click)="closeSuccessModal()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; color: #64748b;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="success-icon-ring">
+      <svg class="check-success-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h3 class="success-alert-title font-bold">{{ successMessageTitle }}</h3>
+    <p class="success-alert-body font-medium">
+      {{ successMessageBody }}
+    </p>
+  </div>
+</div>

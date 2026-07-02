@@ -1,5 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap');
+@import "quill/dist/quill.snow.css";
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #00236F;
+  --color-primary-hover: #001b54;
+  --color-secondary: #FF6A00;
+  --color-secondary-hover: #FF8126;
+  --color-background: #F8FAFC;
+  --color-border-divider: #E2E8F0;
+  --color-text-primary: #1E3A8A;
+  --color-text-secondary: #64748B;
+  --color-text-strong: #0F172A;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+}
 
 @layer base {
   body {
@@ -63,4 +79,27 @@ a {
 
 .animate-scale-up {
   animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@media print {
+  body.print-hoan-huy app-sidebar,
+  body.print-hoan-huy app-topbar {
+    display: none !important;
+  }
+
+  body.print-hoan-huy,
+  body.print-hoan-huy .trang-ch-amin,
+  body.print-hoan-huy .main-content {
+    display: block !important;
+    width: 100% !important;
+    min-height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+  }
+
+  body.print-hoan-huy app-hoan-huy {
+    display: block !important;
+    width: 100% !important;
+  }
 }

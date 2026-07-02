@@ -1,5 +1,6 @@
 <main class="min-h-screen bg-slate-50 overflow-x-hidden">
-  <!-- Hero Section Wrapper -->
+  <ng-container *ngIf="!showResults">
+    <!-- Hero Section Wrapper -->
   <div class="relative w-full max-w-[1920px] h-[300px] md:h-[400px] lg:h-[450px] mx-auto overflow-hidden bg-slate-900">
     <div class="relative w-full h-full">
       <!-- Slides -->
@@ -31,7 +32,7 @@
       </button>
 
       <!-- Dots Navigation Indicator -->
-      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+      <div class="absolute bottom-20 md:bottom-28 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         <button *ngFor="let img of heroImages; let i = index"
                 (click)="setHeroIndex(i)"
                 class="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer shadow-sm"
@@ -205,6 +206,64 @@
     </div>
   </div>
 
+  <!-- Pending Payment Card Section -->
+  <div *ngIf="pendingOrder && !showResults" class="w-full flex justify-center px-4 md:px-8 mb-8 relative z-20">
+    <div class="bg-[#FFF9F2] border border-[#FFE8CC] rounded-xl p-4 w-full max-w-[1200px] shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-300 hover:shadow-md animate-fade-in">
+      <!-- Left side: Icon & Ticket Details -->
+      <div class="flex items-center gap-4 flex-1 w-full min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 animate-pulse">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="min-w-0 flex-1 space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500 text-white uppercase tracking-wider">Chờ thanh toán</span>
+            <span class="flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold bg-red-50 text-red-600 border border-red-100">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+              Còn lại: {{ getFormattedPendingTime() }}
+            </span>
+          </div>
+          <div class="text-sm font-bold text-slate-800 flex items-center gap-1.5 truncate">
+            <span>Tuyến:</span>
+            <span class="text-[#1E3A8A]">{{ pendingOrder.tripName }}</span>
+          </div>
+          <div class="text-xs text-slate-500 font-medium flex flex-wrap gap-x-4 gap-y-1">
+            <span>Ngày đi: <strong class="text-slate-700 font-semibold">{{ getFormattedDateDDMMYYYY(pendingOrder.departureDate) }}<span *ngIf="pendingOrder.outboundTime"> - {{ pendingOrder.outboundTime }}</span></strong></span>
+            <span class="hidden sm:inline text-slate-300">|</span>
+            <span>Ghế: <strong class="text-amber-600 font-bold">{{ pendingOrder.selectedSeats.join(', ') }}</strong></span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right side: Price & Action CTA Buttons -->
+      <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-amber-100">
+        <div class="text-left sm:text-right flex-shrink-0">
+          <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Tổng tiền</p>
+          <p class="text-lg font-black text-[#FF6A00]">{{ pendingOrder.totalAmount.toLocaleString('vi-VN') }}đ</p>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button
+            type="button"
+            (click)="cancelPendingOrder()"
+            class="px-3.5 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-bold text-xs transition-all cursor-pointer shadow-sm active:scale-95"
+          >
+            Hủy
+          </button>
+          <button
+            type="button"
+            (click)="continuePendingPayment()"
+            class="px-4 py-2 rounded-lg bg-[#FF6A00] hover:bg-[#FF8126] text-white font-bold text-xs transition-all cursor-pointer shadow-md hover:shadow-lg active:scale-95 flex items-center gap-1"
+          >
+            Thanh toán ngay
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Core Features Section (Utility Images) -->
   <section class="max-w-[1200px] mx-auto px-4 md:px-8 py-12 lg:py-20">
@@ -440,8 +499,8 @@
             <!-- Review 1 -->
             <div class="bg-white border-l-4 border-[#FF6A00] rounded-r-xl p-5 shadow-sm">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
-                  <img src="/asset/images/customer/customer_avatar_1.png" alt="Customer Avatar 1" class="w-full h-full object-cover" />
+                <div class="w-10 h-10 rounded-full bg-pink-500 text-white font-bold flex items-center justify-center text-sm flex-shrink-0">
+                  TP
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-800">Đỗ Thanh Phương</h4>
@@ -476,8 +535,8 @@
             <!-- Review 2 -->
             <div class="bg-white border-l-4 border-[#FF6A00] rounded-r-xl p-5 shadow-sm">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
-                  <img src="/asset/images/customer/customer_avatar_2.png" alt="Customer Avatar 2" class="w-full h-full object-cover" />
+                <div class="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-sm flex-shrink-0">
+                  VA
                 </div>
                 <div>
                   <h4 class="text-sm font-bold text-gray-800">Nguyễn Văn An</h4>
@@ -510,7 +569,7 @@
           </div>
 
 
-          <a routerLink="/danh-gia" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors mt-8 justify-end cursor-pointer">
+          <a routerLink="/danh-gia" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors mt-8 justify-end">
             <span>Xem tất cả</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -532,7 +591,7 @@
         </h2>
         <div class="w-12 h-1 bg-[#FF6A00] rounded-full"></div>
       </div>
-      <a routerLink="/tin-tuc" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1 cursor-pointer">
+      <a routerLink="/tin-tuc" class="text-sm font-semibold text-[#1A3A8A] hover:text-[#3053B3] flex items-center gap-1 transition-colors pb-1">
         <span>Xem tất cả</span>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -560,7 +619,7 @@
           </div>
         </div>
         <div class="px-6 pb-6 pt-2">
-          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+          <a routerLink="/tin-tuc/chi-tiet/101" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
             Chi tiết &rarr;
           </a>
         </div>
@@ -584,7 +643,7 @@
           </div>
         </div>
         <div class="px-6 pb-6 pt-2">
-          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+          <a routerLink="/tin-tuc/chi-tiet/102" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
             Chi tiết &rarr;
           </a>
         </div>
@@ -608,12 +667,2665 @@
           </div>
         </div>
         <div class="px-6 pb-6 pt-2">
-          <a href="#" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
+          <a routerLink="/tin-tuc/chi-tiet/103" class="text-sm font-semibold text-[#1A3A8A] hover:underline flex items-center gap-1">
             Chi tiết &rarr;
           </a>
         </div>
       </div>
     </div>
   </section>
+  </ng-container>
 
+  <!-- SEARCH RESULTS VIEW (showResults is true) -->
+  <ng-container *ngIf="showResults">
+    <ng-container *ngIf="!selectedTrip">
+      <!-- Results Banner & Booking Form Wrapper -->
+    <div class="relative w-full max-w-[1920px] mx-auto bg-slate-900 overflow-visible py-12 lg:py-16 px-4 md:px-8 xl:px-16"
+         style="background-image: linear-gradient(to right, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.45)), url('/asset/images/customer/xe.png'); background-size: cover; background-position: center;">
+      
+      <!-- Text content -->
+      <div class="max-w-[1200px] mx-auto w-full text-white mb-8 text-left">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+          Hành trình sang trọng,<br>
+          <span class="text-[#FF6A00]">Tiện nghi đẳng cấp</span>
+        </h1>
+        <p class="text-sm md:text-base text-slate-200 mt-3 max-w-[640px] leading-relaxed font-medium opacity-90">
+          Trải nghiệm dịch vụ vận chuyển hàng đầu với dòng xe Limousine tốt nhất.
+          Cam kết an toàn, đúng giờ và chất lượng phục vụ 5 sao.
+        </p>
+      </div>
+
+      <!-- Booking Form Card (embedded inside results) -->
+      <div class="max-w-[1200px] mx-auto w-full bg-white rounded-xl shadow-lg border border-slate-100 p-6 md:p-8 flex flex-col justify-between overflow-visible relative z-20">
+        <!-- Radio Ticket Types -->
+        <div class="flex items-center gap-6 mb-4">
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="resultTripType"
+              value="one-way"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'one-way'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'one-way'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Một chiều</span>
+          </label>
+
+          <label class="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="radio"
+              name="resultTripType"
+              value="round-trip"
+              [(ngModel)]="tripType"
+              class="sr-only"
+            />
+            <div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center transition-all group-hover:border-[#00236F]"
+                 [class.border-[#00236F]]="tripType === 'round-trip'">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#00236F] scale-0 transition-transform duration-200"
+                   [class.scale-100]="tripType === 'round-trip'"></div>
+            </div>
+            <span class="text-sm font-semibold text-gray-800 group-hover:text-[#00236F] transition-colors">Khứ hồi</span>
+          </label>
+        </div>
+
+        <!-- Form Fields Grid -->
+        <div class="flex flex-col lg:flex-row items-end gap-3.5 w-full overflow-visible">
+          <!-- Departure Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              id="resultDeparture"
+              label="Điểm đi"
+              placeholder="Nhập điểm đi"
+              iconPath="/asset/images/customer/icon_diem_di.svg"
+              [items]="departureCities"
+              [value]="departure"
+              (valueChange)="onDepartureChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+          <!-- Swap Icon -->
+          <div class="flex justify-center items-center py-2 lg:py-0 self-center lg:self-end">
+            <button
+              type="button"
+              (click)="swapLocations()"
+              class="w-10 h-10 rounded-full border border-slate-200 hover:border-[#FF6A00] bg-white hover:bg-slate-50 flex items-center justify-center transition-colors shadow-sm active:scale-95 cursor-pointer"
+            >
+              <img src="/asset/images/customer/icon_dao_chieu.svg" class="w-5 h-5 object-contain" alt="swap icon" />
+            </button>
+          </div>
+
+          <!-- Destination Dropdown -->
+          <div class="w-full lg:flex-1 overflow-visible">
+            <app-searchable-dropdown
+              id="resultDestination"
+              label="Điểm đến"
+              placeholder="Nhập điểm đến"
+              iconPath="/asset/images/customer/icon_diem_den.svg"
+              [items]="destinationCities"
+              [value]="destination"
+              (valueChange)="onDestinationChange($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+          <!-- Departure Date -->
+          <div class="w-full lg:w-[180px] text-left">
+            <label class="block text-xs font-extrabold text-[#00236F] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <img src="/asset/images/customer/icon_lich.svg" class="w-3.5 h-3.5 object-contain" alt="calendar icon" />
+              Ngày đi
+            </label>
+            <div class="relative cursor-pointer" (click)="dpDepResult.showPicker()">
+              <input
+                #dpDepResult
+                id="resultDepartureDate"
+                type="date"
+                [(ngModel)]="departureDate"
+                [min]="todayDate"
+                class="absolute inset-0 w-full h-full opacity-0 pointer-events-none z-0"
+              />
+              <div class="w-full bg-[#F4F6FA] border border-[#E2E8F0] focus-within:border-[#FF6A00] focus-within:bg-white text-gray-800 font-semibold text-sm px-3 py-3 rounded-lg outline-none transition-colors flex items-center justify-between min-h-[46px]">
+                <span [class.text-gray-400]="!departureDate" class="select-none">
+                  {{ departureDate ? formatDateToShort(departureDate) : 'dd/mm/yyyy' }}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400 pointer-events-none">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Return Date -->
+          <div *ngIf="tripType === 'round-trip'" class="w-full lg:w-[180px] text-left">
+            <label class="block text-xs font-extrabold text-[#00236F] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <img src="/asset/images/customer/icon_lich.svg" class="w-3.5 h-3.5 object-contain" alt="calendar icon" />
+              Ngày về
+            </label>
+            <div class="relative cursor-pointer" (click)="dpRetResult.showPicker()">
+              <input
+                #dpRetResult
+                id="resultReturnDate"
+                type="date"
+                [(ngModel)]="returnDate"
+                [min]="departureDate || todayDate"
+                class="absolute inset-0 w-full h-full opacity-0 pointer-events-none z-0"
+              />
+              <div class="w-full bg-[#F4F6FA] border border-[#E2E8F0] focus-within:border-[#FF6A00] focus-within:bg-white text-gray-800 font-semibold text-sm px-3 py-3 rounded-lg outline-none transition-colors flex items-center justify-between min-h-[46px]">
+                <span [class.text-gray-400]="!returnDate" class="select-none">
+                  {{ returnDate ? formatDateToShort(returnDate) : 'dd/mm/yyyy' }}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400 pointer-events-none">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ticket Count Selector -->
+          <div class="w-full lg:w-[140px] text-left">
+            <label class="block text-xs font-extrabold text-[#00236F] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <img src="/asset/images/customer/icon_ve.svg" class="w-3.5 h-3.5 object-contain" alt="ticket icon" />
+              Số vé
+            </label>
+            <div class="relative">
+              <select
+                [(ngModel)]="ticketCount"
+                class="w-full bg-[#F4F6FA] border border-[#E2E8F0] rounded-lg px-3 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00] transition-colors cursor-pointer appearance-none"
+              >
+                <option [value]="1">1 vé</option>
+                <option [value]="2">2 vé</option>
+                <option [value]="3">3 vé</option>
+                <option [value]="4">4 vé</option>
+                <option [value]="5">5 vé</option>
+              </select>
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Searches tag inside booking form -->
+        <div class="flex flex-wrap items-center gap-3 mt-4 text-sm font-semibold self-start text-left">
+          <span class="text-[#FF6A00] font-bold text-xs">Tìm kiếm gần đây:</span>
+          <span class="bg-slate-100 text-slate-700 px-3 py-1.5 rounded-full text-xs font-bold shadow-sm cursor-pointer hover:bg-slate-200 transition-colors">
+            {{searchDeparture}} &rarr; {{searchDestination}} {{searchDepartureDate | date:'dd/MM/yyyy'}}
+          </span>
+        </div>
+
+        <!-- Search CTA Button -->
+        <div class="flex justify-center mt-4">
+          <button
+            type="button"
+            (click)="onSubmitSearch()"
+            class="bg-[#FF6A00] hover:bg-[#FF8126] active:bg-[#D95800] text-white font-bold text-base px-16 py-3.5 rounded-lg transition-all shadow-md hover:shadow-lg hover:-translate-y-[1px] active:translate-y-0 tracking-wide cursor-pointer w-full md:w-auto"
+          >
+            TÌM KIẾM
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID CONTAINER FOR FILTERS AND RESULTS -->
+    <div id="results-container" class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 flex flex-col lg:flex-row gap-8">
+      
+      <!-- LEFT COLUMN: SEARCH FILTER -->
+      <aside class="w-full lg:w-[280px] flex-shrink-0">
+        <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 text-left sticky top-4">
+          <!-- Filter Header -->
+          <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+            <span class="font-bold text-[#152C68] text-base uppercase tracking-wider">Bộ lọc tìm kiếm</span>
+            <button (click)="resetFilters()" class="text-xs font-semibold text-[#FF6A00] hover:underline cursor-pointer">
+              Xóa lọc
+            </button>
+          </div>
+
+          <!-- Group 1: GIỜ ĐI -->
+          <div class="mb-6">
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Giờ đi</h4>
+            <div class="flex flex-col gap-2.5">
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.early" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Sáng sớm 00:00 - 06:00</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.morning" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Buổi sáng 06:00 - 12:00</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.afternoon" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Buổi chiều 12:00 - 18:00</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="timeFilters.night" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Buổi tối 18:00 - 24:00</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Group 2: TẦNG -->
+          <div class="mb-6">
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Tầng</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                (click)="selectFloor('lower')"
+                class="border rounded-lg py-2 text-xs font-bold text-center transition-all cursor-pointer"
+                [class.border-[#FF6A00]]="selectedFloor === 'lower'"
+                [class.bg-[#FFF8F2]]="selectedFloor === 'lower'"
+                [class.text-[#FF6A00]]="selectedFloor === 'lower'"
+                [class.border-slate-200]="selectedFloor !== 'lower'"
+                [class.text-gray-600]="selectedFloor !== 'lower'"
+                [class.bg-white]="selectedFloor !== 'lower'"
+              >
+                Tầng dưới
+              </button>
+              <button
+                type="button"
+                (click)="selectFloor('upper')"
+                class="border rounded-lg py-2 text-xs font-bold text-center transition-all cursor-pointer"
+                [class.border-[#FF6A00]]="selectedFloor === 'upper'"
+                [class.bg-[#FFF8F2]]="selectedFloor === 'upper'"
+                [class.text-[#FF6A00]]="selectedFloor === 'upper'"
+                [class.border-slate-200]="selectedFloor !== 'upper'"
+                [class.text-gray-600]="selectedFloor !== 'upper'"
+                [class.bg-white]="selectedFloor !== 'upper'"
+              >
+                Tầng trên
+              </button>
+            </div>
+          </div>
+
+          <!-- Group 3: HẠNG GHẾ -->
+          <div class="mb-6">
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Hàng ghế</h4>
+            <div class="flex flex-col gap-2.5">
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="seatFilters.front" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Hàng đầu (Ghế 1-4)</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="seatFilters.middle" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Hàng giữa (Ghế 5-8)</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="seatFilters.back" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Hàng cuối (Ghế 9-12)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Group 4: GIÁ VÉ -->
+          <div>
+            <h4 class="font-bold text-[#152C68] text-sm mb-3">Giá vé</h4>
+            <div class="flex flex-col gap-2.5">
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="priceFilters.under300" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Dưới 300.000đ</span>
+              </label>
+              <label class="flex items-center gap-2.5 text-xs font-semibold text-gray-600 cursor-pointer">
+                <input type="checkbox" [(ngModel)]="priceFilters.over300" class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00]" />
+                <span>Từ 300.000đ trở lên</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: SEARCH RESULTS -->
+      <section class="flex-1 flex flex-col gap-5 text-left">
+        <!-- Results Title -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex flex-col text-left">
+            <h2 class="text-xl font-bold text-[#152C68]">
+              {{ activeTab === 'outbound' ? searchDeparture : searchDestination }} - {{ activeTab === 'outbound' ? searchDestination : searchDeparture }} ({{getFilteredTrips().length}} chuyến)
+            </h2>
+            <p *ngIf="searchTripType === 'one-way'" class="text-sm font-semibold text-gray-500 mt-1">
+              Ngày đi: {{ searchDepartureDate | date:'dd/MM/yyyy' }}
+            </p>
+          </div>
+          
+          <!-- Sort buttons tabs -->
+          <div class="flex bg-slate-100 p-1 rounded-lg self-start">
+            <button
+              (click)="setSortBy('earliest')"
+              class="px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer"
+              [class.bg-white]="sortBy === 'earliest'"
+              [class.shadow-sm]="sortBy === 'earliest'"
+              [class.text-[#152C68]]="sortBy === 'earliest'"
+              [class.text-gray-500]="sortBy !== 'earliest'"
+            >
+              Giờ đi sớm nhất
+            </button>
+            <button
+              (click)="setSortBy('latest')"
+              class="px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer"
+              [class.bg-white]="sortBy === 'latest'"
+              [class.shadow-sm]="sortBy === 'latest'"
+              [class.text-[#152C68]]="sortBy === 'latest'"
+              [class.text-gray-500]="sortBy !== 'latest'"
+            >
+              Giờ đi muộn nhất
+            </button>
+            <button
+              (click)="setSortBy('cheapest')"
+              class="px-4 py-1.5 rounded-md text-xs font-bold transition-all cursor-pointer"
+              [class.bg-white]="sortBy === 'cheapest'"
+              [class.shadow-sm]="sortBy === 'cheapest'"
+              [class.text-[#152C68]]="sortBy === 'cheapest'"
+              [class.text-gray-500]="sortBy !== 'cheapest'"
+            >
+              Giá rẻ nhất
+            </button>
+          </div>
+        </div>
+
+        <!-- Round-trip Tabs (Chuyến đi / Chuyến về) -->
+        <div *ngIf="searchTripType === 'round-trip'" class="flex border-b border-slate-200 w-full">
+          <button
+            (click)="switchActiveTab('outbound')"
+            class="px-6 py-3 text-sm font-bold text-center border-b-2 transition-all cursor-pointer flex items-center gap-2"
+            [class.border-[#FF6A00]]="activeTab === 'outbound'"
+            [class.text-[#FF6A00]]="activeTab === 'outbound'"
+            [class.border-transparent]="activeTab !== 'outbound'"
+            [class.text-gray-500]="activeTab !== 'outbound'"
+          >
+            CHUYẾN ĐI - {{ getFormattedDateLong(searchDepartureDate) }}
+          </button>
+          <button
+            (click)="switchActiveTab('return')"
+            class="px-6 py-3 text-sm font-bold text-center border-b-2 transition-all cursor-pointer flex items-center gap-2"
+            [class.border-[#FF6A00]]="activeTab === 'return'"
+            [class.text-[#FF6A00]]="activeTab === 'return'"
+            [class.border-transparent]="activeTab !== 'return'"
+            [class.text-gray-500]="activeTab !== 'return'"
+          >
+            CHUYẾN VỀ - {{ getFormattedDateLong(searchReturnDate) }}
+          </button>
+        </div>
+
+        <!-- Trips List -->
+        <div class="flex flex-col gap-4">
+          <!-- Zero Results State -->
+          <div *ngIf="getFilteredTrips().length === 0" class="bg-white border border-slate-150 rounded-xl p-12 text-center shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-slate-300 mx-auto mb-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+            <h3 class="text-base font-bold text-gray-700">Không tìm thấy chuyến xe phù hợp</h3>
+            <p *ngIf="!(searchTripType === 'round-trip' && activeTab === 'return' && selectedOutboundTrip && searchDepartureDate === searchReturnDate)" class="text-xs text-gray-400 mt-1">
+              Vui lòng thay đổi bộ lọc tìm kiếm hoặc quay lại trang chủ.
+            </p>
+            <button 
+              *ngIf="!(searchTripType === 'round-trip' && activeTab === 'return' && selectedOutboundTrip && searchDepartureDate === searchReturnDate)"
+              (click)="resetFilters()" 
+              class="mt-4 bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors cursor-pointer"
+            >
+              Xóa tất cả bộ lọc
+            </button>
+          </div>
+
+          <!-- Trip Cards Loop -->
+          <ng-container *ngFor="let trip of getFilteredTrips(); let i = index">
+            <!-- Normal Trip Card -->
+            <div class="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col w-full">
+              <!-- Top content -->
+              <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <!-- Timeline Info -->
+                <div class="flex items-center gap-4 flex-1 max-w-[480px]">
+                  <div class="flex flex-col text-left w-[130px] flex-shrink-0">
+                    <span class="text-xl font-bold text-[#152C68]">{{trip.depTime}}</span>
+                    <span class="text-xs text-gray-500 font-semibold mt-1">{{trip.depLocation}}</span>
+                  </div>
+
+                  <!-- Connection Line -->
+                  <div class="flex-1 flex flex-col items-center gap-1 min-w-[70px]">
+                    <span class="text-[10px] text-gray-400 font-semibold">{{trip.duration}}</span>
+                    <div class="relative w-full flex items-center justify-center">
+                      <div class="w-full border-t-2 border-dashed border-slate-200"></div>
+                      <div class="absolute w-2 h-2 rounded-full bg-slate-300 -left-1"></div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-[#FF6A00] absolute bg-white px-0.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
+                      <div class="absolute w-2 h-2 rounded-full bg-slate-300 -right-1"></div>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col text-left w-[180px] flex-shrink-0">
+                    <span class="text-xl font-bold text-[#152C68]">{{trip.arrTime}}</span>
+                    <span class="text-xs text-gray-500 font-semibold mt-1">{{trip.arrLocation}}</span>
+                  </div>
+                </div>
+
+                <!-- Vehicle Info -->
+                <div class="flex items-center gap-2 md:justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.136a3.375 3.375 0 00-2.87-3.148l-1.077-.197a48.772 48.772 0 00-11.83 0l-1.078.197a3.375 3.375 0 00-2.87 3.148l-.317 5.136c-.04.62.469 1.124 1.09 1.124H3.75m14.25 0h-3.75m0 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                  </svg>
+                  <div class="flex flex-col text-left">
+                    <span class="text-xs font-semibold text-gray-500">{{trip.type}}</span>
+                    <span class="text-[#FF6A00] font-bold text-xs">{{trip.availableSeats}} chỗ trống</span>
+                  </div>
+                </div>
+
+                <!-- Price and CTA -->
+                <div class="flex items-center md:flex-col gap-4 md:gap-1.5 md:items-end justify-between md:justify-center border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
+                  <span class="text-xl font-black text-[#FF6A00]">{{trip.price | number:'1.0-0'}}đ</span>
+                  <button
+                    (click)="selectTrip(trip)"
+                    class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-bold px-5 py-2.5 rounded-lg transition-colors active:scale-95 cursor-pointer shadow-sm whitespace-nowrap"
+                  >
+                    Chọn chuyến
+                  </button>
+                </div>
+              </div>
+
+              <!-- Amenities horizontal row directly above the bottom links bar -->
+              <div class="px-6 py-2.5 border-t border-slate-100 flex flex-wrap items-center gap-1.5 bg-white">
+                <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mr-1">Tiện ích:</span>
+                <!-- TV (only for 9 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ')" class="px-1.5 py-0.5 bg-teal-50 text-teal-600 border border-teal-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Tivi">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <rect x="2" y="5" width="20" height="11" rx="1.5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v3M9 19h6" />
+                  </svg>
+                  Tivi
+                </span>
+
+                <!-- USB Charger (for 9 chỗ, 22 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ')" class="px-1.5 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Ổ sạc, USB">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M12 6H9m3 4h4m-4 4H9m3 4h4" />
+                  </svg>
+                  Sạc USB
+                </span>
+
+                <!-- GPS (for 9 chỗ, 22 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ')" class="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="GPS định vị">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <circle cx="12" cy="12" r="9" />
+                    <circle cx="12" cy="12" r="2.5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+                  </svg>
+                  GPS
+                </span>
+
+                <!-- Wifi (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ') || trip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-sky-50 text-sky-600 border border-sky-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Wifi miễn phí">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.284 16.284A3 3 0 0012 17a3 3 0 003.716-.716M5.456 13.456a7 7 0 0113.088 0M2.628 10.628a11 11 0 0118.744 0" />
+                  </svg>
+                  Wifi
+                </span>
+
+                <!-- Nước uống & Khăn ướt (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ') || trip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Nước uống & Khăn ướt">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                  </svg>
+                  Nước/Khăn
+                </span>
+
+                <!-- Điều hòa (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                <span *ngIf="trip.type.includes('9 chỗ') || trip.type.includes('22 chỗ') || trip.type.includes('34 chỗ')" class="px-1.5 py-0.5 bg-cyan-50 text-cyan-600 border border-cyan-150 rounded text-[9px] font-bold flex items-center gap-0.5 cursor-help" title="Điều hòa">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-2.5 h-2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M2 12h20M12 12l7.07-7.07M12 12l-7.07 7.07M12 12l7.07 7.07M12 12L4.93 4.93" />
+                  </svg>
+                  Điều hòa
+                </span>
+              </div>
+
+              <!-- Bottom links -->
+              <div class="bg-slate-50 border-t border-slate-100 px-6 py-2.5 flex items-center gap-4 text-[10px] font-bold text-gray-400">
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Quầy vé</span>
+                <span>&bull;</span>
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Lịch trình</span>
+                <span>&bull;</span>
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Trong chuyến</span>
+                <span>&bull;</span>
+                <span class="hover:text-[#1A3A8A] cursor-pointer">Chính sách</span>
+              </div>
+            </div>
+
+            <!-- Member Promo Banner Banner inserted in middle of listing -->
+            <div *ngIf="i === 1" class="bg-gradient-to-r from-[#00236F] to-[#1A3A8A] rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden text-white">
+              <div class="flex-1 flex flex-col gap-1.5 text-left z-10">
+                <h3 class="text-lg font-black tracking-wide">Đăng nhập ngay để nhận nhiều quyền lợi dành cho thành viên</h3>
+                <p class="text-xs font-semibold text-slate-200 opacity-90 leading-relaxed max-w-xl">
+                  Với đăng nhập và đăng ký, bạn sẽ dễ dàng quản lý đặt chỗ, hoặc nhận các thông tin khuyến mãi đặc quyền dành riêng cho khách hàng VIAGO của chúng tôi.
+                </p>
+              </div>
+              <div class="z-10 flex-shrink-0">
+                <button class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-xs font-black px-6 py-3 rounded-lg transition-colors active:scale-95 cursor-pointer shadow-md">
+                  Đăng nhập ngay
+                </button>
+              </div>
+              
+              <!-- Subtle decorative element/avatar badge on the right -->
+              <div class="absolute right-4 bottom-0 opacity-10 pointer-events-none transform translate-y-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-32 h-32">
+                  <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- Back Button -->
+        <div class="mt-4 self-center">
+          <button (click)="goBackHome()" class="text-xs font-bold text-gray-500 hover:text-[#1A3A8A] flex items-center gap-1 transition-colors py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            <span>Quay lại trang chủ</span>
+          </button>
+        </div>
+      </section>
+    </div>
+    </ng-container>
+
+    <!-- IF A TRIP IS SELECTED, SHOW SEAT SELECTION & BOOKING SCREEN -->
+    <ng-container *ngIf="selectedTrip">
+      <!-- Header Banner -->
+      <div class="relative w-full max-w-[1920px] mx-auto bg-[#152C68] text-white py-4 px-4 md:px-8 xl:px-16 flex items-center justify-between shadow-md">
+        <!-- Back Button -->
+        <button
+          *ngIf="!showSuccessScreen"
+          (click)="showPayment ? cancelPayment() : cancelBooking()"
+          class="bg-transparent hover:bg-white/10 text-white border border-white/20 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer"
+        >
+          Quay lại
+        </button>
+        <button
+          *ngIf="showSuccessScreen"
+          (click)="resetToHome()"
+          class="bg-transparent hover:bg-white/10 text-white border border-white/20 text-xs font-bold px-4 py-2 rounded transition-colors cursor-pointer"
+        >
+          Trang chủ
+        </button>
+
+        <!-- Center Text Details -->
+        <div class="text-center flex-1">
+          <!-- Title -->
+          <h2 class="text-lg md:text-xl font-black uppercase tracking-wide">
+            <span *ngIf="showSuccessScreen">Đặt vé thành công</span>
+            <span *ngIf="showPayment">Thanh toán vé xe</span>
+            <span *ngIf="!showPayment && !showSuccessScreen">{{selectedTrip.depLocation}} - {{selectedTrip.arrLocation}}</span>
+          </h2>
+          <!-- Subtitle -->
+          <p class="text-xs font-semibold text-slate-200 mt-0.5 opacity-90">
+            <span *ngIf="showSuccessScreen">Cảm ơn bạn đã lựa chọn dịch vụ VIAGO Express</span>
+            <span *ngIf="showPayment">Vui lòng hoàn tất thanh toán trước khi hết thời gian giữ chỗ</span>
+            <span *ngIf="!showPayment && !showSuccessScreen">{{selectedTrip.depTime}} - {{getFormattedTripDate()}}</span>
+          </p>
+        </div>
+        <div class="w-[80px]"></div> <!-- Spacer for balance -->
+      </div>
+
+      <div *ngIf="!showPayment && !showSuccessScreen" class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 flex flex-col lg:flex-row gap-8 text-left">
+        <!-- LEFT COLUMN: SEAT SELECTION & FORM INFO -->
+        <div class="flex-1 flex flex-col gap-6">
+          
+          <!-- BLOCK 1: CHỌN GHẾ (ROUND-TRIP) -->
+          <div *ngIf="searchTripType === 'round-trip'" class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 lg:divide-x lg:divide-slate-200">
+              <!-- Outbound seat selection -->
+              <div class="flex flex-col gap-6">
+                <div class="flex justify-between items-center w-full border-b border-slate-100 pb-3 gap-2">
+                  <div class="text-left min-w-0">
+                    <h3 class="text-base font-black text-slate-800 leading-tight truncate">Chọn ghế</h3>
+                    <span class="text-xs font-semibold text-slate-400 mt-1 block truncate">Chuyến đi - {{ getFormattedDateShort(searchDepartureDate) }}</span>
+                  </div>
+                </div>
+                <ng-container *ngTemplateOutlet="seatGridTemplate; context: { trip: selectedOutboundTrip || selectedTrip, isReturn: false }"></ng-container>
+              </div>
+
+              <!-- Return seat selection -->
+              <div class="flex flex-col gap-6 lg:pl-12 pt-8 lg:pt-0">
+                <div class="flex justify-between items-center w-full border-b border-slate-100 pb-3 gap-2">
+                  <div class="text-left min-w-0">
+                    <h3 class="text-base font-black text-slate-800 leading-tight truncate">Chọn ghế</h3>
+                    <span class="text-xs font-semibold text-slate-400 mt-1 block truncate">Chuyến về - {{ getFormattedDateShort(searchReturnDate) }}</span>
+                  </div>
+                </div>
+                <ng-container *ngTemplateOutlet="seatGridTemplate; context: { trip: selectedReturnTrip, isReturn: true }"></ng-container>
+              </div>
+            </div>
+
+            <!-- Unified Legend at the bottom -->
+            <div class="flex flex-col items-center justify-center gap-4 mt-6 pt-6 border-t border-slate-100 text-xs font-semibold text-gray-500">
+              <div class="flex flex-wrap items-center justify-center gap-6">
+                <span class="font-extrabold text-gray-700 text-sm uppercase tracking-wide mr-2">Chú thích:</span>
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-slate-200 border border-slate-300"></div>
+                  <span>Đã bán</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-white border border-blue-400 text-blue-600"></div>
+                  <span>Còn trống</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-[#FF6A00] border border-[#FF6A00] text-white"></div>
+                  <span>Đang chọn</span>
+                </div>
+              </div>
+
+              <!-- 22 chỗ legend for round-trip if outbound or return is 22 chỗ -->
+              <div *ngIf="(selectedOutboundTrip || selectedTrip)?.type?.includes('22 chỗ') || selectedReturnTrip?.type?.includes('22 chỗ')" class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-2 pt-2 border-t border-slate-100/50 w-full">
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-blue-50 border border-blue-600"></div>
+                  <span class="font-bold text-gray-700">
+                    Phòng đơn
+                    <ng-container *ngIf="(selectedOutboundTrip || selectedTrip)?.type?.includes('22 chỗ') && !selectedReturnTrip?.type?.includes('22 chỗ')">
+                      (Đi: {{ (selectedOutboundTrip || selectedTrip)?.price | number:'1.0-0' }}đ)
+                    </ng-container>
+                    <ng-container *ngIf="!(selectedOutboundTrip || selectedTrip)?.type?.includes('22 chỗ') && selectedReturnTrip?.type?.includes('22 chỗ')">
+                      (Về: {{ selectedReturnTrip?.price | number:'1.0-0' }}đ)
+                    </ng-container>
+                    <ng-container *ngIf="(selectedOutboundTrip || selectedTrip)?.type?.includes('22 chỗ') && selectedReturnTrip?.type?.includes('22 chỗ')">
+                      (Đi: {{ (selectedOutboundTrip || selectedTrip)?.price | number:'1.0-0' }}đ | Về: {{ selectedReturnTrip?.price | number:'1.0-0' }}đ)
+                    </ng-container>
+                  </span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-6 h-6 rounded bg-purple-50 border border-purple-600"></div>
+                  <span class="font-bold text-gray-700">Phòng đôi (600.000đ)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOCK 1: CHỌN GHẾ (ONE-WAY) -->
+          <div *ngIf="searchTripType !== 'round-trip'" class="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+            <h3 class="text-base font-extrabold text-[#152C68] mb-6 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-[#FF6A00]">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21m0 0l-.813-5.096m.813 5.096h4.875M12 17.25a6.75 6.75 0 110-13.5 6.75 6.75 0 010 13.5z" />
+              </svg>
+              Chọn ghế
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <!-- Chú thích legend -->
+              <div class="flex flex-col gap-4 text-xs font-semibold text-gray-500 md:border-r border-slate-100 pr-4">
+                <span class="font-bold text-gray-700 text-sm mb-1 uppercase tracking-wide">Chú thích</span>
+                <div class="flex items-center gap-3">
+                  <div class="w-6 h-6 rounded bg-slate-200 border border-slate-300"></div>
+                  <span>Đã bán</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-6 h-6 rounded bg-white border border-[#1A3A8A]"></div>
+                  <span>Còn trống</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="w-6 h-6 rounded bg-[#FF6A00] border border-[#FF6A00]"></div>
+                  <span>Đang chọn</span>
+                </div>
+                
+                <div *ngIf="selectedTrip.type.includes('22 chỗ')" class="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-3 leading-relaxed text-gray-600">
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-blue-50 border border-blue-600"></div>
+                    <span class="font-bold text-gray-700">Phòng đơn ({{ selectedTrip.price | number:'1.0-0' }}đ)</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded bg-purple-50 border border-purple-600"></div>
+                    <span class="font-bold text-gray-700">Phòng đôi (600.000đ)</span>
+                  </div>
+                  <div class="text-[10px] font-semibold text-gray-400 mt-1 leading-normal">
+                    * Phòng đôi dành cho tối đa 2 khách người lớn hoặc 1 người lớn + 1 trẻ em dưới 6 tuổi.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Seat map outlet -->
+              <div class="md:col-span-2">
+                <ng-container *ngTemplateOutlet="seatGridTemplate; context: { trip: selectedTrip, isReturn: false }"></ng-container>
+              </div>
+            </div>
+          </div>
+
+          <!-- REUSABLE SEAT GRID TEMPLATE -->
+          <ng-template #seatGridTemplate let-trip="trip" let-isReturn="isReturn">
+            <!-- 9 CHỖ SEAT GRID -->
+            <div *ngIf="trip.type.includes('9 chỗ')" class="text-center w-full">
+              <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Sơ đồ ghế (9 chỗ)</span>
+              <div class="grid grid-cols-3 gap-2 max-w-[180px] mx-auto bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <!-- Row 1 -->
+                <button
+                  type="button"
+                  (click)="toggleSeat('1A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('1A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('1A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('1A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('1A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('1A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('1A', isReturn)"
+                  [class.text-white]="isSeatSelected('1A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('1A', isReturn) && !isSeatSelected('1A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('1A', isReturn) && !isSeatSelected('1A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('1A', isReturn) && !isSeatSelected('1A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('1A') }}
+                </button>
+                <div></div> <!-- Aisle -->
+                <button
+                  type="button"
+                  (click)="toggleSeat('2A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('2A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('2A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('2A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('2A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('2A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('2A', isReturn)"
+                  [class.text-white]="isSeatSelected('2A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('2A', isReturn) && !isSeatSelected('2A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('2A', isReturn) && !isSeatSelected('2A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('2A', isReturn) && !isSeatSelected('2A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('2A') }}
+                </button>
+
+                <!-- Row 2 -->
+                <button
+                  type="button"
+                  (click)="toggleSeat('3A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('3A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('3A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('3A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('3A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('3A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('3A', isReturn)"
+                  [class.text-white]="isSeatSelected('3A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('3A', isReturn) && !isSeatSelected('3A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('3A', isReturn) && !isSeatSelected('3A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('3A', isReturn) && !isSeatSelected('3A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('3A') }}
+                </button>
+                <div></div> <!-- Aisle -->
+                <button
+                  type="button"
+                  (click)="toggleSeat('4A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('4A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('4A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('4A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('4A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('4A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('4A', isReturn)"
+                  [class.text-white]="isSeatSelected('4A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('4A', isReturn) && !isSeatSelected('4A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('4A', isReturn) && !isSeatSelected('4A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('4A', isReturn) && !isSeatSelected('4A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('4A') }}
+                </button>
+
+                <!-- Row 3 -->
+                <button
+                  type="button"
+                  (click)="toggleSeat('5A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('5A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('5A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('5A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('5A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('5A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('5A', isReturn)"
+                  [class.text-white]="isSeatSelected('5A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('5A', isReturn) && !isSeatSelected('5A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('5A', isReturn) && !isSeatSelected('5A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('5A', isReturn) && !isSeatSelected('5A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('5A') }}
+                </button>
+                <div></div> <!-- Aisle -->
+                <button
+                  type="button"
+                  (click)="toggleSeat('6A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('6A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('6A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('6A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('6A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('6A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('6A', isReturn)"
+                  [class.text-white]="isSeatSelected('6A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('6A', isReturn) && !isSeatSelected('6A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('6A', isReturn) && !isSeatSelected('6A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('6A', isReturn) && !isSeatSelected('6A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('6A') }}
+                </button>
+
+                <!-- Row 4 -->
+                <button
+                  type="button"
+                  (click)="toggleSeat('7A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('7A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('7A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('7A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('7A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('7A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('7A', isReturn)"
+                  [class.text-white]="isSeatSelected('7A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('7A', isReturn) && !isSeatSelected('7A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('7A', isReturn) && !isSeatSelected('7A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('7A', isReturn) && !isSeatSelected('7A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('7A') }}
+                </button>
+                <button
+                  type="button"
+                  (click)="toggleSeat('8A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('8A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('8A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('8A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('8A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('8A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('8A', isReturn)"
+                  [class.text-white]="isSeatSelected('8A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('8A', isReturn) && !isSeatSelected('8A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('8A', isReturn) && !isSeatSelected('8A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('8A', isReturn) && !isSeatSelected('8A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('8A') }}
+                </button>
+                <button
+                  type="button"
+                  (click)="toggleSeat('9A', isReturn)"
+                  class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                  [class.bg-slate-200]="isSeatSoldOut('9A', isReturn)"
+                  [class.border-slate-300]="isSeatSoldOut('9A', isReturn)"
+                  [class.text-slate-400]="isSeatSoldOut('9A', isReturn)"
+                  [class.pointer-events-none]="isSeatSoldOut('9A', isReturn)"
+                  [class.bg-[#FF6A00]]="isSeatSelected('9A', isReturn)"
+                  [class.border-[#FF6A00]]="isSeatSelected('9A', isReturn)"
+                  [class.text-white]="isSeatSelected('9A', isReturn)"
+                  [class.bg-white]="!isSeatSoldOut('9A', isReturn) && !isSeatSelected('9A', isReturn)"
+                  [class.border-blue-400]="!isSeatSoldOut('9A', isReturn) && !isSeatSelected('9A', isReturn)"
+                  [class.text-blue-600]="!isSeatSoldOut('9A', isReturn) && !isSeatSelected('9A', isReturn)"
+                >
+                  {{ getDisplaySeatLabel('9A') }}
+                </button>
+              </div>
+            </div>
+
+            <!-- 22 CHỖ SEAT GRID -->
+            <ng-container *ngIf="trip.type.includes('22 chỗ')">
+              <div class="flex flex-col sm:flex-row gap-6 justify-center items-start w-full">
+                <!-- Tầng Dưới Grid -->
+                <div class="text-center flex-1 w-full max-w-[140px] mx-auto">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Dưới</span>
+                  <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4, 5]">
+                      <!-- Left seat -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 1) + 'A', isReturn)"
+                        class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'A', isReturn)"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'A', isReturn)"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'A', isReturn)"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'A', isReturn)"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A', isReturn)"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'A', isReturn)"
+                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'A', isReturn)"
+                        [class.bg-purple-50]="!isSeatSoldOut((row * 2 + 1) + 'A', isReturn) && !isSeatSelected((row * 2 + 1) + 'A', isReturn)"
+                        [class.border-purple-600]="!isSeatSoldOut((row * 2 + 1) + 'A', isReturn) && !isSeatSelected((row * 2 + 1) + 'A', isReturn)"
+                        [class.text-purple-700]="!isSeatSoldOut((row * 2 + 1) + 'A', isReturn) && !isSeatSelected((row * 2 + 1) + 'A', isReturn)"
+                      >
+                        {{ getDisplaySeatLabel((row * 2 + 1) + 'A') }}
+                      </button>
+
+                      <!-- Right seat -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 2) + 'A', isReturn)"
+                        class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'A', isReturn)"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'A', isReturn)"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'A', isReturn)"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'A', isReturn)"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A', isReturn)"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'A', isReturn)"
+                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'A', isReturn)"
+                        [class.bg-purple-50]="!isSeatSoldOut((row * 2 + 2) + 'A', isReturn) && !isSeatSelected((row * 2 + 2) + 'A', isReturn)"
+                        [class.border-purple-600]="!isSeatSoldOut((row * 2 + 2) + 'A', isReturn) && !isSeatSelected((row * 2 + 2) + 'A', isReturn)"
+                        [class.text-purple-700]="!isSeatSoldOut((row * 2 + 2) + 'A', isReturn) && !isSeatSelected((row * 2 + 2) + 'A', isReturn)"
+                      >
+                        {{ getDisplaySeatLabel((row * 2 + 2) + 'A') }}
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Tầng Trên Grid -->
+                <div class="text-center flex-1 w-full max-w-[140px] mx-auto">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Tầng Trên</span>
+                  <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <ng-container *ngFor="let row of [0, 1, 2, 3, 4]">
+                      <!-- Left seat -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 1) + 'B', isReturn)"
+                        class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 1) + 'B', isReturn)"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 1) + 'B', isReturn)"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 1) + 'B', isReturn)"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 1) + 'B', isReturn)"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B', isReturn)"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 1) + 'B', isReturn)"
+                        [class.text-white]="isSeatSelected((row * 2 + 1) + 'B', isReturn)"
+                        [class.bg-blue-50]="!isSeatSoldOut((row * 2 + 1) + 'B', isReturn) && !isSeatSelected((row * 2 + 1) + 'B', isReturn)"
+                        [class.border-blue-600]="!isSeatSoldOut((row * 2 + 1) + 'B', isReturn) && !isSeatSelected((row * 2 + 1) + 'B', isReturn)"
+                        [class.text-blue-700]="!isSeatSoldOut((row * 2 + 1) + 'B', isReturn) && !isSeatSelected((row * 2 + 1) + 'B', isReturn)"
+                      >
+                        {{ getDisplaySeatLabel((row * 2 + 1) + 'B') }}
+                      </button>
+
+                      <!-- Right seat -->
+                      <button
+                        type="button"
+                        (click)="toggleSeat((row * 2 + 2) + 'B', isReturn)"
+                        class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut((row * 2 + 2) + 'B', isReturn)"
+                        [class.border-slate-300]="isSeatSoldOut((row * 2 + 2) + 'B', isReturn)"
+                        [class.text-slate-400]="isSeatSoldOut((row * 2 + 2) + 'B', isReturn)"
+                        [class.pointer-events-none]="isSeatSoldOut((row * 2 + 2) + 'B', isReturn)"
+                        [class.bg-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B', isReturn)"
+                        [class.border-[#FF6A00]]="isSeatSelected((row * 2 + 2) + 'B', isReturn)"
+                        [class.text-white]="isSeatSelected((row * 2 + 2) + 'B', isReturn)"
+                        [class.bg-blue-50]="!isSeatSoldOut((row * 2 + 2) + 'B', isReturn) && !isSeatSelected((row * 2 + 2) + 'B', isReturn)"
+                        [class.border-blue-600]="!isSeatSoldOut((row * 2 + 2) + 'B', isReturn) && !isSeatSelected((row * 2 + 2) + 'B', isReturn)"
+                        [class.text-blue-700]="!isSeatSoldOut((row * 2 + 2) + 'B', isReturn) && !isSeatSelected((row * 2 + 2) + 'B', isReturn)"
+                      >
+                        {{ getDisplaySeatLabel((row * 2 + 2) + 'B') }}
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- 34 CHỖ SEAT GRID -->
+            <ng-container *ngIf="trip.type.includes('34 chỗ')">
+              <div class="flex flex-col sm:flex-row gap-6 justify-center items-start w-full">
+                <!-- Tầng Dưới Grid -->
+                <div class="text-center flex-1 w-full max-w-[180px] mx-auto">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Tầng Dưới</span>
+                  <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <ng-container *ngFor="let seat of ['1A', '', '2A', '3A', '4A', '5A', '6A', '7A', '8A', '9A', '10A', '11A', '12A', '13A', '14A', '15A', '16A', '17A']">
+                      <div *ngIf="seat === ''" class="w-10 h-8"></div>
+                      <button
+                        *ngIf="seat !== ''"
+                        type="button"
+                        (click)="toggleSeat(seat, isReturn)"
+                        class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut(seat, isReturn)"
+                        [class.border-slate-300]="isSeatSoldOut(seat, isReturn)"
+                        [class.text-slate-400]="isSeatSoldOut(seat, isReturn)"
+                        [class.pointer-events-none]="isSeatSoldOut(seat, isReturn)"
+                        [class.bg-[#FF6A00]]="isSeatSelected(seat, isReturn)"
+                        [class.border-[#FF6A00]]="isSeatSelected(seat, isReturn)"
+                        [class.text-white]="isSeatSelected(seat, isReturn)"
+                        [class.bg-white]="!isSeatSoldOut(seat, isReturn) && !isSeatSelected(seat, isReturn)"
+                        [class.border-blue-400]="!isSeatSoldOut(seat, isReturn) && !isSeatSelected(seat, isReturn)"
+                        [class.text-blue-600]="!isSeatSoldOut(seat, isReturn) && !isSeatSelected(seat, isReturn)"
+                      >
+                        {{ getDisplaySeatLabel(seat) }}
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <!-- Tầng Trên Grid -->
+                <div class="text-center flex-1 w-full max-w-[180px] mx-auto">
+                  <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Tầng Trên</span>
+                  <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <ng-container *ngFor="let seat of ['1B', '', '2B', '3B', '4B', '5B', '6B', '7B', '8B', '9B', '10B', '11B', '12B', '13B', '14B', '15B', '16B', '17B']">
+                      <div *ngIf="seat === ''" class="w-10 h-8"></div>
+                      <button
+                        *ngIf="seat !== ''"
+                        type="button"
+                        (click)="toggleSeat(seat, isReturn)"
+                        class="w-10 h-8 rounded-lg border text-xs font-bold transition-all flex items-center justify-center cursor-pointer"
+                        [class.bg-slate-200]="isSeatSoldOut(seat, isReturn)"
+                        [class.border-slate-300]="isSeatSoldOut(seat, isReturn)"
+                        [class.text-slate-400]="isSeatSoldOut(seat, isReturn)"
+                        [class.pointer-events-none]="isSeatSoldOut(seat, isReturn)"
+                        [class.bg-[#FF6A00]]="isSeatSelected(seat, isReturn)"
+                        [class.border-[#FF6A00]]="isSeatSelected(seat, isReturn)"
+                        [class.text-white]="isSeatSelected(seat, isReturn)"
+                        [class.bg-white]="!isSeatSoldOut(seat, isReturn) && !isSeatSelected(seat, isReturn)"
+                        [class.border-blue-400]="!isSeatSoldOut(seat, isReturn) && !isSeatSelected(seat, isReturn)"
+                        [class.text-blue-600]="!isSeatSoldOut(seat, isReturn) && !isSeatSelected(seat, isReturn)"
+                      >
+                        {{ getDisplaySeatLabel(seat) }}
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-template>
+            <!-- BLOCK: THÔNG TIN XE -->
+            <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left flex flex-col gap-6">
+              <span class="block font-extrabold text-[#152C68] text-base flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-[#FF6A00]">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.136a3.375 3.375 0 00-2.87-3.148l-1.077-.197a48.772 48.772 0 00-11.83 0l-1.078.197a3.375 3.375 0 00-2.87 3.148l-.317 5.136c-.04.62.469 1.124 1.09 1.124H3.75m14.25 0h-3.75m0 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                </svg>
+                Thông tin xe
+              </span>
+
+              <div *ngIf="searchTripType === 'round-trip'" class="flex flex-col gap-8">
+                <!-- Outbound Vehicle Info -->
+                <div class="flex flex-col gap-4">
+                  <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-black uppercase tracking-widest self-start">Chiều đi</span>
+                  <ng-container *ngTemplateOutlet="vehicleInfoTemplate; context: { trip: selectedOutboundTrip || selectedTrip }"></ng-container>
+                </div>
+
+                <!-- Return Vehicle Info -->
+                <div class="flex flex-col gap-4 pt-8 border-t border-dashed border-slate-200">
+                  <span class="px-2.5 py-1 bg-orange-50 text-[#FF6A00] rounded-lg text-xs font-black uppercase tracking-widest self-start">Chiều về</span>
+                  <ng-container *ngTemplateOutlet="vehicleInfoTemplate; context: { trip: selectedReturnTrip }"></ng-container>
+                </div>
+              </div>
+
+              <div *ngIf="searchTripType !== 'round-trip'">
+                <ng-container *ngTemplateOutlet="vehicleInfoTemplate; context: { trip: selectedTrip }"></ng-container>
+              </div>
+            </div>
+
+            <!-- REUSABLE VEHICLE INFO TEMPLATE -->
+            <ng-template #vehicleInfoTemplate let-trip="trip">
+              
+              <div class="flex flex-col gap-6">
+                <!-- Detail fields -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 border-b border-slate-100 pb-5 items-start">
+                  <div class="md:col-span-1">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Loại xe</span>
+                    <span class="text-sm font-extrabold text-gray-800">{{ trip?.type }}</span>
+                  </div>
+                  
+                  <div class="md:col-span-2">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-2">Tiện ích phục vụ</span>
+                    <div class="flex flex-wrap gap-2">
+                      <!-- TV (only for 9 chỗ) -->
+                      <span *ngIf="trip?.type?.includes('9 chỗ')" class="px-2 py-1 bg-teal-50 text-teal-600 border border-teal-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                          <rect x="2" y="5" width="20" height="11" rx="1.5" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v3M9 19h6" />
+                        </svg>
+                        Tivi giải trí
+                      </span>
+
+                      <!-- USB Charger (for 9 chỗ, 22 chỗ) -->
+                      <span *ngIf="trip?.type?.includes('9 chỗ') || trip?.type?.includes('22 chỗ')" class="px-2 py-1 bg-emerald-50 text-emerald-600 border border-emerald-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="w-3.5 h-3.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M12 6H9m3 4h4m-4 4H9m3 4h4" />
+                        </svg>
+                        Cổng sạc USB
+                      </span>
+
+                      <!-- GPS (for 9 chỗ, 22 chỗ) -->
+                      <span *ngIf="trip?.type?.includes('9 chỗ') || trip?.type?.includes('22 chỗ')" class="px-2 py-1 bg-indigo-50 text-indigo-600 border border-indigo-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                          <circle cx="12" cy="12" r="9" />
+                          <circle cx="12" cy="12" r="2.5" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+                        </svg>
+                        GPS định vị
+                      </span>
+
+                      <!-- Wifi (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                      <span *ngIf="trip?.type?.includes('9 chỗ') || trip?.type?.includes('22 chỗ') || trip?.type?.includes('34 chỗ')" class="px-2 py-1 bg-sky-50 text-sky-600 border border-sky-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.284 16.284A3 3 0 0012 17a3 3 0 003.716-.716M5.456 13.456a7 7 0 0113.088 0M2.628 10.628a11 11 0 0118.744 0" />
+                        </svg>
+                        Wifi tốc độ cao
+                      </span>
+
+                      <!-- Nước uống & Khăn ướt (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                      <span *ngIf="trip?.type?.includes('9 chỗ') || trip?.type?.includes('22 chỗ') || trip?.type?.includes('34 chỗ')" class="px-2 py-1 bg-blue-50 text-blue-600 border border-blue-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                        </svg>
+                        Nước uống, khăn lạnh
+                      </span>
+
+                      <!-- Điều hòa (for 9 chỗ, 22 chỗ, 34 chỗ) -->
+                      <span *ngIf="trip?.type?.includes('9 chỗ') || trip?.type?.includes('22 chỗ') || trip?.type?.includes('34 chỗ')" class="px-2 py-1 bg-cyan-50 text-cyan-600 border border-cyan-150 rounded-lg text-xs font-bold flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M2 12h20M12 12l7.07-7.07M12 12l-7.07 7.07M12 12l7.07 7.07M12 12L4.93 4.93" />
+                        </svg>
+                        Điều hòa thông gió
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Vehicle Interior Images -->
+                <div>
+                  <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-3">Hình ảnh nội thất xe</span>
+                  
+                  <!-- If 9 chỗ -->
+                  <div *ngIf="trip?.type?.includes('9 chỗ')" class="grid grid-cols-3 gap-4">
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/9 chỗ 1.jpg" alt="Nội thất Limousine 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/9 chỗ 2.jpg" alt="Nội thất Limousine 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/9 chỗ 3.jpg" alt="Nội thất Limousine 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                  </div>
+
+                  <!-- If 22 chỗ -->
+                  <div *ngIf="trip?.type?.includes('22 chỗ')" class="grid grid-cols-3 gap-4">
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/22 chỗ 1.jpg" alt="Nội thất Giường nằm 22 chỗ 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/22 chỗ 2.jpg" alt="Nội thất Giường nằm 22 chỗ 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/22 chỗ 3.png" alt="Nội thất Giường nằm 22 chỗ 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                  </div>
+
+                  <!-- If 34 chỗ -->
+                  <div *ngIf="trip?.type?.includes('34 chỗ')" class="grid grid-cols-3 gap-4">
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/34 chỗ 1.jpg" alt="Nội thất Giường nằm 34 chỗ 1" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/34 chỗ 2.jpg" alt="Nội thất Giường nằm 34 chỗ 2" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div class="h-32 md:h-40 rounded-xl overflow-hidden shadow-sm border border-slate-100">
+                      <img src="/media/34 chỗ 3.jpg" alt="Nội thất Giường nằm 34 chỗ 3" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+          <!-- BLOCK 2: THÔNG TIN KHÁCH HÀNG -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col md:flex-row gap-6">
+            <div class="flex-1 flex flex-col gap-4">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <span class="font-extrabold text-[#152C68] text-base">Thông tin khách hàng</span>
+              </div>
+              
+              <!-- Họ tên -->
+              <div class="flex flex-col gap-1.5 text-left">
+                <label class="text-xs font-bold text-gray-700">Họ tên người đi *</label>
+                <input
+                  type="text"
+                  [(ngModel)]="passengerName"
+                  (blur)="passengerNameTouched = true"
+                  placeholder="Nhập họ và tên"
+                  class="w-full bg-[#F4F6FA] border rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none transition-colors"
+                  [ngClass]="getNameError() ? 'border-rose-400 focus:border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#FF6A00]'"
+                />
+                <span *ngIf="getNameError()" class="text-rose-500 text-[10px] font-bold mt-0.5 pl-1">{{ getNameError() }}</span>
+              </div>
+
+              <!-- Số điện thoại -->
+              <div class="flex flex-col gap-1.5 text-left">
+                <label class="text-xs font-bold text-gray-700">Số điện thoại *</label>
+                <input
+                  type="tel"
+                  [(ngModel)]="passengerPhone"
+                  (blur)="passengerPhoneTouched = true"
+                  placeholder="Nhập số điện thoại"
+                  class="w-full bg-[#F4F6FA] border rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none transition-colors"
+                  [ngClass]="getPhoneError() ? 'border-rose-400 focus:border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#FF6A00]'"
+                />
+                <span *ngIf="getPhoneError()" class="text-rose-500 text-[10px] font-bold mt-0.5 pl-1">{{ getPhoneError() }}</span>
+              </div>
+
+              <!-- Email -->
+              <div class="flex flex-col gap-1.5 text-left">
+                <label class="text-xs font-bold text-gray-700">Email *</label>
+                <input
+                  type="email"
+                  [(ngModel)]="passengerEmail"
+                  (blur)="passengerEmailTouched = true"
+                  placeholder="Nhập email"
+                  class="w-full bg-[#F4F6FA] border rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none transition-colors"
+                  [ngClass]="getEmailError() ? 'border-rose-400 focus:border-rose-500 bg-rose-50/20' : 'border-slate-200 focus:border-[#FF6A00]'"
+                />
+                <span *ngIf="getEmailError()" class="text-rose-500 text-[10px] font-bold mt-0.5 pl-1">{{ getEmailError() }}</span>
+              </div>
+
+              <!-- Chấp nhận điều khoản -->
+              <label class="flex items-start gap-2.5 mt-2 cursor-pointer text-xs font-semibold text-gray-500 leading-normal">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="acceptedTerms"
+                  class="rounded border-slate-300 text-[#FF6A00] focus:ring-[#FF6A00] mt-0.5"
+                />
+                <span>Chấp nhận điều khoản & chính sách bảo mật thông tin của VIAGO</span>
+              </label>
+            </div>
+
+            <!-- Note panel on the right -->
+            <div class="w-full md:w-[240px] flex-shrink-0 bg-[#FFF8F2] border border-[#FFEADA] rounded-xl p-4 text-[10px] text-[#8A4B1A] leading-relaxed font-medium">
+              <span class="block font-black text-[11px] text-[#FF6A00] uppercase tracking-wider mb-2.5">ĐIỀU KHOẢN & LƯU Ý</span>
+              <span class="block font-bold text-[#FF6A00] mb-2 leading-snug">Quý khách vui lòng Đăng ký/Đăng nhập tài khoản để nhận chương trình khuyến mãi.</span>
+              <p class="mb-2">(*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít nhất 30 phút giờ xe khởi hành, mang theo vé điện tử được gửi từ hệ thống VIAGO. Vui lòng liên hệ Tổng đài <strong class="text-[#FF6A00]">19001234</strong> để được hỗ trợ.</p>
+              <p class="mb-2">(*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài trung chuyển <strong class="text-[#FF6A00]">1900565657</strong> trước khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới được.</p>
+              <p>(*) Nếu quý khách có nhu cầu di chuyển chặng đường ngắn hơn so với hành trình, vui lòng gọi Tổng đài <strong class="text-[#FF6A00]">1900565657</strong> để được hướng dẫn chính sách giá vé tốt nhất.</p>
+            </div>
+          </div>
+
+          <!-- BLOCK 3: THÔNG TIN ĐÓN TRẢ (Round-Trip) -->
+          <div *ngIf="searchTripType === 'round-trip'" class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left flex flex-col gap-6">
+            <span class="block font-extrabold text-[#152C68] text-base">Thông tin đón trả</span>
+            
+            <div class="flex flex-col gap-8">
+              <!-- Chiều đi -->
+              <div class="flex flex-col gap-4">
+                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-black uppercase tracking-widest self-start">Chiều đi</span>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Outbound Pickup -->
+                  <div class="flex flex-col gap-1.5 relative">
+                    <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm đón</label>
+                    <div 
+                      (click)="togglePickupDropdown(); $event.stopPropagation()"
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                    >
+                      <div class="flex items-center gap-2 truncate">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-emerald-600 shrink-0">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                        <span class="truncate text-xs font-semibold text-gray-700">{{ pickupPoint || 'Nhập tên điểm đón' }}</span>
+                      </div>
+                      <div class="text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showPickupDropdown}">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      </div>
+                    </div>
+                    <!-- Outbound Pickup Dropdown Overlay -->
+                    <div *ngIf="showPickupDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                      <div class="relative" (click)="$event.stopPropagation()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                        </svg>
+                        <input
+                          type="text"
+                          [(ngModel)]="searchPickupText"
+                          placeholder="Tìm kiếm địa điểm đón..."
+                          class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                        />
+                      </div>
+                      <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                        <button
+                          *ngFor="let point of getFilteredPickupPoints()"
+                          (click)="selectPickupPoint(point)"
+                          class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                        >
+                          <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                                [ngClass]="pickupPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                            <span *ngIf="pickupPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                          </span>
+                          <div class="flex flex-col text-left">
+                            <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                            <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                          </div>
+                        </button>
+                        <div *ngIf="getFilteredPickupPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                          Không tìm thấy địa điểm nào
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Outbound Dropoff -->
+                  <div class="flex flex-col gap-1.5 relative">
+                    <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm trả</label>
+                    <div 
+                      (click)="toggleDropoffDropdown(); $event.stopPropagation()"
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                    >
+                      <div class="flex items-center gap-2 truncate">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-rose-500 shrink-0">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                        <span class="truncate text-xs font-semibold text-gray-700">{{ dropoffPoint || 'Nhập tên điểm trả' }}</span>
+                      </div>
+                      <div class="text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showDropoffDropdown}">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      </div>
+                    </div>
+                    <!-- Outbound Dropoff Dropdown Overlay -->
+                    <div *ngIf="showDropoffDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                      <div class="relative" (click)="$event.stopPropagation()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                        </svg>
+                        <input
+                          type="text"
+                          [(ngModel)]="searchDropoffText"
+                          placeholder="Tìm kiếm địa điểm trả..."
+                          class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                        />
+                      </div>
+                      <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                        <button
+                          *ngFor="let point of getFilteredDropoffPoints()"
+                          (click)="selectDropoffPoint(point)"
+                          class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                        >
+                          <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                                [ngClass]="dropoffPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                            <span *ngIf="dropoffPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                          </span>
+                          <div class="flex flex-col text-left">
+                            <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                            <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                          </div>
+                        </button>
+                        <div *ngIf="getFilteredDropoffPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                          Không tìm thấy địa điểm nào
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Outbound Details Panel -->
+                <!-- Outbound Details Panel -->
+                <div *ngIf="pickupPoint || dropoffPoint" class="mt-4 p-4 bg-slate-50 border border-slate-100 rounded-xl flex flex-col gap-4 text-left">
+                  <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+                    <span class="text-xs font-extrabold text-[#152C68] uppercase tracking-wider">Chi tiết địa điểm đã chọn (Chiều đi)</span>
+                  </div>
+                  
+                  <div class="flex flex-col gap-3.5">
+                    <!-- Outbound Pickup Row -->
+                    <div *ngIf="pickupPoint" class="flex items-start gap-3">
+                      <div class="w-7 h-7 rounded-full bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] flex-shrink-0 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                      </div>
+                      <div class="flex-1 flex items-center justify-between gap-4">
+                        <div class="flex flex-col">
+                          <span class="text-xs font-extrabold text-[#152C68]">Điểm đón:</span>
+                          <span class="text-xs font-semibold text-gray-600 mt-0.5">{{pickupPoint}}</span>
+                        </div>
+                        <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                          Xem bản đồ
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+
+                    <!-- Divider line -->
+                    <div *ngIf="pickupPoint && dropoffPoint" class="border-t border-slate-200/50"></div>
+
+                    <!-- Outbound Dropoff Row -->
+                    <div *ngIf="dropoffPoint" class="flex items-start gap-3">
+                      <div class="w-7 h-7 rounded-full bg-[#152C68]/10 flex items-center justify-center text-[#152C68] flex-shrink-0 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                      </div>
+                      <div class="flex-1 flex items-center justify-between gap-4">
+                        <div class="flex flex-col">
+                          <span class="text-xs font-extrabold text-[#152C68]">Điểm trả:</span>
+                          <span class="text-xs font-semibold text-gray-600 mt-0.5">{{dropoffPoint}}</span>
+                        </div>
+                        <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                          Xem bản đồ
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Chiều về -->
+              <div class="flex flex-col gap-4 pt-8 border-t border-dashed border-slate-200">
+                <span class="px-2.5 py-1 bg-orange-50 text-[#FF6A00] rounded-lg text-xs font-black uppercase tracking-widest self-start">Chiều về</span>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Return Pickup -->
+                  <div class="flex flex-col gap-1.5 relative">
+                    <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm đón</label>
+                    <div 
+                      (click)="toggleReturnPickupDropdown(); $event.stopPropagation()"
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                    >
+                      <div class="flex items-center gap-2 truncate">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-emerald-600 shrink-0">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                        <span class="truncate text-xs font-semibold text-gray-700">{{ returnPickupPoint || 'Nhập tên điểm đón' }}</span>
+                      </div>
+                      <div class="text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showReturnPickupDropdown}">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      </div>
+                    </div>
+                    <!-- Return Pickup Dropdown Overlay -->
+                    <div *ngIf="showReturnPickupDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                      <div class="relative" (click)="$event.stopPropagation()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                        </svg>
+                        <input
+                          type="text"
+                          [(ngModel)]="searchReturnPickupText"
+                          placeholder="Tìm kiếm địa điểm đón..."
+                          class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                        />
+                      </div>
+                      <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                        <button
+                          *ngFor="let point of getFilteredReturnPickupPoints()"
+                          (click)="selectReturnPickupPoint(point)"
+                          class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                        >
+                          <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                                [ngClass]="returnPickupPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                            <span *ngIf="returnPickupPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                          </span>
+                          <div class="flex flex-col text-left">
+                            <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                            <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                          </div>
+                        </button>
+                        <div *ngIf="getFilteredReturnPickupPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                          Không tìm thấy địa điểm nào
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Return Dropoff -->
+                  <div class="flex flex-col gap-1.5 relative">
+                    <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm trả</label>
+                    <div 
+                      (click)="toggleReturnDropoffDropdown(); $event.stopPropagation()"
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                    >
+                      <div class="flex items-center gap-2 truncate">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-rose-500 shrink-0">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                        <span class="truncate text-xs font-semibold text-gray-700">{{ returnDropoffPoint || 'Nhập tên điểm trả' }}</span>
+                      </div>
+                      <div class="text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showReturnDropoffDropdown}">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      </div>
+                    </div>
+                    <!-- Return Dropoff Dropdown Overlay -->
+                    <div *ngIf="showReturnDropoffDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                      <div class="relative" (click)="$event.stopPropagation()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                        </svg>
+                        <input
+                          type="text"
+                          [(ngModel)]="searchReturnDropoffText"
+                          placeholder="Tìm kiếm địa điểm trả..."
+                          class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                        />
+                      </div>
+                      <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                        <button
+                          *ngFor="let point of getFilteredReturnDropoffPoints()"
+                          (click)="selectReturnDropoffPoint(point)"
+                          class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                        >
+                          <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                                [ngClass]="returnDropoffPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                            <span *ngIf="returnDropoffPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                          </span>
+                          <div class="flex flex-col text-left">
+                            <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                            <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                          </div>
+                        </button>
+                        <div *ngIf="getFilteredReturnDropoffPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                          Không tìm thấy địa điểm nào
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Return Details Panel -->
+                <div *ngIf="returnPickupPoint || returnDropoffPoint" class="mt-4 p-4 bg-slate-50 border border-slate-100 rounded-xl flex flex-col gap-4 text-left">
+                  <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+                    <span class="text-xs font-extrabold text-[#152C68] uppercase tracking-wider">Chi tiết địa điểm đã chọn (Chiều về)</span>
+                  </div>
+                  
+                  <div class="flex flex-col gap-3.5">
+                    <!-- Return Pickup Row -->
+                    <div *ngIf="returnPickupPoint" class="flex items-start gap-3">
+                      <div class="w-7 h-7 rounded-full bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] flex-shrink-0 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                      </div>
+                      <div class="flex-1 flex items-center justify-between gap-4">
+                        <div class="flex flex-col">
+                          <span class="text-xs font-extrabold text-[#152C68]">Điểm đón:</span>
+                          <span class="text-xs font-semibold text-gray-600 mt-0.5">{{returnPickupPoint}}</span>
+                        </div>
+                        <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                          Xem bản đồ
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+
+                    <!-- Divider line -->
+                    <div *ngIf="returnPickupPoint && returnDropoffPoint" class="border-t border-slate-200/50"></div>
+
+                    <!-- Return Dropoff Row -->
+                    <div *ngIf="returnDropoffPoint" class="flex items-start gap-3">
+                      <div class="w-7 h-7 rounded-full bg-[#152C68]/10 flex items-center justify-center text-[#152C68] flex-shrink-0 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                      </div>
+                      <div class="flex-1 flex items-center justify-between gap-4">
+                        <div class="flex flex-col">
+                          <span class="text-xs font-extrabold text-[#152C68]">Điểm trả:</span>
+                          <span class="text-xs font-semibold text-gray-600 mt-0.5">{{returnDropoffPoint}}</span>
+                        </div>
+                        <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                          Xem bản đồ
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOCK 3: THÔNG TIN ĐÓN TRẢ (One-Way) -->
+          <div *ngIf="searchTripType !== 'round-trip'" class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left">
+            <span class="block font-extrabold text-[#152C68] text-base mb-4">Thông tin đón trả</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Điểm đón -->
+              <div class="flex flex-col gap-1.5 relative">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm đón</label>
+                <div 
+                  (click)="togglePickupDropdown(); $event.stopPropagation()"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                >
+                  <span class="truncate">{{ pickupPoint || 'Nhập tên điểm đón' }}</span>
+                  <div class="text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showPickupDropdown}">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Pickup Dropdown Overlay -->
+                <div *ngIf="showPickupDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                  <!-- Search input inside dropdown -->
+                  <div class="relative" (click)="$event.stopPropagation()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                    </svg>
+                    <input
+                      type="text"
+                      [(ngModel)]="searchPickupText"
+                      placeholder="Tìm kiếm địa điểm đón..."
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                    />
+                  </div>
+                  <!-- Options list -->
+                  <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                    <button
+                      *ngFor="let point of getFilteredPickupPoints()"
+                      (click)="selectPickupPoint(point)"
+                      class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                    >
+                      <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                            [ngClass]="pickupPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                        <span *ngIf="pickupPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                      </span>
+                      <div class="flex flex-col text-left">
+                        <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                        <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                      </div>
+                    </button>
+                    <div *ngIf="getFilteredPickupPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                      Không tìm thấy địa điểm nào
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Điểm trả -->
+              <div class="flex flex-col gap-1.5 relative">
+                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Điểm trả</label>
+                <div 
+                  (click)="toggleDropoffDropdown(); $event.stopPropagation()"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg px-4 py-3 text-sm font-semibold text-gray-800 flex items-center justify-between cursor-pointer focus-within:border-[#FF6A00] transition-colors"
+                >
+                  <span class="truncate">{{ dropoffPoint || 'Nhập tên điểm trả' }}</span>
+                  <div class="text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-200" [ngClass]="{'rotate-180': showDropoffDropdown}">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Dropoff Dropdown Overlay -->
+                <div *ngIf="showDropoffDropdown" class="absolute z-30 left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl p-3 flex flex-col gap-2.5 max-h-[280px] overflow-hidden">
+                  <!-- Search input inside dropdown -->
+                  <div class="relative" (click)="$event.stopPropagation()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+                    </svg>
+                    <input
+                      type="text"
+                      [(ngModel)]="searchDropoffText"
+                      placeholder="Tìm kiếm địa điểm trả..."
+                      class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-2 text-xs font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                    />
+                  </div>
+                  <!-- Options list -->
+                  <div class="overflow-y-auto flex flex-col gap-1 pr-1" (click)="$event.stopPropagation()">
+                    <button
+                      *ngFor="let point of getFilteredDropoffPoints()"
+                      (click)="selectDropoffPoint(point)"
+                      class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors text-left"
+                    >
+                      <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0"
+                            [ngClass]="dropoffPoint.includes(point.name) ? 'border-[#FF6A00] bg-[#FF6A00]' : 'border-slate-300 bg-white'">
+                        <span *ngIf="dropoffPoint.includes(point.name)" class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                      </span>
+                      <div class="flex flex-col text-left">
+                        <span class="text-xs font-black text-[#152C68]">{{point.time}}</span>
+                        <span class="text-[11px] font-bold text-gray-600 mt-0.5">{{point.name}}</span>
+                      </div>
+                    </button>
+                    <div *ngIf="getFilteredDropoffPoints().length === 0" class="text-center py-4 text-xs font-semibold text-gray-400">
+                      Không tìm thấy địa điểm nào
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Selection details panel -->
+            <div *ngIf="pickupPoint || dropoffPoint" class="mt-5 p-4 bg-slate-50 border border-slate-100 rounded-xl flex flex-col gap-4 text-left">
+              <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+                <span class="text-xs font-extrabold text-[#152C68] uppercase tracking-wider">Chi tiết địa điểm đã chọn</span>
+              </div>
+              
+              <div class="flex flex-col gap-3.5">
+                <!-- Pickup spot details -->
+                <div *ngIf="pickupPoint" class="flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 flex items-center justify-between gap-4">
+                    <div class="flex flex-col">
+                      <span class="text-xs font-extrabold text-[#152C68]">Điểm đón:</span>
+                      <span class="text-xs font-semibold text-gray-600 mt-0.5">{{pickupPoint}}</span>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                      Xem bản đồ
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Divider line -->
+                <div *ngIf="pickupPoint && dropoffPoint" class="border-t border-slate-200/50"></div>
+
+                <!-- Dropoff spot details -->
+                <div *ngIf="dropoffPoint" class="flex items-start gap-3">
+                  <div class="w-7 h-7 rounded-full bg-[#152C68]/10 flex items-center justify-center text-[#152C68] flex-shrink-0 mt-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1 flex items-center justify-between gap-4">
+                    <div class="flex flex-col">
+                      <span class="text-xs font-extrabold text-[#152C68]">Điểm trả:</span>
+                      <span class="text-xs font-semibold text-gray-600 mt-0.5">{{dropoffPoint}}</span>
+                    </div>
+                    <a href="https://maps.google.com" target="_blank" class="text-[11px] font-bold text-[#FF6A00] hover:underline flex items-center gap-1 flex-shrink-0">
+                      Xem bản đồ
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOCK 4: MÃ GIẢM GIÁ -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 text-left">
+            <div class="flex items-center gap-3.5 mb-4 max-w-md">
+              <div class="relative flex-1">
+                <img src="/asset/images/customer/icon_ve.svg" class="w-4 h-4 object-contain absolute left-3 top-1/2 -translate-y-1/2" alt="coupon icon" />
+                <input
+                  type="text"
+                  [(ngModel)]="promoCode"
+                  placeholder="Nhập mã giảm giá"
+                  class="w-full bg-[#F4F6FA] border border-slate-200 rounded-lg pl-9 pr-4 py-3 text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#FF6A00]"
+                />
+              </div>
+              <button
+                (click)="applyPromoCode(promoCode)"
+                class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-6 py-3 rounded-lg transition-colors cursor-pointer"
+              >
+                Áp dụng
+              </button>
+            </div>
+
+            <!-- Applied Promo Alert Info -->
+            <div *ngIf="appliedPromo" class="mb-4 p-3 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center justify-between gap-3 text-left">
+              <div class="flex items-center gap-2">
+                <span class="flex-shrink-0 w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-bold text-emerald-800">
+                  Mã giảm giá đã áp dụng: 
+                  <span class="bg-emerald-100 px-2 py-0.5 rounded text-emerald-900 font-black text-[11px] tracking-wide">{{appliedPromo.code}}</span>
+                  <span class="font-medium text-emerald-700 ml-1">
+                    (Giảm {{appliedPromo.discountPercent ? appliedPromo.discountPercent + '%' : (appliedPromo.discountAmount | number:'1.0-0') + 'đ'}})
+                  </span>
+                </span>
+              </div>
+              <button (click)="removePromoCode()" class="text-emerald-600 hover:text-emerald-800 text-xs font-black cursor-pointer bg-transparent border-0">
+                Hủy
+              </button>
+            </div>
+
+            <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Mã giảm giá có sẵn</span>
+            <div class="flex flex-col gap-3">
+              <div class="border border-dashed border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4 bg-slate-50 hover:bg-slate-100/50 transition-colors">
+                <div class="flex items-center gap-3 text-left">
+                  <div class="w-10 h-10 rounded-lg bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] font-black text-sm">
+                    %
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-[#152C68] text-sm">VIAGO2026</h4>
+                    <p class="text-[10px] text-gray-400 font-semibold mt-0.5">Giảm 10% vé tối đa 50k</p>
+                  </div>
+                </div>
+                <button
+                  (click)="applyPromoCode('VIAGO2026')"
+                  class="text-xs font-bold text-[#FF6A00] hover:underline cursor-pointer"
+                >
+                  Dùng ngay
+                </button>
+              </div>
+
+              <div class="border border-dashed border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4 bg-slate-50 hover:bg-slate-100/50 transition-colors">
+                <div class="flex items-center gap-3 text-left">
+                  <div class="w-10 h-10 rounded-lg bg-[#FF6A00]/10 flex items-center justify-center text-[#FF6A00] font-black text-sm">
+                    $
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-[#152C68] text-sm">BANMOI</h4>
+                    <p class="text-[10px] text-gray-400 font-semibold mt-0.5">Giảm 20k cho khách mới</p>
+                  </div>
+                </div>
+                <button
+                  (click)="applyPromoCode('BANMOI')"
+                  class="text-xs font-bold text-[#FF6A00] hover:underline cursor-pointer"
+                >
+                  Dùng ngay
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOCK 5: FOOTER ACTION BLOCK -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span class="text-xl font-bold text-gray-700 flex items-baseline gap-2">
+              TỔNG TIỀN:
+              <ng-container *ngIf="getDiscountAmount() > 0">
+                <span class="line-through text-sm text-gray-400 font-semibold">{{getBookingSubtotal() | number:'1.0-0'}}đ</span>
+              </ng-container>
+              <span class="text-2xl font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+            </span>
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <button
+                (click)="cancelBooking()"
+                class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 text-gray-700 text-sm font-bold px-8 py-3 rounded-lg transition-colors cursor-pointer"
+              >
+                Hủy
+              </button>
+              <button
+                (click)="submitBooking()"
+                class="flex-1 sm:flex-initial bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-12 py-3 rounded-lg shadow-md transition-colors cursor-pointer"
+              >
+                Thanh toán
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: TRIP INFO SUMMARY -->
+        <aside class="w-full lg:w-[320px] flex-shrink-0 flex flex-col gap-6">
+          <!-- Outbound Trip Info Card -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 text-left flex flex-col gap-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <span class="font-extrabold text-base text-[#152C68]">Thông tin chuyến đi</span>
+            </div>
+
+            <div class="flex flex-col gap-3">
+              <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-gray-400">Tuyến xe</span>
+                <span class="text-gray-800 font-bold">{{ searchDeparture }} - {{ searchDestination }}</span>
+              </div>
+              <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-gray-400">Thời gian xuất bến</span>
+                <span class="text-teal-600 font-extrabold">{{ (selectedOutboundTrip || selectedTrip)?.depTime }} {{ getFormattedDateDDMMYYYY(searchDepartureDate) }}</span>
+              </div>
+              <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-gray-400">Số lượng ghế</span>
+                <span class="text-gray-800 font-bold">{{ selectedSeats.length }} Ghế</span>
+              </div>
+              <div class="flex justify-between items-start text-xs font-semibold">
+                <span class="text-gray-400">Số ghế</span>
+                <span class="text-gray-800 font-bold max-w-[60%] text-right break-words">{{ selectedSeats.join(', ') || 'Chưa chọn' }}</span>
+              </div>
+              <div class="flex justify-between items-center text-xs font-semibold border-t border-slate-50 pt-3">
+                <span class="text-gray-400">Tổng tiền lượt đi</span>
+                <span class="text-teal-600 font-extrabold">{{ getOutboundSubtotal() | number:'1.0-0' }}đ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Return Trip Info Card (Round-Trip only) -->
+          <div *ngIf="searchTripType === 'round-trip'" class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 text-left flex flex-col gap-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <span class="font-extrabold text-base text-[#152C68]">Thông tin chuyến về</span>
+            </div>
+
+            <div class="flex flex-col gap-3">
+              <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-gray-400">Tuyến xe</span>
+                <span class="text-gray-800 font-bold">{{ searchDestination }} - {{ searchDeparture }}</span>
+              </div>
+              <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-gray-400">Thời gian xuất bến</span>
+                <span class="text-teal-600 font-extrabold">{{ selectedReturnTrip?.depTime }} {{ getFormattedDateDDMMYYYY(searchReturnDate) }}</span>
+              </div>
+              <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-gray-400">Số lượng ghế</span>
+                <span class="text-gray-800 font-bold">{{ selectedReturnSeats.length }} Ghế</span>
+              </div>
+              <div class="flex justify-between items-start text-xs font-semibold">
+                <span class="text-gray-400">Số ghế</span>
+                <span class="text-gray-800 font-bold max-w-[60%] text-right break-words">{{ selectedReturnSeats.join(', ') || 'Chưa chọn' }}</span>
+              </div>
+              <div class="flex justify-between items-center text-xs font-semibold border-t border-slate-50 pt-3">
+                <span class="text-gray-400">Tổng tiền lượt về</span>
+                <span class="text-teal-600 font-extrabold">{{ getReturnSubtotal() | number:'1.0-0' }}đ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price detail widget -->
+          <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 text-left flex flex-col gap-4 text-xs font-semibold">
+            <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+              <span class="font-extrabold text-base text-[#152C68]">Chi tiết giá</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+              </svg>
+            </div>
+
+            <div class="flex flex-col gap-3">
+              <!-- If Round-Trip, show both legs separated -->
+              <ng-container *ngIf="searchTripType === 'round-trip'">
+                <div class="flex justify-between text-gray-500">
+                  <span>Giá vé lượt đi:</span>
+                  <span class="text-gray-700 font-bold">{{ getOutboundSubtotal() | number:'1.0-0' }}đ</span>
+                </div>
+                <div class="flex justify-between text-gray-500">
+                  <span>Giá vé lượt về:</span>
+                  <span class="text-gray-700 font-bold">{{ getReturnSubtotal() | number:'1.0-0' }}đ</span>
+                </div>
+              </ng-container>
+
+              <!-- If One-Way, show outbound subtotal only -->
+              <ng-container *ngIf="searchTripType !== 'round-trip'">
+                <div class="flex justify-between text-gray-500">
+                  <span>Giá vé lượt đi:</span>
+                  <span class="text-gray-700 font-bold">{{ getOutboundSubtotal() | number:'1.0-0' }}đ</span>
+                </div>
+              </ng-container>
+
+              <!-- Discount Promo (if any) -->
+              <div class="flex justify-between text-gray-500" *ngIf="getDiscountAmount() > 0">
+                <span>Giảm giá:</span>
+                <span class="text-green-600 font-bold">-{{ getDiscountAmount() | number:'1.0-0' }}đ</span>
+              </div>
+
+              <!-- Payment processing fee -->
+              <div class="flex justify-between text-gray-500">
+                <span>Phí thanh toán:</span>
+                <span class="text-gray-700 font-bold">0đ</span>
+              </div>
+
+              <!-- Grand Total -->
+              <div class="border-t border-slate-100 pt-3 flex justify-between items-center text-sm font-bold mt-1">
+                <span class="text-[#152C68] font-extrabold text-sm">Tổng tiền</span>
+                <span class="text-lg font-black text-[#FF6A00]">{{ getBookingTotal() | number:'1.0-0' }}đ</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Promo Banner Image widget -->
+          <div class="rounded-xl overflow-hidden shadow-sm relative h-[200px] bg-slate-900">
+            <img src="/asset/images/customer/xe.png" alt="Promo banner" class="w-full h-full object-cover opacity-90" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent p-5 flex flex-col justify-end text-left text-white">
+              <h4 class="text-base font-black tracking-wide leading-tight">HÀNH TRÌNH ÊM ÁI<br>CÙNG VIAGO</h4>
+              <p class="text-[10px] font-semibold text-slate-200 mt-1 opacity-80">Đồng hành trên mọi nẻo đường cùng bạn.</p>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+
+      <!-- PAYMENT SCREEN -->
+      <div *ngIf="showPayment" class="payment-wrap max-w-[1000px] mx-auto px-4">
+        <div class="payment-card">
+          <!-- Col 1: Methods -->
+          <div class="col methods text-left">
+            <h3>Phương thức thanh toán</h3>
+            <ul>
+              <li class="method" [class.active]="selectedPaymentMethod === 'vietqr'" (click)="selectedPaymentMethod = 'vietqr'">
+                <img src="/asset/images/customer/VietQR_Logo.png" alt="VietQR" />
+                <span>Thanh toán qua VietQR</span>
+              </li>
+              <li class="method" [class.active]="selectedPaymentMethod === 'vnpay'" (click)="selectedPaymentMethod = 'vnpay'">
+                <img src="/asset/images/customer/VNPay_logo.png" alt="VNPay" />
+                <span>VNPay</span>
+              </li>
+              <li class="method" [class.active]="selectedPaymentMethod === 'momo'" (click)="selectedPaymentMethod = 'momo'">
+                <img src="/asset/images/customer/MoMo_Logo.png" alt="MoMo" />
+                <span>Ví MoMo</span>
+              </li>
+              <li class="method" [class.active]="selectedPaymentMethod === 'zalopay'" (click)="selectedPaymentMethod = 'zalopay'">
+                <img src="/asset/images/customer/zalopay_logo.png" alt="ZaloPay" class="opacity-95" />
+                <span>Ví ZaloPay</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Col 2: QR & Confirm -->
+          <div class="col qr">
+            <h3>Tổng thanh toán</h3>
+            <div class="amount">{{ getBookingTotal() | number:'1.0-0' }}đ</div>
+            <div class="timer">Thời gian để giữ chỗ: <b>{{ getFormattedPaymentTime() }}</b></div>
+
+            <!-- Dynamic styled QR code with overlay logo -->
+            <div 
+              [style.border-color]="getQRColor()"
+              class="relative w-52 h-52 bg-white p-3 rounded-2xl shadow-md border-4 flex items-center justify-center transition-all duration-300 mx-auto mb-4"
+            >
+              <!-- Static QR Code image -->
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=VIAGO_PAYMENT_QR" alt="Mã thanh toán QR" class="w-full h-full object-contain" />
+              
+              <!-- Dynamic brand logo in the center -->
+              <div class="absolute w-12 h-12 bg-white p-1 rounded-xl shadow-lg border border-slate-100 flex items-center justify-center">
+                <img *ngIf="selectedPaymentMethod === 'vietqr'" src="/asset/images/customer/VietQR_Logo.png" alt="VietQR" class="w-full h-full object-contain" />
+                <img *ngIf="selectedPaymentMethod === 'vnpay'" src="/asset/images/customer/VNPay_logo.png" alt="VNPay" class="w-full h-full object-contain" />
+                <img *ngIf="selectedPaymentMethod === 'momo'" src="/asset/images/customer/MoMo_Logo.png" alt="MoMo" class="w-full h-full object-contain" />
+                <img *ngIf="selectedPaymentMethod === 'zalopay'" src="/asset/images/customer/zalopay_logo.png" alt="ZaloPay" class="w-full h-full object-contain" />
+              </div>
+            </div>
+
+            <ol class="instructions">
+              <li>Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử.</li>
+              <li>Chọn tài khoản và xác nhận thanh toán.</li>
+              <li>Quay lại trang để hoàn tất đặt vé.</li>
+            </ol>
+
+            <button class="btn-confirm" (click)="confirmPayment()">Xác nhận đã chuyển khoản</button>
+          </div>
+
+          <!-- Col 3: Summary & Cancel -->
+          <div class="col summary text-left">
+            <h3>Thông tin hành khách</h3>
+            <div class="summary-row"><strong>Tuyến:</strong> {{ searchDeparture }} - {{ searchDestination }}</div>
+            <div class="summary-row"><strong>Hành khách:</strong> {{ passengerName }}</div>
+            <div class="summary-row"><strong>Điện thoại:</strong> {{ passengerPhone }}</div>
+            <div class="summary-row" *ngIf="passengerEmail"><strong>Email:</strong> {{ passengerEmail }}</div>
+            <div class="summary-row"><strong>Ngày giờ:</strong> {{ getFormattedTripDate() }} - {{ selectedTrip.depTime }}</div>
+            <div class="summary-row"><strong>Ghế:</strong> {{ selectedSeats.join(', ') }}</div>
+
+            <div class="price-box">
+              <div class="label font-bold">Tổng tiền</div>
+              <div class="price">{{ getBookingTotal() | number:'1.0-0' }}đ</div>
+            </div>
+
+            <button class="btn-cancel" (click)="cancelPayment()">Hủy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS SCREEN -->
+      <div *ngIf="showSuccessScreen" class="w-full max-w-[1200px] mx-auto px-4 py-12 flex flex-col gap-12">
+        <!-- Success main card (max-w-xl centered) -->
+        <div class="max-w-[650px] mx-auto w-full text-center flex flex-col items-center gap-6">
+          <div class="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center border-4 border-emerald-100 shadow-md">
+            <svg class="w-10 h-10 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <h2 class="text-2xl font-black text-[#152C68] uppercase tracking-wide">Đặt vé thành công!</h2>
+          <p class="text-sm font-semibold text-gray-500 max-w-md">Cảm ơn bạn đã lựa chọn dịch vụ VIAGO Express. Chúc quý khách một hành trình an toàn và thuận lợi.</p>
+
+          <div class="w-full bg-white rounded-2xl border border-slate-100 shadow-lg p-6 flex flex-col gap-4 text-left">
+            <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Thông tin vé xe</span>
+              <span class="text-xs font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">Đã thanh toán</span>
+            </div>
+
+            <!-- Customer & Ticket Metadata at the very top -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 border border-slate-100 rounded-xl p-4 text-xs mb-2">
+              <!-- Column 1: Customer Details -->
+              <div class="flex flex-col gap-2 text-left text-slate-600">
+                <span class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Thông tin hành khách:</span>
+                <div>
+                  <span class="text-slate-400 font-medium">Họ tên:</span>
+                  <span class="text-slate-700 font-semibold ml-1.5">{{passengerName}}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 font-medium">Số điện thoại:</span>
+                  <span class="text-slate-700 font-semibold ml-1.5">{{passengerPhone}}</span>
+                </div>
+                <div *ngIf="passengerEmail">
+                  <span class="text-slate-400 font-medium">Email:</span>
+                  <span class="text-slate-700 font-semibold ml-1.5">{{passengerEmail}}</span>
+                </div>
+              </div>
+              
+              <!-- Column 2: Ticket Codes -->
+              <div class="flex flex-col gap-2 text-left text-slate-600">
+                <span class="text-slate-400 font-bold uppercase tracking-wider text-[9px]">Thông tin mã vé:</span>
+                <div>
+                  <span class="text-slate-400 font-medium">Mã đơn hàng:</span>
+                  <span class="text-[#FF6A00] font-semibold ml-1.5">{{orderCode}}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 font-medium">Mã vé:</span>
+                  <span class="text-slate-700 font-semibold ml-1.5">{{ticketCode}}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Journeys Details (Outbound / Return) -->
+            <div class="flex flex-col gap-4">
+              <!-- One-way journey details -->
+              <ng-container *ngIf="searchTripType !== 'round-trip'">
+                <div class="bg-blue-50/30 border border-blue-100 rounded-xl p-4 text-xs flex flex-col gap-3">
+                  <!-- Header: Direction & Ticket Count -->
+                  <div class="flex justify-between items-center border-b border-blue-100/50 pb-2">
+                    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd" d="M8.25 3.75H19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-1.5 0V6.06L5.3 19.56a.75.75 0 11-1.06-1.06L17.69 5.25H8.25a.75.75 0 010-1.5z" clip-rule="evenodd" />
+                      </svg>
+                      Chiều đi
+                    </span>
+                    <span class="text-[10px] font-semibold uppercase bg-blue-100/60 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
+                      {{selectedSeats.length}} Vé
+                    </span>
+                  </div>
+
+                  <!-- Route -->
+                  <div class="flex flex-col gap-0.5 text-left">
+                    <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Lộ trình:</span>
+                    <span class="text-slate-700 font-semibold text-sm">{{selectedTrip?.depLocation}} → {{selectedTrip?.arrLocation}}</span>
+                  </div>
+
+                  <!-- Grid details -->
+                  <div class="grid grid-cols-2 gap-3.5 pt-1 text-left">
+                    <div class="flex flex-col gap-0.5">
+                      <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Giờ xuất phát:</span>
+                      <span class="text-slate-600 font-semibold text-xs">{{selectedTrip?.depTime}} - {{getFormattedTripDate()}}</span>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                      <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Danh sách ghế:</span>
+                      <div class="flex flex-wrap gap-1 mt-0.5">
+                        <span *ngFor="let seat of selectedSeats" class="text-[10px] font-semibold bg-blue-100/60 text-blue-700 border border-blue-200/50 px-1.5 py-0.5 rounded">
+                          {{seat}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Round-trip journey details -->
+              <ng-container *ngIf="searchTripType === 'round-trip'">
+                <!-- Outbound details -->
+                <div class="bg-blue-50/30 border border-blue-100 rounded-xl p-4 text-xs flex flex-col gap-3">
+                  <!-- Header: Direction & Ticket Count -->
+                  <div class="flex justify-between items-center border-b border-blue-100/50 pb-2">
+                    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider flex items-center gap-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd" d="M8.25 3.75H19.5a.75.75 0 01.75.75v11.25a.75.75 0 01-1.5 0V6.06L5.3 19.56a.75.75 0 11-1.06-1.06L17.69 5.25H8.25a.75.75 0 010-1.5z" clip-rule="evenodd" />
+                      </svg>
+                      Chiều đi
+                    </span>
+                    <span class="text-[10px] font-semibold uppercase bg-blue-100/60 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
+                      {{selectedSeats.length}} Vé
+                    </span>
+                  </div>
+
+                  <!-- Route -->
+                  <div class="flex flex-col gap-0.5 text-left">
+                    <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Lộ trình:</span>
+                    <span class="text-slate-700 font-semibold text-sm">{{selectedOutboundTrip?.depLocation || selectedTrip?.depLocation}} → {{selectedOutboundTrip?.arrLocation || selectedTrip?.arrLocation}}</span>
+                  </div>
+
+                  <!-- Grid details -->
+                  <div class="grid grid-cols-2 gap-3.5 pt-1 text-left">
+                    <div class="flex flex-col gap-0.5">
+                      <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Giờ xuất phát:</span>
+                      <span class="text-slate-600 font-semibold text-xs">{{selectedOutboundTrip?.depTime || selectedTrip?.depTime}} - {{getFormattedTripDate()}}</span>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                      <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Danh sách ghế:</span>
+                      <div class="flex flex-wrap gap-1 mt-0.5">
+                        <span *ngFor="let seat of selectedSeats" class="text-[10px] font-semibold bg-blue-100/60 text-blue-700 border border-blue-200/50 px-1.5 py-0.5 rounded">
+                          {{seat}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Return details -->
+                <div class="bg-orange-50/30 border border-orange-100 rounded-xl p-4 text-xs flex flex-col gap-3" *ngIf="selectedReturnTrip">
+                  <!-- Header: Direction & Ticket Count -->
+                  <div class="flex justify-between items-center border-b border-orange-100/50 pb-2">
+                    <span class="text-xs font-bold text-orange-600 uppercase tracking-wider flex items-center gap-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd" d="M15.75 20.25H4.5a.75.75 0 01-.75-.75V8.25a.75.75 0 011.5 0v10.19L18.7 5.19a.75.75 0 011.06 1.06L6.31 18.75h9.44a.75.75 0 010 1.5z" clip-rule="evenodd" />
+                      </svg>
+                      Chiều về
+                    </span>
+                    <span class="text-[10px] font-semibold uppercase bg-orange-100/60 text-orange-700 px-2 py-0.5 rounded border border-orange-200">
+                      {{selectedReturnSeats.length}} Vé
+                    </span>
+                  </div>
+
+                  <!-- Route -->
+                  <div class="flex flex-col gap-0.5 text-left">
+                    <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Lộ trình:</span>
+                    <span class="text-slate-800 font-semibold text-sm">{{selectedReturnTrip.depLocation}} → {{selectedReturnTrip.arrLocation}}</span>
+                  </div>
+
+                  <!-- Grid details -->
+                  <div class="grid grid-cols-2 gap-3.5 pt-1 text-left">
+                    <div class="flex flex-col gap-0.5">
+                      <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Giờ xuất phát:</span>
+                      <span class="text-slate-600 font-semibold text-xs">{{selectedReturnTrip.depTime}} - {{getFormattedDateLong(searchReturnDate)}}</span>
+                    </div>
+                    <div class="flex flex-col gap-0.5">
+                      <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">Danh sách ghế:</span>
+                      <div class="flex flex-wrap gap-1 mt-0.5">
+                        <span *ngFor="let seat of selectedReturnSeats" class="text-[10px] font-semibold bg-orange-100/60 text-orange-700 border border-orange-200/50 px-1.5 py-0.5 rounded">
+                          {{seat}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 flex justify-between items-center text-sm font-bold mt-1">
+              <span class="text-gray-700">Tổng tiền đã thanh toán</span>
+              <span class="text-xl font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+            </div>
+          </div>
+
+          <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl text-left text-xs font-medium text-blue-800 leading-relaxed flex gap-3.5 max-w-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            <span>Vé điện tử và hướng dẫn chi tiết đã được gửi đến số điện thoại và địa chỉ email của bạn. Quý khách vui lòng lưu lại thông tin để đối chiếu khi lên xe.</span>
+          </div>
+
+          <div class="flex items-center gap-4 w-full justify-center mt-2">
+            <button
+              (click)="viewTicketDetails()"
+              class="bg-white hover:bg-slate-50 text-[#FF6A00] border-2 border-[#FF6A00] text-sm font-bold px-8 py-3 rounded-xl transition-colors cursor-pointer"
+            >
+              Xem chi tiết vé
+            </button>
+            <button
+              (click)="resetToHome()"
+              class="bg-[#FF6A00] hover:bg-[#FF8126] text-white text-sm font-bold px-8 py-3 rounded-xl shadow-md transition-colors cursor-pointer"
+            >
+              Về trang chủ
+            </button>
+          </div>
+        </div>
+
+        <!-- TIỆN ÍCH TẠI ĐIỂM ĐẾN -->
+        <div class="border-t border-slate-200/80 pt-10 text-left flex flex-col gap-6">
+          <div class="flex items-start gap-3">
+            <div class="p-2 bg-blue-50 text-[#152C68] rounded-xl">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-black text-slate-800 leading-tight">Tiện ích tại điểm đến</h3>
+              <p class="text-xs font-semibold text-slate-400 mt-1">Các dịch vụ hỗ trợ hành trình của bạn tại điểm trả khách Bến xe Miền Đông.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-2">
+            <!-- Left: Weather and AI Suggestions -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+              <!-- Weather Card -->
+              <div class="bg-gradient-to-br from-blue-50 to-[#e9f2ff] border border-blue-100/50 rounded-2xl p-5 flex items-center justify-between shadow-sm relative overflow-hidden">
+                <div class="flex flex-col gap-1 text-left">
+                  <span class="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Thời tiết TP. HCM</span>
+                  <span class="text-3xl font-black text-slate-800 mt-0.5">26-31°C</span>
+                  <span class="text-xs font-semibold text-slate-500">Mưa rào rải rác</span>
+                </div>
+                <!-- Weather cloud rain icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="w-16 h-16 text-blue-400 drop-shadow-md">
+                  <path fill="#93c5fd" d="M46 36a10 10 0 00-6.88-9.52 12 12 0 00-22.24-2 10 10 0 00-2.88 19.52c.62.13 1.25.2 1.88.2H44a10 10 0 002-20.2z"/>
+                  <path stroke="#2563eb" stroke-width="3" stroke-linecap="round" d="M22 48l-2 6M30 48l-2 6M38 48l-2 6"/>
+                </svg>
+              </div>
+
+              <!-- AI Suggestions Card -->
+              <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col gap-4 text-left">
+                <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-[#152C68]">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 21l8.904-4.473L21 9l-8.904 4.473L9 15.904z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15.904l-5.63-2.815M15.904 9l2.815-5.63" />
+                  </svg>
+                  <span class="text-sm font-black text-slate-800">Gợi ý từ VIAGO AI</span>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                  <!-- Check 1 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Mang theo áo mưa hoặc ô</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Dự báo thời tiết có khả năng xảy ra mưa rào rải rác vào buổi chiều và tối tại TP. HCM.</span>
+                    </div>
+                  </div>
+
+                  <!-- Check 2 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Sử dụng túi chống nước cho balo</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Bảo vệ các thiết bị điện tử và giấy tờ quan trọng tránh khỏi độ ẩm cao hoặc những cơn mưa bất chợt.</span>
+                    </div>
+                  </div>
+
+                  <!-- Check 3 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Chuẩn bị sạc dự phòng cầm tay</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Đảm bảo điện thoại luôn duy trì nguồn pin để liên hệ với người thân hoặc tài xế trung chuyển khi xe cập bến.</span>
+                    </div>
+                  </div>
+
+                  <!-- Check 4 -->
+                  <div class="flex gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-blue-500 shrink-0 mt-0.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <span class="text-xs font-black text-slate-800 block">Đặt xe taxi / xe máy đón trước</span>
+                      <span class="text-[11px] font-medium text-slate-400 block mt-0.5 leading-relaxed">Bến xe Miền Đông mới nằm khá xa khu vực trung tâm thành phố. Bạn nên đặt xe trước 15-20 phút khi xe chuẩn bị cập bến.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Hotels and Transit -->
+            <div class="lg:col-span-8 flex flex-col gap-8">
+              <!-- Hotels section -->
+              <div class="flex flex-col gap-4 text-left">
+                <div class="flex justify-between items-center">
+                  <h4 class="text-sm font-black text-slate-800 uppercase tracking-wide">Khách sạn gần Bến xe Miền Đông</h4>
+                  <a href="https://booking.com" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1">
+                    Xem tất cả
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                      <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                    </svg>
+                  </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <!-- Hotel 1 -->
+                  <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
+                    <div class="h-28 bg-slate-100 overflow-hidden relative">
+                      <img src="/asset/images/customer/hotel_1.jpg" alt="Aurora Hotel" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-3 flex flex-col gap-2 flex-grow text-left">
+                      <div class="flex justify-between items-start gap-1">
+                        <span class="text-xs font-black text-slate-800 leading-tight">Aurora Hotel</span>
+                        <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-[10px]">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.209.818.686 1.464 1.394 1.003L10 15.422l4.192 2.702c.708.461 1.603-.185 1.394-1.003l-1.196-4.683 3.6-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+                          </svg>
+                          4.8
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-semibold text-slate-400">Cách bến xe 500m</span>
+                      <a href="https://booking.com" target="_blank" class="mt-1 w-full bg-slate-50 hover:bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold py-2 rounded-xl text-center transition-colors">
+                        Đặt ngay Booking.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Hotel 2 -->
+                  <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
+                    <div class="h-28 bg-slate-100 overflow-hidden relative">
+                      <img src="/asset/images/customer/hotel_2.jpg" alt="Saigon Riverside" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-3 flex flex-col gap-2 flex-grow text-left">
+                      <div class="flex justify-between items-start gap-1">
+                        <span class="text-xs font-black text-slate-800 leading-tight">Saigon Riverside</span>
+                        <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-[10px]">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.209.818.686 1.464 1.394 1.003L10 15.422l4.192 2.702c.708.461 1.603-.185 1.394-1.003l-1.196-4.683 3.6-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+                          </svg>
+                          4.5
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-semibold text-slate-400">Cách bến xe 1.2km</span>
+                      <a href="https://booking.com" target="_blank" class="mt-1 w-full bg-slate-50 hover:bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold py-2 rounded-xl text-center transition-colors">
+                        Đặt ngay Booking.com
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Hotel 3 -->
+                  <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow duration-300">
+                    <div class="h-28 bg-slate-100 overflow-hidden relative">
+                      <img src="/asset/images/customer/hotel_3.jpg" alt="Grand Central" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="p-3 flex flex-col gap-2 flex-grow text-left">
+                      <div class="flex justify-between items-start gap-1">
+                        <span class="text-xs font-black text-slate-800 leading-tight">Grand Central</span>
+                        <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-[10px]">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.6 3.102-1.196 4.683c-.209.818.686 1.464 1.394 1.003L10 15.422l4.192 2.702c.708.461 1.603-.185 1.394-1.003l-1.196-4.683 3.6-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+                          </svg>
+                          4.9
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-semibold text-slate-400">Cách bến xe 800m</span>
+                      <a href="https://booking.com" target="_blank" class="mt-1 w-full bg-slate-50 hover:bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold py-2 rounded-xl text-center transition-colors">
+                        Đặt ngay Booking.com
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Transit options -->
+              <div class="flex flex-col gap-4 text-left">
+                <h4 class="text-sm font-black text-slate-800 uppercase tracking-wide">Phương tiện di chuyển tiếp nối</h4>
+                <div class="bg-white border border-slate-100 rounded-2xl shadow-sm flex flex-col divide-y divide-slate-100 overflow-hidden">
+                  <!-- Option 1 -->
+                  <div class="p-4 flex justify-between items-center gap-4">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-650 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.077a2.25 2.25 0 00-2.247-2.112H5.625c-.906 0-1.745.548-2.11 1.378l-1.24 2.813c-.112.256-.168.534-.168.814v4.748c0 .621.504 1.125 1.125 1.125h1.125M18 10.5h1.875A1.125 1.125 0 0121 11.625v1.875m-9-6.75v1.5m3-1.5v1.5m-9-1.5v1.5M6 15h12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span class="text-xs font-black text-slate-800 block">Xe trung chuyển VIAGO (Khuyên dùng)</span>
+                        <span class="text-[10px] font-semibold text-slate-400 block mt-0.5 leading-relaxed">Liên hệ tổng đài nhà xe để đăng ký thay đổi bến trả mong muốn</span>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0 flex flex-col gap-1">
+                      <span class="text-xs font-black text-blue-600 block">Miễn phí (VIP)</span>
+                      <span class="text-[10px] font-bold text-slate-400 hover:text-blue-650 flex items-center justify-end gap-1 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-[#FF6A00]">
+                          <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 01-1.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.073a15.485 15.485 0 01-11.405-4.887A15.485 15.485 0 012 3.5z" clip-rule="evenodd" />
+                        </svg>
+                        Gọi tổng đài
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Option 2 -->
+                  <div class="p-4 flex justify-between items-center gap-4">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-650 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.077a2.25 2.25 0 00-2.247-2.112H5.625c-.906 0-1.745.548-2.11 1.378l-1.24 2.813c-.112.256-.168.534-.168.814v4.748c0 .621.504 1.125 1.125 1.125h1.125M18 10.5h1.875A1.125 1.125 0 0121 11.625v1.875m-9-6.75v1.5m3-1.5v1.5m-9-1.5v1.5M6 15h12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span class="text-xs font-black text-slate-800 block">Taxi đối tác liên kết (Nhà xe không tự cung cấp)</span>
+                        <span class="text-[10px] font-semibold text-slate-400 block mt-0.5 leading-relaxed">Quý khách vui lòng gọi tổng đài hãng taxi đối tác tại bến xe</span>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0 flex flex-col gap-1">
+                      <span class="text-xs font-black text-[#152C68] block">Theo đồng hồ xe</span>
+                      <span class="text-[10px] font-bold text-slate-400 hover:text-blue-650 flex items-center justify-end gap-1 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-[#FF6A00]">
+                          <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 01-1.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.073a15.485 15.485 0 01-11.405-4.887A15.485 15.485 0 012 3.5z" clip-rule="evenodd" />
+                        </svg>
+                        Gọi Mai Linh
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Option 3 -->
+                  <div class="p-4 flex justify-between items-center gap-4">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-650 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.077a2.25 2.25 0 00-2.247-2.112H5.625c-.906 0-1.745.548-2.11 1.378l-1.24 2.813c-.112.256-.168.534-.168.814v4.748c0 .621.504 1.125 1.125 1.125h1.125M18 10.5h1.875A1.125 1.125 0 0121 11.625v1.875m-9-6.75v1.5m3-1.5v1.5m-9-1.5v1.5M6 15h12" />
+                        </svg>
+                      </div>
+                      <div>
+                        <span class="text-xs font-black text-slate-800 block">Thuê xe hợp đồng 7 chỗ (Đơn vị liên kết đối tác)</span>
+                        <span class="text-[10px] font-semibold text-slate-400 block mt-0.5 leading-relaxed">Dịch vụ xe riêng của đối tác. Quý khách vui lòng liên hệ hotline để nhận báo giá</span>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0 flex flex-col gap-1">
+                      <span class="text-xs font-black text-[#152C68] block">Theo hợp đồng</span>
+                      <span class="text-[10px] font-bold text-slate-400 hover:text-blue-650 flex items-center justify-end gap-1 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 text-[#FF6A00]">
+                          <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 01-1.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5h-1.073a15.485 15.485 0 01-11.405-4.887A15.485 15.485 0 012 3.5z" clip-rule="evenodd" />
+                        </svg>
+                        Gọi hotline đối tác
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </ng-container>
+  </ng-container>
+
+  <!-- TICKET DETAILS MODAL -->
+  <div *ngIf="showTicketModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-lg w-full flex flex-col overflow-hidden max-h-[90vh] text-left">
+      <!-- Modal Header -->
+      <div class="bg-[#152C68] text-white px-6 py-4 flex items-center justify-between shrink-0">
+        <span class="font-extrabold text-sm uppercase tracking-wider">Chi tiết vé xe VIAGO Express</span>
+        <button (click)="showTicketModal = false" class="text-white hover:text-slate-200 font-bold text-lg bg-transparent border-0 cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body (scrollable) -->
+      <div class="p-6 overflow-y-auto flex flex-col gap-6 flex-1 min-h-0">
+        <!-- Stylized ticket mockup -->
+        <div class="border-2 border-dashed border-[#152C68]/30 rounded-2xl bg-slate-50 relative overflow-hidden p-5 flex flex-col gap-4 shadow-inner shrink-0">
+          <!-- Ticket top brand row -->
+          <div class="flex items-center justify-between border-b border-slate-200/80 pb-4">
+            <span class="text-sm font-black text-[#152C68] tracking-widest">VIAGO EXPRESS</span>
+            <span class="text-[10px] font-bold text-[#FF6A00] bg-[#FF6A00]/10 px-2 py-0.5 rounded-full uppercase tracking-wider">Vé điện tử</span>
+          </div>
+
+          <!-- Grid details -->
+          <div class="grid grid-cols-2 gap-y-3 gap-x-4 text-xs font-semibold text-gray-500">
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Mã đơn hàng:</span>
+              <span class="text-slate-800 font-extrabold text-sm text-[#FF6A00]">{{orderCode}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Mã vé:</span>
+              <span class="text-slate-800 font-extrabold text-sm">{{ticketCode}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2">
+              <span class="text-gray-400">Tuyến đường:</span>
+              <span class="text-slate-800 font-extrabold text-sm">{{searchDeparture}} → {{searchDestination}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2">
+              <span class="text-gray-400">Thời gian khởi hành:</span>
+              <span class="text-slate-800 font-bold text-sm">{{selectedTrip.depTime}} - {{getFormattedTripDate()}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Điểm đón:</span>
+              <span class="text-slate-800 font-bold">{{pickupPoint}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Điểm trả:</span>
+              <span class="text-slate-800 font-bold">{{dropoffPoint}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Họ tên khách đi:</span>
+              <span class="text-slate-850 font-bold">{{passengerName}}</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-gray-400">Số điện thoại:</span>
+              <span class="text-slate-850 font-bold">{{passengerPhone}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2" *ngIf="passengerEmail">
+              <span class="text-gray-400">Email nhận vé:</span>
+              <span class="text-slate-850 font-bold">{{passengerEmail}}</span>
+            </div>
+            <div class="flex flex-col gap-1 col-span-2">
+              <span class="text-gray-400">Mã số ghế:</span>
+              <span class="text-slate-800 font-extrabold bg-[#FF6A00]/10 text-[#FF6A00] px-2.5 py-1 rounded w-max text-xs">{{selectedSeats.join(', ')}}</span>
+            </div>
+          </div>
+
+          <!-- Total fee -->
+          <div class="border-t border-slate-200/80 pt-3 flex justify-between items-center text-sm font-bold mt-1">
+            <span class="text-gray-500">Tổng tiền đã thanh toán</span>
+            <span class="text-lg font-black text-[#FF6A00]">{{getBookingTotal() | number:'1.0-0'}}đ</span>
+          </div>
+        </div>
+
+        <div class="text-xs text-gray-500 leading-relaxed bg-amber-50/50 border border-amber-100/50 rounded-xl p-4 flex flex-col gap-2 shrink-0">
+          <span class="font-bold text-amber-800 block text-[13px]">Lưu ý quan trọng:</span>
+          <p>• Quý khách vui lòng có mặt tại điểm đón trước 30 phút để chuẩn bị hành lý và check-in.</p>
+          <p>• Khi lên xe, quý khách vui lòng xuất trình vé điện tử này hoặc đọc số điện thoại đã đặt vé cho nhân viên.</p>
+          <p>• Để hủy hoặc đổi chuyến xe, vui lòng liên hệ Tổng đài hỗ trợ <strong class="text-[#FF6A00]">19001234</strong> trước giờ khởi hành ít nhất 60 phút.</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="bg-slate-50 px-6 py-4 flex justify-end border-t border-slate-100 shrink-0">
+        <button
+          (click)="showTicketModal = false"
+          class="bg-[#152C68] hover:bg-[#1f3f88] text-white text-xs font-bold px-6 py-2.5 rounded-lg transition-colors cursor-pointer"
+        >
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Toast Alert clinging to right edge of screen, level with selected seats -->
+  <div *ngIf="showToast" 
+       [ngClass]="toastType === 'success' ? 'bg-[#10B981]' : 'bg-[#DC2626]'"
+       class="fixed right-0 top-[35%] z-50 flex items-center justify-between gap-4 text-white px-5 py-3.5 rounded-l-2xl shadow-2xl max-w-sm animate-slide-in-right">
+    <div class="flex items-center gap-3">
+      <!-- Icon warning -->
+      <svg *ngIf="toastType === 'warning'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 shrink-0 text-white">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+      </svg>
+      <!-- Icon success -->
+      <svg *ngIf="toastType === 'success'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 shrink-0 text-white">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p class="text-xs font-bold leading-relaxed whitespace-pre-line text-left">{{ toastMessage }}</p>
+    </div>
+    <button (click)="showToast = false" class="text-white hover:text-gray-200 focus:outline-none cursor-pointer font-bold text-sm leading-none shrink-0">
+      ✕
+    </button>
+  </div>
 </main>

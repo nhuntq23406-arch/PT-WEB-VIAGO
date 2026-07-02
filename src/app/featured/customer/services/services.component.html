@@ -1,4 +1,552 @@
-<div class="p-8">
-  <h1 class="text-h1 text-primary">Dịch vụ</h1>
-  <p class="text-body-main mt-4">Nội dung trang Dịch vụ đang được phát triển.</p>
+<!-- HERO BANNER -->
+<section class="service-hero">
+    <div class="container mx-auto px-4 md:px-10 lg:px-16 text-center">
+        <div class="service-hero-content">
+            <span class="pill-label inline-flex items-center justify-center rounded-full bg-[#f96d00]/20 text-[#f96d00] px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.24em] mb-3">Dịch vụ vận tải 5 sao</span>
+            <h1 class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Thuê xe hợp đồng toàn quốc</h1>
+            <p class="text-xs md:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">Dịch vụ thuê xe Limousine, Giường nằm và Cabin đôi phục vụ du lịch, công tác, sự kiện và đưa đón sân bay. Đẳng cấp trên mọi hành trình.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Tabs are now managed purely by router query parameters (Tab header selection) -->
+
+<!-- TAB 1: CAR RENTAL CONTENT -->
+<div *ngIf="activeTab === 'thue-xe'" class="container mx-auto px-4 md:px-10 lg:px-16 py-12 tab-content">
+
+    <!-- STEP 1: FLEET SELECTOR (Only show if no car is selected) -->
+    <div *ngIf="!selectedCar" id="fleet-selector-section" class="fleet-section mb-12">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 border-b border-[#eef2f7] pb-6">
+            <div>
+                <h3 class="text-2xl font-black text-[#123063] tracking-tight">Đội xe cao cấp</h3>
+                <p class="text-xs text-gray-500 mt-1">Lựa chọn đa dạng phù hợp với mọi nhu cầu di chuyển của bạn.</p>
+            </div>
+            <div class="fleet-stats inline-flex items-center gap-4 text-xs text-gray-500">
+                <div class="stat-pill rounded-full bg-[#f8fafc] px-4 py-2 border border-[#eef2f7]">{{ rentalCars.length }} dòng xe</div>
+                <div class="stat-pill rounded-full bg-[#f8fafc] px-4 py-2 border border-[#eef2f7]">4.9 / 5 điểm Đánh giá chất lượng</div>
+            </div>
+        </div>
+
+        <div class="fleet-grid grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div *ngFor="let car of rentalCars" 
+                 (click)="selectCar(car)"
+                 class="fleet-card cursor-pointer overflow-hidden rounded-[28px] border border-[#eef2f7] bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                <div class="relative overflow-hidden h-40">
+                    <img [src]="car.mainImage" [alt]="car.title" class="w-full h-full object-cover transition duration-500 hover:scale-105">
+                </div>
+                <div class="p-5 flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-4">
+                        <h4 class="text-sm font-bold text-[#123063]">{{ car.title }}</h4>
+                    </div>
+                    <div class="text-[11px] text-gray-400 font-semibold flex items-center gap-1.5">
+                        Tối đa {{ car.seats }} {{ car.id === 4 ? 'cabin' : 'khách' }}
+                    </div>
+                    <div class="flex items-center justify-between gap-2 border-t border-[#f8fafc] pt-3 mt-1">
+                        <span class="text-xs font-extrabold text-[#f96d00]">{{ car.priceLabel }}</span>
+                        <span class="text-[11px] font-bold text-[#123063] flex items-center gap-0.5">Chi tiết</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SERVICES FOR EVERY JOURNEY SECTION -->
+    <div *ngIf="!selectedCar" class="services-journey-section mt-16 pt-12 border-t border-[#eef2f7] mb-8">
+        <div class="text-center mb-10">
+            <h3 class="text-2xl font-black text-[#123063] tracking-tight">Dịch vụ cho mọi hành trình</h3>
+            <p class="text-xs text-gray-500 mt-1">Đáp ứng hoàn hảo mọi nhu cầu di chuyển đa dạng của khách hàng.</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
+                <span class="text-xs font-bold text-[#123063]">Du lịch</span>
+            </div>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
+                <span class="text-xs font-bold text-[#123063]">Công tác</span>
+            </div>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
+                <span class="text-xs font-bold text-[#123063]">Sân bay</span>
+            </div>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
+                <span class="text-xs font-bold text-[#123063]">Đám cưới</span>
+            </div>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
+                <span class="text-xs font-bold text-[#123063]">Sự kiện</span>
+            </div>
+            <div class="journey-item flex flex-col items-center justify-center p-6 bg-white border border-[#eef2f7] rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
+                <span class="text-xs font-bold text-[#123063]">Team Building</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: SELECTED CAR DETAILS & RENTAL FORM (Page 2 detail page style) -->
+    <div *ngIf="selectedCar" class="selected-car-panel bg-white border border-[#f0f3f8] rounded-[32px] p-6 md:p-8 shadow-sm">
+        <div class="mb-6">
+            <button (click)="selectedCar = null" class="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs font-bold text-[#123063] hover:bg-[#123063] hover:text-white hover:border-[#123063] transition duration-300 cursor-pointer">
+                ‹ Quay lại danh sách xe
+            </button>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+            
+            <!-- LEFT COLUMN: Image Gallery, 360 Viewer, Details, Price Table -->
+            <div class="flex-1 w-full lg:max-w-[62%]">
+                
+                <!-- Grid layout for main image + vertical thumbnails on the right -->
+                <div class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 mb-6">
+                    <!-- Main Image Viewer -->
+                    <div class="viewer-container relative rounded-[28px] overflow-hidden border border-[#e6e9f2] bg-[#f8fafc] shadow-sm w-full h-[400px]">
+                        <img [src]="selectedCar.images[selectedImageIndex]" [alt]="selectedCar.title" class="w-full h-full object-cover">
+                    </div>
+
+                    <!-- Vertical Thumbnail Selector (Right) -->
+                    <div class="flex flex-row md:flex-col gap-2.5 overflow-x-auto md:overflow-y-auto max-h-[400px] w-full md:w-24 pb-2 md:pb-0 pr-1">
+                        <div *ngFor="let imgUrl of selectedCar.images; let idx = index" 
+                             (click)="selectedImageIndex = idx"
+                             [class.active-thumb]="selectedImageIndex === idx"
+                             class="thumb-item flex-shrink-0 w-24 h-16 rounded-xl overflow-hidden border-2 bg-white cursor-pointer transition">
+                            <img [src]="imgUrl" alt="Car Detail" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car Detailed Specifications & Amenities -->
+                <div class="selected-car-info border border-[#f0f3f8] bg-white rounded-[24px] p-6 shadow-sm mb-6">
+                    <span class="car-category-tag mb-3 inline-flex bg-[#123063] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">{{ selectedCar.category }}</span>
+                    <h3 class="text-2xl font-black text-[#123063] mb-2">{{ selectedCar.title }}</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed mb-6 bg-slate-50 p-4 rounded-2xl border border-[#eef2f7] italic">" {{ selectedCar.shortDescription }} "</p>
+
+                    <div class="info-badges grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                        <div class="flex items-center gap-2 border border-[#f0f3f8] rounded-xl p-2.5 text-xs text-gray-600 bg-slate-50/50">
+                            <div>
+                                <p class="text-[10px] text-gray-400 font-medium">Sức chứa</p>
+                                <p class="font-bold text-[#123063]">{{ selectedCar.seats }} {{ selectedCar.id === 1 ? 'chỗ ngồi' : selectedCar.id === 2 ? 'giường nằm' : 'giường phòng' }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 border border-[#f0f3f8] rounded-xl p-2.5 text-xs text-gray-600 bg-slate-50/50 min-w-0 overflow-hidden">
+                            <div class="min-w-0">
+                                <p class="text-[10px] text-gray-400 font-medium">Hành lý</p>
+                                <p class="font-bold text-[#123063] truncate" [title]="selectedCar.luggage">{{ selectedCar.luggage }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 border border-[#f0f3f8] rounded-xl p-2.5 text-xs text-gray-600 bg-slate-50/50 min-w-0 overflow-hidden">
+                            <div class="min-w-0">
+                                <p class="text-[10px] text-gray-400 font-medium">Đánh giá</p>
+                                <p class="font-bold text-[#123063] truncate">{{ selectedCar.rating }} ({{ selectedCar.reviewCount }} phản hồi)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amenities list -->
+                    <h4 class="text-sm font-bold text-[#123063] mb-3">Tiện nghi trên xe</h4>
+                    <div class="feature-grid grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <div *ngFor="let am of selectedCar.amenities" class="feature-card border border-[#eef2f7] rounded-xl p-3 text-xs text-gray-600 flex items-center gap-2 bg-[#f8fafc]">
+                            <span>- {{ am }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Specifications Section -->
+                <div class="specs-section border border-[#f0f3f8] rounded-[24px] p-6 shadow-sm mb-6 bg-white">
+                    <h4 class="text-sm font-bold text-[#123063] mb-4">Thông số & Xuất xứ xe</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="flex items-center justify-between border-b border-[#f0f3f8] pb-2.5">
+                            <span class="text-gray-400">Hãng sản xuất / Model:</span>
+                            <strong class="text-[#123063] text-right">{{ selectedCar.brand || 'Đang cập nhật' }}</strong>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-[#f0f3f8] pb-2.5">
+                            <span class="text-gray-400">Năm sản xuất:</span>
+                            <strong class="text-[#123063]">{{ selectedCar.year || '2024' }}</strong>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-[#f0f3f8] pb-2.5">
+                            <span class="text-gray-400">Xuất xứ:</span>
+                            <strong class="text-[#123063] text-right">{{ selectedCar.origin || 'Nhập khẩu nguyên chiếc' }}</strong>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-[#f0f3f8] pb-2.5">
+                            <span class="text-gray-400">Hộp số:</span>
+                            <strong class="text-[#123063]">{{ selectedCar.transmission || 'Số tự động' }}</strong>
+                        </div>
+                        <div class="flex items-center justify-between md:col-span-2 border-b border-[#f0f3f8] pb-2.5">
+                            <span class="text-gray-400">Loại nhiên liệu:</span>
+                            <strong class="text-[#123063]">{{ selectedCar.fuelType || 'Dầu Diesel' }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Brochure Section -->
+                <div class="brochure-section border border-[#f0f3f8] bg-white rounded-[24px] p-6 shadow-sm mb-6">
+                    <h4 class="text-sm font-bold text-[#123063] mb-4 flex items-center gap-2">
+                        Mô tả chi tiết sản phẩm & dịch vụ
+                    </h4>
+                    <div class="space-y-4 text-xs text-gray-600 leading-relaxed">
+                        <div>
+                            <h5 class="font-bold text-[#123063] mb-1 flex items-center gap-1.5">Tổng quan dòng xe</h5>
+                            <p>{{ selectedCar.description }}</p>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-[#123063] mb-1 flex items-center gap-1.5">Nội thất & Tiện ích khoang khách</h5>
+                            <p>Toàn bộ ghế giường được thiết kế theo tiêu chuẩn công thái học cao cấp chống mỏi cột sống. Ghế có chức năng massage đa chế độ, bọc da thật nhập khẩu siêu mềm mịn. Khoang nội thất được trang trí đèn bầu trời sao LED vô cực thay đổi sắc màu, mang lại cảm giác thư thái đỉnh cao suốt hành trình dài.</p>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-[#123063] mb-1 flex items-center gap-1.5">Tiêu chuẩn An toàn vượt trội</h5>
+                            <p>Xe trang bị hệ thống giảm chấn khí nén (bầu hơi) tân tiến giúp hấp thụ mọi rung chấn từ mặt đường. Hệ thống phanh ABS/EBD cao cấp, camera hành trình trước sau giám sát 24/7, cùng hệ thống lọc không khí tươi liên tục khử khuẩn nano bạc đem lại không khí trong lành tối đa cho hành khách.</p>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-[#123063] mb-1 flex items-center gap-1.5">Cam kết dịch vụ từ VIAGO</h5>
+                            <ul class="list-disc pl-4 space-y-1 mt-1 text-[11px] text-gray-500">
+                                <li>Đảm bảo giao đúng chủng loại xe khách hàng đã đặt báo giá.</li>
+                                <li>Lái xe được đào tạo bài bản, lịch sự, chuyên nghiệp, thông thạo đường tuyến.</li>
+                                <li>Vật phẩm phục vụ (nước suối, khăn lạnh, chăn gối) luôn được thay mới, giặt sấy vô trùng trước mỗi hành trình.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suitable For Section -->
+                <div class="suitable-section border border-[#f0f3f8] rounded-[24px] p-6 shadow-sm bg-[#f8fafc]">
+                    <h4 class="text-sm font-bold text-[#123063] mb-4">Phù hợp cho nhu cầu</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                        <div class="bg-white border border-[#eef2f7] p-3 rounded-xl shadow-xs">
+                            <p class="text-[10px] font-bold text-[#123063] mt-2">Đưa đón Sân bay</p>
+                        </div>
+                        <div class="bg-white border border-[#eef2f7] p-3 rounded-xl shadow-xs">
+                            <p class="text-[10px] font-bold text-[#123063] mt-2">Đi công tác VIP</p>
+                        </div>
+                        <div class="bg-white border border-[#eef2f7] p-3 rounded-xl shadow-xs">
+                            <p class="text-[10px] font-bold text-[#123063] mt-2">Du lịch gia đình</p>
+                        </div>
+                        <div class="bg-white border border-[#eef2f7] p-3 rounded-xl shadow-xs">
+                            <p class="text-[10px] font-bold text-[#123063] mt-2">Team Building</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Quotation Booking Form (Styled white background) -->
+            <div class="w-full lg:w-[35%]">
+                <div class="booking-sidebar bg-white text-slate-800 rounded-[28px] p-6 shadow-lg border border-slate-200/60">
+                    <div class="mb-5 pb-5 border-b border-slate-100 text-center">
+                        <span class="text-[10px] uppercase tracking-widest text-[#f96d00] font-black">Dịch vụ vận tải 5 sao</span>
+                        <h3 class="text-xl font-extrabold mt-1 text-[#123063]">Nhận báo giá ngay</h3>
+                        <p class="text-[11px] text-slate-500 mt-1">Chúng tôi sẽ phản hồi thông tin báo giá trong vòng 15 phút.</p>
+                    </div>
+
+                    <form (submit)="submitRentalForm($event)" class="space-y-4">
+                        <div class="form-field flex flex-col gap-1.5">
+                            <label class="text-[11px] font-bold text-slate-600 uppercase">Dòng xe đã chọn</label>
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-extrabold text-[#f96d00]">
+                                {{ selectedCar.title }} ({{ selectedCar.seats }} Chỗ)
+                            </div>
+                        </div>
+
+                        <div class="form-field flex flex-col gap-1.5">
+                            <label class="text-[11px] font-bold text-slate-600 uppercase">Họ và tên <span class="text-red-500">*</span></label>
+                            <input type="text" [(ngModel)]="bookingForm.fullName" name="fullName" placeholder="Nhập tên của bạn..." class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required>
+                        </div>
+
+                        <div class="form-field flex flex-col gap-1.5">
+                            <label class="text-[11px] font-bold text-slate-600 uppercase">Số điện thoại <span class="text-red-500">*</span></label>
+                            <input type="tel" [(ngModel)]="bookingForm.phone" name="phone" placeholder="0xxxxxxxxx" class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="form-field flex flex-col gap-1.5">
+                                <label class="text-[11px] font-bold text-slate-600 uppercase">Điểm đi <span class="text-red-500">*</span></label>
+                                <input type="text" [(ngModel)]="bookingForm.pickup" name="pickup" class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required>
+                            </div>
+                            <div class="form-field flex flex-col gap-1.5">
+                                <label class="text-[11px] font-bold text-slate-600 uppercase">Điểm đến <span class="text-red-500">*</span></label>
+                                <input type="text" [(ngModel)]="bookingForm.destination" name="destination" class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="form-field flex flex-col gap-1.5">
+                                <label class="text-[11px] font-bold text-slate-600 uppercase">Ngày khởi hành <span class="text-red-500">*</span></label>
+                                <input type="date" [(ngModel)]="bookingForm.date" name="date" class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required>
+                            </div>
+                            <div class="form-field flex flex-col gap-1.5">
+                                <label class="text-[11px] font-bold text-slate-600 uppercase">Số lượng khách <span class="text-red-500">*</span></label>
+                                <input type="number" [(ngModel)]="bookingForm.guests" name="guests" min="1" [max]="selectedCar.seats" class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required>
+                            </div>
+                        </div>
+
+                        <div class="form-field flex flex-col gap-1.5">
+                            <label class="text-[11px] font-bold text-slate-600 uppercase">Yêu cầu thêm</label>
+                            <textarea [(ngModel)]="bookingForm.notes" name="notes" placeholder="Yêu cầu riêng của bạn..." rows="3" class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-xs text-gray-800 outline-none resize-none focus:border-[#123063] focus:bg-white transition"></textarea>
+                        </div>
+
+                        <!-- Trust seals / badges in sidebar form -->
+                        <div class="grid grid-cols-3 gap-2 text-center text-[9px] text-slate-400 py-2 border-t border-slate-100 mt-2">
+                            <div class="flex flex-col items-center">
+                                <span class="font-bold mt-1">Bảo mật 100%</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <span class="font-bold mt-1">Phản hồi siêu tốc</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <span class="font-bold mt-1">Hỗ trợ 24/7</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-booking-submit w-full rounded-xl bg-[#f96d00] hover:bg-[#e56400] text-white p-3.5 text-xs font-extrabold uppercase tracking-widest shadow-md transition duration-300">
+                            Nhận Báo Giá Ngay
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- TAB 2: LOST & FOUND CONTENT -->
+<div *ngIf="activeTab === 'that-lac'" class="container mx-auto px-4 md:px-10 lg:px-16 py-6 tab-content">
+
+    <!-- Claiming workflow moved to the top -->
+    <div class="workflow-section mb-10 border-b border-[#eef2f7] pb-10">
+        <h2 class="text-xl font-extrabold text-[#123063] text-center mb-8">Quy trình nhận lại tài sản khi thất lạc</h2>
+        <div class="workflow-grid grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Step 1 -->
+            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
+                <div class="workflow-icon w-12 h-12 bg-[#123063]/5 rounded-full flex items-center justify-center mx-auto text-[#123063] text-xl font-bold">1</div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Xác minh thông tin</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Cung cấp thông tin vé hoặc mô tả đặc điểm tài sản để xác minh quyền sở hữu.</p>
+            </div>
+            <!-- Step 2 -->
+            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
+                <div class="workflow-icon w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto text-green-600 text-xl font-bold">2</div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Đối soát thông tin hành trình</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Nhà xe rà soát danh sách bàn giao từ tài xế hoặc camera để kiểm tra vật phẩm phù hợp.</p>
+            </div>
+            <!-- Step 3 -->
+            <div class="workflow-step bg-white border border-[#eef2f7] rounded-2xl p-6 shadow-xs text-center transition hover:shadow-sm">
+                <div class="workflow-icon w-12 h-12 bg-[#f96d00]/10 rounded-full flex items-center justify-center mx-auto text-[#f96d00] text-xl font-bold">3</div>
+                <h4 class="text-sm font-bold text-[#123063] mt-4 mb-2">Bàn giao tài sản</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">Hành khách ký biên bản bàn giao và nhận lại đồ tại văn phòng hoặc trạm trung chuyển gần nhất.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH & FILTER BAR -->
+    <div class="lost-filter-wrapper bg-white border border-[#eef2f7] rounded-[24px] p-6 shadow-sm mb-10 flex flex-col md:flex-row gap-4 items-center">
+            <input type="text" [(ngModel)]="lostSearchText" (ngModelChange)="onLostFilterChange()" placeholder="Tìm nhanh: điện thoại, ví, balo..." class="w-full px-4 py-3 bg-slate-50 border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition">
+        <div class="w-full md:w-48">
+            <select [(ngModel)]="lostRouteFilter" (ngModelChange)="onLostFilterChange()" class="w-full p-3 bg-slate-50 border border-[#eef2f7] rounded-xl text-xs text-gray-700 outline-none focus:border-[#123063] focus:bg-white transition">
+                <option value="">Tất cả các tuyến</option>
+                <option value="TP.HCM - Đà Lạt">TP.HCM - Đà Lạt</option>
+                <option value="TP.HCM - Nha Trang">TP.HCM - Nha Trang</option>
+                <option value="TP.HCM - Cần Thơ">TP.HCM - Cần Thơ</option>
+                <option value="Hà Nội - Sapa">Hà Nội - Sapa</option>
+            </select>
+        </div>
+        <div class="w-full md:w-44">
+            <select [(ngModel)]="lostStatusFilter" (ngModelChange)="onLostFilterChange()" class="w-full p-3 bg-slate-50 border border-[#eef2f7] rounded-xl text-xs text-gray-700 outline-none focus:border-[#123063] focus:bg-white transition">
+                <option value="">Tất cả trạng thái</option>
+                <option value="Chưa nhận">Chưa nhận (Đang lưu trữ)</option>
+                <option value="Đã trả">Đã trả (Đã bàn giao)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="rental-layout grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-10 items-start">
+        
+        <!-- Grid of Lost Items -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-base font-extrabold text-[#123063] flex items-center gap-2">
+                    Vật phẩm vừa thu hồi
+                    <span class="text-xs bg-[#123063]/10 text-[#123063] font-bold px-2 py-0.5 rounded-full">{{ filteredLostItems.length }}</span>
+                </h3>
+                <span class="text-xs text-gray-400">Xem trang {{ lostCurrentPage }} trên {{ lostTotalPages }}</span>
+            </div>
+            
+            <div class="lostfound-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Dynamic Items -->
+                <div class="lost-item-card bg-white border border-[#eef2f7] rounded-2xl overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300" *ngFor="let item of paginatedLostItems">
+                    <div class="lost-item-img h-40 overflow-hidden relative bg-slate-100">
+                        <span [class.status-unclaimed]="item.status === 'Chưa nhận'"
+                              [class.status-claimed]="item.status === 'Đã trả'"
+                              class="absolute top-3 right-3 text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                            {{ item.status === 'Chưa nhận' ? 'Đang lưu trữ' : 'Đã trao trả' }}
+                        </span>
+                        <img [src]="item.imageUrl" [alt]="item.name" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h4 class="text-xs font-bold text-gray-800 line-clamp-1 mb-3">{{ item.name }}</h4>
+                        <div class="lost-item-meta flex flex-col gap-2 text-[10px] text-gray-500 mb-4 border-b border-[#f8fafc] pb-3">
+                            <span class="flex items-center gap-1.5">Tìm thấy: <strong class="text-[#123063]">{{ item.date }}</strong></span>
+                            <span class="flex items-center gap-1.5">Tuyến: <strong class="text-[#123063] truncate">{{ item.route }}</strong></span>
+                            <span class="flex items-center gap-1.5">Lưu trữ: <strong class="text-[#123063]">{{ item.location }}</strong></span>
+                        </div>
+                        <button class="btn-claim w-full py-2.5 rounded-xl text-xs font-extrabold transition" 
+                                [class.claimed-btn]="item.status === 'Đã trả'"
+                                [class.unclaimed-btn]="item.status === 'Chưa nhận'"
+                                [disabled]="item.status === 'Đã trả'"
+                                (click)="claimItem(item)">
+                            {{ item.status === 'Đã trả' ? 'Đã trao trả' : 'Báo nhận sở hữu' }}
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Card list end -->
+            </div>
+
+            <!-- Lost items pagination -->
+            <div class="pagination flex justify-center items-center gap-2 mt-8" *ngIf="lostTotalPages > 1">
+                <button class="w-8 h-8 flex items-center justify-center border border-[#eef2f7] rounded-full text-xs font-bold hover:bg-[#123063] hover:text-white transition disabled:opacity-30 disabled:pointer-events-none" 
+                        [disabled]="lostCurrentPage === 1" 
+                        (click)="setLostPage(lostCurrentPage - 1)">
+                    ❮
+                </button>
+                <button *ngFor="let p of lostPagesArray" 
+                        class="w-9 h-9 rounded-full text-xs font-bold transition flex items-center justify-center cursor-pointer"
+                        [ngClass]="lostCurrentPage === p 
+                            ? 'bg-[#123063] text-white border border-[#123063]' 
+                            : 'bg-white border border-[#e8ebf3] text-[#123063] hover:bg-[#f0f3f8]'"
+                        (click)="setLostPage(p)">
+                    {{ p }}
+                </button>
+                <button class="w-9 h-9 rounded-full border border-[#e8ebf3] bg-white text-xs font-bold text-[#123063] hover:bg-[#123063] hover:text-white hover:border-[#123063] transition disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center cursor-pointer" 
+                        [disabled]="lostCurrentPage === lostTotalPages" 
+                        (click)="setLostPage(lostCurrentPage + 1)">
+                    ›
+                </button>
+            </div>
+        </div>
+
+        <!-- Form Sidebar for Reporting -->
+        <div class="report-sidebar-form bg-[#f8fafc] border border-[#eef2f7] rounded-[28px] p-6 shadow-sm">
+            <h3 class="text-base font-extrabold text-[#123063] mb-2 flex items-center gap-1.5">Khai báo thất lạc</h3>
+            <p class="text-[11px] text-gray-500 mb-5 leading-relaxed">Hãy điền chi tiết biểu mẫu khai báo dưới đây để bộ phận đối soát trích xuất camera hành trình hỗ trợ bạn tìm kiếm.</p>
+            
+            <form (submit)="submitLostForm($event)" class="space-y-4">
+                <div class="form-field flex flex-col gap-1.5">
+                    <label class="text-[10px] font-bold text-gray-600 uppercase">Mô tả vật phẩm thất lạc <span class="text-red-500">*</span></label>
+                    <input type="text" id="desc-input" placeholder="Ví dụ: Ví da cá sấu đen, iPhone 14 Pro màu tím..." class="p-3 bg-white border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] transition" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-field flex flex-col gap-1.5">
+                        <label class="text-[10px] font-bold text-gray-600 uppercase">Tuyến xe <span class="text-red-500">*</span></label>
+                        <select class="p-3 bg-white border border-[#eef2f7] rounded-xl text-xs text-gray-700 outline-none focus:border-[#123063] transition" required>
+                            <option value="" disabled selected>Chọn tuyến</option>
+                            <option value="T001-GO">Hà Nội đến Sapa</option>
+                            <option value="T001-BACK">Sapa đến Hà Nội</option>
+                            <option value="T002-GO">TP.HCM đến Đà Lạt</option>
+                            <option value="T002-BACK">Đà Lạt đến TP.HCM</option>
+                            <option value="T003-GO">TP.HCM đến Nha Trang</option>
+                            <option value="T003-BACK">Nha Trang đến TP.HCM</option>
+                        </select>
+                    </div>
+                    <div class="form-field flex flex-col gap-1.5">
+                        <label class="text-[10px] font-bold text-gray-600 uppercase">Ngày di chuyển <span class="text-red-500">*</span></label>
+                        <input type="date" class="p-3 bg-white border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] transition" required>
+                    </div>
+                </div>
+
+                <div class="form-field flex flex-col gap-1.5">
+                    <label class="text-[10px] font-bold text-gray-600 uppercase">Số ghế / vị trí phòng (nếu nhớ)</label>
+                    <input type="text" placeholder="Ví dụ: Phòng A12, số ghế 5..." class="p-3 bg-white border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] transition">
+                </div>
+
+                <div class="form-field flex flex-col gap-1.5">
+                    <label class="text-[10px] font-bold text-gray-600 uppercase">Họ tên hành khách <span class="text-red-500">*</span></label>
+                    <input type="text" placeholder="Nguyễn Văn A" class="p-3 bg-white border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] transition" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="form-field flex flex-col gap-1.5">
+                        <label class="text-[10px] font-bold text-gray-600 uppercase">Số điện thoại <span class="text-red-500">*</span></label>
+                        <input type="tel" placeholder="0987xxxxxx" class="p-3 bg-white border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] transition" required>
+                    </div>
+                    <div class="form-field flex flex-col gap-1.5">
+                        <label class="text-[10px] font-bold text-gray-600 uppercase">Địa chỉ Email <span class="text-red-500">*</span></label>
+                        <input type="email" placeholder="name@example.com" class="p-3 bg-white border border-[#eef2f7] rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] transition" required>
+                    </div>
+                </div>
+
+                <!-- Image upload field -->
+                <div class="form-field flex flex-col gap-1.5">
+                    <label class="text-[10px] font-bold text-gray-600 uppercase">Hình ảnh vật phẩm (nếu có)</label>
+                    <div class="image-upload-wrapper relative border-2 border-dashed border-[#eef2f7] rounded-xl p-4 bg-white flex flex-col items-center justify-center text-center cursor-pointer hover:border-[#123063] transition min-h-[70px]">
+                        <input type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" (change)="onLostImageUpload($event)">
+                        <div class="flex flex-col items-center gap-1">
+                            <span class="text-[10px] font-semibold text-gray-500 truncate max-w-[200px]">{{ uploadedImageName || 'Tải ảnh vật phẩm lên (.jpg, .png)' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit w-full bg-[#f96d00] hover:bg-[#e56400] text-white p-3.5 font-bold rounded-xl transition text-xs shadow-sm cursor-pointer uppercase tracking-wider mt-2">Gửi yêu cầu đối soát</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Old workflow section removed from the bottom -->
+</div>
+
+<!-- SUCCESS TOAST NOTIFICATION (Top Right corner) -->
+<div *ngIf="showSuccessModal" class="success-toast-notification fixed top-6 right-6 z-50 bg-white border-l-4 rounded-2xl p-5 shadow-2xl max-w-sm w-full mx-4 transition-all duration-300"
+     [ngClass]="isErrorModal ? 'border-red-500' : 'border-green-500'">
+    <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black uppercase tracking-wider"
+                [ngClass]="isErrorModal ? 'text-red-600' : 'text-green-600'">{{ modalTitle }}</h3>
+            <button (click)="closeSuccessModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer text-xs font-bold bg-transparent border-0">×</button>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">{{ modalDesc }}</p>
+    </div>
+</div>
+
+<!-- CLAIM ITEM VERIFICATION MODAL -->
+<div class="claim-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs" *ngIf="showClaimVerificationModal && selectedClaimItem">
+    <div class="claim-modal-card bg-white rounded-[28px] p-6 shadow-2xl max-w-md w-full mx-4 border border-slate-100 flex flex-col gap-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h3 class="text-sm font-bold text-[#123063]">Xác minh sở hữu tài sản</h3>
+            <button (click)="showClaimVerificationModal = false" class="text-slate-400 hover:text-slate-600 cursor-pointer text-sm font-bold bg-transparent border-0">Đóng</button>
+        </div>
+        
+        <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-2xl flex flex-col gap-1">
+            <span class="text-[10px] text-slate-400 font-bold uppercase">Vật phẩm báo nhận:</span>
+            <span class="text-xs font-bold text-[#123063]">{{ selectedClaimItem.name }} (Tìm thấy ngày {{ selectedClaimItem.date }} tại {{ selectedClaimItem.location }})</span>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <p class="text-xs text-slate-500 leading-relaxed">Để nhận lại tài sản nhanh nhất, quý khách có thể liên hệ trực tiếp với chúng tôi hoặc cung cấp thông tin đối soát trực tuyến dưới đây:</p>
+            
+            <a href="tel:19001234" class="w-full text-center py-3 bg-[#f96d00] hover:bg-[#e56400] text-white text-xs font-bold rounded-xl transition shadow-sm block decoration-none">
+                Gọi Hotline hỗ trợ: 1900 1234
+            </a>
+
+            <div class="relative flex py-1 items-center">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink mx-3 text-[10px] text-slate-400 uppercase font-bold">Hoặc gửi thông tin</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
+
+            <form (submit)="submitLostClaimVerification($event)" class="space-y-3">
+                <div class="form-field flex flex-col gap-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase">Họ và tên người nhận <span class="text-red-500">*</span></label>
+                    <input type="text" [(ngModel)]="claimVerificationForm.fullName" name="claimFullName" placeholder="Nhập tên của bạn..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required />
+                </div>
+                <div class="form-field flex flex-col gap-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase">Số điện thoại liên hệ <span class="text-red-500">*</span></label>
+                    <input type="tel" [(ngModel)]="claimVerificationForm.phone" name="claimPhone" placeholder="0xxxxxxxxx" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required />
+                </div>
+                <div class="form-field flex flex-col gap-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase">Mã số vé / Số ghế <span class="text-red-500">*</span></label>
+                    <input type="text" [(ngModel)]="claimVerificationForm.ticketCode" name="claimTicketCode" placeholder="Mã vé / Vị trí ghế..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required />
+                </div>
+                <div class="form-field flex flex-col gap-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase">Ngày di chuyển trên vé <span class="text-red-500">*</span></label>
+                    <input type="date" [(ngModel)]="claimVerificationForm.date" name="claimDate" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-gray-800 outline-none focus:border-[#123063] focus:bg-white transition" required />
+                </div>
+                <div class="form-field flex flex-col gap-1">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase">Mô tả đặc điểm nhận dạng riêng <span class="text-red-500">*</span></label>
+                    <textarea [(ngModel)]="claimVerificationForm.description" name="claimDesc" placeholder="Ví dụ: điện thoại có ốp lưng hình pikachu..." class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-gray-800 outline-none resize-none focus:border-[#123063] focus:bg-white transition" rows="2" required></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-[#123063] hover:bg-[#1d4586] text-white text-xs font-bold rounded-xl transition shadow-sm cursor-pointer uppercase tracking-wider">
+                    Gửi yêu cầu nhận đồ
+                </button>
+            </form>
+        </div>
+    </div>
 </div>

@@ -1,0 +1,362 @@
+<div class="ticket-list-page">
+  <section class="lookup-panel">
+    <div class="lookup-heading">
+      <div>
+        <span class="eyebrow">Hệ thống</span>
+        <h1>Quản lý nhật ký hoạt động</h1>
+      </div>
+    </div>
+
+    <!-- Stats summary strip -->
+    <div class="lookup-summary-section" style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; align-items: stretch;">
+      <div class="summary-strip" style="grid-template-columns: repeat(4, 1fr); width: 100%;">
+        <div class="summary-item">
+          <span>{{ totalLogsToday }}</span>
+          <small>Tổng log hôm nay</small>
+        </div>
+        <div class="summary-item warning">
+          <span>{{ successfulLogins }}</span>
+          <small>Đăng nhập thành công</small>
+        </div>
+        <div class="summary-item danger">
+          <span>{{ failedOperations }}</span>
+          <small>Thao tác thất bại</small>
+        </div>
+        <div class="summary-item revenue">
+          <span>{{ ticketsBookedToday }}</span>
+          <small>Lượt đặt vé hôm nay</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Grid -->
+    <div class="filters-grid">
+      <!-- Search Input field -->
+      <div class="field">
+        <label>Tìm kiếm nhanh</label>
+        <div style="position: relative; display: flex; align-items: center; width: 100%;">
+          <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Tìm ID log, tài khoản, IP, mã vé..." />
+        </div>
+      </div>
+
+      <!-- Role selector dropdown field -->
+      <div class="field">
+        <label>Vai trò người thực hiện</label>
+        <select [(ngModel)]="selectedRole" (change)="applyFilters()">
+          <option value="all">Tất cả vai trò</option>
+          <option value="KHÁCH HÀNG">Khách hàng</option>
+          <option value="BÁN VÉ">Bán vé</option>
+          <option value="ĐIỀU PHỐI">Điều phối</option>
+          <option value="QUẢN TRỊ VIÊN">Quản trị viên</option>
+          <option value="BAN QUẢN LÝ">Ban quản lý</option>
+        </select>
+      </div>
+
+      <!-- Action Type Selector dropdown field -->
+      <div class="field">
+        <label>Loại thao tác</label>
+        <select [(ngModel)]="selectedAction" (change)="applyFilters()">
+          <option value="all">Tất cả thao tác</option>
+          <option value="Đăng ký">Đăng ký</option>
+          <option value="Đăng nhập">Đăng nhập</option>
+          <option value="Đặt vé">Đặt vé</option>
+          <option value="Tra cứu vé">Tra cứu vé</option>
+          <option value="Hủy vé">Hủy vé</option>
+          <option value="Chỉnh sửa thông tin vé">Chỉnh sửa thông tin vé</option>
+          <option value="Đánh giá chuyến xe">Đánh giá chuyến xe</option>
+          <option value="Đổi mật khẩu">Đổi mật khẩu</option>
+          <option value="Cập nhật thông tin cá nhân">Cập nhật thông tin cá nhân</option>
+          <option value="Quản lý lịch trình">Quản lý lịch trình</option>
+          <option value="Quản lý tuyến xe">Quản lý tuyến xe</option>
+          <option value="Quản lý phương tiện">Quản lý phương tiện</option>
+          <option value="Quản lý tài xế">Quản lý tài xế</option>
+          <option value="Quản lý vé (thay khách)">Quản lý vé (thay khách)</option>
+          <option value="Quản lý tài khoản">Quản lý tài khoản</option>
+          <option value="Quản lý đánh giá">Quản lý đánh giá</option>
+          <option value="Quản lý tin tức">Quản lý tin tức</option>
+          <option value="Quản lý chính sách">Quản lý chính sách</option>
+          <option value="Báo cáo & Xuất file">Báo cáo & Xuất file</option>
+        </select>
+      </div>
+
+      <!-- Status Selector dropdown field -->
+      <div class="field">
+        <label>Trạng thái</label>
+        <select [(ngModel)]="selectedStatus" (change)="applyFilters()">
+          <option value="all">Tất cả trạng thái</option>
+          <option value="Thành công">Thành công</option>
+          <option value="Thất bại">Thất bại</option>
+        </select>
+      </div>
+
+      <!-- From Date field -->
+      <div class="field">
+        <label>Từ ngày</label>
+        <input #startInput type="date" [(ngModel)]="startDate" (click)="showDatePicker(startInput)" (change)="applyFilters()" />
+      </div>
+
+      <!-- To Date field -->
+      <div class="field">
+        <label>Đến ngày</label>
+        <input #endInput type="date" [(ngModel)]="endDate" (click)="showDatePicker(endInput)" (change)="applyFilters()" />
+      </div>
+
+      <!-- Clear filter button field -->
+      <div class="field filter-action-field">
+        <label>&nbsp;</label>
+        <button type="button" class="secondary-button" (click)="resetFilters()" style="width: 100%; min-height: 40px;">Xóa bộ lọc</button>
+      </div>
+
+      <!-- Export Excel button field -->
+      <div class="field filter-action-field">
+        <label>&nbsp;</label>
+        <button type="button" class="primary-blue-button" (click)="exportExcel()" style="width: 100%; min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; background-color: #10b981; border-color: #10b981; color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          <span>Xuất Excel</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-panel">
+    <div class="table-header">
+      <strong>Nhật ký hệ thống & Biến động vé xe</strong>
+      <span>Đã tìm thấy {{ filteredLogs.length }} kết quả</span>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 9%">Mã nhật ký</th>
+            <th style="width: 16%">Người thực hiện</th>
+            <th style="width: 11%">Vai trò</th>
+            <th style="width: 16%">Thao tác</th>
+            <th style="width: 11%">Trạng thái</th>
+            <th style="width: 18%">Thời gian</th>
+            <th style="width: 11%">Địa chỉ IP</th>
+            <th style="text-align: center; width: 8%;">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of getPaginatedLogs()" class="log-row">
+            <td class="log-id-cell" [title]="log.id" style="font-family: monospace; font-size: 12px; color: #64748b;">
+              {{ log.id.slice(-8) }}
+            </td>
+            <td>
+              <div class="operator-info">
+                <strong class="operator-name">{{ log.name }}</strong>
+                <span class="operator-username">{{ log.username }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="role-pill" [class.role-admin]="log.role.toUpperCase() === 'QUẢN TRỊ VIÊN'"
+                                      [class.role-manager]="log.role.toUpperCase() === 'BAN QUẢN LÝ'"
+                                      [class.role-dispatcher]="log.role.toUpperCase() === 'ĐIỀU PHỐI'"
+                                      [class.role-cashier]="log.role.toUpperCase() === 'BÁN VÉ'"
+                                      [class.role-driver]="log.role.toUpperCase() === 'TÀI XẾ'">
+                {{ 
+                  log.role.toUpperCase() === 'QUẢN TRỊ VIÊN' ? 'Quản trị viên' :
+                  log.role.toUpperCase() === 'BAN QUẢN LÝ' ? 'Ban quản lý' :
+                  log.role.toUpperCase() === 'ĐIỀU PHỐI' ? 'Điều phối' :
+                  log.role.toUpperCase() === 'BÁN VÉ' ? 'Bán vé' :
+                  log.role.toUpperCase() === 'TÀI XẾ' ? 'Tài xế' :
+                  log.role.toUpperCase() === 'CHƯA XÁC ĐỊNH' ? 'Chưa xác định' :
+                  log.role
+                }}
+              </span>
+            </td>
+            <td>
+              <span class="action-badge">{{ log.action }}</span>
+            </td>
+            <td>
+              <span class="status-badge" [class.status-success]="log.status === 'Thành công'" [class.status-failed]="log.status === 'Thất bại'">
+                {{ log.status }}
+              </span>
+            </td>
+            <td class="time-cell">{{ log.time }}</td>
+            <td class="ip-cell">{{ log.ip }}</td>
+            <td style="text-align: center;">
+              <button type="button" class="btn-action-view" (click)="openDetailModal(log)">Xem chi tiết</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredLogs.length === 0">
+            <td colspan="8" class="no-data-cell">Không tìm thấy dữ liệu nhật ký phù hợp với bộ lọc.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Bar -->
+    <div class="pagination-bar" *ngIf="filteredLogs.length > 0">
+      <div class="pagination-left">
+        Hiển thị <strong class="semibold-text">{{ getStartRowIndex() }} - {{ getEndRowIndex() }}</strong> của <strong class="bold-count">{{ filteredLogs.length }}</strong> log
+      </div>
+      <div class="pagination-center">
+        <label>
+          Số hàng hiển thị:
+          <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" class="page-size-select" style="min-height: auto; width: auto; padding: 4px 8px;">
+            <option [ngValue]="10">10 / trang</option>
+            <option [ngValue]="20">20 / trang</option>
+            <option [ngValue]="50">50 / trang</option>
+            <option [ngValue]="100">100 / trang</option>
+          </select>
+        </label>
+      </div>
+      <div class="pagination-controls">
+        <button type="button" class="page-button" [disabled]="currentPage === 1" (click)="setPage(1)">|<</button>
+        <button type="button" class="page-button" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)"><</button>
+        
+        <button type="button" 
+                *ngFor="let page of getPageNumbers()"
+                [class.active]="currentPage === page" 
+                class="page-button" 
+                (click)="setPage(page)">
+          {{ page }}
+        </button>
+
+        <button type="button" class="page-button" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)">></button>
+        <button type="button" class="page-button" [disabled]="currentPage === totalPages" (click)="setPage(totalPages)">>|</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" *ngIf="showDetailModal" (click)="closeDetailModal()">
+    <div class="detail-modal" (click)="$event.stopPropagation()" style="width: min(640px, 100%);">
+      <header class="modal-header">
+        <div>
+          <h2>Chi tiết nhật ký hoạt động</h2>
+        </div>
+        <button type="button" class="close-button" (click)="closeDetailModal()">x</button>
+      </header>
+      
+      <div class="detail-modal-body" *ngIf="selectedLog" style="grid-template-columns: 1fr; display: flex; flex-direction: column; gap: 16px; padding: 20px; overflow-y: auto;">
+        
+        <!-- Grey card container matching feedback details style -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+          <!-- 2-column Grid for metadata -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; margin-bottom: 8px; color: #334155;">
+            <div>Mã nhật ký: <strong class="code-pill" [title]="selectedLog.id" style="display: inline-block; padding: 2px 6px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #f0fdfa; color: #0d9488; font-family: monospace; cursor: help;">{{ selectedLog.id.slice(-8) }}</strong></div>
+            <div>Thời gian thực hiện: <strong>{{ selectedLog.time }}</strong></div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              Trạng thái: 
+              <span class="status-badge" [class.status-success]="selectedLog.status === 'Thành công'" [class.status-failed]="selectedLog.status === 'Thất bại'" style="padding: 2px 8px; font-size: 11px;">
+                <svg *ngIf="selectedLog.status === 'Thành công'" class="status-badge-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 11px; height: 11px; margin-right: 2px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                <svg *ngIf="selectedLog.status === 'Thất bại'" class="status-badge-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="width: 11px; height: 11px; margin-right: 2px;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+                {{ selectedLog.status }}
+              </span>
+            </div>
+            <div>Địa chỉ IP: <strong style="font-family: monospace;">{{ selectedLog.ip }}</strong></div>
+          </div>
+
+          <!-- Biến động trạng thái vé if available -->
+          <div *ngIf="isStateChange" style="border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;">Biến động trạng thái vé:</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #e2e8f0; color: #334155;">{{ beforeStatus }}</span>
+              <span style="color: #94a3b8; font-weight: bold;">→</span>
+              <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #d1fae5; color: #065f46; font-weight: 700;">{{ afterStatus }}</span>
+            </div>
+          </div>
+
+          <!-- Operator Details -->
+          <div style="border-top: 1px dashed #cbd5e1; padding-top: 12px; margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: #475569; text-transform: uppercase;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" style="width: 15px; height: 15px; color: #64748b;">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+              <span>Thông tin người thực hiện</span>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background-color: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px; flex: 1;">
+                <strong style="font-size: 14px; color: #0f172a;">{{ selectedLog.name }}</strong>
+                <span style="font-size: 12px; color: #64748b;">Mã tài khoản: {{ selectedOperatorCode }}  •  SĐT: {{ selectedOperatorPhone }}</span>
+              </div>
+              <span class="role-pill" [class.role-admin]="selectedLog.role === 'QUẢN TRỊ VIÊN'"
+                                     [class.role-manager]="selectedLog.role === 'BAN QUẢN LÝ'"
+                                     [class.role-dispatcher]="selectedLog.role === 'ĐIỀU PHỐI'"
+                                     [class.role-cashier]="selectedLog.role === 'BÁN VÉ'"
+                                     [class.role-driver]="selectedLog.role === 'TÀI XẾ'">
+                {{ selectedLog.role }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Action Type and Device -->
+          <div style="border-top: 1px dashed #cbd5e1; padding-top: 10px; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #334155;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              Loại thao tác: 
+              <span style="background-color: #f3e8ff; color: #6b21a8; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+                {{ selectedLog.action }}
+              </span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              Thiết bị / Trình duyệt: 
+              <span style="display: flex; align-items: center; gap: 4px; font-weight: 700; color: #1e293b;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px; color: #64748b;">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25" />
+                </svg>
+                Web Client
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Box -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <h3 style="margin: 0; font-size: 12px; font-weight: 800; color: #1e3a8a; text-transform: uppercase;">NỘI DUNG CHI TIẾT THAO TÁC:</h3>
+          <div style="background-color: #f8fafc; border-left: 4px solid #0d9488; border-radius: 0 8px 8px 0; padding: 14px; font-size: 13px; color: #334155; line-height: 1.5; font-weight: 500;">
+            {{ selectedLog.details }}
+          </div>
+        </div>
+
+        <!-- Before / After data variation table -->
+        <div *ngIf="isStateChange" style="display: flex; flex-direction: column; gap: 8px;">
+          <h3 style="margin: 0; font-size: 12px; font-weight: 800; color: #1e3a8a; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 14px; height: 14px; color: #f97316;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+            </svg>
+            Chi tiết biến động dữ liệu (Before / After)
+          </h3>
+          <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; min-width: 100%;">
+            <thead>
+              <tr style="background-color: #f8fafc;">
+                <th style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; border-bottom: 1px solid #e2e8f0; position: static; background: #f8fafc;">Trường thay đổi</th>
+                <th style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; border-bottom: 1px solid #e2e8f0; position: static; background: #f8fafc;">Giá trị trước</th>
+                <th style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; border-bottom: 1px solid #e2e8f0; position: static; background: #f8fafc;">Giá trị sau</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 10px 14px; font-size: 13px; font-weight: 600; color: #0f172a; border-bottom: none;">TrangThai</td>
+                <td style="padding: 10px 14px; font-size: 13px; border-bottom: none;">
+                  <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #fee2e2; color: #991b1b;">{{ beforeStatus }}</span>
+                </td>
+                <td style="padding: 10px 14px; font-size: 13px; border-bottom: none;">
+                  <span style="padding: 3px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; background-color: #d1fae5; color: #065f46;">{{ afterStatus }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <footer class="modal-footer">
+        <button type="button" class="secondary-button" (click)="closeDetailModal()">Đóng cửa sổ</button>
+      </footer>
+    </div>
+  </div>
+</div>

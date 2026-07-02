@@ -1,10 +1,10 @@
-<div class="trang-ch-amin">
+<div class="trang-ch-amin" [class.sidebar-collapsed]="isSidebarCollapsed">
   <!-- Sidebar cố định bên trái -->
-  <app-sidebar></app-sidebar>
+  <app-sidebar-admin [isCollapsed]="isSidebarCollapsed"></app-sidebar-admin>
 
   <!-- Nội dung chính bên phải -->
   <div class="main-content">
-    <app-topbar></app-topbar>
+    <app-topbar (toggleSidebar)="onToggleSidebar()"></app-topbar>
     <router-outlet></router-outlet>
   </div>
 </div>

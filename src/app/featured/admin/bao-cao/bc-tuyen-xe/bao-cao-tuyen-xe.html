@@ -1,0 +1,289 @@
+<div class="bc-wrap">
+
+  <!-- ── Header ──────────────────────────────────────────────────── -->
+  <div class="bc-header">
+    <div>
+      <div class="bc-breadcrumb">Báo cáo / <span>Báo cáo tổng hợp theo tuyến</span></div>
+      <h1 class="bc-title">Báo cáo tổng hợp theo tuyến</h1>
+    </div>
+  </div>
+
+  <!-- ── Stats Row (5 Columns) ──────────────────────────────────── -->
+  <div class="bc-stats five-cols">
+    <div class="stat-card blue">
+      <div class="stat-icon-wrap">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="stat-icon">
+          <rect x="1" y="3" width="15" height="13" rx="2" />
+          <path d="M16 8h4l3 3v5h-7V8Z" />
+          <circle cx="5.5" cy="18.5" r="2.5" />
+          <circle cx="18.5" cy="18.5" r="2.5" />
+        </svg>
+      </div>
+      <div>
+        <div class="stat-label">Số tuyến xe báo cáo</div>
+        <div class="stat-num">{{ totalRoutesCount }} tuyến</div>
+      </div>
+    </div>
+
+    <div class="stat-card orange-light">
+      <div class="stat-icon-wrap">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="stat-icon">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-label">Tổng vé đã bán</div>
+        <div class="stat-num">{{ totalTicketsSold }} vé</div>
+      </div>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-icon-wrap">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="stat-icon">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <line x1="12" y1="4" x2="12" y2="20"/>
+          <circle cx="12" cy="12" r="4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-label">Tổng doanh thu vé</div>
+        <div class="stat-num">{{ totalRevenue | number }}đ</div>
+      </div>
+    </div>
+
+    <div class="stat-card red-light">
+      <div class="stat-icon-wrap">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="stat-icon">
+          <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          <path d="M14 9h-4v2h4V9zm0 4h-4v2h4v-2z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-label">Tổng chi phí vận hành</div>
+        <div class="stat-num">{{ totalCost | number }}đ</div>
+      </div>
+    </div>
+
+    <div class="stat-card purple">
+      <div class="stat-icon-wrap">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="stat-icon">
+          <path d="M23 6l-9.5 9.5-5-5L1 18"/>
+          <path d="M17 6h6v6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-label">Tổng lợi nhuận tuyến</div>
+        <div class="stat-num">{{ totalProfit | number }}đ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Filter Card ────────────────────────────────────────────── -->
+  <div class="filter-card">
+    <div class="fc-head">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" class="fc-icon">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
+      <span>Bộ lọc báo cáo tổng hợp</span>
+    </div>
+    <div class="fc-body">
+      <div class="filter-grid-three">
+        <!-- Date from -->
+        <div class="form-group">
+          <label class="form-label">Khoảng thời gian khởi hành (Từ ngày - Đến ngày)</label>
+          <div class="date-range-inputs">
+            <input type="date" [(ngModel)]="startDate" class="form-input date" />
+            <span class="range-sep">→</span>
+            <input type="date" [(ngModel)]="endDate" class="form-input date" />
+          </div>
+        </div>
+
+        <!-- Route select -->
+        <div class="form-group">
+          <label class="form-label">Tuyến xe</label>
+          <select [(ngModel)]="selectedRoute" class="form-select">
+            <option value="">Tất cả các tuyến</option>
+            <option *ngFor="let r of routesList" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+
+        <!-- Status select -->
+        <div class="form-group">
+          <label class="form-label">Trạng thái tuyến xe</label>
+          <select [(ngModel)]="selectedStatus" class="form-select">
+            <option value="">Tất cả trạng thái</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="locked">Tạm khóa</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="fc-actions">
+        <div class="left-btns">
+          <button class="btn-primary orange" (click)="applyFilters()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="btn-icon">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Xem báo cáo
+          </button>
+          <button class="btn-secondary" (click)="resetFilters()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="btn-icon">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            Làm mới bộ lọc
+          </button>
+        </div>
+        <button class="btn-excel" (click)="exportExcel()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="btn-icon">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Xuất Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Table Panel ────────────────────────────────────────────── -->
+  <div class="table-panel">
+    <div class="tp-head">
+      <h3>Doanh số tổng hợp theo tuyến <span class="badge-total">Tổng cộng {{ totalRoutesCount }} tuyến đang khai thác</span></h3>
+    </div>
+    <div class="tp-body">
+      <div class="table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th style="width: 100px;">Mã tuyến</th>
+              <th>Tên tuyến xe</th>
+              <th>Cự ly & Thời gian dự kiến</th>
+              <th class="center">Số chuyến đã chạy</th>
+              <th class="center">Số lượng vé đã bán</th>
+              <th class="center">Lấp đầy trung bình</th>
+              <th class="right">Tổng doanh thu (VND)</th>
+              <th class="right">Tổng chi phí vận hành (VND)</th>
+              <th class="right">Lợi nhuận tuyến (VND)</th>
+              <th class="right">Doanh thu TB/chuyến (VND)</th>
+              <th class="right">Lợi nhuận TB/chuyến (VND)</th>
+              <th class="center" style="width: 130px;">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of filteredRoutes">
+              <td><span class="route-code">{{ r.code }}</span></td>
+              <td><div class="route-full-name">{{ r.name }}</div></td>
+              <td>
+                <div class="dist-time font-semibold">{{ r.distance }} km / {{ r.duration }}</div>
+              </td>
+              <td class="center font-semibold">{{ r.tripsRun }}</td>
+              <td class="center font-semibold">{{ r.ticketsSold }}</td>
+              <td class="center">
+                <span class="fill-lbl-tuyen font-semibold" [class.fill-active]="r.avgFill > 0">{{ r.avgFill }}%</span>
+              </td>
+              <td class="right font-semibold">{{ r.revenue | number }}đ</td>
+              <td class="right" [class.cost-active]="r.cost > 0">{{ r.cost | number }}đ</td>
+              <td class="right font-bold profit-text">{{ (r.revenue - r.cost) | number }}đ</td>
+              <td class="right">{{ getAvgRevenuePerTrip(r) | number }}đ</td>
+              <td class="right font-semibold" [class.profit-active]="getAvgProfitPerTrip(r) > 0">{{ getAvgProfitPerTrip(r) | number }}đ</td>
+              <td class="center">
+                <span class="status-pill" [class.active]="r.status==='active'" [class.locked]="r.status==='locked'">
+                  {{ r.status === 'active' ? 'Đang hoạt động' : 'Tạm khóa' }}
+                </span>
+              </td>
+            </tr>
+
+            <!-- Empty state -->
+            <tr *ngIf="filteredRoutes.length === 0">
+              <td colspan="12">
+                <div class="empty-state">
+                  <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="empty-icon">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                  <p>Không tìm thấy tuyến xe nào phù hợp bộ lọc</p>
+                  <small>Thử thay đổi bộ lọc hoặc xóa bộ lọc.</small>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL: CHI TIẾT TUYẾN
+     ══════════════════════════════════════════════ -->
+<div *ngIf="showDetailModal && detailRoute" class="modal-overlay" (click)="closeDetail()">
+  <div class="modal-box premium-route-modal" (click)="$event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <h3>Chi tiết tuyến</h3>
+      </div>
+      <button class="btn-close" (click)="closeDetail()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <form (submit)="closeDetail()" class="modal-body">
+      <div class="form-grid">
+        <!-- Điểm đầu -->
+        <div class="form-group">
+          <label class="form-label">Điểm đầu <span class="req">*</span></label>
+          <input type="text" class="form-input" [value]="detailRoute.name.split(' ↔ ')[0]" />
+        </div>
+        <!-- Thuộc tỉnh/thành phố -->
+        <div class="form-group">
+          <label class="form-label">Thuộc tỉnh / thành phố <span class="req">*</span></label>
+          <select class="form-select">
+            <option>Chọn tỉnh/ TP</option>
+          </select>
+        </div>
+
+        <!-- Điểm cuối -->
+        <div class="form-group">
+          <label class="form-label">Điểm cuối <span class="req">*</span></label>
+          <input type="text" class="form-input" [value]="detailRoute.name.split(' ↔ ')[1]" />
+        </div>
+        <!-- Thuộc tỉnh/thành phố -->
+        <div class="form-group">
+          <label class="form-label">Thuộc tỉnh / thành phố <span class="req">*</span></label>
+          <select class="form-select">
+            <option>Chọn tỉnh/ TP</option>
+          </select>
+        </div>
+
+        <!-- Khoảng cách -->
+        <div class="form-group">
+          <label class="form-label">Khoảng cách (km) <span class="req">*</span></label>
+          <input type="number" class="form-input" [value]="detailRoute.distance" />
+        </div>
+
+        <!-- Thời gian di chuyển dự kiến -->
+        <div class="form-group">
+          <label class="form-label">Thời gian di chuyển dự kiến <span class="req">*</span></label>
+          <div class="time-spinners">
+            <input type="number" value="12" class="form-input inline-time" />
+            <span>giờ</span>
+            <input type="number" value="0" class="form-input inline-time" />
+            <span>phút</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer flex-footer">
+        <div class="footer-left">
+          <button type="button" class="btn-warning-lock" (click)="toggleRouteStatus(detailRoute); closeDetail()">
+            <span class="lock-icon">🔒</span>
+            {{ detailRoute.status === 'locked' ? 'Mở khóa' : 'Khóa tuyến' }}
+          </button>
+        </div>
+        <div class="footer-right">
+          <button type="button" class="btn-cancel" (click)="closeDetail()">Hủy</button>
+          <button type="submit" class="btn-submit">Lưu</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

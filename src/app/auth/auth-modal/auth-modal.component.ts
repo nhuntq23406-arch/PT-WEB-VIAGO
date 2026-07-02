@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { getAuth, RecaptchaVerifier } from 'firebase/auth';
 import { AuthService } from '../auth.service';
 import { ToastService } from '../../shared/toast.service';
+import { Router } from '@angular/router';
 import { LunarDatePickerComponent } from '../../shared/components/lunar-date-picker/lunar-date-picker.component';
 
 type AuthStep = 'login' | 'forgot' | 'forgot-otp' | 'forgot-reset' | 'register-phone' | 'register-otp' | 'register-password' | 'register-profile' | 'success-status';
@@ -65,7 +66,8 @@ export class AuthModalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public authService: AuthService,
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -120,9 +122,9 @@ export class AuthModalComponent implements OnInit, OnDestroy {
     this.profileForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.pattern(emailPattern)]], // Optional but validated if filled
-      gender: ['', [Validators.required]],
-      birthday: ['', [Validators.required]],
-      occupation: ['', [Validators.required]]
+      gender: [''],
+      birthday: [''],
+      occupation: ['']
     });
 
     // Track profile form updates to recalculate progress bar dynamically
@@ -371,10 +373,10 @@ export class AuthModalComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  // Step 4: Submit Full Profile Setup (HOÀN TẤT)
+  // Step 4: Submit Profile Setup
   async onProfileSubmit(): Promise<void> {
-    if (this.profileForm.invalid) {
-      this.profileForm.markAllAsTouched();
+    if (this.profileForm.get('name')?.invalid) {
+      this.profileForm.get('name')?.markAsTouched();
       return;
     }
 
@@ -390,7 +392,9 @@ export class AuthModalComponent implements OnInit, OnDestroy {
     });
 
     if (result.success) {
-      this.showSuccessStatus('Đăng ký tài khoản thành công', 'Đang tự động đăng nhập...');
+      this.toastService.showSuccess('Cập nhật hồ sơ thành công!');
+      this.close.emit();
+      this.router.navigate(['/']);
     } else {
       setTimeout(() => {
         this.errorMessage = result.message;

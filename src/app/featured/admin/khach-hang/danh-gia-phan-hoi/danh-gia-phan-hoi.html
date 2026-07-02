@@ -1,0 +1,409 @@
+<div class="ticket-list-page">
+  @if (ThongBaoToast(); as t) {
+    <div class="toast-message {{ t.LoaiToast === 'thanh-cong' ? 'success' : t.LoaiToast === 'loi' ? 'danger' : 'warning' }}">
+      <span class="toast-mark"></span>
+      <span>{{ t.NoiDungDanhGia }}</span>
+    </div>
+  }
+
+  <section class="lookup-panel">
+    <div class="lookup-heading">
+      <div>
+        <span class="eyebrow">CSKH sau chuyến</span>
+        <h1>Quản lý đánh giá & phản hồi</h1>
+      </div>
+    </div>
+
+    <!-- Rating Insights & Summary Strip section -->
+    <div class="lookup-summary-section" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; margin-bottom: 16px; align-items: stretch;">
+      <div class="summary-strip">
+        <div class="summary-item">
+          <span>{{ ThongKe().TongSo }}</span>
+          <small>Tất cả review</small>
+        </div>
+        <div class="summary-item warning">
+          <span>{{ ThongKeHangDoi().CanTraLoi }}</span>
+          <small>Cần trả lời</small>
+        </div>
+        <div class="summary-item danger">
+          <span>{{ ThongKeHangDoi().DanhGiaThap }}</span>
+          <small>Đánh giá thấp (1-3★)</small>
+        </div>
+        <div class="summary-item revenue">
+          <span style="font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;" [title]="ThongKe().chuyenXeTeNhat">
+            {{ ThongKe().chuyenXeTeNhat }}
+          </span>
+          <small>Chuyến tệ nhất</small>
+        </div>
+      </div>
+
+      <!-- Rating Insights Card matching client UI -->
+      <div class="rating-insights-card" style="margin: 0; padding: 10px 16px;">
+        <div class="rating-overall">
+          <div class="score-main">{{ ThongKeDanhGia().trungBinh }}</div>
+          <div class="stars-gold fractional-stars" [attr.aria-label]="ThongKeDanhGia().trungBinh + ' sao'">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              <span class="fractional-star">
+                <span class="star-empty">★</span>
+                <span class="star-fill" [style.width.%]="StarFill(ThongKeDanhGia().trungBinh, star)">★</span>
+              </span>
+            }
+          </div>
+          <div class="reviews-count">{{ DanhSachLoc().length }} đánh giá</div>
+        </div>
+        <div class="rating-criteria">
+          @for (item of TieuChiDanhGia(); track item.label) {
+            <div class="criteria-row">
+              <span class="crit-label">{{ item.label }}</span>
+              <span class="crit-stars fractional-stars" [attr.aria-label]="item.label + ': ' + item.score + ' sao'">
+                @for (star of [1, 2, 3, 4, 5]; track star) {
+                  <span class="fractional-star">
+                    <span class="star-empty">★</span>
+                    <span class="star-fill" [style.width.%]="StarFill(item.score, star)">★</span>
+                  </span>
+                }
+              </span>
+              <span class="crit-score">{{ item.score }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="filters-grid">
+      <div class="field">
+        <label>Tìm kiếm</label>
+        <input
+          type="text"
+          placeholder="Tên khách, SĐT, mã chuyến, tuyến, nội dung..."
+          [ngModel]="TuKhoaTimKiem()"
+          (ngModelChange)="TuKhoaTimKiem.set($event)"
+        />
+      </div>
+
+      <div class="field">
+        <label>Tuyến xe</label>
+        <select [ngModel]="LocTuyenXe()" (ngModelChange)="CapNhatTuyenXe($event)">
+          <option value="tat-ca">Tất cả tuyến</option>
+          @for (tuyen of DanhSachTuyen(); track tuyen) {
+            <option [value]="tuyen">{{ tuyen }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Giờ đi</label>
+        <select [ngModel]="LocGioKhoiHanh()" (ngModelChange)="LocGioKhoiHanh.set($event); trangHienTai.set(1)">
+          <option value="tat-ca">Tất cả giờ</option>
+          @for (slot of DanhSachGioKhoiHanh(); track slot.gio) {
+            <option [value]="slot.gio">{{ slot.gio }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Ngày đánh giá</label>
+        <input type="date" [ngModel]="LocNgayTao()" (ngModelChange)="LocNgayTao.set($event)" />
+      </div>
+
+      <div class="field">
+        <label>Trạng thái</label>
+        <select [ngModel]="LocTrangThaiXuLy()" (ngModelChange)="LocTrangThaiXuLy.set($event)">
+          <option value="tat-ca">Tất cả</option>
+          <option value="chua-xu-ly">Chưa xử lý</option>
+          <option value="da-xu-ly">Đã xử lý</option>
+        </select>
+      </div>
+
+      <div class="field" style="position: relative;">
+        <label>Số sao</label>
+        <button type="button" class="star-dropdown-btn" (click)="ToggleDropdownSao(); $event.stopPropagation()">
+          <span>{{ LabelLocSao() }}</span>
+          <span class="chevron">▼</span>
+        </button>
+        
+        @if (HienDropdownSao()) {
+          <div class="star-dropdown-menu" (click)="$event.stopPropagation()">
+            <div class="star-chip-grid">
+              <button
+                type="button"
+                class="star-filter-chip all"
+                [class.active]="TatCaSaoChecked()"
+                (click)="ToggleChonTatCaSao(); $event.stopPropagation()"
+              >
+                Tất cả
+              </button>
+              @for (sao of [5, 4, 3, 2, 1]; track sao) {
+                <button
+                  type="button"
+                  class="star-filter-chip"
+                  [class.active]="LocSao()[sao]"
+                  (click)="ToggleLocSao(sao); $event.stopPropagation()"
+                >
+                  <span class="star-chip-score">{{ sao }}</span>
+                  <span class="star-chip-icon">★</span>
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="field filter-action-field">
+        <label>&nbsp;</label>
+        <button type="button" class="secondary-button clear-filter-btn" (click)="XoaBoLoc()">Xóa bộ lọc</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-panel">
+    <div class="table-header">
+      <strong>Danh sách đánh giá & phản hồi</strong>
+      <span>{{ DanhSachLoc().length }} bản ghi</span>
+    </div>
+
+    <div class="table-scroll">
+      @if (DanhSachLoc().length === 0) {
+        <div class="empty-table">
+          <h3>Không có kết quả</h3>
+          <p>Thử đổi từ khóa hoặc trạng thái lọc.</p>
+        </div>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 15%;">Khách hàng</th>
+              <th style="width: 15%;">Chuyến xe</th>
+              <th style="width: 52%;">Đánh giá</th>
+              <th style="width: 10%;">Trạng thái</th>
+              <th style="width: 8%; text-align: center;">Xử lý</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (dg of danhSachPhanTrang(); track dg.MaDanhGia) {
+              <tr [class.cancelled]="dg.TrangThai === 'an'" (click)="ChonDanhGia(dg)" style="cursor: pointer;" [class.selected-row]="DanhGiaDuocChon()?.MaDanhGia === dg.MaDanhGia">
+                <td class="name">
+                  <strong>{{ dg.HoTenKhachHang }}</strong>
+                  <span style="font-size: 12px; color: #475569; font-weight: 500; margin-top: 2px;">{{ dg.SoDienThoai }}</span>
+                  <small style="font-size: 11px; color: #64748b; margin-top: 2px;">{{ dg.MaDanhGia }}</small>
+                </td>
+                <td class="trip-cell">
+                  <strong class="code">{{ dg.MaLichTrinh }}</strong>
+                  <span style="font-size: 12px; color: #475569; font-weight: 500; margin-top: 2px;">{{ dg.TenTuyenXe }}</span>
+                  <small style="font-size: 11px; color: #64748b; margin-top: 2px;">{{ dg.GioKhoiHanh }} · {{ dg.BienSoXe }}</small>
+                </td>
+                <td>
+                  <div class="rating-line" style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                    <span class="rating-score-wrap">
+                      <strong>{{ dg.SoSao }}/5</strong>
+                      <span class="fractional-stars row-stars" [attr.aria-label]="dg.SoSao + ' sao'">
+                        @for (star of [1, 2, 3, 4, 5]; track star) {
+                          <span class="fractional-star">
+                            <span class="star-empty">★</span>
+                            <span class="star-fill" [style.width.%]="StarFill(dg.SoSao, star)">★</span>
+                          </span>
+                        }
+                      </span>
+                    </span>
+                    <span style="font-size: 12px; color: #64748b;">{{ DinhDangNgay(dg.ThoiGianDanhGia) }}</span>
+                  </div>
+                  <p style="margin: 6px 0 0 0; font-size: 13px; color: #334155; line-height: 1.45;">{{ dg.NoiDungDanhGia }}</p>
+                </td>
+                <td>
+                  <span class="badge payment {{ dg.TrangThaiXuLy === 'da-xong' || dg.TrangThaiXuLy === 'dong' ? 'da-thanh-toan' : 'cho-thanh-toan' }}">
+                    {{ getTrangThaiText(dg.TrangThaiXuLy) }}
+                  </span>
+                </td>
+                <td class="actions-col" (click)="$event.stopPropagation()">
+                  <button type="button" class="action-btn-icon edit" (click)="ChonVaXuLy(dg)" title="Xử lý và phản hồi">
+                    <span class="material-symbols-outlined">edit_note</span>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+
+    <!-- Pagination Bar -->
+    <div class="pagination-bar">
+      <span>
+        Hiển thị {{ chiSoDauTrang() }}-{{ chiSoCuoiTrang() }} / {{ DanhSachLoc().length }} đánh giá
+      </span>
+      <div class="pagination-controls">
+        <label>
+          Số dòng
+          <select [ngModel]="soDongMoiTrang()" (ngModelChange)="CapNhatSoDongMoiTrang($event)">
+            <option [value]="8">8</option>
+            <option [value]="12">12</option>
+            <option [value]="20">20</option>
+          </select>
+        </label>
+        <button type="button" class="page-button" [disabled]="trangHopLe() <= 1" (click)="ChuyenTrang(trangHopLe() - 1)">
+          Trước
+        </button>
+        @for (page of cacTrangHienThi(); track page) {
+          <button type="button" class="page-button" [class.active]="page === trangHopLe()" [disabled]="page > tongTrang()" (click)="ChuyenTrang(page)">
+            {{ page }}
+          </button>
+        }
+        <strong>{{ trangHopLe() }} / {{ tongTrang() }}</strong>
+        <button type="button" class="page-button" [disabled]="trangHopLe() >= tongTrang()" (click)="ChuyenTrang(trangHopLe() + 1)">
+          Sau
+        </button>
+      </div>
+    </div>
+  </section>
+
+  @if (HienModalPhanHoi() && DanhGiaDuocChon(); as dg) {
+    <div class="modal-overlay" (click)="DongModalPhanHoi()">
+      <div class="detail-modal" (click)="$event.stopPropagation()" style="width: min(640px, 100%);">
+        <header class="modal-header">
+          <div>
+            <h2>Xử lý & Phản hồi - {{ dg.MaDanhGia }}</h2>
+          </div>
+          <button type="button" class="close-button" (click)="DongModalPhanHoi()">x</button>
+        </header>
+
+        <div class="detail-modal-body" style="grid-template-columns: 1fr; display: flex; flex-direction: column; gap: 16px; padding: 20px; overflow-y: auto;">
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; margin-bottom: 8px; color: #334155;">
+              <div>Khách hàng: <strong>{{ dg.HoTenKhachHang }}</strong></div>
+              <div>Số điện thoại: <strong>{{ dg.SoDienThoai }}</strong></div>
+              <div class="detail-score-line">
+                <span>Đánh giá:</span>
+                <strong>{{ dg.SoSao }}/5</strong>
+                <span class="fractional-stars row-stars" [attr.aria-label]="dg.SoSao + ' sao'">
+                  @for (star of [1, 2, 3, 4, 5]; track star) {
+                    <span class="fractional-star">
+                      <span class="star-empty">★</span>
+                      <span class="star-fill" [style.width.%]="StarFill(dg.SoSao, star)">★</span>
+                    </span>
+                  }
+                </span>
+              </div>
+              <div>Tuyến: <strong>{{ dg.TenTuyenXe }}</strong></div>
+              <div>Chuyến: <strong>{{ dg.MaLichTrinh }}</strong></div>
+            </div>
+            <p style="margin: 8px 0 0 0; font-size: 14px; font-style: italic; color: #475569; border-top: 1px dashed #cbd5e1; padding-top: 8px; line-height: 1.5;">“{{ dg.NoiDungDanhGia }}”</p>
+            
+            <div style="background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-top: 10px;">
+              <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 800; color: #1e3a8a; text-transform: uppercase;">Chi tiết điểm tiêu chí</h4>
+              <div class="criteria-detail-grid">
+                @for (item of TieuChiCuaDanhGia(dg); track item.label) {
+                  <div class="criteria-detail-card" [class.low]="item.score <= 3">
+                    <span>{{ item.label }}</span>
+                    <span class="fractional-stars detail-stars" [attr.aria-label]="item.label + ': ' + item.score + ' sao'">
+                      @for (star of [1, 2, 3, 4, 5]; track star) {
+                        <span class="fractional-star">
+                          <span class="star-empty">★</span>
+                          <span class="star-fill" [style.width.%]="StarFill(item.score, star)">★</span>
+                        </span>
+                      }
+                    </span>
+                    <strong>{{ item.score }}</strong>
+                  </div>
+                }
+              </div>
+            </div>
+            
+            <div style="border-top: 1px dashed #cbd5e1; padding-top: 12px; margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 13px; font-weight: 700; color: #475569;">Trạng thái hiển thị: <strong [style.color]="dg.TrangThai === 'hien-thi' ? '#10B981' : '#EF4444'">{{ dg.TrangThai === 'hien-thi' ? 'Hiển thị' : 'Đang ẩn' }}</strong></span>
+                <button type="button" class="visibility-toggle-button" [class.restore]="dg.TrangThai === 'an'" (click)="YeuCauDaoTrangThai(dg)">
+                  {{ dg.TrangThai === 'hien-thi' ? 'Ẩn vi phạm' : 'Hiển thị lại' }}
+                </button>
+              </div>
+              
+              <div class="field" style="margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
+                <label style="font-size: 12px; font-weight: 800; color: #475569;">Ghi chú nội bộ</label>
+                <textarea
+                  #internalNoteModal
+                  rows="2"
+                  placeholder="Ghi nhanh kết quả gọi khách hoặc lưu ý cho ca sau..."
+                  [value]="dg.GhiChuNoiBo || ''"
+                  (blur)="CapNhatNoiBo(dg, { GhiChuNoiBo: internalNoteModal.value })"
+                  style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; font-size: 13px; resize: vertical; min-height: 50px;"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          @if (dg.PhanHoi) {
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px;">
+              <h3 style="margin: 0 0 6px 0; color: #166534; font-size: 13px; font-weight: 850; text-transform: uppercase;">Phản hồi đã gửi</h3>
+              <p style="font-size: 14px; color: #1e293b; line-height: 1.5; margin: 0;">{{ dg.PhanHoi }}</p>
+            </div>
+          }
+
+          <div class="response-input-area" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="block-title-row" style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="margin: 0; font-size: 13px; font-weight: 800; color: #1e3a8a; text-transform: uppercase;">Nội dung phản hồi chính thức</h3>
+              <span [class.limit-warning]="NoiDungPhanHoi().length > 500" style="font-size: 12px; color: #64748b;">{{ NoiDungPhanHoi().length }} / 500 ký tự</span>
+            </div>
+
+            <div class="quick-reply-row" style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <button type="button" class="template-button" (click)="TaoGoiYPhanHoi(dg)">
+                Cảm ơn
+              </button>
+              @for (macro of quickReplies; track macro.label) {
+                <button
+                  type="button"
+                  class="template-button"
+                  [class.active]="NoiDungPhanHoi() === macro.text"
+                  (click)="ApDungPhanHoiNhanh(macro.text)"
+                >
+                  {{ macro.label }}
+                </button>
+              }
+            </div>
+
+            <textarea
+              rows="6"
+              placeholder="Nhập nội dung phản hồi chính thức cho khách..."
+              [ngModel]="NoiDungPhanHoi()"
+              (ngModelChange)="NoiDungPhanHoi.set($event)"
+              style="width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; font-family: inherit; font-size: 14px; outline: none; min-height: 100px; resize: vertical; line-height: 1.5;"
+            ></textarea>
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" class="secondary-button" (click)="DongModalPhanHoi()">Hủy</button>
+          @if (dg.PhanHoi) {
+            <button type="button" class="danger-button" (click)="XoaPhanHoiTrucTiep(dg)">Xóa phản hồi</button>
+          }
+          <button type="button" class="primary-button" (click)="LuuPhanHoiTrucTiep(dg)">Gửi phản hồi</button>
+        </footer>
+      </div>
+    </div>
+  }
+
+  @if (HienModalXacNhanAn()) {
+    <div class="modal-overlay top-layer" (click)="DongModalXacNhanAn()">
+      <div class="confirm-modal" (click)="$event.stopPropagation()">
+        <header class="modal-header cancel-header">
+          <h2>Xác nhận trạng thái hiển thị</h2>
+          <button type="button" class="close-button" (click)="DongModalXacNhanAn()">x</button>
+        </header>
+        <div class="confirm-body">
+          <strong>{{ DanhGiaMuonAn()?.TrangThai === 'hien-thi' ? 'Ẩn đánh giá này?' : 'Hiển thị lại đánh giá này?' }}</strong>
+          <p>
+            Đánh giá bị ẩn sẽ không hiện trên website khách hàng nhưng vẫn được giữ trong trang quản trị để đối soát.
+          </p>
+          <div class="confirm-target-info" style="margin-top: 14px; border: 1px solid #dfe4ec; border-radius: 6px; background: #f7fafc; padding: 12px; text-align: left;">
+            <strong style="color: #0f172a; font-weight: 800;">{{ DanhGiaMuonAn()?.HoTenKhachHang }}</strong>
+            <span style="margin-top: 6px; color: #475569; line-height: 1.45; font-size: 13px;">“{{ DanhGiaMuonAn()?.NoiDungDanhGia }}”</span>
+          </div>
+        </div>
+        <footer class="modal-footer">
+          <button type="button" class="secondary-button" (click)="DongModalXacNhanAn()">Hủy</button>
+          <button type="button" class="danger-button solid" (click)="XacNhanDaoTrangThai()">Xác nhận</button>
+        </footer>
+      </div>
+    </div>
+  }
+</div>
+
+

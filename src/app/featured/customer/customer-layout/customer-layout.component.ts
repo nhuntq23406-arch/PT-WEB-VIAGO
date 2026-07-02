@@ -33,12 +33,13 @@ export class CustomerLayoutComponent {
     public router: Router
   ) {}
 
-  isDichVuActive(): boolean {
-    return this.router.url.startsWith('/dich-vu');
+  isAboutRouteActive(): boolean {
+    const activeRoutes = ['/ve-chung-toi', '/chinh-sach', '/dieu-khoan', '/faq', '/lien-he', '/tuyen-dung'];
+    return activeRoutes.some(route => this.router.url.includes(route));
   }
 
-  isGioiThieuActive(): boolean {
-    return this.router.url.startsWith('/gioi-thieu');
+  isServicesRouteActive(): boolean {
+    return this.router.url.includes('/dich-vu');
   }
 
   toggleServices(event: Event) {
@@ -91,5 +92,10 @@ export class CustomerLayoutComponent {
     this.isServicesOpen = false;
     this.isAboutOpen = false;
     this.isDropdownOpen = false;
+  }
+
+  onHomeClick(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/'], { queryParams: { reset: Date.now() } });
   }
 }

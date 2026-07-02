@@ -1,0 +1,1411 @@
+/* ==========================================================================
+   DESIGN SYSTEM & GLOBAL VARIABLES (Inter Font and ERP-style Hex Palette)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:host {
+  display: block;
+  width: 100%;
+  padding: 24px 32px 48px;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+:host,
+:host *,
+.report-container,
+.report-container * {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  box-sizing: border-box;
+}
+
+/* Base Container */
+.report-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   PAGE TITLE CARD (Top Card, no print)
+   ========================================================================== */
+.header-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* ==========================================================================
+   STATISTICS DASHBOARD CARDS (Left border layout, #F9F8FD background)
+   ========================================================================== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stats-card {
+  background-color: #F9F8FD;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.stats-card-value {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #000000; /* Black numbers */
+}
+
+.stats-card-label {
+  font-size: 11px;
+  font-weight: 600; /* Semi-bold labels */
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Card Left-border Colors */
+.purple-card { border-left: 5px solid #8b5cf6; }
+.blue-card { border-left: 5px solid #002664; }
+.green-card { border-left: 5px solid #10b981; }
+.red-card { border-left: 5px solid #ef4444; }
+
+.danger-card-accent {
+  border-left: 5px solid #ef4444;
+  background-color: #fff5f5;
+}
+
+/* ==========================================================================
+   FILTER PANEL
+   ========================================================================== */
+.filter-panel {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 140px;
+  gap: 16px;
+  align-items: end;
+}
+
+@media (max-width: 992px) {
+  .filter-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .filter-btn-group {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 640px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+  .filter-btn-group {
+    grid-column: span 1;
+  }
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.filter-group input,
+.styled-select {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: #1e293b;
+  background-color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-group input:focus,
+.styled-select:focus {
+  border-color: #002664;
+  box-shadow: 0 0 0 3px rgba(0, 38, 100, 0.1);
+}
+
+.filter-group input::placeholder {
+  color: #94a3b8;
+}
+
+.btn-reset-rounded {
+  height: 38px;
+  width: 100%;
+  border: 1px solid #002664;
+  border-radius: 8px; /* Rounded corners */
+  background-color: #ffffff;
+  color: #002664;
+  font-size: 13.5px;
+  font-weight: 700; /* Bold */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-reset-rounded:hover {
+  background-color: #f1f5f9;
+}
+
+.btn-label-hidden {
+  opacity: 0;
+}
+
+@media (max-width: 992px) {
+  .btn-label-hidden {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   UNIFIED MAIN CONTAINER CARD
+   ========================================================================== */
+.main-dashboard-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .header-right-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.header-left-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.main-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.main-card-subtitle {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.header-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.action-buttons-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* Rounded Outline Buttons (In báo cáo / Xóa bộ lọc style) */
+.btn-rounded-outline {
+  height: 34px;
+  padding: 0 20px;
+  border: 1px solid #002664;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #002664;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-rounded-outline:hover {
+  background-color: #f1f5f9;
+}
+
+/* Primary filled button (Xuất PDF) */
+.btn-action-primary {
+  height: 34px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f97316;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-action-primary:hover {
+  background-color: #ea580c;
+  box-shadow: 0 2px 4px rgba(249, 115, 22, 0.2);
+}
+
+/* Orange Excel Button (No icon) */
+.btn-excel.btn-orange {
+  background-color: #f97316 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.btn-excel.btn-orange:hover {
+  background-color: #ea580c !important;
+  box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2) !important;
+}
+
+.btn-excel {
+  height: 34px;
+  padding: 0 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* View Switching Tab Buttons inside large container */
+.tab-buttons {
+  display: flex;
+  gap: 4px;
+  background-color: #f1f5f9;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.tab-btn {
+  height: 28px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover:not(.active) {
+  color: #0f172a;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.tab-btn.active {
+  color: #ffffff;
+  background-color: #002664;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   DIVIDERS WITH END GAPS (chừa 2 kẽ hở ở 2 đầu lề)
+   ========================================================================== */
+.container-divider {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 0 24px; /* Gaps at both ends */
+}
+
+.card-divider {
+  height: 1px;
+  background-color: #cbd5e1;
+  margin: 0 16px; /* Gaps at both ends */
+}
+
+/* Main Content Wrapper */
+.main-card-content {
+  padding: 24px;
+  background-color: #ffffff;
+}
+
+/* ==========================================================================
+   CHARTS GRID AND CARD LAYOUTS
+   ========================================================================== */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: stretch; /* Cards in same row have equal height */
+}
+
+@media (max-width: 1024px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e3a8a; /* Blocks title: #1e3a8a bold uppercase */
+  margin: 0;
+  letter-spacing: 0.5px;
+  white-space: nowrap; /* Stretched, single-row layout */
+}
+
+.chart-body {
+  padding: 20px;
+  flex: 1; /* Stretch content */
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-body.no-padding {
+  padding: 0;
+}
+
+.flex-center-vertical {
+  justify-content: center;
+}
+
+/* ==========================================================================
+   FIGURE 2 DONUT/PIE SPLIT LAYOUT WITH LEGEND CARDS
+   ========================================================================== */
+.split-layout-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .split-layout-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+}
+
+.chart-left-pie {
+  flex-shrink: 0;
+  width: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-right-legends {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.legend-card-box {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.legend-card-box.blue-border { border-left: 4px solid #002664; }
+.legend-card-box.orange-border { border-left: 4px solid #f97316; }
+.legend-card-box.green-border { border-left: 4px solid #10b981; }
+.legend-card-box.grey-border { border-left: 4px solid #94a3b8; }
+
+.lbl-top {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.lbl-val {
+  font-size: 13.5px;
+  color: #0f172a;
+}
+
+.lbl-pct {
+  font-size: 12px;
+  color: #475569;
+}
+
+/* Basic SVG circle slices */
+.donut-svg-simple, .pie-svg-simple {
+  display: block;
+}
+
+.donut-slice, .pie-slice {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.donut-chart-text {
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+.donut-number {
+  font-size: 8px;
+  font-weight: 700;
+  fill: #000000;
+  text-anchor: middle;
+}
+
+.donut-label {
+  font-size: 3px;
+  font-weight: 500;
+  fill: #64748b;
+  text-anchor: middle;
+}
+
+/* ==========================================================================
+   HORIZONTAL PROGRESS BARS (Card 3: Hạng bằng lái)
+   ========================================================================== */
+.grade-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.grade-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.grade-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.grade-label {
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.grade-desc-right {
+  font-size: 12px;
+  color: #334155;
+}
+
+.grade-bar-wrapper {
+  height: 8px;
+  background-color: #f1f5f9;
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.grade-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.8s ease-out;
+}
+
+.bg-blue-deep { background-color: #002664; }
+.bg-mint { background-color: #0d9488; }
+
+.grade-subtext {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+/* ==========================================================================
+   VERTICAL COLUMNS CHART (Card 4)
+   ========================================================================== */
+.vertical-chart-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 130px;
+  width: 100%;
+  padding-top: 10px;
+}
+
+.vertical-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.v-bar-value {
+  font-size: 13px;
+}
+
+.v-bar-track {
+  width: 32px;
+  height: 80px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.v-bar-fill {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  border-radius: 4px;
+  transition: height 0.8s ease;
+}
+
+.bg-red { background-color: #ef4444; }
+.text-red { color: #ef4444; }
+.text-blue { color: #002664; }
+.text-orange { color: #f97316; }
+.text-yellow { color: #eab308; }
+
+.v-bar-label {
+  font-size: 11px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   HIỆU SUẤT VẬN HÀNH SCROLLABLE LIST (Card 5)
+   ========================================================================== */
+.title-with-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.perf-metric-badge {
+  font-size: 11px;
+  background-color: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #475569;
+}
+
+.scroll-container-height {
+  height: 310px; /* Constrained height to align properly */
+}
+
+.scroll-disabled {
+  overflow: hidden;
+}
+
+.perf-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.perf-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+.perf-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.perf-scroll-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.perf-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.perf-row-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 140px;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .perf-row-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .perf-item-value-badge {
+    justify-content: flex-start !important;
+  }
+}
+
+.perf-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.perf-item-name {
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.perf-item-code {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.perf-item-bar-wrapper {
+  height: 8px;
+  background-color: #f1f5f9;
+  border-radius: 100px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.perf-item-bar {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 0.8s ease-out;
+}
+
+.bg-orange { background-color: #f97316; }
+.bg-green { background-color: #10b981; }
+.bg-blue-light { background-color: #3b82f6; }
+
+.perf-item-value-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+}
+
+.perf-trips-num {
+  font-size: 11px;
+  color: #334155;
+  white-space: nowrap;
+}
+
+.perf-status-badge-lbl {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.lbl-orange-bg {
+  background-color: #fff7ed;
+  color: #f97316;
+}
+
+.lbl-green-bg {
+  background-color: #f0fdf4;
+  color: #10b981;
+}
+
+.lbl-blue-bg {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+/* ==========================================================================
+   GRID & LAYOUT UTILITIES
+   ========================================================================== */
+.grid-col-span-2 {
+  grid-column: span 2;
+}
+
+.padding-20 {
+  padding: 20px !important;
+}
+
+.font-bold {
+  font-weight: 600 !important;
+}
+
+/* ==========================================================================
+   SIMPLE LEGENDS AND SVG LABELS (Card 1 & Card 2)
+   ========================================================================== */
+.chart-right-legends-simple {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  padding-left: 20px;
+}
+
+.legend-row-simple {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-square {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.bg-blue-sq {
+  background-color: #002664;
+}
+
+.bg-orange-sq {
+  background-color: #f97316;
+}
+
+.bg-green-sq {
+  background-color: #10b981;
+}
+
+.bg-red-sq {
+  background-color: #ef4444;
+}
+
+.bg-gray-sq {
+  background-color: #94a3b8;
+}
+
+.legend-label-simple {
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+}
+
+.svg-pointer-text {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.text-blue-color {
+  fill: #002664;
+}
+
+.text-orange-color {
+  fill: #f97316;
+}
+
+.text-green-color {
+  fill: #10b981;
+}
+
+.text-red-color {
+  fill: #ef4444;
+}
+
+.text-gray-color {
+  fill: #94a3b8;
+}
+
+.donut-center-number-erp {
+  font-size: 14px;
+  font-weight: 700;
+  fill: #0f172a;
+}
+
+.donut-center-label-erp {
+  font-size: 7px;
+  font-weight: 500;
+  fill: #64748b;
+}
+
+.chart-desc-sub {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  display: block;
+  margin-top: 2px;
+  white-space: normal;
+}
+
+.chart-card-height-380 {
+  height: 380px !important;
+}
+
+/* ==========================================================================
+   SPLIT LAYOUT & SCROLLABLE LISTS (Card 5 & Card 6)
+   ========================================================================== */
+.perf-column-half {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.border-right-light {
+  border-right: 1px solid #e2e8f0;
+}
+
+.border-left-light {
+  border-left: 1px solid #e2e8f0;
+}
+
+.column-header-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  background-color: #f8fafc;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.scrollable-y-box {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.perf-row-item-unified {
+  display: grid;
+  grid-template-columns: 140px 1fr 140px;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+.perf-row-item-unified:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.violation-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-divider-inner {
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 16px 0;
+}
+
+.sub-bar-item-unified {
+  display: grid;
+  grid-template-columns: 220px 1fr 100px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.bg-indigo-gradient {
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+}
+
+.bg-teal-gradient {
+  background: linear-gradient(90deg, #14b8a6, #0d9488);
+}
+
+.bg-red-gradient {
+  background: linear-gradient(90deg, #ef4444, #b91c1c);
+}
+
+.bg-rose-gradient {
+  background: linear-gradient(90deg, #f43f5e, #be123c);
+}
+
+.bg-blue-gradient {
+  background: linear-gradient(90deg, #3b82f6, #002664);
+}
+
+.chart-label-text {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   SUBSECTIONS: CARD 6 PHÂN TÍCH VI PHẠM & KHÓA
+   ========================================================================== */
+.card-subsection-container {
+  height: 100%;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.subsection-divider {
+  border-bottom: 1px solid #cbd5e1;
+  width: 100%;
+}
+
+.sub-title-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+}
+
+.sub-bar-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 60px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.sub-bar-label {
+  font-size: 12px;
+  color: #334155;
+}
+
+.sub-bar-wrapper {
+  height: 6px;
+  background-color: #f1f5f9;
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.sub-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+}
+
+.bg-yellow { background-color: #eab308; }
+.bg-slate { background-color: #64748b; }
+
+.sub-bar-value {
+  font-size: 11.5px;
+  color: #1e293b;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   DETAILED LIST TABLE VIEW
+   ========================================================================== */
+.list-wrapper {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.personnel-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13.5px;
+  color: #334155;
+}
+
+.personnel-table th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+  padding: 14px 20px;
+  border-bottom: 1px solid #cbd5e1;
+  white-space: nowrap;
+}
+
+.personnel-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.personnel-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.personnel-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.personnel-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.personnel-table tbody tr.warning-row {
+  background-color: #fff5f5 !important;
+  color: #b91c1c;
+}
+
+.personnel-table tbody tr.warning-row:hover {
+  background-color: #fee2e2 !important;
+}
+
+.personnel-table tr.warning-row td {
+  border-bottom: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.personnel-table tr.warning-row td.bold-text {
+  color: #7f1d1d;
+}
+
+.id-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.warning-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: help;
+}
+
+.bold-text {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.name-cell {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.contact-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-cell .phone {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.warning-row .contact-cell .phone {
+  color: #7f1d1d;
+}
+
+.contact-cell .cccd {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.warning-row .contact-cell .cccd {
+  color: #b91c1c;
+}
+
+.license-cell {
+  line-height: 1.4;
+}
+
+.license-rank {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.warning-row .license-rank {
+  color: #7f1d1d;
+}
+
+.license-exp {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.text-danger-bold {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.assistant-license-text {
+  font-style: italic;
+  color: #94a3b8;
+  font-size: 12.5px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-locked {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.empty-row {
+  text-align: center;
+  color: #64748b;
+  padding: 36px !important;
+  font-style: italic;
+}
+
+/* Pagination controls */
+.pagination-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background-color: #ffffff;
+  border-top: 1px solid #cbd5e1;
+}
+
+@media (max-width: 640px) {
+  .pagination-footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.pagination-info {
+  font-size: 12.5px;
+  color: #64748b;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.page-btn:hover:not([disabled]):not(.active-page) {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.page-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f8fafc;
+}
+
+.active-page {
+  background-color: #002664;
+  color: #ffffff;
+  border-color: #002664;
+  font-weight: 600;
+}
+
+.pagination-arrow {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==========================================================================
+   CENTERED DONUT & PIE CHARTS (Sales style from Figure 2)
+   ========================================================================== */
+.donut-chart-centered-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.donut-svg-centered,
+.pie-svg-centered {
+  display: block;
+}
+
+.donut-center-number-erp-large {
+  font-size: 26px;
+  font-weight: 700;
+  fill: #000000;
+}
+
+.donut-center-label-erp-large {
+  font-size: 9px;
+  font-weight: 600;
+  fill: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.legend-row-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* ==========================================================================
+   PRINT MEDIA STYLES
+   ========================================================================== */
+@media print {
+  html, body, :host {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .no-print,
+  .filter-panel,
+  .tab-buttons,
+  .action-buttons-group,
+  .pagination-footer {
+    display: none !important;
+  }
+
+  .report-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    gap: 16px !important;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+    page-break-inside: avoid;
+  }
+
+  .stats-card {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff !important;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 16px !important;
+  }
+
+  .chart-card {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    page-break-inside: avoid;
+  }
+}
