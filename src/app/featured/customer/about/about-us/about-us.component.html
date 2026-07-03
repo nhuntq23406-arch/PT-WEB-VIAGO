@@ -11,8 +11,8 @@
           Kiến tạo những hành trình di chuyển văn minh, an toàn và đầy cảm hứng. Chúng tôi không chỉ vận chuyển hành khách, chúng tôi kết nối niềm vui và sự an tâm trên mọi nẻo đường Việt Nam.
         </p>
         <div class="hero-actions">
-          <button class="btn btn-primary">Khám Phá Dịch Vụ</button>
-          <button class="btn btn-outline">Xem Lịch Trình</button>
+          <button class="btn btn-primary" (click)="goToRentalServices()">Khám Phá Dịch Vụ</button>
+          <button class="btn btn-outline" (click)="goToSchedule()">Xem Lịch Trình</button>
         </div>
       </div>
       <div class="hero-image">
@@ -139,7 +139,7 @@
           </li>
         </ul>
         <div class="vision-action">
-          <button class="btn btn-navy">
+          <button class="btn btn-navy" (click)="goToBookingSection()">
             Đặt Vé Ngay Hôm Nay
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </button>

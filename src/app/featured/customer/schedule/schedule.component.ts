@@ -233,13 +233,22 @@ allRoutes: Route[] = [
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   }
 
+  private getTodayDateString(): string {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
   handleViewSchedule(route: Route) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = this.getTodayDateString();
     this.router.navigate(['/'], { 
       queryParams: { 
         from: route.from, 
         to: route.to, 
         date: today,
+        autoSearch: 'true',
         scroll: 'search-section'
       } 
     });

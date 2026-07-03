@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, HostListener, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, HostListener, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -14,11 +14,14 @@ import { Subscription } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('destinationDropdown') destinationDropdown!: SearchableDropdownComponent;
+  @ViewChild('searchButton') searchButton?: ElementRef<HTMLButtonElement>;
 
   private router = inject(Router);
   private routerSubscription!: Subscription;
+  private pendingAutoSearch = false;
+  private lastAutoSearchKey = '';
 
   heroImages = [
     '/asset/images/customer/hero_banner_1.png',
@@ -210,15 +213,60 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.updateCitiesLists();
       }
 
+      if (params['autoSearch'] === 'true') {
+        this.tripType = 'one-way';
+        this.returnDate = '';
+        if (!this.departureDate) {
+          this.departureDate = this.todayDate;
+        }
+
+        const autoSearchKey = `${this.departure}|${this.destination}|${this.departureDate}`;
+        if (autoSearchKey !== this.lastAutoSearchKey) {
+          this.lastAutoSearchKey = autoSearchKey;
+          this.triggerSearchButtonClick();
+        }
+        return;
+      }
+
       if (params['scroll']) {
-        setTimeout(() => {
-          const element = document.getElementById(params['scroll']);
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 100);
+        this.scrollToPageElement(params['scroll']);
       }
     });
+  }
+
+  ngAfterViewInit() {
+    if (this.pendingAutoSearch) {
+      this.triggerSearchButtonClick();
+    }
+  }
+
+  private triggerSearchButtonClick() {
+    this.pendingAutoSearch = true;
+    setTimeout(() => {
+      if (this.searchButton?.nativeElement) {
+        this.searchButton.nativeElement.click();
+      } else {
+        this.onSubmitSearch();
+      }
+      this.pendingAutoSearch = false;
+    }, 100);
+  }
+
+  private scrollToPageElement(elementId: string) {
+    setTimeout(() => {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.getBoundingClientRect().height : 0;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = Math.max(elementPosition - headerHeight - 16, 0);
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }, 150);
   }
 
   formatDateToShort(dateStr: string): string {

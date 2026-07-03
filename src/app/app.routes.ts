@@ -16,6 +16,7 @@ import { TicketLookupComponent } from './featured/customer/ticket-lookup/ticket-
 import { InvoiceComponent } from './featured/customer/invoice/invoice.component';
 import { ScheduleComponent } from './featured/customer/schedule/schedule.component';
 import { CareersComponent } from './featured/customer/about/careers/careers.component';
+import { GuideComponent } from './featured/customer/about/guide/guide.component';
 
 // Import phần của Vanh (Admin)
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout';
@@ -189,6 +190,7 @@ export const routes: Routes = [
       { path: 'danh-gia', component: ReviewsComponent },
       { path: 'dich-vu', component: ServicesComponent },
       { path: 've-chung-toi', component: AboutUsComponent },
+      { path: 'gioi-thieu', component: GuideComponent },
       { path: 'chinh-sach', component: PoliciesComponent },
       { path: 'dieu-khoan', component: TermsComponent },
       { path: 'faq', component: FaqComponent },

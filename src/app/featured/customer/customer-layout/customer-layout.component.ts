@@ -16,7 +16,7 @@ export class CustomerLayoutComponent {
   constructor(public router: Router) {}
 
   isAboutRouteActive(): boolean {
-    const activeRoutes = ['/ve-chung-toi', '/chinh-sach', '/dieu-khoan', '/faq', '/lien-he', '/tuyen-dung'];
+    const activeRoutes = ['/ve-chung-toi', '/gioi-thieu', '/chinh-sach', '/dieu-khoan', '/faq', '/lien-he', '/tuyen-dung'];
     return activeRoutes.some(route => this.router.url.includes(route));
   }
 
