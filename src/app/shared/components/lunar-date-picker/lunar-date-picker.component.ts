@@ -264,6 +264,17 @@ export class LunarDatePickerComponent implements ControlValueAccessor, OnInit, O
 
   // --- CALENDAR GENERATION & INTERACTIVE EVENTS ---
 
+  openCalendar(event: Event): void {
+    event.stopPropagation();
+    if (this.disabled) return;
+    if (!this.showCalendar) {
+      this.showCalendar = true;
+      this.syncCalDateFromValue();
+      this.generateCalendar();
+      this.adjustPopoverPosition();
+    }
+  }
+
   toggleCalendar(event: Event): void {
     event.stopPropagation();
     if (this.disabled) return;

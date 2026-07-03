@@ -109,7 +109,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Generated list of trips
   trips: any[] = [];
   activeTripId: string | null = null;
-  activeSubTab: 'schedule' | 'points' | 'policy' | null = null;
+  activeSubTab: 'seats' | 'amenities' | 'schedule' | 'points' | 'policy' | null = null;
 
   // Booking process states
   activeTab: 'outbound' | 'return' = 'outbound';
@@ -234,6 +234,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     this.todayDate = `${yyyy}-${mm}-${dd}`;
+    this.departureDate = this.todayDate;
 
     // Reset customer view state when user clicks home or logo.
     this.routerSubscription = this.router.events.pipe(
@@ -577,13 +578,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     return `${hStr}:${mStr}`;
   }
 
-  toggleSubTab(trip: any, subTab: 'schedule' | 'points' | 'policy') {
+  toggleSubTab(trip: any, subTab: 'seats' | 'amenities' | 'schedule' | 'points' | 'policy') {
     if (this.activeTripId === trip.id && this.activeSubTab === subTab) {
       this.activeTripId = null;
       this.activeSubTab = null;
     } else {
+      const isSwitchingTrip = this.activeTripId !== trip.id;
       this.activeTripId = trip.id;
       this.activeSubTab = subTab;
+      if (subTab === 'seats' && isSwitchingTrip) {
+        this.selectedSeats = [];
+        this.selectedReturnSeats = [];
+      }
     }
   }
 
@@ -927,7 +933,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   isSeatSoldOut(seatId: string, isReturn: boolean = false): boolean {
-    const trip = isReturn ? this.selectedReturnTrip : (this.selectedOutboundTrip || this.selectedTrip);
+    const trip = (isReturn ? this.selectedReturnTrip : (this.selectedOutboundTrip || this.selectedTrip)) || this.trips.find(t => t.id === this.activeTripId);
     if (!trip || !trip.soldOutSeats) {
       return false;
     }

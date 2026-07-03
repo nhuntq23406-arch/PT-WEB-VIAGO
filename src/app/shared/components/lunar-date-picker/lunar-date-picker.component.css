@@ -3,3 +3,14 @@
   display: block;
   width: 100%;
 }
+
+.calendar-grid-header {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+}
+
+.calendar-grid-body {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}

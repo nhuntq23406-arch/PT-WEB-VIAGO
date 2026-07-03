@@ -1,6 +1,7 @@
 <div 
+  (click)="openCalendar($event)"
   [ngClass]="variant === 'search' ? 'rounded-lg px-4 py-3.5' : 'rounded-xl px-3 py-2.5'"
-  [class]="'relative flex items-center justify-between border bg-slate-50 border-slate-200 focus-within:border-[#00236F] focus-within:bg-white text-gray-800 transition-all duration-200 shadow-sm w-full ' + 
+  [class]="'relative flex items-center justify-between border bg-slate-50 border-slate-200 focus-within:border-[#00236F] focus-within:bg-white text-gray-800 transition-all duration-200 shadow-sm w-full cursor-pointer ' + 
     (disabled ? 'opacity-60 cursor-not-allowed select-none bg-slate-100' : '')"
 >
   <!-- Segmented inputs for typing -->
@@ -120,12 +121,12 @@
     </div>
 
     <!-- Weekday headers -->
-    <div class="grid grid-cols-7 text-center text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+    <div class="calendar-grid-header text-center text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
       <span *ngFor="let w of weekDays">{{ w }}</span>
     </div>
 
     <!-- Calendar days grid -->
-    <div class="grid grid-cols-7 gap-1">
+    <div class="calendar-grid-body">
       <div 
         *ngFor="let d of calendarDays" 
         (click)="selectDay(d)"
