@@ -149,7 +149,15 @@ export class SearchableDropdownComponent implements OnInit, OnChanges {
     // If the input text is not empty and doesn't match any item, reset to previous value
     if (this.searchText !== this.value) {
       const match = this.items.find(
-        item => this.normalizeStr(item) === this.normalizeStr(this.searchText)
+        item => {
+          if (this.normalizeStr(item) === this.normalizeStr(this.searchText)) return true;
+          if (item === 'TP.HCM') {
+            const aliases = ['ho chi minh', 'sai gon', 'saigon', 'hcm', 'sg'];
+            const normSearch = this.normalizeStr(this.searchText);
+            return aliases.includes(normSearch) || aliases.some(alias => normSearch.includes(alias));
+          }
+          return false;
+        }
       );
       if (match) {
         this.selectItem(match);
@@ -166,9 +174,17 @@ export class SearchableDropdownComponent implements OnInit, OnChanges {
     }
 
     const normSearchText = this.normalizeStr(this.searchText);
-    this.filteredItems = this.items.filter(item =>
-      this.normalizeStr(item).includes(normSearchText)
-    );
+    this.filteredItems = this.items.filter(item => {
+      const normItem = this.normalizeStr(item);
+      if (normItem.includes(normSearchText)) return true;
+      
+      // Add custom aliases for TP.HCM
+      if (item === 'TP.HCM') {
+        const aliases = ['ho chi minh', 'sai gon', 'saigon', 'hcm', 'sg'];
+        return aliases.some(alias => alias.includes(normSearchText) || normSearchText.includes(alias));
+      }
+      return false;
+    });
   }
 
   // Clean Vietnamese accents and normalize for search

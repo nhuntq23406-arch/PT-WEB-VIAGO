@@ -124,6 +124,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedTrip: any = null;
   selectedSeats: string[] = [];
   selectedReturnSeats: string[] = [];
+  selectedSeatTypes: { [seatId: string]: 'single' | 'double' } = {};
+  selectedReturnSeatTypes: { [seatId: string]: 'single' | 'double' } = {};
   passengerName = '';
   passengerPhone = '';
   passengerEmail = '';
@@ -180,14 +182,38 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getDetailedSpot(city: string, index: number): string {
     if (!city) return '';
-    const spots = this.detailedSpots[city] || [
-      `Bến xe ${city}`,
-      `Văn phòng ${city}`,
-      `Trạm dừng ${city}`,
-      `Nội thành ${city}`,
-      `Trung tâm ${city}`
+    const normalizedCity = this.normalizeCityKey(city);
+    const spots = this.detailedSpots[normalizedCity] || [
+      `Bến xe ${normalizedCity}`,
+      `Văn phòng ${normalizedCity}`,
+      `Trạm dừng ${normalizedCity}`,
+      `Nội thành ${normalizedCity}`,
+      `Trung tâm ${normalizedCity}`
     ];
     return spots[index % spots.length];
+  }
+
+  normalizeCityKey(city: string): string {
+    if (!city) return '';
+    const norm = city.trim();
+    const upper = norm.toUpperCase();
+    if (
+      upper === 'TP. HỒ CHÍ MINH' ||
+      upper === 'HỒ CHÍ MINH' ||
+      upper === 'TP HỒ CHÍ MINH' ||
+      upper === 'TP.HCM' ||
+      upper === 'TPHCM' ||
+      upper === 'SÀI GÒN' ||
+      upper === 'SAI GON' ||
+      upper === 'SAIGON'
+    ) {
+      return 'TP.HCM';
+    }
+    const match = this.allCities.find(c => c.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') === norm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+    if (match) {
+      return match;
+    }
+    return norm;
   }
 
   allCities = [
@@ -384,9 +410,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   updateCitiesLists() {
     // 1. Filter destination cities based on selected departure
     if (this.departure) {
+      const depCityNormalized = this.normalizeCityKey(this.departure);
       const connected = this.routesData
-        .filter(r => r.cities.includes(this.departure))
-        .map(r => r.cities.find(c => c !== this.departure) || '');
+        .filter(r => r.cities.map(c => this.normalizeCityKey(c)).includes(depCityNormalized))
+        .map(r => {
+          const other = r.cities.find(c => this.normalizeCityKey(c) !== depCityNormalized);
+          return other ? this.normalizeCityKey(other) : '';
+        });
       this.destinationCities = connected.filter(c => c !== '' && this.allCities.includes(c));
     } else {
       this.destinationCities = [...this.allCities];
@@ -394,9 +424,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // 2. Filter departure cities based on selected destination
     if (this.destination) {
+      const destCityNormalized = this.normalizeCityKey(this.destination);
       const connected = this.routesData
-        .filter(r => r.cities.includes(this.destination))
-        .map(r => r.cities.find(c => c !== this.destination) || '');
+        .filter(r => r.cities.map(c => this.normalizeCityKey(c)).includes(destCityNormalized))
+        .map(r => {
+          const other = r.cities.find(c => this.normalizeCityKey(c) !== destCityNormalized);
+          return other ? this.normalizeCityKey(other) : '';
+        });
       this.departureCities = connected.filter(c => c !== '' && this.allCities.includes(c));
     } else {
       this.departureCities = [...this.allCities];
@@ -632,6 +666,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       if (subTab === 'seats' && isSwitchingTrip) {
         this.selectedSeats = [];
         this.selectedReturnSeats = [];
+        this.selectedSeatTypes = {};
+        this.selectedReturnSeatTypes = {};
       }
     }
   }
@@ -704,7 +740,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getDetailedSpotsList(city: string, baseTime: string): any[] {
-    const spots = this.detailedSpots[city] || [`Bến xe ${city}`];
+    const normalizedCity = this.normalizeCityKey(city);
+    const spots = this.detailedSpots[normalizedCity] || [`Bến xe ${normalizedCity}`];
     const baseMins = this.timeToMinutes(baseTime);
     return spots.map((spot, idx) => {
       const offset = idx * 15;
@@ -718,6 +755,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getFilteredTrips() {
     let result = [...this.trips];
+
+    // Filter out past trips if search date is today
+    const currentSearchDate = this.activeTab === 'return' ? this.searchReturnDate : this.searchDepartureDate;
+    if (currentSearchDate === this.todayDate) {
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      result = result.filter(trip => {
+        const tripMinutes = this.timeToMinutes(trip.depTime);
+        return tripMinutes > currentMinutes;
+      });
+    }
 
     // Same-day return time constraint: Giờ đi lượt về phải lớn hơn Giờ đến lượt đi + 60 phút
     if (this.searchTripType === 'round-trip' && this.activeTab === 'return' && this.selectedOutboundTrip) {
@@ -813,12 +861,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.activeTab === 'outbound') {
         this.selectedOutboundTrip = trip;
         this.selectedSeats = [];
+        this.selectedSeatTypes = {};
         this.showNotification('Đã chọn chuyến đi. Vui lòng chọn chuyến về.', 'success');
         this.switchActiveTab('return');
         return;
       } else {
         this.selectedReturnTrip = trip;
         this.selectedReturnSeats = [];
+        this.selectedReturnSeatTypes = {};
       }
     }
 
@@ -962,9 +1012,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const seats = isReturn ? this.selectedReturnSeats : this.selectedSeats;
+    const types = isReturn ? this.selectedReturnSeatTypes : this.selectedSeatTypes;
     const index = seats.indexOf(seatId);
     if (index > -1) {
       seats.splice(index, 1);
+      delete types[seatId];
       this.showToast = false;
     } else {
       if (seats.length >= 5) {
@@ -972,6 +1024,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         return;
       }
       seats.push(seatId);
+      types[seatId] = 'single';
     }
   }
 
@@ -1041,8 +1094,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let outboundSubtotal = 0;
     if (outboundTrip.type.includes('22 chỗ')) {
       for (const seat of this.selectedSeats) {
-        if (seat.endsWith('A')) outboundSubtotal += 600000;
-        else outboundSubtotal += (outboundTrip.price || 390000);
+        const type = this.selectedSeatTypes[seat] || 'single';
+        if (type === 'double') {
+          outboundSubtotal += (outboundTrip.price || 390000) * 2;
+        } else {
+          outboundSubtotal += (outboundTrip.price || 390000);
+        }
       }
     } else {
       outboundSubtotal = this.selectedSeats.length * (outboundTrip.price || 390000);
@@ -1055,8 +1112,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let returnSubtotal = 0;
     if (this.selectedReturnTrip.type.includes('22 chỗ')) {
       for (const seat of this.selectedReturnSeats) {
-        if (seat.endsWith('A')) returnSubtotal += 600000;
-        else returnSubtotal += (this.selectedReturnTrip.price || 390000);
+        const type = this.selectedReturnSeatTypes[seat] || 'single';
+        if (type === 'double') {
+          returnSubtotal += (this.selectedReturnTrip.price || 390000) * 2;
+        } else {
+          returnSubtotal += (this.selectedReturnTrip.price || 390000);
+        }
       }
     } else {
       returnSubtotal = this.selectedReturnSeats.length * (this.selectedReturnTrip.price || 390000);
@@ -1156,10 +1217,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getPickupPointsList(): { time: string, name: string }[] {
     if (!this.selectedTrip) return [];
-    const spots = this.detailedSpots[this.searchDeparture] || [
-      `Văn phòng ${this.searchDeparture}`,
-      `Bến xe trung tâm ${this.searchDeparture}`,
-      `Đón tận nơi nội thành ${this.searchDeparture}`
+    const city = this.normalizeCityKey(this.selectedTrip.depCity || this.searchDeparture);
+    const spots = this.detailedSpots[city] || [
+      `Văn phòng ${city}`,
+      `Bến xe trung tâm ${city}`,
+      `Đón tận nơi nội thành ${city}`
     ];
     return spots.map((spot, index) => {
       return {
@@ -1171,10 +1233,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getDropoffPointsList(): { time: string, name: string }[] {
     if (!this.selectedTrip) return [];
-    const spots = this.detailedSpots[this.searchDestination] || [
-      `Văn phòng ${this.searchDestination}`,
-      `Bến xe trung tâm ${this.searchDestination}`,
-      `Trả tận nơi nội thành ${this.searchDestination}`
+    const city = this.normalizeCityKey(this.selectedTrip.arrCity || this.searchDestination);
+    const spots = this.detailedSpots[city] || [
+      `Văn phòng ${city}`,
+      `Bến xe trung tâm ${city}`,
+      `Trả tận nơi nội thành ${city}`
     ];
     return spots.map((spot, index) => {
       return {
@@ -1224,10 +1287,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getReturnPickupPointsList(): { time: string, name: string }[] {
     if (!this.selectedReturnTrip) return [];
-    const spots = this.detailedSpots[this.searchDestination] || [
-      `Văn phòng ${this.searchDestination}`,
-      `Bến xe trung tâm ${this.searchDestination}`,
-      `Đón tận nơi nội thành ${this.searchDestination}`
+    const city = this.normalizeCityKey(this.selectedReturnTrip.depCity || this.searchDestination);
+    const spots = this.detailedSpots[city] || [
+      `Văn phòng ${city}`,
+      `Bến xe trung tâm ${city}`,
+      `Đón tận nơi nội thành ${city}`
     ];
     return spots.map((spot, index) => {
       return {
@@ -1239,10 +1303,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getReturnDropoffPointsList(): { time: string, name: string }[] {
     if (!this.selectedReturnTrip) return [];
-    const spots = this.detailedSpots[this.searchDeparture] || [
-      `Văn phòng ${this.searchDeparture}`,
-      `Bến xe trung tâm ${this.searchDeparture}`,
-      `Trả tận nơi nội thành ${this.searchDeparture}`
+    const city = this.normalizeCityKey(this.selectedReturnTrip.arrCity || this.searchDeparture);
+    const spots = this.detailedSpots[city] || [
+      `Văn phòng ${city}`,
+      `Bến xe trung tâm ${city}`,
+      `Trả tận nơi nội thành ${city}`
     ];
     return spots.map((spot, index) => {
       return {
@@ -1484,6 +1549,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.stopPaymentTimer();
     this.selectedSeats = [];
     this.selectedReturnSeats = [];
+    this.selectedSeatTypes = {};
+    this.selectedReturnSeatTypes = {};
     this.passengerName = '';
     this.passengerPhone = '';
     this.passengerEmail = '';
@@ -1564,7 +1631,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           DiemDonThoiGian: `${this.selectedOutboundTrip?.depTime || this.selectedTrip?.depTime || ''} - ${this.getFormattedDateDDMMYYYY(this.searchDepartureDate)}`,
           DiemTra: this.getPickupDisplayName(this.dropoffPoint) || (this.selectedOutboundTrip?.arrLocation || this.selectedTrip?.arrLocation || this.searchDestination),
           DiemTraThoiGian: `${this.selectedOutboundTrip?.arrTime || this.selectedTrip?.arrTime || ''} - ${this.getFormattedDateDDMMYYYY(this.searchDepartureDate)}`,
-          GiaVe: this.selectedOutboundTrip?.price || this.selectedTrip?.price || 390000,
+          GiaVe: (() => {
+            const trip = this.selectedOutboundTrip || this.selectedTrip;
+            if (trip?.type?.includes('22 chỗ')) {
+              const type = this.selectedSeatTypes[seat] || 'single';
+              return type === 'double' ? (trip.price * 2) : trip.price;
+            }
+            return trip?.price || 390000;
+          })(),
           TrangThaiVe: 'Chờ khởi hành',
           MaQRVe: `QR-${this.ticketCode}-${seat}`
         })),
@@ -1576,7 +1650,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           DiemDonThoiGian: `${this.selectedReturnTrip.depTime} - ${this.getFormattedDateDDMMYYYY(this.searchReturnDate)}`,
           DiemTra: this.getPickupDisplayName(this.returnDropoffPoint) || (this.selectedReturnTrip?.arrLocation || this.searchDeparture),
           DiemTraThoiGian: `${this.selectedReturnTrip.arrTime} - ${this.getFormattedDateDDMMYYYY(this.searchReturnDate)}`,
-          GiaVe: this.selectedReturnTrip.price || 390000,
+          GiaVe: (() => {
+            if (this.selectedReturnTrip?.type?.includes('22 chỗ')) {
+              const type = this.selectedReturnSeatTypes[seat] || 'single';
+              return type === 'double' ? (this.selectedReturnTrip.price * 2) : this.selectedReturnTrip.price;
+            }
+            return this.selectedReturnTrip.price || 390000;
+          })(),
           TrangThaiVe: 'Chờ khởi hành',
           MaQRVe: `QR-${this.ticketCode}-V-${seat}`
         })) : [])
