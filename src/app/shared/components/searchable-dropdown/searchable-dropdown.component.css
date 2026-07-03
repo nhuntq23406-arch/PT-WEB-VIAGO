@@ -1,1 +1,14 @@
 /* searchable-dropdown.component.css */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+input:focus {
+  box-shadow: 0 0 0 4px rgba(0, 35, 111, 0.06);
+}

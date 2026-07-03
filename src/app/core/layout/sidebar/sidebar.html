@@ -9,8 +9,8 @@
     <div class="list-wrapper">
       <div class="list">
 
-        <!-- Tổng quan (active) -->
-        <a class="item-link" routerLink="/admin/trangchu" routerLinkActive="item-link--active">
+        <!-- Tổng quan -->
+        <a class="item-link-2" routerLink="/admin/trangchu" routerLinkActive="item-link--active">
           <div class="div-3">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -128,8 +128,10 @@
           </svg>
         </a>
         <div class="submenu-list" *ngIf="showContentMenu">
-          <a class="submenu-item" routerLink="/admin/noidung/tin-tuc" routerLinkActive="submenu-item--active">Quản lý tin tức</a>
-          <a class="submenu-item" routerLink="/admin/khuyenmai" routerLinkActive="submenu-item--active">Quản lý khuyến mãi</a>
+          <a class="submenu-item" routerLink="/admin/tin-tuc" routerLinkActive="submenu-item--active">Tin tức</a>
+          <a class="submenu-item" routerLink="/admin/chinh-sach" routerLinkActive="submenu-item--active">Chính sách</a>
+          <a class="submenu-item" routerLink="/admin/khuyen-mai" routerLinkActive="submenu-item--active">Khuyến mãi</a>
+          <a class="submenu-item" routerLink="/admin/tu-khoa-cam" routerLinkActive="submenu-item--active">Từ khóa cấm</a>
         </div>
 
         <!-- Thuê xe hợp đồng -->
@@ -167,6 +169,7 @@
           <a class="submenu-item" routerLink="/admin/baocao/dat-ve" routerLinkActive="submenu-item--active">Báo cáo đặt vé</a>
           <a class="submenu-item" routerLink="/admin/baocao/khach-hang" routerLinkActive="submenu-item--active">Báo cáo khách hàng</a>
           <a class="submenu-item" routerLink="/admin/baocao/van-hanh" routerLinkActive="submenu-item--active">Báo cáo vận hành</a>
+          <a class="submenu-item" routerLink="/admin/baocao/tai-xe-phu-xe" routerLinkActive="submenu-item--active">Báo cáo tài xế phụ xe</a>
           <a class="submenu-item" routerLink="/admin/baocao/tuyen" routerLinkActive="submenu-item--active">Báo cáo tuyến xe</a>
           <a class="submenu-item" routerLink="/admin/baocao/hoan-huy" routerLinkActive="submenu-item--active">Báo cáo hoàn hủy</a>
         </div>
