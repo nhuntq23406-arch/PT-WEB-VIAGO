@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Input() isCollapsed: boolean = false;
 
   showReportMenu = false;
@@ -34,6 +34,36 @@ export class SidebarComponent {
   confirmPassword = '';
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.checkActiveMenu(event.urlAfterRedirects);
+      }
+    });
+    // Check initial route
+    this.checkActiveMenu(this.router.url);
+  }
+
+  checkActiveMenu(url: string) {
+    if (url.includes('/admin/baocao')) {
+      this.showReportMenu = true;
+    }
+    if (url.includes('/admin/datve')) {
+      this.showBookingMenu = true;
+    }
+    if (url.includes('/admin/dieuphoi')) {
+      this.showDispatchMenu = true;
+    }
+    if (
+      url.includes('/admin/tin-tuc') ||
+      url.includes('/admin/chinh-sach') ||
+      url.includes('/admin/khuyen-mai') ||
+      url.includes('/admin/tu-khoa-cam')
+    ) {
+      this.showContentMenu = true;
+    }
+  }
 
   toggleReportMenu(event: Event) {
     event.preventDefault();

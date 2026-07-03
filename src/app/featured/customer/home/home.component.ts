@@ -1,16 +1,20 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, HostListener, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef, HostListener, signal, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router, NavigationEnd } from '@angular/router';
 import { SearchableDropdownComponent } from '../../../shared/components/searchable-dropdown/searchable-dropdown.component';
-import { Router, NavigationEnd } from '@angular/router';
+import { AuthService } from '../../../auth/auth.service';
+import { VoucherService, Voucher } from '../../../core/services/voucher.service';
+import { VoucherCardComponent } from '../../../shared/components/voucher-card/voucher-card.component';
+import { ToastService } from '../../../shared/toast.service';
+import { LunarDatePickerComponent } from '../../../shared/components/lunar-date-picker/lunar-date-picker.component';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchableDropdownComponent, RouterLink],
+  imports: [CommonModule, FormsModule, SearchableDropdownComponent, VoucherCardComponent, LunarDatePickerComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -22,6 +26,38 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private routerSubscription!: Subscription;
   private pendingAutoSearch = false;
   private lastAutoSearchKey = '';
+
+  // Checkout & Voucher Simulation State (Obsolete, kept for safety)
+  ticketPrice = 250000;
+  appliedVoucher: Voucher | null = null;
+  voucherCodeInput = '';
+  showVoucherModal = false;
+  selectedModalVoucher: Voucher | null = null;
+  bestVoucherRecommended: Voucher | null = null;
+
+  // Homepage Voucher Pagination State
+  currentPromoPage = 1;
+
+  get totalPromoPages(): number {
+    return Math.ceil(this.voucherService.publicVouchers.length / 3);
+  }
+
+  get paginatedPromos(): Voucher[] {
+    const startIndex = (this.currentPromoPage - 1) * 3;
+    return this.voucherService.publicVouchers.slice(startIndex, startIndex + 3);
+  }
+
+  prevPromoPage(): void {
+    if (this.currentPromoPage > 1) {
+      this.currentPromoPage--;
+    }
+  }
+
+  nextPromoPage(): void {
+    if (this.currentPromoPage < this.totalPromoPages) {
+      this.currentPromoPage++;
+    }
+  }
 
   heroImages = [
     '/asset/images/customer/hero_banner_1.png',
@@ -75,6 +111,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Generated list of trips
   trips: any[] = [];
+  activeTripId: string | null = null;
+  activeSubTab: 'seats' | 'amenities' | 'schedule' | 'points' | 'policy' | null = null;
 
   // Booking process states
   activeTab: 'outbound' | 'return' = 'outbound';
@@ -129,7 +167,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   selectedPaymentMethod = 'vietqr';
 
   detailedSpots: { [key: string]: string[] } = {
-    'TP.HCM': ['Bến xe Miền Đông Mới', 'Bến xe Miền Tây', 'Văn phòng Quận 1', 'Văn phòng Quận 5', 'Văn phòng Quận 10', 'Ngã tư Thủ Đức', 'Ngã tư An Sương', 'Suối Tiên'],
+    'TP. Hồ Chí Minh': ['Bến xe Miền Đông Mới', 'Bến xe Miền Tây', 'Văn phòng Quận 1', 'Văn phòng Quận 5', 'Văn phòng Quận 10', 'Ngã tư Thủ Đức', 'Ngã tư An Sương', 'Suối Tiên'],
     'Cần Thơ': ['Bến xe Trung tâm Cần Thơ', 'Văn phòng Ninh Kiều', 'Bến Ninh Kiều', 'Đại học Cần Thơ'],
     'Vũng Tàu': ['Bến xe Vũng Tàu', 'Văn phòng Vũng Tàu', 'Bãi Sau', 'Bãi Trước'],
     'Đà Lạt': ['Bến xe Liên Tỉnh Đà Lạt', 'Chợ Đà Lạt', 'Hồ Xuân Hương', 'Quảng trường Lâm Viên'],
@@ -153,7 +191,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   allCities = [
-    'TP.HCM',
+    'TP. Hồ Chí Minh',
     'Đà Lạt',
     'Nha Trang',
     'Cần Thơ',
@@ -165,33 +203,41 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   routesData = [
-    { cities: ['TP.HCM', 'Cần Thơ'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '170 km', duration: '3.5 tiếng', tripsPerDay: 12, price: 180000 },
-    { cities: ['TP.HCM', 'Vũng Tàu'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '100 km', duration: '2 tiếng', tripsPerDay: 20, price: 160000 },
+    { cities: ['TP. Hồ Chí Minh', 'Cần Thơ'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '170 km', duration: '3.5 tiếng', tripsPerDay: 12, price: 180000 },
+    { cities: ['TP. Hồ Chí Minh', 'Vũng Tàu'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '100 km', duration: '2 tiếng', tripsPerDay: 20, price: 160000 },
     { cities: ['Đà Lạt', 'Buôn Ma Thuột'], types: ['Giường nằm 34 chỗ'], distance: '210 km', duration: '5 tiếng', tripsPerDay: 8, price: 220000 },
     { cities: ['Đà Lạt', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '140 km', duration: '3 tiếng', tripsPerDay: 15, price: 170000 },
     { cities: ['Cần Thơ', 'Rạch Giá'], types: ['Giường nằm 34 chỗ', 'Limousine 9 chỗ'], distance: '115 km', duration: '2.5 tiếng', tripsPerDay: 10, price: 150000 },
-    { cities: ['TP.HCM', 'Phan Thiết'], types: ['Giường nằm 34 chỗ'], distance: '200 km', duration: '4 tiếng', tripsPerDay: 18, price: 200000 },
-    { cities: ['TP.HCM', 'Đà Lạt'], types: ['Cabin 22 chỗ', 'Limousine 9 chỗ'], distance: '310 km', duration: '7 tiếng', tripsPerDay: 25, price: 250000 },
-    { cities: ['TP.HCM', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '435 km', duration: '8.5 tiếng', tripsPerDay: 22, price: 300000 },
+    { cities: ['TP. Hồ Chí Minh', 'Phan Thiết'], types: ['Giường nằm 34 chỗ'], distance: '200 km', duration: '4 tiếng', tripsPerDay: 18, price: 200000 },
+    { cities: ['TP. Hồ Chí Minh', 'Đà Lạt'], types: ['Cabin 22 chỗ', 'Limousine 9 chỗ'], distance: '310 km', duration: '7 tiếng', tripsPerDay: 25, price: 250000 },
+    { cities: ['TP. Hồ Chí Minh', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '435 km', duration: '8.5 tiếng', tripsPerDay: 22, price: 300000 },
     { cities: ['Nha Trang', 'Đà Nẵng'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '530 km', duration: '11 tiếng', tripsPerDay: 14, price: 350000 }
   ];
 
   departureCities: string[] = [];
   destinationCities: string[] = [];
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    public authService: AuthService,
+    public voucherService: VoucherService,
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.checkPendingOrder();
     this.departureCities = [...this.allCities];
     this.destinationCities = [...this.allCities];
     this.startHeroTimer();
+    
     // Set todayDate to YYYY-MM-DD
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     this.todayDate = `${yyyy}-${mm}-${dd}`;
+    this.departureDate = '';
 
     // Reset customer view state when user clicks home or logo.
     this.routerSubscription = this.router.events.pipe(
@@ -203,13 +249,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
 
-    // Handle query parameters from the schedule page.
+    // Read query parameters to auto-fill search panel or apply voucher
     this.route.queryParams.subscribe(params => {
-      if (params['from']) this.departure = params['from'];
-      if (params['to']) this.destination = params['to'];
-      if (params['date']) this.departureDate = params['date'];
-      
-      if (params['from'] || params['to']) {
+      if (params['departure']) {
+        this.departure = params['departure'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['departure'];
         this.updateCitiesLists();
       }
 
@@ -227,7 +270,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         return;
       }
-
+      if (params['destination']) {
+        this.destination = params['destination'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['destination'];
+        this.updateCitiesLists();
+      }
+      if (params['from']) {
+        this.departure = params['from'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['from'];
+        this.updateCitiesLists();
+      }
+      if (params['to']) {
+        this.destination = params['to'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['to'];
+        this.updateCitiesLists();
+      }
+      if (params['date']) {
+        this.departureDate = params['date'];
+      }
       if (params['scroll']) {
         this.scrollToPageElement(params['scroll']);
       }
@@ -324,25 +381,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.updateCitiesLists();
   }
 
-  onDepartureDateChange() {
-    if (this.returnDate && this.departureDate && this.returnDate < this.departureDate) {
-      this.returnDate = this.departureDate;
-    }
-  }
-
-  onReturnDateChange() {
-    if (this.returnDate && this.departureDate && this.returnDate < this.departureDate) {
-      this.returnDate = this.departureDate;
-    }
-  }
-
   updateCitiesLists() {
     // 1. Filter destination cities based on selected departure
     if (this.departure) {
       const connected = this.routesData
         .filter(r => r.cities.includes(this.departure))
         .map(r => r.cities.find(c => c !== this.departure) || '');
-      this.destinationCities = connected.filter(c => c !== '');
+      this.destinationCities = connected.filter(c => c !== '' && this.allCities.includes(c));
     } else {
       this.destinationCities = [...this.allCities];
     }
@@ -352,7 +397,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       const connected = this.routesData
         .filter(r => r.cities.includes(this.destination))
         .map(r => r.cities.find(c => c !== this.destination) || '');
-      this.departureCities = connected.filter(c => c !== '');
+      this.departureCities = connected.filter(c => c !== '' && this.allCities.includes(c));
     } else {
       this.departureCities = [...this.allCities];
     }
@@ -377,9 +422,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   selectPopularRoute(dep: string, dest: string) {
-    this.departure = dep;
-    this.updateCitiesLists();
-    this.destination = dest;
+    const stdDep = dep === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dep;
+    const stdDest = dest === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dest;
+
+    this.departure = stdDep;
+    this.destination = stdDest;
     this.updateCitiesLists();
 
     if (!this.departureDate) {
@@ -521,6 +568,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       const destSpots = this.detailedSpots[dest] || [`Bến xe ${dest}`];
 
       return {
+        id: `${dep}-${dest}-${time}-${idx}`,
+        depCity: dep,
+        arrCity: dest,
         depTime: time,
         duration: durationVal,
         distance: distanceVal,
@@ -561,6 +611,109 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const parts = timeStr.split(':');
     if (parts.length < 2) return 0;
     return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+  }
+
+  minutesToTime(mins: number): string {
+    const hours = Math.floor((mins % (24 * 60)) / 60);
+    const minutes = Math.floor(mins % 60);
+    const hStr = hours < 10 ? '0' + hours : '' + hours;
+    const mStr = minutes < 10 ? '0' + minutes : '' + minutes;
+    return `${hStr}:${mStr}`;
+  }
+
+  toggleSubTab(trip: any, subTab: 'seats' | 'amenities' | 'schedule' | 'points' | 'policy') {
+    if (this.activeTripId === trip.id && this.activeSubTab === subTab) {
+      this.activeTripId = null;
+      this.activeSubTab = null;
+    } else {
+      const isSwitchingTrip = this.activeTripId !== trip.id;
+      this.activeTripId = trip.id;
+      this.activeSubTab = subTab;
+      if (subTab === 'seats' && isSwitchingTrip) {
+        this.selectedSeats = [];
+        this.selectedReturnSeats = [];
+      }
+    }
+  }
+
+  getTripStops(trip: any): any[] {
+    if (!trip) return [];
+    if (trip.stops) return trip.stops;
+
+    const depCity = trip.depCity || trip.depLocation;
+    const arrCity = trip.arrCity || trip.arrLocation;
+
+    const depSpots = this.detailedSpots[depCity] || [];
+    const arrSpots = this.detailedSpots[arrCity] || [];
+
+    const names: string[] = [];
+    if (depSpots.length > 0) {
+      names.push(depSpots[0]);
+      for (let i = 1; i < depSpots.length; i++) {
+        names.push(depSpots[i]);
+      }
+    } else {
+      names.push(depCity);
+    }
+
+    if (arrSpots.length > 0) {
+      for (let i = arrSpots.length - 1; i > 0; i--) {
+        if (!names.includes(arrSpots[i])) {
+          names.push(arrSpots[i]);
+        }
+      }
+      if (!names.includes(arrSpots[0])) {
+        names.push(arrSpots[0]);
+      }
+    } else {
+      if (!names.includes(arrCity)) {
+        names.push(arrCity);
+      }
+    }
+
+    const finalNames = names.slice(0, 6);
+    const lastSpot = arrSpots[0] || arrCity;
+    if (!finalNames.includes(lastSpot)) {
+      if (finalNames.length < 6) {
+        finalNames.push(lastSpot);
+      } else {
+        finalNames[5] = lastSpot;
+      }
+    }
+
+    const depMins = this.timeToMinutes(trip.depTime);
+    const arrMins = this.timeToMinutes(trip.arrTime);
+    let diff = arrMins - depMins;
+    if (diff < 0) diff += 24 * 60;
+
+    const stopsList = [];
+    const count = finalNames.length;
+    for (let i = 0; i < count; i++) {
+      const fraction = count > 1 ? i / (count - 1) : 0;
+      const mins = Math.round(depMins + fraction * diff);
+      const stopTime = this.minutesToTime(mins);
+      stopsList.push({
+        time: stopTime,
+        name: finalNames[i],
+        isStart: i === 0,
+        isEnd: i === count - 1
+      });
+    }
+
+    return stopsList;
+  }
+
+  getDetailedSpotsList(city: string, baseTime: string): any[] {
+    const spots = this.detailedSpots[city] || [`Bến xe ${city}`];
+    const baseMins = this.timeToMinutes(baseTime);
+    return spots.map((spot, idx) => {
+      const offset = idx * 15;
+      const mins = baseMins + offset;
+      return {
+        name: spot,
+        time: this.minutesToTime(mins)
+      };
+    });
   }
 
   getFilteredTrips() {
@@ -823,7 +976,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   isSeatSoldOut(seatId: string, isReturn: boolean = false): boolean {
-    const trip = isReturn ? this.selectedReturnTrip : (this.selectedOutboundTrip || this.selectedTrip);
+    const trip = (isReturn ? this.selectedReturnTrip : (this.selectedOutboundTrip || this.selectedTrip)) || this.trips.find(t => t.id === this.activeTripId);
     if (!trip || !trip.soldOutSeats) {
       return false;
     }
@@ -1348,6 +1501,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.searchReturnDropoffText = '';
     this.promoCode = '';
     this.appliedPromo = null;
+    this.activeTripId = null;
+    this.activeSubTab = null;
     this.checkPendingOrder();
     this.scrollToTop();
   }
@@ -1505,6 +1660,139 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
+  }
+
+  // --- CHECKOUT & VOUCHER SIMULATION ---
+
+  get checkoutSubtotal(): number {
+    return this.ticketPrice * this.ticketCount;
+  }
+
+  get discountAmount(): number {
+    if (!this.appliedVoucher) return 0;
+    const subtotal = this.checkoutSubtotal;
+    if (this.appliedVoucher.type === 'percentage') {
+      return subtotal * (this.appliedVoucher.value / 100);
+    } else {
+      return Math.min(this.appliedVoucher.value, subtotal);
+    }
+  }
+
+  get finalTotal(): number {
+    return Math.max(0, this.checkoutSubtotal - this.discountAmount);
+  }
+
+  applyGuestVoucher(): void {
+    if (!this.voucherCodeInput) {
+      this.toastService.showError('Vui lòng nhập mã giảm giá.');
+      return;
+    }
+    const code = this.voucherCodeInput.toUpperCase().trim();
+    // Validate from public list
+    const found = this.voucherService.publicVouchers.find(v => v.code === code);
+    if (found) {
+      this.appliedVoucher = found;
+      this.toastService.showSuccess(`Áp dụng mã ${code} thành công!`);
+    } else {
+      const user = this.authService.currentUser();
+      if (user) {
+        const memberVouchers = this.voucherService.getWalletVouchers(user.id);
+        const memberFound = memberVouchers.find(v => v.code === code);
+        if (memberFound) {
+          this.appliedVoucher = memberFound;
+          this.toastService.showSuccess(`Áp dụng mã ${code} thành công!`);
+          return;
+        }
+      }
+      this.toastService.showError('Mã giảm giá không hợp lệ hoặc đã hết hạn.');
+    }
+  }
+
+  openMemberVoucherModal(): void {
+    const user = this.authService.currentUser();
+    if (!user) return;
+    const wallet = this.voucherService.getWalletVouchers(user.id);
+    if (wallet.length === 0) {
+      this.toastService.showError('Ví của bạn chưa có voucher nào. Hãy lưu mã từ trang chủ!');
+      return;
+    }
+    
+    // Find the best voucher for auto-recommendation
+    const best = this.getBestVoucher(wallet, this.checkoutSubtotal);
+    this.bestVoucherRecommended = best;
+    this.selectedModalVoucher = best; // select best by default
+    this.showVoucherModal = true;
+  }
+
+  getBestVoucher(wallet: Voucher[], subtotal: number): Voucher | null {
+    if (wallet.length === 0) return null;
+    let bestVoucher: Voucher | null = null;
+    let maxDiscount = 0;
+    
+    wallet.forEach(v => {
+      let discount = 0;
+      if (v.type === 'percentage') {
+        discount = subtotal * (v.value / 100);
+      } else {
+        discount = v.value;
+      }
+      if (discount > maxDiscount) {
+        maxDiscount = discount;
+        bestVoucher = v;
+      }
+    });
+    
+    return bestVoucher;
+  }
+
+  confirmMemberVoucher(): void {
+    if (this.selectedModalVoucher) {
+      this.appliedVoucher = this.selectedModalVoucher;
+      this.toastService.showSuccess(`Áp dụng mã ${this.appliedVoucher.code} thành công!`);
+    }
+    this.showVoucherModal = false;
+  }
+
+  removeVoucher(): void {
+    this.appliedVoucher = null;
+    this.voucherCodeInput = '';
+    this.toastService.showSuccess('Đã hủy áp dụng mã giảm giá.');
+  }
+
+  simulatePaymentSuccess(): void {
+    this.toastService.showSuccess('Thanh toán giả lập thành công! Cảm ơn bạn đã lựa chọn VIAGO.');
+    this.appliedVoucher = null;
+    this.voucherCodeInput = '';
+  }
+
+  bookRoute(dep: string, dest: string): void {
+    const stdDep = dep === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dep;
+    const stdDest = dest === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dest;
+
+    this.departure = stdDep;
+    this.destination = stdDest;
+    this.updateCitiesLists();
+    this.cdr.detectChanges();
+
+    const element = document.getElementById('searchPanel');
+    if (element) {
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.offsetHeight : 80;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - headerHeight - 20;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  formatDateToShort(dateStr: string): string {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
   checkPendingOrder() {

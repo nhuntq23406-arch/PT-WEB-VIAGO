@@ -1,11 +1,3 @@
-<section class="news-hero">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <span class="hero-badge">Tin tức mới nhất</span>
-    <h1 class="hero-title">Tin tức Viago</h1>
-    <p class="hero-subtitle">Cập nhật nhanh các tin tức nhà xe, ưu đãi, cẩm nang di chuyển, sự kiện và cơ hội việc làm.</p>
-  </div>
-</section>
 
 <section class="news-filter-bar">
   <div class="container mx-auto px-4 md:px-10 lg:px-16">
@@ -193,20 +185,20 @@
     </div>
 
     <!-- Custom FUTA pagination bar -->
-    <div class="futa-pagination flex justify-center items-center gap-1.5 mt-8" *ngIf="totalPages > 1">
-      <button type="button" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="px-3.5 py-2 border border-slate-200 rounded-xl text-xs font-bold bg-white text-[#123063] hover:border-[#123063] disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer">
+    <div class="viago-pagination-container" *ngIf="totalPages > 1">
+      <button type="button" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="viago-page-btn">
         ‹
       </button>
       <button
         type="button"
         *ngFor="let p of pagesArray"
-        [class.active-page]="currentPage === p"
+        [class.active]="currentPage === p"
         (click)="setPage(p)"
-        class="w-9 h-9 border border-slate-200 rounded-xl text-xs font-bold bg-white text-[#123063] hover:border-[#123063] transition cursor-pointer flex items-center justify-center"
+        class="viago-page-btn"
       >
         {{ p }}
       </button>
-      <button type="button" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)" class="px-3.5 py-2 border border-slate-200 rounded-xl text-xs font-bold bg-white text-[#123063] hover:border-[#123063] disabled:opacity-40 disabled:pointer-events-none transition cursor-pointer">
+      <button type="button" [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)" class="viago-page-btn">
         ›
       </button>
     </div>

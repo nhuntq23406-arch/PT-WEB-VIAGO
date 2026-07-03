@@ -1,0 +1,72 @@
+<!-- Chatbot Floating Bubble Button -->
+<button type="button" class="chatbot-bubble-btn" [class.active]="isOpen" (click)="toggleChat()" title="Trợ lý ảo ViagoAI">
+  <!-- Close icon when open -->
+  <svg *ngIf="isOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+  <!-- Chat bubble icon when closed -->
+  <svg *ngIf="!isOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423 3.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+  </svg>
+</button>
+
+<!-- Chatbot Chat Window -->
+<div class="chatbot-window" *ngIf="isOpen">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-avatar-wrapper">
+        <img src="/asset/images/customer/icon_user.svg" alt="ViagoAI Avatar" />
+        <span class="online-indicator"></span>
+      </div>
+      <div class="chat-title-container">
+        <span class="chat-title">ViagoAI</span>
+        <span class="chat-subtitle">
+          Trợ lý ảo thông minh
+        </span>
+      </div>
+    </div>
+    <button type="button" class="chat-close-btn" (click)="toggleChat()">&times;</button>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-messages-container" #messageContainer>
+    <div *ngFor="let msg of messages" class="message-row" [class.bot]="msg.sender === 'bot'" [class.user]="msg.sender === 'user'">
+      <div class="message-bubble">
+        <div [innerHTML]="renderMessageText(msg.text)" (click)="handleLinkClick($event)"></div>
+        <span class="message-time">{{ msg.timestamp | date:'HH:mm' }}</span>
+      </div>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div *ngIf="isTyping" class="message-row bot">
+      <div class="message-bubble">
+        <div class="typing-indicator">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Input Form -->
+  <form (submit)="sendMessage(); $event.preventDefault()" class="chat-footer">
+    <div class="chat-input-wrapper">
+      <input
+        type="text"
+        [(ngModel)]="userInput"
+        name="userInput"
+        class="chat-input"
+        placeholder="Hỏi ViagoAI..."
+        autocomplete="off"
+        [disabled]="isTyping"
+      />
+    </div>
+    <button type="submit" class="chat-send-btn" [disabled]="!userInput.trim() || isTyping">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+      </svg>
+    </button>
+  </form>
+</div>

@@ -15,6 +15,7 @@ import { ContactComponent } from './featured/customer/about/contact/contact.comp
 import { TicketLookupComponent } from './featured/customer/ticket-lookup/ticket-lookup.component';
 import { InvoiceComponent } from './featured/customer/invoice/invoice.component';
 import { ScheduleComponent } from './featured/customer/schedule/schedule.component';
+import { Profile } from './featured/customer/profile/profile.component';
 import { CareersComponent } from './featured/customer/about/careers/careers.component';
 import { GuideComponent } from './featured/customer/about/guide/guide.component';
 
@@ -22,7 +23,7 @@ import { GuideComponent } from './featured/customer/about/guide/guide.component'
 import { AdminLayoutComponent } from './core/layout/admin-layout/admin-layout';
 
 export const routes: Routes = [
-  // --- TUYẾN ĐƯỜNG ADMIN (CỦA VANH) ---
+  // --- TUYẾN ĐƯỜNG ADMIN (CỦA VANH & NGHI) ---
   {
     path: 'admin',
     pathMatch: 'full',
@@ -157,6 +158,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'khachhang/do-that-lac',
+        loadComponent: () =>
+          import('./featured/admin/khach-hang/do-that-lac/do-that-lac').then(
+            (m) => m.DoThatLacComponent
+          ),
+      },
+      {
         path: 'nhanvien/tai-khoan',
         loadComponent: () =>
           import('./featured/admin/nhan-vien/quan-ly-tai-khoan-nhan-vien/quan-ly-tai-khoan-nhan-vien').then(
@@ -168,6 +176,41 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./featured/admin/nhat-ky/nhat-ky').then(
             (m) => m.NhatKy
+          ),
+      },
+      {
+        path: 'baocao/tai-xe-phu-xe',
+        loadComponent: () =>
+          import('./featured/admin/bao-cao/bc-tai-xe-phu-xe/bao-cao-tai-xe-phu-xe').then(
+            (m) => m.BaoCaoTaiXePhuXeComponent
+          ),
+      },
+      {
+        path: 'tin-tuc',
+        loadComponent: () =>
+          import('./featured/admin/noi-dung/tin-tuc/tin-tuc').then(
+            (m) => m.TinTucComponent
+          ),
+      },
+      {
+        path: 'chinh-sach',
+        loadComponent: () =>
+          import('./featured/admin/noi-dung/chinh-sach/chinh-sach').then(
+            (m) => m.ChinhSachComponent
+          ),
+      },
+      {
+        path: 'khuyen-mai',
+        loadComponent: () =>
+          import('./featured/admin/khuyen-mai/khuyen-mai').then(
+            (m) => m.KhuyenMaiComponent
+          ),
+      },
+      {
+        path: 'tu-khoa-cam',
+        loadComponent: () =>
+          import('./featured/admin/noi-dung/tu-khoa-cam/tu-khoa-cam').then(
+            (m) => m.TuKhoaCamComponent
           ),
       },
       {
@@ -198,6 +241,7 @@ export const routes: Routes = [
       { path: 'tra-cuu-ve', component: TicketLookupComponent },
       { path: 'hoa-don', component: InvoiceComponent },
       { path: 'lich-trinh', component: ScheduleComponent },
+      { path: 'profile', component: Profile },
       { path: 'tuyen-dung', component: CareersComponent }
     ]
   }

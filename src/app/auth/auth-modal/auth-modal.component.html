@@ -1,0 +1,651 @@
+<!-- Auth Modal Backdrop -->
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300" (click)="$event.stopPropagation(); handleClose()">
+  
+  <!-- Main Modal Card Container -->
+  <!-- Note: We adjust max-width dynamically for Step 4 (profile setup) because it needs more width to display the 2-column layout beautifully -->
+  <div [class]="currentStep === 'register-profile' ? 'relative bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,35,111,0.15)] max-w-2xl w-full mx-4 p-8 border border-slate-100 overflow-hidden transition-all transform scale-100' : 'relative bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,35,111,0.15)] max-w-[460px] w-full mx-4 p-8 md:p-10 border border-slate-100 overflow-hidden transition-all transform scale-100'" (click)="$event.stopPropagation()">
+    
+    <!-- Close Button -->
+    <button *ngIf="currentStep !== 'success-status' && currentStep !== 'register-profile'" (click)="handleClose()" class="absolute top-6 right-6 p-1.5 rounded-full text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all cursor-pointer z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+ 
+    <!-- Wrapper for normal steps to hide them during success status -->
+    <div *ngIf="currentStep !== 'success-status'">
+
+ 
+    <!-- Recaptcha container for Firebase Phone Auth (Off-screen) -->
+    <div id="recaptcha-container" class="absolute -left-[9999px] -top-[9999px]"></div>
+
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: LOGIN VIEW -->
+    <!-- ========================================================================= -->
+    <div *ngIf="currentStep === 'login'" class="flex flex-col items-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-8">Đăng nhập</h2>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="w-full space-y-5">
+        <!-- Phone Input -->
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_sdt.svg" class="w-5 h-5 opacity-60" alt="phone icon" />
+            </div>
+            <input type="text" formControlName="phoneNumber" autocomplete="off" placeholder="Nhập số điện thoại" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+          </div>
+          <!-- Validation -->
+          <div *ngIf="loginForm.get('phoneNumber')?.touched && loginForm.get('phoneNumber')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="loginForm.get('phoneNumber')?.errors?.['required']">Vui lòng nhập số điện thoại.</span>
+            <span *ngIf="loginForm.get('phoneNumber')?.errors?.['pattern']">Số điện thoại không hợp lệ.</span>
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_mat_khau.svg" class="w-5 h-5 opacity-60" alt="password icon" />
+            </div>
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="off" placeholder="Mật khẩu" class="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+            <button type="button" (click)="toggleShowPassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+              <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.822 7.822L21 21m-2.228-2.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+            </button>
+          </div>
+          <!-- Validation -->
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Vui lòng nhập mật khẩu.</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Mật khẩu phải chứa ít nhất 8 ký tự.</span>
+          </div>
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="flex justify-end">
+          <a (click)="setStep('forgot')" class="text-sm font-semibold text-[#FF6600] hover:text-[#e05900] cursor-pointer hover:underline">Quên mật khẩu?</a>
+        </div>
+
+        <!-- General Error/Success Alerts - Positioned directly above CTA button -->
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start animate-fade-in">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all cursor-pointer">
+          Đăng nhập
+        </button>
+      </form>
+
+      <!-- Toggle Registration Link -->
+      <div class="mt-8 text-center text-sm text-slate-500 font-medium">
+        Bạn chưa có tài khoản? 
+        <a (click)="setStep('register-phone')" class="text-[#FF6600] font-bold hover:underline cursor-pointer">Đăng ký ngay</a>
+      </div>
+    </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- FORGOT PASSWORD FLOW -->
+    <!-- ========================================================================= -->
+    
+    <!-- STEP 1: ENTER PHONE -->
+    <div *ngIf="currentStep === 'forgot'" class="flex flex-col items-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-4">Quên mật khẩu</h2>
+      <p class="text-slate-500 text-sm text-center mb-8 font-medium">Nhập số điện thoại đã đăng ký để nhận mã xác thực OTP khôi phục mật khẩu.</p>
+      
+      <form [formGroup]="forgotForm" (ngSubmit)="onForgotSubmit()" class="w-full space-y-6">
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_sdt.svg" class="w-5 h-5 opacity-60" alt="phone icon" />
+            </div>
+            <input type="text" formControlName="phoneNumber" autocomplete="off" placeholder="Nhập số điện thoại" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+          </div>
+          <div *ngIf="forgotForm.get('phoneNumber')?.touched && forgotForm.get('phoneNumber')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="forgotForm.get('phoneNumber')?.errors?.['required']">Vui lòng nhập số điện thoại.</span>
+            <span *ngIf="forgotForm.get('phoneNumber')?.errors?.['pattern']">Số điện thoại không hợp lệ.</span>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start animate-fade-in">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <button type="submit" class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all cursor-pointer">
+          Gửi mã xác thực
+        </button>
+      </form>
+
+      <a (click)="setStep('login')" class="mt-8 flex items-center justify-start w-full gap-2 text-sm font-bold text-[#00236F] hover:text-blue-900 cursor-pointer group">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span>Quay lại đăng nhập</span>
+      </a>
+    </div>
+
+    <!-- STEP 2: ENTER OTP -->
+    <div *ngIf="currentStep === 'forgot-otp'" class="flex flex-col items-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-3">Nhập mã xác thực</h2>
+      <p class="text-slate-500 text-sm text-center mb-8 font-medium">Mã xác thực đã được gửi về số <span class="font-bold text-[#00236F]">{{ resetPhoneNumber }}</span></p>
+
+      <!-- Blue Test Environment OTP Alertbox -->
+      <div *ngIf="generatedOtp" class="w-full max-w-sm mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-850 flex gap-2 items-center justify-center animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5 text-blue-600 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+        <span>Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
+      </div>
+      
+      <!-- Single Hidden Input OTP Container -->
+      <div class="relative flex justify-center gap-2 md:gap-3 mb-6 w-full max-w-sm mx-auto">
+        <!-- Hidden input covering the entire area -->
+        <input 
+          #otpInput
+          type="text" 
+          maxlength="6" 
+          pattern="[0-9]*"
+          inputmode="numeric"
+          autocomplete="off"
+          [value]="otpString"
+          (input)="onOtpInput($event)"
+          (focus)="isOtpFocused = true"
+          (blur)="isOtpFocused = false"
+          (paste)="onOtpPaste($event)"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-text z-10"
+        />
+        <!-- 6 Visual Boxes -->
+        <div 
+          *ngFor="let box of [0, 1, 2, 3, 4, 5]; let i = index"
+          [class]="(isOtpFocused && otpString.length === i) 
+            ? 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-[#00236F] ring-2 ring-[#00236F]/10 bg-white rounded-xl transition-all' 
+            : 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-slate-200 bg-slate-50 rounded-xl transition-all'"
+        >
+          {{ otpString.charAt(i) }}
+        </div>
+      </div>
+
+      <div class="flex justify-between w-full max-w-sm mb-6 text-sm font-semibold">
+        <span class="text-slate-500">
+          Thời gian còn lại: 
+          <span class="text-[#FF6600] font-bold tracking-wider">{{ getFormattedTime() }}</span>
+        </span>
+        <button 
+          type="button" 
+          (click)="resendForgotOtp()" 
+          [disabled]="otpTimer > 0" 
+          class="text-[#00236F] disabled:text-slate-400 hover:text-blue-900 cursor-pointer disabled:cursor-not-allowed hover:underline"
+        >
+          Gửi lại mã
+        </button>
+      </div>
+
+      <div *ngIf="errorMessage" class="w-full max-w-sm bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start mb-5 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+          <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <button 
+        type="button" 
+        (click)="onForgotOtpSubmit()" 
+        class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer"
+      >
+        Tiếp tục
+      </button>
+
+      <a (click)="setStep('forgot')" class="flex items-center justify-start w-full gap-2 text-sm font-bold text-[#00236F] hover:text-blue-900 cursor-pointer group">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span>Quay lại</span>
+      </a>
+    </div>
+
+    <!-- STEP 3: RESET PASSWORD (ĐẶT LẠI MẬT KHẨU) -->
+    <div *ngIf="currentStep === 'forgot-reset'" class="flex flex-col items-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-8">Đặt lại mật khẩu</h2>
+      
+      <form [formGroup]="resetForm" (ngSubmit)="onResetSubmit()" class="w-full space-y-5">
+        <!-- New Password -->
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_mat_khau.svg" class="w-5 h-5 opacity-60" alt="password icon" />
+            </div>
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="off" placeholder="Nhập mật khẩu mới (ít nhất 8 ký tự)" class="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+            <button type="button" (click)="toggleShowPassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+              <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.822 7.822L21 21m-2.228-2.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="resetForm.get('password')?.touched && resetForm.get('password')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="resetForm.get('password')?.errors?.['required']">Vui lòng nhập mật khẩu mới.</span>
+            <span *ngIf="resetForm.get('password')?.errors?.['minlength']">Mật khẩu phải chứa ít nhất 8 ký tự.</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_mat_khau.svg" class="w-5 h-5 opacity-60" alt="password icon" />
+            </div>
+            <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" autocomplete="off" placeholder="Nhập lại mật khẩu mới" class="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+            <button type="button" (click)="toggleShowConfirmPassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+              <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.822 7.822L21 21m-2.228-2.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="resetForm.get('confirmPassword')?.touched && resetForm.get('confirmPassword')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="resetForm.get('confirmPassword')?.errors?.['required']">Vui lòng nhập lại mật khẩu mới.</span>
+            <span *ngIf="resetForm.get('confirmPassword')?.errors?.['passwordMismatch']">Mật khẩu mới nhập lại không trùng khớp.</span>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start animate-fade-in">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+
+
+        <button type="submit" class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all cursor-pointer">
+          Xác nhận
+        </button>
+      </form>
+
+      <a (click)="setStep('forgot-otp')" class="mt-8 flex items-center justify-start w-full gap-2 text-sm font-bold text-[#00236F] hover:text-blue-900 cursor-pointer group">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span>Quay lại</span>
+      </a>
+    </div>
+
+
+    <!-- STEP 1: REGISTER ENTER PHONE (Figma Image 2) -->
+    <div *ngIf="currentStep === 'register-phone'" class="flex flex-col items-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-8">Đăng ký</h2>
+      
+      <form [formGroup]="registerPhoneForm" (ngSubmit)="onRegisterPhoneSubmit()" class="w-full space-y-6">
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_sdt.svg" class="w-5 h-5 opacity-60" alt="phone icon" />
+            </div>
+            <input type="text" formControlName="phoneNumber" autocomplete="off" placeholder="Nhập số điện thoại" class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+          </div>
+          <div *ngIf="registerPhoneForm.get('phoneNumber')?.touched && registerPhoneForm.get('phoneNumber')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="registerPhoneForm.get('phoneNumber')?.errors?.['required']">Vui lòng nhập số điện thoại.</span>
+            <span *ngIf="registerPhoneForm.get('phoneNumber')?.errors?.['pattern']">Số điện thoại không hợp lệ.</span>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start animate-fade-in">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <button type="submit" class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all cursor-pointer">
+          Đăng ký
+        </button>
+      </form>
+
+      <div class="mt-8 text-center text-sm text-slate-500 font-medium">
+        Bạn đã có tài khoản? 
+        <a (click)="setStep('login')" class="text-[#FF6600] font-bold hover:underline cursor-pointer">Đăng nhập</a>
+      </div>
+    </div>
+
+    <!-- STEP 2: REGISTER OTP (Figma Image 3) -->
+    <div *ngIf="currentStep === 'register-otp'" class="flex flex-col items-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-3">Nhập mã xác thực</h2>
+      <p class="text-slate-500 text-sm text-center mb-8 font-medium">Mã xác thực đã được gửi về số <span class="font-bold text-[#00236F]">{{ registerPhoneNumber }}</span></p>
+
+      <!-- Blue Test Environment OTP Alertbox -->
+      <div *ngIf="generatedOtp" class="w-full max-w-sm mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-850 flex gap-2 items-center justify-center animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5 text-blue-600 shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 111.063.852l-.708 2.836a.75.75 0 001.063.852l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+        <span>Mã OTP vừa được tạo là: <strong class="text-blue-900 font-bold text-sm tracking-wider">{{generatedOtp}}</strong></span>
+      </div>
+      
+      <!-- Single Hidden Input OTP Container -->
+      <div class="relative flex justify-center gap-2 md:gap-3 mb-6 w-full max-w-sm mx-auto">
+        <!-- Hidden input covering the entire area -->
+        <input 
+          #otpInput
+          type="text" 
+          maxlength="6" 
+          pattern="[0-9]*"
+          inputmode="numeric"
+          autocomplete="off"
+          [value]="otpString"
+          (input)="onOtpInput($event)"
+          (focus)="isOtpFocused = true"
+          (blur)="isOtpFocused = false"
+          (paste)="onOtpPaste($event)"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-text z-10"
+        />
+        <!-- 6 Visual Boxes -->
+        <div 
+          *ngFor="let box of [0, 1, 2, 3, 4, 5]; let i = index"
+          [class]="(isOtpFocused && otpString.length === i) 
+            ? 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-[#00236F] ring-2 ring-[#00236F]/10 bg-white rounded-xl transition-all' 
+            : 'w-11 h-11 md:w-12 md:h-12 text-center flex items-center justify-center text-xl font-bold border border-slate-200 bg-slate-50 rounded-xl transition-all'"
+        >
+          {{ otpString.charAt(i) }}
+        </div>
+      </div>
+
+      <div class="flex justify-between w-full max-w-sm mb-6 text-sm font-semibold">
+        <span class="text-slate-500">
+          Thời gian còn lại: 
+          <span class="text-[#FF6600] font-bold tracking-wider">{{ getFormattedTime() }}</span>
+        </span>
+        <button 
+          type="button" 
+          (click)="resendRegisterOtp()" 
+          [disabled]="otpTimer > 0" 
+          class="text-[#00236F] disabled:text-slate-400 hover:text-blue-900 cursor-pointer disabled:cursor-not-allowed hover:underline"
+        >
+          Gửi lại mã
+        </button>
+      </div>
+
+      <div *ngIf="errorMessage" class="w-full max-w-sm bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start mb-5 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+          <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <button 
+        type="button" 
+        (click)="onRegisterOtpSubmit()" 
+        class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer"
+      >
+        Tiếp tục
+      </button>
+
+      <a (click)="setStep('register-phone')" class="flex items-center justify-start w-full gap-2 text-sm font-bold text-[#00236F] hover:text-blue-900 cursor-pointer group">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span>Quay lại</span>
+      </a>
+    </div>
+
+    <!-- STEP 3: REGISTER PASSWORD SETUP (Figma Image 4) -->
+    <div *ngIf="currentStep === 'register-password'" class="flex flex-col items-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-8">Thiết lập mật khẩu</h2>
+      
+      <form [formGroup]="registerPasswordForm" (ngSubmit)="onRegisterPasswordSubmit()" class="w-full space-y-5">
+        <!-- New Password -->
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_mat_khau.svg" class="w-5 h-5 opacity-60" alt="password icon" />
+            </div>
+            <input [type]="showPassword ? 'text' : 'password'" formControlName="password" autocomplete="off" placeholder="Nhập mật khẩu (ít nhất 8 ký tự)" class="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+            <button type="button" (click)="toggleShowPassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+              <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.822 7.822L21 21m-2.228-2.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="registerPasswordForm.get('password')?.touched && registerPasswordForm.get('password')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="registerPasswordForm.get('password')?.errors?.['required']">Vui lòng nhập mật khẩu.</span>
+            <span *ngIf="registerPasswordForm.get('password')?.errors?.['minlength']">Mật khẩu phải chứa ít nhất 8 ký tự.</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <img src="/asset/images/customer/icon_mat_khau.svg" class="w-5 h-5 opacity-60" alt="password icon" />
+            </div>
+            <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" autocomplete="off" placeholder="Nhập lại mật khẩu" class="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-sm font-medium" />
+            <button type="button" (click)="toggleShowConfirmPassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+              <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.822 7.822L21 21m-2.228-2.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+            </button>
+          </div>
+          <div *ngIf="registerPasswordForm.get('confirmPassword')?.touched && registerPasswordForm.get('confirmPassword')?.invalid" class="text-red-500 text-xs mt-1.5 pl-1.5">
+            <span *ngIf="registerPasswordForm.get('confirmPassword')?.errors?.['required']">Vui lòng nhập lại mật khẩu.</span>
+            <span *ngIf="registerPasswordForm.get('confirmPassword')?.errors?.['passwordMismatch']">Mật khẩu nhập lại không trùng khớp.</span>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start animate-fade-in">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <button type="submit" class="w-full bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white py-3.5 rounded-xl font-bold text-base shadow-md hover:shadow-lg transition-all cursor-pointer">
+          Xác nhận
+        </button>
+      </form>
+
+      <a (click)="setStep('register-otp')" class="mt-8 flex items-center justify-start w-full gap-2 text-sm font-bold text-[#00236F] hover:text-blue-900 cursor-pointer group">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 transition-transform group-hover:-translate-x-1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        <span>Quay lại</span>
+      </a>
+    </div>
+
+    <!-- STEP 4: REGISTER PROFILE SETUP (Figma Image 5) -->
+    <div *ngIf="currentStep === 'register-profile'" class="flex flex-col">
+      <h2 class="text-2xl md:text-3xl font-extrabold text-[#00236F] text-center mb-2">Thiết lập hồ sơ của bạn</h2>
+      
+      <!-- Light Blue Info Subtitle Bar -->
+      <div class="bg-blue-50 rounded-xl p-3 flex gap-2.5 items-center mb-6 border border-blue-100">
+        <img src="/asset/images/customer/icon_inf.svg" class="w-4 h-4 text-blue-600" alt="info icon" />
+        <span class="text-[11px] md:text-xs text-blue-800 font-medium leading-relaxed">Cập nhật hồ sơ để nhận hỗ trợ tốt nhất khi đặt vé, hoặc bổ sung sau tại trang Thông tin cá nhân</span>
+      </div>
+
+      <!-- Real-time Progress Bar -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center text-xs font-bold mb-2">
+          <span class="text-[#00236F]">Mức độ hoàn thiện hồ sơ</span>
+          <span class="text-[#FF6600]">{{ profileCompleteness }}%</span>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+          <div class="bg-[#FF6600] h-full rounded-full transition-all duration-300" [style.width.%]="profileCompleteness"></div>
+        </div>
+      </div>
+
+      <!-- Main Form Container -->
+      <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          
+          <!-- Column 1: Image Upload -->
+          <div class="flex flex-col items-center justify-center space-y-3">
+            <div (click)="photoFileInput.click()" class="w-28 h-28 bg-slate-50 hover:bg-slate-100/80 rounded-full border-2 border-dashed border-slate-200 relative flex items-center justify-center cursor-pointer transition-all group overflow-hidden shadow-inner">
+              <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Profile Preview" class="w-full h-full object-cover" />
+              
+              <div *ngIf="!avatarPreview" class="flex flex-col items-center text-slate-400 group-hover:text-slate-500 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                </svg>
+              </div>
+
+              <!-- Orange Edit Pencil Indicator -->
+              <div class="absolute bottom-1 right-1 bg-[#FF6600] text-white p-1.5 rounded-full shadow-md border-2 border-white hover:bg-[#e05900] transition-colors flex items-center justify-center">
+                <img src="/asset/images/customer/icon_but_chinh_sua.svg" class="w-3.5 h-3.5 brightness-0 invert" alt="edit icon" />
+              </div>
+            </div>
+            
+            <input type="file" #photoFileInput (change)="onPhotoSelected($event)" accept="image/*" class="hidden" />
+            <p class="text-[10px] text-slate-400 text-center leading-normal">Định dạng: .JPG, .PNG<br>Dung lượng tối đa: 5MB</p>
+          </div>
+
+          <!-- Column 2 & 3: Profile Inputs -->
+          <div class="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Họ và tên -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_personal.svg" class="w-3.5 h-3.5" alt="user icon" />
+                Họ và tên <span class="text-red-500">*</span>
+              </label>
+              <input type="text" formControlName="name" autocomplete="off" placeholder="Nhập họ và tên" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium" />
+              <div *ngIf="profileForm.get('name')?.touched && profileForm.get('name')?.invalid" class="text-red-500 text-[10px] mt-1 pl-1.5">
+                Nhập Họ và tên để tiếp tục
+              </div>
+            </div>
+
+            <!-- Số điện thoại (Disabled) -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_sdt.svg" class="w-3.5 h-3.5" alt="phone icon" />
+                Số điện thoại
+              </label>
+              <div class="relative">
+                <input type="text" [value]="registerPhoneNumber" disabled class="w-full px-3 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-500 select-none" />
+                <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400">
+                  <img src="/asset/images/customer/icon_mat_khau.svg" class="w-4 h-4 opacity-50" alt="lock icon" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Giới tính -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_gioi_tinh.svg" class="w-3.5 h-3.5" alt="gender icon" />
+                Giới tính
+              </label>
+              <select formControlName="gender" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium">
+                <option value="" disabled selected>Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_email.svg" class="w-3.5 h-3.5" alt="email icon" />
+                Email
+              </label>
+              <input type="text" formControlName="email" autocomplete="off" placeholder="example@gmail.com" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium" />
+              <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.value && (profileForm.get('email')?.value.includes('@') || profileForm.get('email')?.value.length > 5)" class="text-red-500 text-[10px] mt-1 pl-1.5">
+                Định dạng email không hợp lệ.
+              </div>
+            </div>
+
+            <!-- Ngày sinh -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_lich.svg" class="w-3.5 h-3.5" alt="birthday icon" />
+                Ngày sinh
+              </label>
+              <div class="relative w-full">
+                <app-lunar-date-picker
+                  formControlName="birthday"
+                ></app-lunar-date-picker>
+              </div>
+            </div>
+
+            <!-- Nghề nghiệp -->
+            <div>
+              <label class="block text-xs font-bold text-[#00236F] mb-1.5 flex items-center gap-1">
+                <img src="/asset/images/customer/icon_nghe_nghiep.svg" class="w-3.5 h-3.5" alt="occupation icon" />
+                Nghề nghiệp
+              </label>
+              <select formControlName="occupation" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00236F]/10 focus:border-[#00236F] transition-all text-xs font-medium">
+                <option value="" disabled selected>Bạn đang là...</option>
+                <option value="Học sinh / Sinh viên">Học sinh / Sinh viên</option>
+                <option value="Nhân viên văn phòng">Nhân viên văn phòng</option>
+                <option value="Kinh doanh tự do">Kinh doanh tự do</option>
+                <option value="Khác">Khác</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Birthday Promo Banner -->
+        <div class="bg-orange-50 border border-orange-100 rounded-xl p-3.5 flex gap-2.5 items-center">
+          <div class="text-[#FF6600]">
+            <img src="/asset/images/customer/icon_qua.svg" class="w-4 h-4 opacity-70 group-hover/item:opacity-100 transition-opacity" alt="user icon" />
+          </div>
+          <span class="text-[11px] md:text-xs text-orange-800 font-bold">Thêm ngày sinh để nhận ngay ưu đãi tháng sinh nhật</span>
+        </div>
+
+        <!-- General Error/Success Alerts - Positioned directly above CTA button container -->
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-100 rounded-xl p-3.5 text-xs text-red-700 flex gap-2 items-start animate-fade-in">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-red-500 shrink-0 mt-0.5">
+            <path fill-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="submit" class="px-6 py-3 bg-[#FF6600] hover:bg-[#e05900] active:bg-[#c74e00] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer">
+            Lưu thông tin
+          </button>
+        </div>
+      </form>
+    </div>
+    </div> <!-- End of wrapper -->
+
+    <!-- Centered Success Status View -->
+    <div *ngIf="currentStep === 'success-status'" class="flex flex-col items-center text-center py-6 animate-scale-up">
+      <!-- Icon trạng thái: Vòng tròn tích Xanh lá cây (bg-emerald-50 text-emerald-500) -->
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-5">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+      </div>
+      <h3 class="text-2xl font-extrabold text-[#00236F] mb-2">{{ successTitle }}</h3>
+    </div>
+
+  </div>
+</div>
