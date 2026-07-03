@@ -72,6 +72,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Generated list of trips
   trips: any[] = [];
+  activeTripId: string | null = null;
+  activeSubTab: 'schedule' | 'points' | 'policy' | null = null;
 
   // Booking process states
   activeTab: 'outbound' | 'return' = 'outbound';
@@ -473,6 +475,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       const destSpots = this.detailedSpots[dest] || [`Bến xe ${dest}`];
 
       return {
+        id: `${dep}-${dest}-${time}-${idx}`,
+        depCity: dep,
+        arrCity: dest,
         depTime: time,
         duration: durationVal,
         distance: distanceVal,
@@ -513,6 +518,104 @@ export class HomeComponent implements OnInit, OnDestroy {
     const parts = timeStr.split(':');
     if (parts.length < 2) return 0;
     return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+  }
+
+  minutesToTime(mins: number): string {
+    const hours = Math.floor((mins % (24 * 60)) / 60);
+    const minutes = Math.floor(mins % 60);
+    const hStr = hours < 10 ? '0' + hours : '' + hours;
+    const mStr = minutes < 10 ? '0' + minutes : '' + minutes;
+    return `${hStr}:${mStr}`;
+  }
+
+  toggleSubTab(trip: any, subTab: 'schedule' | 'points' | 'policy') {
+    if (this.activeTripId === trip.id && this.activeSubTab === subTab) {
+      this.activeTripId = null;
+      this.activeSubTab = null;
+    } else {
+      this.activeTripId = trip.id;
+      this.activeSubTab = subTab;
+    }
+  }
+
+  getTripStops(trip: any): any[] {
+    if (!trip) return [];
+    if (trip.stops) return trip.stops;
+
+    const depCity = trip.depCity || trip.depLocation;
+    const arrCity = trip.arrCity || trip.arrLocation;
+
+    const depSpots = this.detailedSpots[depCity] || [];
+    const arrSpots = this.detailedSpots[arrCity] || [];
+
+    const names: string[] = [];
+    if (depSpots.length > 0) {
+      names.push(depSpots[0]);
+      for (let i = 1; i < depSpots.length; i++) {
+        names.push(depSpots[i]);
+      }
+    } else {
+      names.push(depCity);
+    }
+
+    if (arrSpots.length > 0) {
+      for (let i = arrSpots.length - 1; i > 0; i--) {
+        if (!names.includes(arrSpots[i])) {
+          names.push(arrSpots[i]);
+        }
+      }
+      if (!names.includes(arrSpots[0])) {
+        names.push(arrSpots[0]);
+      }
+    } else {
+      if (!names.includes(arrCity)) {
+        names.push(arrCity);
+      }
+    }
+
+    const finalNames = names.slice(0, 6);
+    const lastSpot = arrSpots[0] || arrCity;
+    if (!finalNames.includes(lastSpot)) {
+      if (finalNames.length < 6) {
+        finalNames.push(lastSpot);
+      } else {
+        finalNames[5] = lastSpot;
+      }
+    }
+
+    const depMins = this.timeToMinutes(trip.depTime);
+    const arrMins = this.timeToMinutes(trip.arrTime);
+    let diff = arrMins - depMins;
+    if (diff < 0) diff += 24 * 60;
+
+    const stopsList = [];
+    const count = finalNames.length;
+    for (let i = 0; i < count; i++) {
+      const fraction = count > 1 ? i / (count - 1) : 0;
+      const mins = Math.round(depMins + fraction * diff);
+      const stopTime = this.minutesToTime(mins);
+      stopsList.push({
+        time: stopTime,
+        name: finalNames[i],
+        isStart: i === 0,
+        isEnd: i === count - 1
+      });
+    }
+
+    return stopsList;
+  }
+
+  getDetailedSpotsList(city: string, baseTime: string): any[] {
+    const spots = this.detailedSpots[city] || [`Bến xe ${city}`];
+    const baseMins = this.timeToMinutes(baseTime);
+    return spots.map((spot, idx) => {
+      const offset = idx * 15;
+      const mins = baseMins + offset;
+      return {
+        name: spot,
+        time: this.minutesToTime(mins)
+      };
+    });
   }
 
   getFilteredTrips() {
@@ -1300,6 +1403,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.searchReturnDropoffText = '';
     this.promoCode = '';
     this.appliedPromo = null;
+    this.activeTripId = null;
+    this.activeSubTab = null;
     this.checkPendingOrder();
     this.scrollToTop();
   }
