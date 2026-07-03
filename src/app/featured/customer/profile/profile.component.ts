@@ -159,6 +159,9 @@ export class Profile implements OnInit, OnDestroy {
       const ticketIdNum = 97589000 + ((seed * 17 + i * 3) % 1000);
       const ticketId = `VE${ticketIdNum}`;
 
+      const orderIdNum = 10000000 + ((seed * 13 + i * 7) % 10000);
+      const orderId = `DH${orderIdNum}`;
+
       const month = String(1 + ((seed + i) % 6)).padStart(2, '0');
       const day = String(1 + ((seed + i * 7) % 28)).padStart(2, '0');
       const dateStr = `2026-${month}-${day}`;
@@ -168,6 +171,7 @@ export class Profile implements OnInit, OnDestroy {
 
       generated.push({
         id: ticketId,
+        orderId: orderId,
         status: status,
         date: dateStr,
         dateLabel: dateLabelStr,
@@ -731,7 +735,7 @@ export class Profile implements OnInit, OnDestroy {
     const tickets = this.userTickets;
     const filtered = tickets.filter(t => {
       const matchSearch = !this.searchQuery || 
-        t.id.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
+        (t.orderId && t.orderId.toLowerCase().includes(this.searchQuery.toLowerCase())) || 
         t.depLoc.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
         t.arrLoc.toLowerCase().includes(this.searchQuery.toLowerCase());
         

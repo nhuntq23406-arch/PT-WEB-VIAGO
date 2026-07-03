@@ -477,6 +477,25 @@ export class TinTucComponent implements OnInit {
 
     const index = this.articles.findIndex(a => a.id === this.editingArticle!.id);
     if (index !== -1) {
+      const original = this.articles[index];
+      const originalTags = original.tags || [];
+      const currentTags = this.editingArticleTags || [];
+      const tagsChanged = originalTags.length !== currentTags.length || originalTags.some((t, i) => t !== currentTags[i]);
+      
+      const hasChanged = 
+        original.tieuDe !== this.editingArticle.tieuDe ||
+        original.moTa !== this.editingArticle.moTa ||
+        original.loai !== this.editingArticle.loai ||
+        original.trangThai !== this.editingArticle.trangThai ||
+        original.image !== this.editingArticle.image ||
+        original.noiBat !== this.editingArticle.noiBat ||
+        tagsChanged;
+
+      if (!hasChanged) {
+        this.toastService.showError('Không có dữ liệu nào thay đổi');
+        return;
+      }
+
       this.editingArticle!.tags = [...this.editingArticleTags];
       this.articles[index] = { ...this.editingArticle! };
       

@@ -392,26 +392,45 @@ export class ChinhSachComponent implements OnInit {
       return;
     }
 
+    // Automatically generate list text for CancelRefund if selected
+    if (this.editingPolicy.loaiChinhSach === 'Chính sách hoàn hủy' && this.editingPolicy.mocThoiGianHuyVe && this.editingPolicy.mocThoiGianHuyVe.length > 0) {
+      let listHtml = '<p>Chính sách hủy vé được quy định rõ ràng nhằm đảm bảo quyền lợi cho cả khách hàng và nhà xe:</p><ul class="policy-list">';
+      const sortedRules = [...this.editingPolicy.mocThoiGianHuyVe].sort((a, b) => b.truocGio - a.truocGio);
+      sortedRules.forEach(r => {
+        const refundPct = 100 - r.phiHuy;
+        if (r.truocGio > 0) {
+          listHtml += `<li>Hủy vé trước ${r.truocGio}h: Hành khách được hoàn lại ${refundPct}% giá vé gốc.</li>`;
+        } else {
+          listHtml += `<li>Hủy vé sát giờ khởi hành: Hành khách được hoàn lại ${refundPct}% giá vé gốc (Phí hủy ${r.phiHuy}%).</li>`;
+        }
+      });
+      listHtml += '</ul>';
+      this.editingPolicy.noiDungChinhSach = listHtml;
+    }
+
     const idx = this.policies.findIndex(p => p.maCS === this.editingPolicy!.maCS);
     if (idx !== -1) {
-      this.editingPolicy.capNhatCuoi = new Date().toISOString().slice(0, 16).replace('T', ' ');
-      
-      // Automatically generate list text for CancelRefund if selected
-      if (this.editingPolicy.loaiChinhSach === 'Chính sách hoàn hủy' && this.editingPolicy.mocThoiGianHuyVe && this.editingPolicy.mocThoiGianHuyVe.length > 0) {
-        let listHtml = '<p>Chính sách hủy vé được quy định rõ ràng nhằm đảm bảo quyền lợi cho cả khách hàng và nhà xe:</p><ul class="policy-list">';
-        const sortedRules = [...this.editingPolicy.mocThoiGianHuyVe].sort((a, b) => b.truocGio - a.truocGio);
-        sortedRules.forEach(r => {
-          const refundPct = 100 - r.phiHuy;
-          if (r.truocGio > 0) {
-            listHtml += `<li>Hủy vé trước ${r.truocGio}h: Hành khách được hoàn lại ${refundPct}% giá vé gốc.</li>`;
-          } else {
-            listHtml += `<li>Hủy vé sát giờ khởi hành: Hành khách được hoàn lại ${refundPct}% giá vé gốc (Phí hủy ${r.phiHuy}%).</li>`;
-          }
-        });
-        listHtml += '</ul>';
-        this.editingPolicy.noiDungChinhSach = listHtml;
+      const original = this.policies[idx];
+      const originalRules = original.mocThoiGianHuyVe || [];
+      const currentRules = this.editingPolicy.mocThoiGianHuyVe || [];
+      let rulesChanged = originalRules.length !== currentRules.length;
+      if (!rulesChanged) {
+        rulesChanged = originalRules.some((r, i) => r.truocGio !== currentRules[i].truocGio || r.phiHuy !== currentRules[i].phiHuy);
       }
 
+      const hasChanged = 
+        original.tenChinhSach !== this.editingPolicy.tenChinhSach ||
+        original.loaiChinhSach !== this.editingPolicy.loaiChinhSach ||
+        original.trangThai !== this.editingPolicy.trangThai ||
+        original.noiDungChinhSach !== this.editingPolicy.noiDungChinhSach ||
+        rulesChanged;
+
+      if (!hasChanged) {
+        this.toastService.showError('Không có dữ liệu nào thay đổi');
+        return;
+      }
+
+      this.editingPolicy.capNhatCuoi = new Date().toISOString().slice(0, 16).replace('T', ' ');
       const policyCode = this.editingPolicy.maCS;
       this.policies[idx] = { ...this.editingPolicy! };
       this.filterData();

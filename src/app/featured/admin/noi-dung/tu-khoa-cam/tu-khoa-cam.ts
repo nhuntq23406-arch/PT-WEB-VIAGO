@@ -324,6 +324,17 @@ export class TuKhoaCamComponent implements OnInit {
 
     const idx = this.keywords.findIndex(k => k.maTuKhoa === this.editingKeyword!.maTuKhoa);
     if (idx !== -1) {
+      const original = this.keywords[idx];
+      const hasChanged = 
+        original.noiDung !== this.editingKeyword.noiDung ||
+        original.mucDoViPham !== this.editingKeyword.mucDoViPham ||
+        original.trangThai !== this.editingKeyword.trangThai;
+
+      if (!hasChanged) {
+        this.toastService.showError('Không có dữ liệu nào thay đổi');
+        return;
+      }
+
       let moTa = 'Nhắc nhở vi phạm (không chặn)';
       if (this.editingKeyword.mucDoViPham === 'Nặng') moTa = 'Chặn gửi, bắt buộc nhập lại';
       else if (this.editingKeyword.mucDoViPham === 'Trung bình') moTa = 'Yêu cầu chỉnh sửa nội dung';
