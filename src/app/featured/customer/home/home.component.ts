@@ -162,7 +162,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedPaymentMethod = 'vietqr';
 
   detailedSpots: { [key: string]: string[] } = {
-    'TP.HCM': ['Bến xe Miền Đông Mới', 'Bến xe Miền Tây', 'Văn phòng Quận 1', 'Văn phòng Quận 5', 'Văn phòng Quận 10', 'Ngã tư Thủ Đức', 'Ngã tư An Sương', 'Suối Tiên'],
+    'TP. Hồ Chí Minh': ['Bến xe Miền Đông Mới', 'Bến xe Miền Tây', 'Văn phòng Quận 1', 'Văn phòng Quận 5', 'Văn phòng Quận 10', 'Ngã tư Thủ Đức', 'Ngã tư An Sương', 'Suối Tiên'],
     'Cần Thơ': ['Bến xe Trung tâm Cần Thơ', 'Văn phòng Ninh Kiều', 'Bến Ninh Kiều', 'Đại học Cần Thơ'],
     'Vũng Tàu': ['Bến xe Vũng Tàu', 'Văn phòng Vũng Tàu', 'Bãi Sau', 'Bãi Trước'],
     'Đà Lạt': ['Bến xe Liên Tỉnh Đà Lạt', 'Chợ Đà Lạt', 'Hồ Xuân Hương', 'Quảng trường Lâm Viên'],
@@ -186,7 +186,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   allCities = [
-    'TP.HCM',
+    'TP. Hồ Chí Minh',
     'Đà Lạt',
     'Nha Trang',
     'Cần Thơ',
@@ -198,14 +198,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
 
   routesData = [
-    { cities: ['TP.HCM', 'Cần Thơ'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '170 km', duration: '3.5 tiếng', tripsPerDay: 12, price: 180000 },
-    { cities: ['TP.HCM', 'Vũng Tàu'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '100 km', duration: '2 tiếng', tripsPerDay: 20, price: 160000 },
+    { cities: ['TP. Hồ Chí Minh', 'Cần Thơ'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '170 km', duration: '3.5 tiếng', tripsPerDay: 12, price: 180000 },
+    { cities: ['TP. Hồ Chí Minh', 'Vũng Tàu'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '100 km', duration: '2 tiếng', tripsPerDay: 20, price: 160000 },
     { cities: ['Đà Lạt', 'Buôn Ma Thuột'], types: ['Giường nằm 34 chỗ'], distance: '210 km', duration: '5 tiếng', tripsPerDay: 8, price: 220000 },
     { cities: ['Đà Lạt', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '140 km', duration: '3 tiếng', tripsPerDay: 15, price: 170000 },
     { cities: ['Cần Thơ', 'Rạch Giá'], types: ['Giường nằm 34 chỗ', 'Limousine 9 chỗ'], distance: '115 km', duration: '2.5 tiếng', tripsPerDay: 10, price: 150000 },
-    { cities: ['TP.HCM', 'Phan Thiết'], types: ['Giường nằm 34 chỗ'], distance: '200 km', duration: '4 tiếng', tripsPerDay: 18, price: 200000 },
-    { cities: ['TP.HCM', 'Đà Lạt'], types: ['Cabin 22 chỗ', 'Limousine 9 chỗ'], distance: '310 km', duration: '7 tiếng', tripsPerDay: 25, price: 250000 },
-    { cities: ['TP.HCM', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '435 km', duration: '8.5 tiếng', tripsPerDay: 22, price: 300000 },
+    { cities: ['TP. Hồ Chí Minh', 'Phan Thiết'], types: ['Giường nằm 34 chỗ'], distance: '200 km', duration: '4 tiếng', tripsPerDay: 18, price: 200000 },
+    { cities: ['TP. Hồ Chí Minh', 'Đà Lạt'], types: ['Cabin 22 chỗ', 'Limousine 9 chỗ'], distance: '310 km', duration: '7 tiếng', tripsPerDay: 25, price: 250000 },
+    { cities: ['TP. Hồ Chí Minh', 'Nha Trang'], types: ['Limousine 9 chỗ', 'Giường nằm 34 chỗ'], distance: '435 km', duration: '8.5 tiếng', tripsPerDay: 22, price: 300000 },
     { cities: ['Nha Trang', 'Đà Nẵng'], types: ['Limousine 9 chỗ', 'Cabin 22 chỗ'], distance: '530 km', duration: '11 tiếng', tripsPerDay: 14, price: 350000 }
   ];
 
@@ -246,19 +246,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Read query parameters to auto-fill search panel or apply voucher
     this.route.queryParams.subscribe(params => {
       if (params['departure']) {
-        this.departure = params['departure'];
+        this.departure = params['departure'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['departure'];
         this.updateCitiesLists();
       }
       if (params['destination']) {
-        this.destination = params['destination'];
+        this.destination = params['destination'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['destination'];
         this.updateCitiesLists();
       }
       if (params['from']) {
-        this.departure = params['from'];
+        this.departure = params['from'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['from'];
         this.updateCitiesLists();
       }
       if (params['to']) {
-        this.destination = params['to'];
+        this.destination = params['to'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['to'];
         this.updateCitiesLists();
       }
       if (params['date']) {
@@ -338,8 +338,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   updateCitiesLists() {
-    if (this.departure === 'TP.HCM' || this.departure === 'TP. Hồ Chí Minh') {
-      // If Departure is TP.HCM / TP. Hồ Chí Minh, Destination is limited to: Đà Lạt, Nha Trang, Cần Thơ, Vũng Tàu
+    if (this.departure === 'TP. Hồ Chí Minh') {
+      // If Departure is TP. Hồ Chí Minh, Destination is limited to: Đà Lạt, Nha Trang, Cần Thơ, Vũng Tàu
       this.destinationCities = ['Đà Lạt', 'Nha Trang', 'Cần Thơ', 'Vũng Tàu'];
     } else if (this.departure) {
       // Exclude departure city
@@ -378,9 +378,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   selectPopularRoute(dep: string, dest: string) {
-    this.departure = dep;
-    this.updateCitiesLists();
-    this.destination = dest;
+    const stdDep = dep === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dep;
+    const stdDest = dest === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dest;
+
+    this.departure = stdDep;
+    this.destination = stdDest;
     this.updateCitiesLists();
 
     if (!this.departureDate) {
@@ -1612,9 +1614,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   bookRoute(dep: string, dest: string): void {
-    this.departure = dep;
+    const stdDep = dep === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dep;
+    const stdDest = dest === 'TP.HCM' ? 'TP. Hồ Chí Minh' : dest;
+
+    this.departure = stdDep;
+    this.destination = stdDest;
     this.updateCitiesLists();
-    this.destination = dest;
     this.cdr.detectChanges();
 
     const element = document.getElementById('searchPanel');
