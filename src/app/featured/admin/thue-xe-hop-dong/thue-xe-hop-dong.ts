@@ -411,6 +411,105 @@ export class ThueXeHopDongComponent {
     // Logic mở modal sẽ được bổ sung sau
   }
 
+  createQuoteFromRequest(request: RequestItem) {
+    if (!request) return;
+    
+    // 1. Update request status
+    request.status = 'Đã báo giá';
+    
+    // 2. Generate new quote
+    const newQuoteCode = 'BG' + Math.floor(100 + Math.random() * 900);
+    const basePriceNum = request.vehicleType.includes('Limousine') ? 2500000 : 5500000;
+    const feesNum = 300000;
+    const totalNum = basePriceNum * request.vehicles + feesNum;
+    
+    const newQuote: CustomerQuoteItem = {
+      code: newQuoteCode,
+      requestCode: request.code,
+      customer: request.customer,
+      phone: request.phone,
+      vehicleType: request.vehicleType,
+      vehicles: request.vehicles,
+      price: totalNum.toLocaleString('vi-VN') + 'đ',
+      sent: new Date().toLocaleDateString('vi-VN'),
+      status: 'Chờ phản hồi',
+      guests: request.guests,
+      pickup: request.pickup,
+      destination: request.destination,
+      basePrice: (basePriceNum * request.vehicles).toLocaleString('vi-VN') + 'đ',
+      fees: feesNum.toLocaleString('vi-VN') + 'đ',
+      discount: '0đ',
+      total: totalNum.toLocaleString('vi-VN') + 'đ'
+    };
+    
+    this.customerQuotes.unshift(newQuote);
+    
+    // 3. Switch tab and open quote detail
+    this.setTab('quote');
+    this.setSubTab('customer');
+    this.viewDetail(newQuote, 'quote');
+  }
+
+  convertQuoteToContract(quote: CustomerQuoteItem) {
+    if (!quote) return;
+    
+    // 1. Update quote status
+    quote.status = 'Đã chấp nhận';
+    
+    // 2. Generate new contract
+    const newContractCode = 'HD' + Math.floor(100 + Math.random() * 900);
+    const newContract: ContractItem = {
+      code: newContractCode,
+      quoteCode: quote.code,
+      created: new Date().toLocaleDateString('vi-VN'),
+      customer: quote.customer,
+      phone: quote.phone,
+      email: quote.customer.toLowerCase().replace(/\s+/g, '') + '@example.com',
+      vehicleType: quote.vehicleType,
+      vehicles: quote.vehicles,
+      guests: quote.guests,
+      departure: new Date(Date.now() + 3*24*60*60*1000).toLocaleDateString('vi-VN'),
+      amount: quote.total,
+      status: 'Chờ thực hiện',
+      pickup: quote.pickup,
+      destination: quote.destination,
+      price: quote.basePrice,
+      fees: quote.fees,
+      discount: quote.discount,
+      total: quote.total,
+      terms: [
+        'Có tài xế đi kèm',
+        'Giá có thể thay đổi nếu phát sinh lộ trình',
+        'Khách cần xác nhận trước ngày khởi hành',
+        'Hợp đồng có thể bị hủy theo chính sách hủy'
+      ],
+      history: [
+        'Khách gửi yêu cầu',
+        'Nhân viên gửi báo giá',
+        'Khách xác nhận',
+        'Tạo hợp đồng'
+      ]
+    };
+    
+    this.contracts.unshift(newContract);
+    
+    // 3. Switch tab and open contract detail
+    this.setTab('contract');
+    this.viewDetail(newContract, 'contract');
+  }
+
+  updateContractStatus(contract: ContractItem) {
+    if (!contract) return;
+    
+    if (contract.status === 'Chờ thực hiện') {
+      contract.status = 'Đang thực hiện';
+      contract.history.push('Bắt đầu thực hiện chuyến đi');
+    } else if (contract.status === 'Đang thực hiện') {
+      contract.status = 'Hoàn thành';
+      contract.history.push('Hoàn thành chuyến đi, tất toán hợp đồng');
+    }
+  }
+
   private get activePageKey(): PageKey {
     if (this.activeMainTab === 'quote') {
       return this.activeQuoteSubTab === 'standard' ? 'standard' : 'customer';
