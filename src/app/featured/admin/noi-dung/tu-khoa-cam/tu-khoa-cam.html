@@ -103,12 +103,12 @@
         <table class="news-table">
           <thead>
             <tr>
-              <th width="12%">MÃ TỪ KHÓA</th>
-              <th width="25%">NỘI DUNG TỪ KHÓA</th>
-              <th width="15%" class="text-center">MỨC ĐỘ VI PHẠM</th>
-              <th width="12%" class="text-center">TRẠNG THÁI</th>
-              <th width="15%">CẬP NHẬT CUỐI</th>
-              <th width="15%">NGƯỜI THỰC HIỆN</th>
+              <th width="10%">MÃ TỪ KHÓA</th>
+              <th width="28%">NỘI DUNG TỪ KHÓA</th>
+              <th width="14%" class="text-center">MỨC ĐỘ VI PHẠM</th>
+              <th width="14%" class="status-cell text-center">TRẠNG THÁI</th>
+              <th width="16%" class="text-center">CẬP NHẬT CUỐI</th>
+              <th width="14%" class="text-center">NGƯỜI THỰC HIỆN</th>
               <th width="6%" class="text-center">CHỨC NĂNG</th>
             </tr>
           </thead>
@@ -121,14 +121,14 @@
                   {{ kw.mucDoViPham }}
                 </span>
               </td>
-              <td class="text-center">
+              <td class="status-cell text-center">
                 <div class="status-pill" [ngClass]="kw.trangThai === 'Đang áp dụng' ? 'status-active' : 'status-inactive'">
                   <span>{{ kw.trangThai }}</span>
                 </div>
               </td>
-              <td class="text-slate-600">{{ kw.capNhatCuoi }}</td>
-              <td>
-                <div class="actor-cell">
+              <td class="text-slate-600 table-cell-nowrap text-center">{{ kw.capNhatCuoi }}</td>
+              <td class="text-center">
+                <div class="actor-cell justify-center">
                   <span class="text-slate-700 font-medium">{{ kw.nguoiThucHien }}</span>
                 </div>
               </td>

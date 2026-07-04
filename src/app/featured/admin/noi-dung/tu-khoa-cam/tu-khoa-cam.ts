@@ -15,94 +15,94 @@ interface Keyword {
 
 const MOCK_KEYWORDS: Keyword[] = [
   {
-    "maTuKhoa": "TKC00001",
-    "noiDung": "lừa đảo",
-    "mucDoViPham": "Nặng",
-    "moTaMucDo": "Chặn gửi, bắt buộc nhập lại",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:15",
-    "nguoiThucHien": "Ban Vận Hành"
-  }, 
-  {
-    "maTuKhoa": "TKC00002",
-    "noiDung": "quỵt tiền",
-    "mucDoViPham": "Nặng",
-    "moTaMucDo": "Chặn gửi, bắt buộc nhập lại",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:17",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00001',
+    noiDung: 'lừa đảo',
+    mucDoViPham: 'Nặng',
+    moTaMucDo: 'Chặn gửi, bắt buộc nhập lại',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:15',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00003",
-    "noiDung": "đm",
-    "mucDoViPham": "Nặng",
-    "moTaMucDo": "Chặn gửi, bắt buộc nhập lại",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:20",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00002',
+    noiDung: 'quỵt tiền',
+    mucDoViPham: 'Nặng',
+    moTaMucDo: 'Chặn gửi, bắt buộc nhập lại',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:17',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00004",
-    "noiDung": "chửi thề",
-    "mucDoViPham": "Trung bình",
-    "moTaMucDo": "Yêu cầu chỉnh sửa nội dung",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:22",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00003',
+    noiDung: 'đm',
+    mucDoViPham: 'Nặng',
+    moTaMucDo: 'Chặn gửi, bắt buộc nhập lại',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:20',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00005",
-    "noiDung": "bóp dái",
-    "mucDoViPham": "Nặng",
-    "moTaMucDo": "Chặn gửi, bắt buộc nhập lại",
-    "trangThai": "Đã khóa",
-    "capNhatCuoi": "2026-07-03 10:25",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00004',
+    noiDung: 'chửi thề',
+    mucDoViPham: 'Trung bình',
+    moTaMucDo: 'Yêu cầu chỉnh sửa nội dung',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:22',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00006",
-    "noiDung": "vcl",
-    "mucDoViPham": "Trung bình",
-    "moTaMucDo": "Yêu cầu chỉnh sửa nội dung",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:30",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00005',
+    noiDung: 'ăn chặn',
+    mucDoViPham: 'Nặng',
+    moTaMucDo: 'Chặn gửi, bắt buộc nhập lại',
+    trangThai: 'Đã khóa',
+    capNhatCuoi: '2026-07-03 10:25',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00007",
-    "noiDung": "nhà xe rách",
-    "mucDoViPham": "Nhẹ",
-    "moTaMucDo": "Nhắc nhở vi phạm (không chặn)",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:32",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00006',
+    noiDung: 'vcl',
+    mucDoViPham: 'Trung bình',
+    moTaMucDo: 'Yêu cầu chỉnh sửa nội dung',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:30',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00008",
-    "noiDung": "tài xế mất dạy",
-    "mucDoViPham": "Trung bình",
-    "moTaMucDo": "Yêu cầu chỉnh sửa nội dung",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:35",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00007',
+    noiDung: 'nhà xe rách',
+    mucDoViPham: 'Nhẹ',
+    moTaMucDo: 'Nhắc nhở vi phạm (không chặn)',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:32',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00009",
-    "noiDung": "xe bẩn",
-    "mucDoViPham": "Nhẹ",
-    "moTaMucDo": "Nhắc nhở vi phạm (không chặn)",
-    "trangThai": "Đang áp dụng",
-    "capNhatCuoi": "2026-07-03 10:38",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00008',
+    noiDung: 'tài xế mất dạy',
+    mucDoViPham: 'Trung bình',
+    moTaMucDo: 'Yêu cầu chỉnh sửa nội dung',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:35',
+    nguoiThucHien: 'Ban Vận Hành'
   },
   {
-    "maTuKhoa": "TKC00010",
-    "noiDung": "chạy ẩu",
-    "mucDoViPham": "Nhẹ",
-    "moTaMucDo": "Nhắc nhở vi phạm (không chặn)",
-    "trangThai": "Đã khóa",
-    "capNhatCuoi": "2026-07-03 10:40",
-    "nguoiThucHien": "Ban Vận Hành"
+    maTuKhoa: 'TKC00009',
+    noiDung: 'xe bẩn',
+    mucDoViPham: 'Nhẹ',
+    moTaMucDo: 'Nhắc nhở vi phạm (không chặn)',
+    trangThai: 'Đang áp dụng',
+    capNhatCuoi: '2026-07-03 10:38',
+    nguoiThucHien: 'Ban Vận Hành'
+  },
+  {
+    maTuKhoa: 'TKC00010',
+    noiDung: 'chạy ẩu',
+    mucDoViPham: 'Nhẹ',
+    moTaMucDo: 'Nhắc nhở vi phạm (không chặn)',
+    trangThai: 'Đã khóa',
+    capNhatCuoi: '2026-07-03 10:40',
+    nguoiThucHien: 'Ban Vận Hành'
   }
 ];
 
@@ -155,11 +155,15 @@ export class TuKhoaCamComponent implements OnInit {
   get totalKeywords(): number {
     return this.keywords.length;
   }
+  private isActiveStatus(status: string): boolean {
+    return status === 'Đang áp dụng';
+  }
+
   get totalActive(): number {
-    return this.keywords.filter(k => k.trangThai === 'Đang áp dụng').length;
+    return this.keywords.filter(k => this.isActiveStatus(k.trangThai)).length;
   }
   get totalLocked(): number {
-    return this.keywords.filter(k => k.trangThai === 'Đã khóa').length;
+    return this.keywords.filter(k => !this.isActiveStatus(k.trangThai)).length;
   }
   get totalNang(): number {
     return this.keywords.filter(k => k.mucDoViPham === 'Nặng').length;
@@ -184,9 +188,9 @@ export class TuKhoaCamComponent implements OnInit {
 
     // Tab Filter
     if (this.currentTab === 'Đang áp dụng') {
-      result = result.filter(k => k.trangThai === 'Đang áp dụng');
+      result = result.filter(k => this.isActiveStatus(k.trangThai));
     } else if (this.currentTab === 'Đã khóa') {
-      result = result.filter(k => k.trangThai === 'Đã khóa');
+      result = result.filter(k => !this.isActiveStatus(k.trangThai));
     }
 
     // Dropdown Filter
@@ -370,7 +374,7 @@ export class TuKhoaCamComponent implements OnInit {
       const keywordCode = this.editingKeyword.maTuKhoa;
       this.closeEditModal();
       this.showCenteredSuccess(
-        nextStatus === 'Đã khóa' ? 'Đã khóa từ khóa' : 'Đã mở khóa từ khóa',
+        nextStatus === 'Đã khóa' ? 'Đã khóa từ khóa' : 'Đã kích hoạt lại từ khóa',
         `Trạng thái của ${keywordCode} đã được cập nhật thành ${nextStatus}.`
       );
     }
