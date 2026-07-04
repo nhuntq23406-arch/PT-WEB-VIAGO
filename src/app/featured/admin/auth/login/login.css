@@ -7,7 +7,7 @@
   background:
     radial-gradient(circle at top left, rgba(255, 138, 0, 0.14), transparent 30%),
     linear-gradient(135deg, #002664 0%, #001b48 48%, #001233 100%);
-  font-family: "Montserrat", "Inter", Helvetica, sans-serif;
+  font-family: "Inter", "Inter", Helvetica, sans-serif;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -99,7 +99,7 @@
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  font-family: "Inter", "Montserrat", Helvetica, sans-serif;
+  font-family: "Inter", "Inter", Helvetica, sans-serif;
   color: #0f172a;
   background-color: #f8fafc;
   box-sizing: border-box;
@@ -132,7 +132,7 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  font-family: "Montserrat", "Inter", Helvetica, sans-serif;
+  font-family: "Inter", "Inter", Helvetica, sans-serif;
   transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
   margin-top: 8px;
   box-shadow: 0 8px 18px rgba(255, 138, 0, 0.24);

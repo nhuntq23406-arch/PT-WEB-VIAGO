@@ -33,6 +33,8 @@ export class PhuongTienComponent implements OnInit {
   isUploadingIns = false;
   isUploadingVeh = false;
   errors: any = {};
+  toasts: { id: number; message: string; type: 'success' | 'error' }[] = [];
+  toastCounter = 0;
 
   vehicleConfigs: { [key: string]: { floors: number, rows: number, seats: number } } = {
     'Limousine': { floors: 2, rows: 2, seats: 22 },
@@ -121,16 +123,9 @@ export class PhuongTienComponent implements OnInit {
   }
 
   getPaginationItems(): (number | string)[] {
-    const total = this.totalPages;
-    const current = this.currentPage;
-
-    if (total <= 6) {
-      return Array.from({ length: total }, (_, i) => i + 1);
-    }
-
-    if (current <= 3) return [1, 2, 3, 4, '...', total - 2, total - 1, total];
-    if (current >= total - 2) return [1, 2, 3, '...', total - 3, total - 2, total - 1, total];
-    return [1, '...', current - 1, current, current + 1, '...', total];
+    const groupStart = Math.floor((this.currentPage - 1) / 3) * 3 + 1;
+    const groupEnd = Math.min(groupStart + 2, this.totalPages);
+    return Array.from({ length: groupEnd - groupStart + 1 }, (_, i) => groupStart + i);
   }
 
   clearFilters() {
@@ -138,6 +133,7 @@ export class PhuongTienComponent implements OnInit {
     this.selectedType = 'Tất cả loại xe';
     this.selectedStatus = 'Tất cả trạng thái';
     this.filterVehicles();
+    this.addToast('Đã xóa bộ lọc phương tiện.', 'success');
   }
 
   openAddModal() {
@@ -186,14 +182,19 @@ export class PhuongTienComponent implements OnInit {
       vehicleImage: !this.currentVehicle.vehicleImage
     };
 
-    if (Object.values(this.errors).some(Boolean)) return;
+    if (Object.values(this.errors).some(Boolean)) {
+      this.addToast('Vui lòng nhập đầy đủ thông tin bắt buộc.', 'error');
+      return;
+    }
 
     if (this.isEditMode) {
       const index = this.allVehicles.findIndex(v => v.id === this.currentVehicle.id);
       if (index !== -1) this.allVehicles[index] = this.currentVehicle;
+      this.addToast('Đã cập nhật phương tiện thành công.', 'success');
     } else {
       this.currentVehicle.id = Math.max(0, ...this.allVehicles.map(v => v.id)) + 1;
       this.allVehicles.push(this.currentVehicle);
+      this.addToast('Đã thêm phương tiện mới thành công.', 'success');
     }
     this.filterVehicles();
     this.closeModal();
@@ -238,5 +239,19 @@ export class PhuongTienComponent implements OnInit {
 
   toggleStatus() {
     this.currentVehicle.status = this.currentVehicle.status === 'Đã khóa' ? 'Đang hoạt động' : 'Đã khóa';
+    this.addToast(
+      this.currentVehicle.status === 'Đã khóa' ? 'Đã khóa phương tiện.' : 'Đã mở khóa phương tiện.',
+      'success'
+    );
+  }
+
+  addToast(message: string, type: 'success' | 'error') {
+    const id = this.toastCounter++;
+    this.toasts.push({ id, message, type });
+    setTimeout(() => this.removeToast(id), 3000);
+  }
+
+  removeToast(id: number) {
+    this.toasts = this.toasts.filter(t => t.id !== id);
   }
 }

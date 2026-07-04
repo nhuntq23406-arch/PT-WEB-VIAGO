@@ -260,11 +260,21 @@ export class ChinhSachComponent implements OnInit {
   }
 
   getPages(): number[] {
-    const pages = [];
-    for (let i = 1; i <= this.totalPages; i++) {
-      pages.push(i);
+    const windowSize = 3;
+    let start = this.currentPage - Math.floor(windowSize / 2);
+    let end = this.currentPage + Math.floor(windowSize / 2);
+
+    if (start < 1) {
+      start = 1;
+      end = Math.min(this.totalPages, windowSize);
     }
-    return pages;
+
+    if (end > this.totalPages) {
+      end = this.totalPages;
+      start = Math.max(1, this.totalPages - windowSize + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
   }
 
   // --- TIMELINE RULE ACTIONS ---

@@ -86,7 +86,7 @@
     <!-- Grid of Route Cards (Premium layout) -->
     <div class="routes-grid-container" *ngIf="filteredRoutes.length > 0">
       
-      <div class="route-premium-card" *ngFor="let route of filteredRoutes" [class.route-locked]="route.status === 'locked'" 
+      <div class="route-premium-card" *ngFor="let route of paginatedRoutes" [class.route-locked]="route.status === 'locked'" 
            style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 24px; width: 100%; box-sizing: border-box;">
         
         <!-- Left Section: Status & Title -->
@@ -154,18 +154,47 @@
             </div>
           </div>
 
-          <button class="card-action-btn" title="Chỉnh sửa chi tiết" (click)="openEditModal(route, $event)" style="background-color: var(--primary-light); color: var(--primary); padding: 8px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="8" x2="13" y2="8"></line>
-              <line x1="3" y1="13" x2="13" y2="13"></line>
-              <line x1="3" y1="18" x2="9" y2="18"></line>
-              <path d="M16 14l4.5-4.5a1.5 1.5 0 0 1 2.1 2.1L18 16.5H16V14z"></path>
-            </svg>
+          <button class="admin-action-btn edit" title="Chỉnh sửa chi tiết" aria-label="Chỉnh sửa chi tiết" (click)="openEditModal(route, $event)">
+            <span class="material-symbols-outlined">edit_note</span>
           </button>
         </div>
 
       </div>
 
+    </div>
+
+    <div class="pagination-footer" *ngIf="filteredRoutes.length > 0">
+      <div class="pagination-summary">
+        Hiển thị {{ (currentPage - 1) * pageSize + 1 }} -
+        {{ currentPage * pageSize > filteredRoutes.length ? filteredRoutes.length : currentPage * pageSize }}
+        của {{ filteredRoutes.length }} tuyến xe
+      </div>
+      <div class="pagination-controls">
+        <button
+          class="pagination-btn"
+          type="button"
+          (click)="setPage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          aria-label="Trang trước">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button
+          class="pagination-btn"
+          type="button"
+          *ngFor="let page of getPaginationItems()"
+          [class.active]="currentPage === page"
+          (click)="setPage(page)">
+          {{ page }}
+        </button>
+        <button
+          class="pagination-btn"
+          type="button"
+          (click)="setPage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+          aria-label="Trang sau">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
     </div>
 
     <!-- Empty State -->

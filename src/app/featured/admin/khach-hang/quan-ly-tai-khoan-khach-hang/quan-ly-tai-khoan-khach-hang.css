@@ -787,3 +787,548 @@ tbody tr.cancelled {
   border: 1px solid #e2e8f0;
 }
 
+/* Admin UI standard sync from bo-cuc */
+:host {
+  --admin-primary: #002664;
+  --admin-primary-soft: #1e3a8a;
+  --admin-primary-hover: #3053b3;
+  --admin-secondary: #ff6a00;
+  --admin-secondary-hover: #ff8126;
+  --admin-success: #10b981;
+  --admin-success-bg: #ecfdf5;
+  --admin-success-border: #bbf7d0;
+  --admin-success-text: #047857;
+  --admin-bg: #f8fafc;
+  --admin-surface: #ffffff;
+  --admin-border: #e2e8f0;
+  --admin-border-strong: #cbd5e1;
+  --admin-text: #0f172a;
+  --admin-text-body: #334155;
+  --admin-text-muted: #64748b;
+  --admin-danger: #ef4444;
+  --admin-radius: 8px;
+  --admin-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+:host,
+:host * {
+  font-family: Inter, Arial, sans-serif;
+}
+
+:host .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+}
+
+.ticket-list-page,
+.customer-page,
+.lookup-page,
+.management-container {
+  background: var(--admin-bg);
+  color: var(--admin-text);
+}
+
+.lookup-panel,
+.table-card,
+.content-card,
+.summary-card,
+.edit-modal,
+.create-modal {
+  border: 1px solid #d9e2ef;
+  border-radius: var(--admin-radius);
+  background: var(--admin-surface);
+  box-shadow: var(--admin-shadow);
+}
+
+.page-title,
+.main-title,
+.lookup-heading h1,
+.modal-header h2 {
+  color: var(--admin-primary);
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.tab-button.active,
+.pill-tab.active,
+.horizontal-tab-btn.active {
+  background: var(--admin-primary) !important;
+  color: #ffffff !important;
+  border-color: var(--admin-primary) !important;
+}
+
+input,
+select,
+textarea {
+  border-color: var(--admin-border-strong) !important;
+  border-radius: var(--admin-radius) !important;
+  color: var(--admin-text) !important;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--admin-primary) !important;
+  box-shadow: 0 0 0 3px rgba(0, 38, 100, 0.12) !important;
+}
+
+.primary-button,
+.create-button,
+.add-button {
+  border-color: var(--admin-success) !important;
+  background: var(--admin-success) !important;
+  color: #ffffff !important;
+  border-radius: var(--admin-radius) !important;
+  font-weight: 900 !important;
+}
+
+.primary-button:hover,
+.create-button:hover,
+.add-button:hover {
+  background: #059669 !important;
+}
+
+.save-button,
+.modal-save-button {
+  border-color: var(--admin-secondary) !important;
+  background: var(--admin-secondary) !important;
+  color: #ffffff !important;
+  border-radius: var(--admin-radius) !important;
+  font-weight: 900 !important;
+}
+
+.save-button:hover,
+.modal-save-button:hover {
+  background: var(--admin-secondary-hover) !important;
+}
+
+.secondary-button,
+.cancel-button {
+  border: 1px solid var(--admin-primary) !important;
+  background: #ffffff !important;
+  color: var(--admin-primary) !important;
+  border-radius: var(--admin-radius) !important;
+  font-weight: 900 !important;
+}
+
+.secondary-button:hover,
+.cancel-button:hover {
+  background: #eff6ff !important;
+  color: var(--admin-primary-hover) !important;
+}
+
+.action-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--admin-radius);
+  padding: 0;
+  background: transparent;
+  color: var(--admin-text-muted);
+}
+
+.action-btn-icon:hover,
+.action-btn-icon.edit:hover {
+  background: #eff6ff;
+  color: var(--admin-primary);
+}
+
+.pagination-bar {
+  border-top: 1px solid var(--admin-border);
+  background: var(--admin-bg);
+  color: var(--admin-text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pagination-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  min-height: 32px;
+  border: 1px solid var(--admin-border-strong) !important;
+  border-radius: var(--admin-radius) !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+  color: var(--admin-text-body) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  line-height: 1;
+}
+
+.page-button .material-symbols-outlined {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.page-button:hover:not(:disabled):not(.active) {
+  background: #f8fafc !important;
+  color: var(--admin-primary-soft) !important;
+}
+
+.page-button.active {
+  border-color: var(--admin-primary-soft) !important;
+  background: var(--admin-primary-soft) !important;
+  color: #ffffff !important;
+}
+
+.page-button:disabled {
+  color: #cbd5e1 !important;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Final header/layout normalization from bo-cuc */
+.ticket-list-page {
+  display: flex !important;
+  min-height: calc(100vh - 78px) !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  box-sizing: border-box !important;
+  padding: 12px !important;
+  background: var(--admin-bg) !important;
+}
+
+.lookup-panel,
+.table-panel {
+  border: 1px solid #d9e2ef !important;
+  border-radius: var(--admin-radius) !important;
+  background: var(--admin-surface) !important;
+  box-shadow: var(--admin-shadow) !important;
+}
+
+.lookup-panel {
+  padding: 24px 30px !important;
+}
+
+.lookup-heading {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  margin: 0 0 16px !important;
+}
+
+.lookup-heading h1 {
+  margin: 2px 0 0 !important;
+  color: var(--admin-primary) !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+}
+
+.eyebrow {
+  color: var(--admin-text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+.summary-item span {
+  color: var(--admin-text) !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+}
+
+.summary-item small {
+  color: var(--admin-text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+.admin-create-banner {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  min-width: min(472px, 100%) !important;
+  border: 1px solid var(--admin-success-border) !important;
+  border-radius: var(--admin-radius) !important;
+  padding: 14px 26px !important;
+  background: var(--admin-success-bg) !important;
+  color: var(--admin-success-text) !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.admin-create-banner:hover {
+  border-color: #86efac !important;
+  background: #dcfce7 !important;
+  box-shadow: 0 8px 18px rgba(16, 185, 129, 0.12) !important;
+}
+
+.admin-create-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 auto !important;
+  color: var(--admin-success-text) !important;
+}
+
+.admin-create-icon .material-symbols-outlined {
+  font-size: 26px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+}
+
+.admin-create-text strong {
+  display: block !important;
+  color: #166534 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.admin-create-text span {
+  display: block !important;
+  margin-top: 3px !important;
+  color: var(--admin-success-text) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+
+.filters-grid {
+  grid-template-columns: minmax(260px, 1.4fr) minmax(170px, 0.8fr) minmax(150px, 0.7fr) !important;
+}
+
+/* Summary cards and status tabs */
+.summary-strip {
+  gap: 10px !important;
+}
+
+.summary-item {
+  position: relative !important;
+  min-height: 78px !important;
+  border: 1px solid var(--admin-border-strong) !important;
+  border-left-width: 4px !important;
+  border-radius: var(--admin-radius) !important;
+  padding: 14px 16px !important;
+  background: #ffffff !important;
+  color: var(--admin-text) !important;
+  cursor: default !important;
+  text-align: left !important;
+  box-shadow: var(--admin-shadow) !important;
+}
+
+.summary-item.paid {
+  border-left-color: var(--admin-success) !important;
+}
+
+.summary-item.cancelled {
+  border-left-color: var(--admin-danger) !important;
+}
+
+.account-status-tabs {
+  display: inline-flex !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  gap: 4px !important;
+  margin-bottom: 16px !important;
+  border: 1px solid var(--admin-border) !important;
+  border-radius: var(--admin-radius) !important;
+  padding: 4px !important;
+  background: var(--admin-bg) !important;
+  overflow-x: auto !important;
+}
+
+.pill-tab-item {
+  min-height: 36px !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  padding: 8px 20px !important;
+  background: transparent !important;
+  color: #475569 !important;
+  font-family: Inter, Arial, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease, color 0.2s ease !important;
+}
+
+.pill-tab-item:hover {
+  color: var(--admin-primary) !important;
+}
+
+.pill-tab-item.active {
+  background: var(--admin-primary) !important;
+  color: #ffffff !important;
+  box-shadow: var(--admin-shadow) !important;
+}
+
+/* Account page structure: header, stats and list panel are separate blocks */
+.account-header-panel .lookup-heading {
+  margin: 0 !important;
+}
+
+.account-summary-section {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.account-summary-section .summary-strip {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  width: 100% !important;
+  gap: 10px !important;
+  margin: 0 !important;
+}
+
+.account-summary-section .summary-item {
+  background: #ffffff !important;
+}
+
+.table-control-panel {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 20px !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  padding: 20px 24px !important;
+  background: var(--admin-bg) !important;
+}
+
+.table-control-panel .account-status-tabs {
+  display: flex !important;
+  width: fit-content !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  border: 1px solid var(--admin-border) !important;
+  border-radius: var(--admin-radius) !important;
+  padding: 4px !important;
+  background: var(--admin-bg) !important;
+  box-shadow: none !important;
+  overflow-x: auto !important;
+}
+
+.table-control-panel .pill-tab-item {
+  min-height: 36px !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  padding: 8px 20px !important;
+  background: transparent !important;
+  color: #475569 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+.table-control-panel .pill-tab-item.active {
+  background: var(--admin-primary) !important;
+  color: #ffffff !important;
+  box-shadow: var(--admin-shadow) !important;
+}
+
+.table-panel > .filters-grid {
+  display: grid !important;
+  grid-template-columns: minmax(260px, 1.4fr) minmax(170px, 0.8fr) minmax(150px, 0.7fr) !important;
+  gap: 10px !important;
+  align-items: end !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  padding: 14px 24px !important;
+  background: var(--admin-bg) !important;
+}
+
+.table-panel > .filters-grid .field label {
+  color: var(--admin-text-muted) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+.table-panel .table-header {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .account-summary-section .summary-strip,
+  .table-panel > .filters-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Customer account layout sync: summary cards inside the top white panel */
+.account-header-panel {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 16px !important;
+}
+
+.account-header-panel .account-summary-section {
+  margin: 0 !important;
+}
+
+.account-header-panel .summary-strip {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(110px, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.account-header-panel .summary-item {
+  min-height: 58px !important;
+  border: 1px solid var(--admin-border, #e2e8f0) !important;
+  border-left: 4px solid #64748b !important;
+  border-radius: 7px !important;
+  padding: 8px 10px !important;
+  background: #f8fafc !important;
+  box-shadow: none !important;
+}
+
+.account-header-panel .summary-item.paid {
+  border-left-color: #059669 !important;
+}
+
+.account-header-panel .summary-item.cancelled {
+  border-left-color: #dc2626 !important;
+}
+
+.account-header-panel .summary-item span {
+  color: #0f172a !important;
+  font-size: 18px !important;
+}
+
+.table-control-panel,
+.table-panel > .filters-grid,
+.pagination-bar {
+  background: #ffffff !important;
+}
+
+.table-panel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.table-panel > .table-control-panel {
+  order: 0 !important;
+}
+
+.table-panel > .filters-grid {
+  order: 1 !important;
+}
+
+.table-panel > .table-scroll {
+  order: 2 !important;
+}
+
+.table-panel > .pagination-bar {
+  order: 3 !important;
+}
+

@@ -262,7 +262,7 @@
   align-items: center;
   width: fit-content;
   margin-top: -4px;
-  font-family: "Montserrat-Medium", Helvetica;
+  font-family: "Inter", Helvetica;
   font-weight: 500;
   color: #ffffff;
   font-size: 14px;
@@ -277,7 +277,7 @@
   align-items: center;
   width: fit-content;
   margin-top: -1px;
-  font-family: "Montserrat-Medium", Helvetica;
+  font-family: "Inter", Helvetica;
   font-weight: 500;
   color: #ffffff;
   font-size: 14px;
@@ -356,7 +356,7 @@
   align-items: center;
   width: fit-content;
   margin-top: -1px;
-  font-family: "Montserrat-SemiBold", Helvetica;
+  font-family: "Inter", Helvetica;
   font-weight: 600;
   color: #ffffff;
   font-size: 14px;
@@ -371,7 +371,7 @@
   align-items: center;
   width: fit-content;
   margin-top: -1px;
-  font-family: "Montserrat-Regular", Helvetica;
+  font-family: "Inter", Helvetica;
   font-weight: 400;
   color: #9ca3af;
   font-size: 12px;
@@ -404,7 +404,7 @@
   align-items: center;
   padding: 10px 24px 10px 36px;
   text-decoration: none;
-  font-family: "Montserrat-Medium", Helvetica;
+  font-family: "Inter", Helvetica;
   font-weight: 500;
   color: #c7d2fe;
   font-size: 13px;
@@ -475,7 +475,7 @@
   padding: 10px 16px;
   text-decoration: none;
   color: #374151;
-  font-family: "Montserrat-Medium", Helvetica, sans-serif;
+  font-family: "Inter", Helvetica, sans-serif;
   font-size: 13px;
   font-weight: 500;
   transition: background-color 0.2s ease, color 0.2s ease;

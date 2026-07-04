@@ -359,7 +359,7 @@ export class DoThatLacComponent implements OnInit {
   editFormSubmitted = false;
 
   // Pagination
-  itemsPerPage = 12;
+  itemsPerPage = 10;
   currentPage = 1;
 
   toastService = inject(ToastService);
@@ -458,11 +458,9 @@ export class DoThatLacComponent implements OnInit {
   }
 
   getPages(): number[] {
-    const pages = [];
-    for (let i = 1; i <= this.totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
+    const groupStart = Math.floor((this.currentPage - 1) / 3) * 3 + 1;
+    const groupEnd = Math.min(groupStart + 2, this.totalPages);
+    return Array.from({ length: groupEnd - groupStart + 1 }, (_, i) => groupStart + i);
   }
 
   // --- MODALS ---

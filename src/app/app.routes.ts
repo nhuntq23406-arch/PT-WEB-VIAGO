@@ -202,8 +202,8 @@ export const routes: Routes = [
       {
         path: 'khuyen-mai',
         loadComponent: () =>
-          import('./featured/admin/khuyen-mai/khuyen-mai').then(
-            (m) => m.KhuyenMaiComponent
+          import('./featured/admin/noi-dung/khuyen-mai/khuyen-mai').then(
+            (m) => m.QuanLyKhuyenMaiComponent
           ),
       },
       {

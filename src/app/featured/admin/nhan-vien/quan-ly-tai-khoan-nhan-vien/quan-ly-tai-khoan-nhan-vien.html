@@ -1,26 +1,51 @@
 <div class="ticket-list-page">
-  <section class="lookup-panel">
+  <section class="lookup-panel account-header-panel">
     <div class="lookup-heading">
       <div>
         <span class="eyebrow">Quản lý hệ thống</span>
         <h1>Quản lý tài khoản nhân viên</h1>
       </div>
+      <div class="admin-create-banner" role="button" tabindex="0" (click)="openCreateModal()" title="Them tai khoan nhan vien moi">
+        <span class="admin-create-icon">
+          <span class="material-symbols-outlined">add_circle</span>
+        </span>
+        <span class="admin-create-text">
+          <strong>Th&ecirc;m t&agrave;i kho&#7843;n m&#7899;i</strong>
+          <span>T&#7841;o h&#7891; s&#417; nh&acirc;n vi&ecirc;n, ph&acirc;n quy&#7873;n v&agrave; c&#7853;p nh&#7853;t th&ocirc;ng tin li&ecirc;n h&#7879;.</span>
+        </span>
+      </div>
     </div>
 
-    <!-- Summary Strip -->
-    <div class="lookup-summary-section" style="margin-bottom: 16px;">
-      <div class="summary-strip" style="grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%;">
-        <button type="button" class="summary-item" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+  <!-- Summary Strip -->
+    <section class="account-summary-section">
+    <div class="summary-strip">
+        <div class="summary-item">
           <span>{{ employees.length }}</span>
           <small>Tất cả tài khoản</small>
-        </button>
-        <button type="button" class="summary-item paid" [class.active]="activeTab === 'active'" (click)="setTab('active')">
+        </div>
+        <div class="summary-item paid">
           <span>{{ activeCount }}</span>
           <small>Đang hoạt động</small>
-        </button>
-        <button type="button" class="summary-item cancelled" [class.active]="activeTab === 'locked'" (click)="setTab('locked')">
+        </div>
+        <div class="summary-item cancelled">
           <span>{{ lockedCount }}</span>
           <small>Đã khóa</small>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="table-panel">
+    <div class="table-control-panel">
+      <div class="pill-tabs account-status-tabs">
+        <button type="button" class="pill-tab-item" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+          Tất cả ({{ employees.length }})
+        </button>
+        <button type="button" class="pill-tab-item" [class.active]="activeTab === 'active'" (click)="setTab('active')">
+          Đang hoạt động ({{ activeCount }})
+        </button>
+        <button type="button" class="pill-tab-item" [class.active]="activeTab === 'locked'" (click)="setTab('locked')">
+          Đã khóa ({{ lockedCount }})
         </button>
       </div>
     </div>
@@ -146,20 +171,19 @@
         Hiển thị {{ startIndex }}-{{ endIndex }} / {{ filteredEmployees.length }} nhân viên
       </span>
       <div class="pagination-controls">
-        <label>
-          Số dòng
-          <select [ngModel]="pageSize" (ngModelChange)="updatePageSize($event)">
-            <option [value]="8">8</option>
-            <option [value]="12">12</option>
-            <option [value]="20">20</option>
-          </select>
-        </label>
-        <button type="button" class="page-button" [disabled]="validCurrentPage <= 1" (click)="changePage(validCurrentPage - 1)">
-          Trước
+        <button type="button" class="page-button" [disabled]="validCurrentPage <= 1" (click)="changePage(validCurrentPage - 1)" aria-label="Trang trước">
+          <span class="material-symbols-outlined">chevron_left</span>
         </button>
-        <strong>{{ validCurrentPage }} / {{ totalPages }}</strong>
-        <button type="button" class="page-button" [disabled]="validCurrentPage >= totalPages" (click)="changePage(validCurrentPage + 1)">
-          Sau
+        <button
+          type="button"
+          class="page-button"
+          *ngFor="let page of getPaginationItems()"
+          [class.active]="page === validCurrentPage"
+          (click)="changePage(page)">
+          {{ page }}
+        </button>
+        <button type="button" class="page-button" [disabled]="validCurrentPage >= totalPages" (click)="changePage(validCurrentPage + 1)" aria-label="Trang sau">
+          <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
     </div>

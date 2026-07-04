@@ -54,6 +54,8 @@ export class DonTraComponent implements OnInit {
   isEditMode = false;
   currentPoint: Partial<DiemDonTra> = {};
   isUploadingImage = false;
+  toasts: { id: number; message: string; type: 'success' | 'error' }[] = [];
+  toastCounter = 0;
   
   errors: { name?: boolean; city?: boolean; address?: boolean } = {};
 
@@ -173,16 +175,9 @@ export class DonTraComponent implements OnInit {
   }
 
   getPaginationItems(): (number | string)[] {
-    const total = this.totalPages;
-    const current = this.currentPage;
-
-    if (total <= 6) {
-      return Array.from({ length: total }, (_, i) => i + 1);
-    }
-
-    if (current <= 3) return [1, 2, 3, 4, '...', total - 2, total - 1, total];
-    if (current >= total - 2) return [1, 2, 3, '...', total - 3, total - 2, total - 1, total];
-    return [1, '...', current - 1, current, current + 1, '...', total];
+    const groupStart = Math.floor((this.currentPage - 1) / 3) * 3 + 1;
+    const groupEnd = Math.min(groupStart + 2, this.totalPages);
+    return Array.from({ length: groupEnd - groupStart + 1 }, (_, i) => groupStart + i);
   }
 
   applyFilter() {
@@ -194,6 +189,7 @@ export class DonTraComponent implements OnInit {
     this.cityFilters[this.activeTab] = 'all';
     this.typeFilters[this.activeTab] = 'all';
     this.filterPoints();
+    this.addToast('Đã xóa bộ lọc địa điểm.', 'success');
   }
 
   openAddModal() {
@@ -233,6 +229,7 @@ export class DonTraComponent implements OnInit {
     };
 
     if (Object.values(this.errors).some(Boolean)) {
+      this.addToast('Vui lòng nhập đầy đủ thông tin bắt buộc.', 'error');
       return;
     }
 
@@ -241,12 +238,14 @@ export class DonTraComponent implements OnInit {
       if (index !== -1) {
         this.allPoints[index] = this.currentPoint as DiemDonTra;
       }
+      this.addToast('Đã cập nhật địa điểm thành công.', 'success');
     } else {
       const newPoint: DiemDonTra = {
         ...(this.currentPoint as DiemDonTra),
         id: Math.max(0, ...this.allPoints.map(p => p.id)) + 1
       };
       this.allPoints.push(newPoint);
+      this.addToast('Đã thêm địa điểm mới thành công.', 'success');
     }
 
     this.filterPoints();
@@ -256,8 +255,10 @@ export class DonTraComponent implements OnInit {
   toggleStatus() {
     if (this.currentPoint.status === 'active') {
       this.currentPoint.status = 'locked';
+      this.addToast('Đã khóa địa điểm.', 'success');
     } else {
       this.currentPoint.status = 'active';
+      this.addToast('Đã mở khóa địa điểm.', 'success');
     }
   }
 
@@ -277,5 +278,15 @@ export class DonTraComponent implements OnInit {
 
   removeImage() {
     this.currentPoint.image = null;
+  }
+
+  addToast(message: string, type: 'success' | 'error') {
+    const id = this.toastCounter++;
+    this.toasts.push({ id, message, type });
+    setTimeout(() => this.removeToast(id), 3000);
+  }
+
+  removeToast(id: number) {
+    this.toasts = this.toasts.filter(t => t.id !== id);
   }
 }

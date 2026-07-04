@@ -381,6 +381,32 @@ export class ThueXeHopDongComponent {
   }
 
   openCreateAction() {
+    if (this.activeMainTab === 'request') {
+      const request = this.filteredRequests[0] || this.requests[0];
+      if (request) {
+        this.viewDetail(request, 'request');
+      }
+      return;
+    }
+
+    if (this.activeMainTab === 'quote') {
+      if (this.activeQuoteSubTab === 'standard') {
+        this.activeQuoteSubTab = 'customer';
+      }
+
+      const quote = this.filteredCustomerQuotes[0] || this.customerQuotes[0];
+      if (quote) {
+        this.viewDetail(quote, 'quote');
+      }
+      return;
+    }
+
+    const contract = this.filteredContracts[0] || this.contracts[0];
+    if (contract) {
+      this.viewDetail(contract, 'contract');
+      return;
+    }
+
     console.log('Mở modal thêm mới cho tab:', this.activeMainTab);
     // Logic mở modal sẽ được bổ sung sau
   }
