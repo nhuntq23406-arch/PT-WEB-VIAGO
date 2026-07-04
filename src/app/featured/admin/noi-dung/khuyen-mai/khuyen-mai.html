@@ -96,7 +96,6 @@
       <div class="table-wrapper">
         <table class="report-table">
           <colgroup>
-            <col class="col-stt" />
             <col class="col-code" />
             <col class="col-info" />
             <col class="col-discount" />
@@ -107,7 +106,6 @@
           </colgroup>
           <thead>
             <tr>
-              <th style="width: 50px;">STT</th>
               <th>Mã Voucher</th>
               <th>Khuyến mãi & Điều kiện</th>
               <th>Mức ưu đãi</th>
@@ -119,7 +117,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of filteredVouchers" [class.row-active]="selectedVoucherForStats?.code === item.code">
-              <td class="text-center">{{ item.stt }}</td>
               <td>
                 <span class="voucher-code-badge">{{ item.code }}</span>
               </td>
@@ -181,7 +178,7 @@
               </td>
             </tr>
             <tr *ngIf="filteredVouchers.length === 0">
-              <td colspan="8" class="empty-state">
+              <td colspan="7" class="empty-state">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
