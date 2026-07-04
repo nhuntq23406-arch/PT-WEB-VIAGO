@@ -109,12 +109,12 @@
         <table class="news-table">
           <thead>
             <tr>
-              <th width="10%">Mã CS</th>
-              <th width="22%">TÊN CHÍNH SÁCH</th>
-              <th width="20%" class="text-center">LOẠI CHÍNH SÁCH</th>
-              <th width="14%" class="status-cell text-center">TRẠNG THÁI</th>
-              <th width="14%" class="text-center">CẬP NHẬT CUỐI</th>
-              <th width="14%" class="text-center">NGƯỜI TẠO</th>
+              <th width="12%">Mã CS</th>
+              <th width="30%">TÊN CHÍNH SÁCH</th>
+              <th width="20%">LOẠI CHÍNH SÁCH</th>
+              <th width="12%" class="text-center">TRẠNG THÁI</th>
+              <th width="13%">CẬP NHẬT CUỐI</th>
+              <th width="13%">NGƯỜI TẠO</th>
               <th width="6%" class="text-center">CHỨC NĂNG</th>
             </tr>
           </thead>
@@ -122,15 +122,15 @@
             <tr *ngFor="let p of paginatedPolicies">
               <td class="font-medium text-slate-700">{{ p.maCS }}</td>
               <td><span class="font-bold text-slate-800">{{ p.tenChinhSach }}</span></td>
-              <td class="text-center"><span class="category-badge">{{ p.loaiChinhSach }}</span></td>
-              <td class="status-cell text-center">
+              <td><span class="category-badge">{{ p.loaiChinhSach }}</span></td>
+              <td class="text-center">
                 <div class="status-pill" [ngClass]="p.trangThai === 'Đang áp dụng' ? 'status-active' : 'status-inactive'">
                   <span>{{ p.trangThai }}</span>
                 </div>
               </td>
-              <td class="text-slate-600 table-cell-nowrap text-center">{{ p.capNhatCuoi }}</td>
-              <td class="text-center">
-                <div class="actor-cell justify-center">
+              <td class="text-slate-600">{{ p.capNhatCuoi }}</td>
+              <td>
+                <div class="actor-cell">
                   <span class="text-slate-700 font-medium">{{ p.nguoiThucHien }}</span>
                 </div>
               </td>
