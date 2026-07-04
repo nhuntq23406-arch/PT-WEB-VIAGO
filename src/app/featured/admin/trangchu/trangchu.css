@@ -331,7 +331,7 @@
 }
 
 /* Decorative Wave */
-334: .decorative-wave-SVG {
+.decorative-wave-SVG {
   display: flex;
   flex-direction: column;
   width: 100%;

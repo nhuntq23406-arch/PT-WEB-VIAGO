@@ -240,7 +240,6 @@
                 <div>
                   <strong>{{ item.MaDonHang }}</strong>
                   <span>{{ item.HoTenNguoiDi }} · {{ item.MaVe }}</span>
-                  <span>{{ MoTaXeGhe(item) }}</span>
                 </div>
                 <small>{{ DinhDangNgayGio(item) }}</small>
               </div>
@@ -553,13 +552,13 @@
                 <th style="width: 11%;">Đơn / vé</th>
                 <th style="width: 14%;">Khách hàng</th>
                 <th style="width: 17%;">Tuyến xe & chuyến</th>
-                <th style="width: 15%;">Xe & ghế</th>
+                <th style="width: 15%;">Ghế</th>
                 <th style="width: 13%;">Ngày hủy & lý do</th>
                 <th style="width: 8%;">Nguồn</th>
                 <th style="width: 8%;">Giá vé</th>
                 <th style="width: 8%;">Phí hủy</th>
                 <th style="width: 8%;">Hoàn trả</th>
-                <th style="width: 10%;">Hoàn tiền / đơn</th>
+                <th style="width: 10%;">Trạng thái hoàn</th>
               </tr>
             </thead>
             <tbody>
@@ -578,9 +577,7 @@
                     <small class="trip-meta">{{ v.GioKhoiHanh }} · Khởi hành: {{ DinhDangNgay(v.NgayKhoiHanh) }}</small>
                   </td>
                   <td class="trip-cell vehicle-cell">
-                    <span>{{ MoTaXeGhe(v) }}</span>
-                    <small class="trip-meta">{{ v.TenXe || 'Xe chưa xác định' }}</small>
-                    <small class="trip-meta">{{ v.BienSoXe || '-' }}</small>
+                    <span>Ghế {{ v.SoGhe || '-' }}</span>
                   </td>
                   <td class="trip-cell">
                     <strong>{{ DinhDangNgayGio(v) }}</strong>
@@ -588,7 +585,6 @@
                   </td>
                   <td>
                     <span class="source-pill">{{ LabelNguonDat(v.NguonDat) }}</span>
-                    <small class="refund-method">{{ LabelNguonXuLy(v) }}</small>
                   </td>
                   <td>{{ v.TienVeGoc | number }} đ</td>
                   <td class="fee-cell">{{ v.LePhiHuy | number }} đ</td>
@@ -597,8 +593,6 @@
                     <span class="badge payment {{ v.TrangThaiGiaoDich }}">
                       {{ LabelTrangThaiHoanTien(v.TrangThaiGiaoDich) }}
                     </span>
-                    <small class="refund-method">{{ v.PhuongThucThanhToan }}</small>
-                    <small class="refund-method">{{ LabelTrangThaiDonHangCuaBanGhi(v) }} · {{ LabelPhamViHuy(v) }}</small>
                   </td>
                 </tr>
               }
