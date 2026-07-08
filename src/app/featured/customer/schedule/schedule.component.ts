@@ -241,16 +241,33 @@ allRoutes: Route[] = [
     return `${yyyy}-${mm}-${dd}`;
   }
 
-  handleViewSchedule(route: Route) {
+  private navigateToBooking(from: string, to: string): void {
     const today = this.getTodayDateString();
-    this.router.navigate(['/'], { 
-      queryParams: { 
-        from: route.from, 
-        to: route.to, 
+
+    this.router.navigate(['/'], {
+      queryParams: {
+        from,
+        to,
         date: today,
-        autoSearch: 'true',
-        scroll: 'search-section'
-      } 
+        autoSearch: 'true'
+      }
     });
+  }
+
+  handleViewSchedule(route: Route) {
+    this.navigateToBooking(route.from, route.to);
+  }
+
+  bookSelectedRoute() {
+    if (!this.selectedRouteForDetails) return;
+
+    const from = this.selectedDirection === 'forward'
+      ? this.selectedRouteForDetails.from
+      : this.selectedRouteForDetails.to;
+    const to = this.selectedDirection === 'forward'
+      ? this.selectedRouteForDetails.to
+      : this.selectedRouteForDetails.from;
+
+    this.navigateToBooking(from, to);
   }
 }

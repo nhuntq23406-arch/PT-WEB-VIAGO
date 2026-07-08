@@ -251,9 +251,29 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Read query parameters to auto-fill search panel or apply voucher
     this.route.queryParams.subscribe(params => {
+      const normalizeCity = (city: string) => city === 'TP.HCM'
+        ? (this.allCities.find(item => item.startsWith('TP.')) || city)
+        : city;
+
       if (params['departure']) {
         this.departure = params['departure'] === 'TP.HCM' ? 'TP. Hồ Chí Minh' : params['departure'];
         this.updateCitiesLists();
+      }
+
+      if (params['from']) {
+        this.departure = normalizeCity(params['from']);
+        this.updateCitiesLists();
+      }
+      if (params['destination']) {
+        this.destination = normalizeCity(params['destination']);
+        this.updateCitiesLists();
+      }
+      if (params['to']) {
+        this.destination = normalizeCity(params['to']);
+        this.updateCitiesLists();
+      }
+      if (params['date']) {
+        this.departureDate = params['date'];
       }
 
       if (params['autoSearch'] === 'true') {
@@ -266,7 +286,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         const autoSearchKey = `${this.departure}|${this.destination}|${this.departureDate}`;
         if (autoSearchKey !== this.lastAutoSearchKey) {
           this.lastAutoSearchKey = autoSearchKey;
-          this.triggerSearchButtonClick();
+          this.onSubmitSearch();
         }
         return;
       }
@@ -1786,13 +1806,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         behavior: 'smooth'
       });
     }
-  }
-
-  formatDateToShort(dateStr: string): string {
-    if (!dateStr) return '';
-    const parts = dateStr.split('-');
-    if (parts.length !== 3) return dateStr;
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
   checkPendingOrder() {
