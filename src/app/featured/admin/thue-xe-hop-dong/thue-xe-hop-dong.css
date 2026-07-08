@@ -746,3 +746,267 @@
 .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Final admin layout sync */
+.management-container {
+  gap: 12px !important;
+  min-height: calc(100vh - 78px) !important;
+  padding: 12px !important;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  font-family: Inter, Arial, sans-serif !important;
+}
+
+.header-card-container,
+.dashboard-card {
+  border: 1px solid #d9e2ef !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04) !important;
+}
+
+.header-card-container {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(520px, .8fr) !important;
+  gap: 18px 24px !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 24px 30px !important;
+}
+
+.main-title {
+  color: #002664 !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+}
+
+.category-tag {
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em !important;
+}
+
+.header-action-banner {
+  justify-self: end !important;
+  position: relative !important;
+  z-index: 3 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: auto !important;
+  min-width: 520px !important;
+  max-width: 100% !important;
+  min-height: 58px !important;
+  border: 1px solid #bbf7d0 !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  background: #f0fdf4 !important;
+  color: #14532d !important;
+  font: inherit !important;
+  text-align: left !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  white-space: nowrap !important;
+}
+
+.header-action-banner:hover {
+  background: #ecfdf5 !important;
+  transform: none !important;
+}
+
+.action-icon-circle {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.action-banner-text,
+.action-banner-text h3,
+.action-banner-text p {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.action-banner-text h3 {
+  margin: 0 !important;
+  color: #14532d !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.action-banner-text p {
+  margin: 2px 0 0 !important;
+  color: #166534 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+}
+
+.stats-overview-row {
+  position: relative !important;
+  z-index: 1 !important;
+  display: grid !important;
+  grid-column: 1 / -1 !important;
+  grid-template-columns: repeat(3, minmax(110px, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.stats-overview-card {
+  min-height: 58px !important;
+  border: 1px solid #e2e8f0 !important;
+  border-left: 4px solid #64748b !important;
+  border-radius: 7px !important;
+  padding: 8px 10px !important;
+  background: #f8fafc !important;
+  box-shadow: none !important;
+}
+
+.stats-overview-card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.stats-overview-card.border-orange { border-left-color: #d97706 !important; }
+.stats-overview-card.border-blue { border-left-color: #2563eb !important; }
+.stats-overview-card.border-green { border-left-color: #059669 !important; }
+
+.stat-card-icon-container {
+  display: none !important;
+}
+
+.stat-label {
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+.stat-value {
+  color: #0f172a !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+.stat-trend-indicator {
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+.dashboard-card {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.dashboard-control-panel {
+  order: 0 !important;
+  margin: 0 !important;
+  padding: 20px 24px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  background: #ffffff !important;
+}
+
+.sub-tabs-row {
+  order: 1 !important;
+  margin: 0 !important;
+  padding: 12px 24px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  background: #ffffff !important;
+}
+
+.pill-tabs {
+  width: fit-content !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 4px !important;
+  background: #ffffff !important;
+}
+
+.pill-tab-item {
+  min-height: 36px !important;
+  border-radius: 6px !important;
+  padding: 8px 20px !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+.search-filters-row {
+  order: 2 !important;
+  display: flex !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  border-radius: 0 !important;
+  padding: 14px 24px !important;
+  background: #ffffff !important;
+}
+
+.table-wrapper {
+  order: 3 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.pagination-footer {
+  order: 4 !important;
+  margin: 0 !important;
+  border-top: 1px solid #e2e8f0 !important;
+  border-radius: 0 !important;
+  padding: 16px 24px !important;
+  background: #ffffff !important;
+}
+
+.data-table th {
+  background: #ffffff !important;
+  color: #64748b !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.data-table td {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.btn-icon {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 4px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #475569 !important;
+}
+
+.btn-icon:hover {
+  background: transparent !important;
+  color: #1d4ed8 !important;
+}
+
+@media (max-width: 1024px) {
+  .header-card-container {
+    grid-template-columns: 1fr !important;
+  }
+
+  .header-action-banner {
+    justify-self: stretch !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .stats-overview-row,
+  .search-filters-row {
+    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+}

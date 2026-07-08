@@ -702,6 +702,20 @@ export class QuanLyKhuyenMaiComponent implements OnInit {
     this.voucherPendingDelete = voucher;
   }
 
+  deleteEditingVoucher() {
+    if (!this.newVoucher.code) {
+      return;
+    }
+
+    const voucher = this.vouchers.find(v => v.code === this.newVoucher.code);
+    if (!voucher) {
+      return;
+    }
+
+    this.showForm = false;
+    this.deleteVoucher(voucher);
+  }
+
   cancelDeleteVoucher() {
     this.voucherPendingDelete = null;
   }

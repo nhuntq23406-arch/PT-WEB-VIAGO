@@ -526,3 +526,87 @@ tbody tr:hover {
     grid-template-columns: 1fr 1fr !important;
   }
 }
+
+/* Final activity log layout sync */
+.lookup-panel .lookup-summary-section {
+  margin: 16px 0 14px !important;
+}
+
+.lookup-panel .summary-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(110px, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.lookup-panel .summary-item {
+  min-height: 58px !important;
+  border: 1px solid #e2e8f0 !important;
+  border-left: 4px solid #64748b !important;
+  border-radius: 7px !important;
+  padding: 8px 10px !important;
+  background: #f8fafc !important;
+  box-shadow: none !important;
+}
+
+.lookup-panel .summary-item.warning {
+  border-left-color: #059669 !important;
+}
+
+.lookup-panel .summary-item.danger {
+  border-left-color: #dc2626 !important;
+}
+
+.lookup-panel .summary-item.revenue {
+  border-left-color: #2563eb !important;
+}
+
+.lookup-panel .summary-item span {
+  color: #0f172a !important;
+  font-size: 18px !important;
+}
+
+.lookup-panel .summary-item small {
+  color: #64748b !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+.lookup-panel .filters-grid,
+.pagination-bar {
+  background: #ffffff !important;
+}
+
+.table-panel {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.table-panel > .table-header { order: 0 !important; }
+.table-panel > .table-scroll { order: 1 !important; }
+.table-panel > .pagination-bar { order: 2 !important; }
+
+.btn-action-view {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #64748b !important;
+  font-size: 0 !important;
+}
+
+.btn-action-view:hover {
+  background: #eff6ff !important;
+  color: #002664 !important;
+}
+
+.btn-action-view svg {
+  width: 18px !important;
+  height: 18px !important;
+}

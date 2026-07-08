@@ -131,13 +131,8 @@
               </span>
             </td>
             <td class="col-actions text-center">
-              <button class="btn-icon" title="Chỉnh sửa chi tiết" (click)="openEditModal(point)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="3" y1="8" x2="13" y2="8"></line>
-                  <line x1="3" y1="13" x2="13" y2="13"></line>
-                  <line x1="3" y1="18" x2="9" y2="18"></line>
-                  <path d="M16 14l4.5-4.5a1.5 1.5 0 0 1 2.1 2.1L18 16.5H16V14z"></path>
-                </svg>
+              <button class="admin-action-btn edit" title="Chỉnh sửa chi tiết" aria-label="Chỉnh sửa chi tiết" (click)="openEditModal(point)">
+                <span class="material-symbols-outlined">edit_note</span>
               </button>
             </td>
           </tr>
@@ -152,11 +147,11 @@
         của {{ filteredPoints.length }} địa điểm
       </div>
       <div class="pagination-controls">
-        <button class="pagination-btn" (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1">‹</button>
+        <button class="pagination-btn" (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Trang trước">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
         <ng-container *ngFor="let page of getPaginationItems()">
-          <span *ngIf="page === '...'" class="pagination-ellipsis">...</span>
           <button
-            *ngIf="page !== '...'"
             class="pagination-btn"
             [class.active]="currentPage === page"
             (click)="setPage(page)"
@@ -164,7 +159,9 @@
             {{ page }}
           </button>
         </ng-container>
-        <button class="pagination-btn" (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages">›</button>
+        <button class="pagination-btn" (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Trang sau">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
       </div>
     </div>
   </div>
@@ -296,6 +293,16 @@
           <button class="btn-save" (click)="savePoint()">Lưu thông tin</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="toast-container">
+    <div class="toast-card" *ngFor="let toast of toasts" [class.toast-success]="toast.type === 'success'" [class.toast-error]="toast.type === 'error'">
+      <div class="toast-content-wrapper">
+        <span class="toast-icon material-symbols-outlined">{{ toast.type === 'success' ? 'check_circle' : 'error' }}</span>
+        <span class="toast-text">{{ toast.message }}</span>
+      </div>
+      <button class="toast-close-btn" (click)="removeToast(toast.id)">×</button>
     </div>
   </div>
 </div>

@@ -1,0 +1,74 @@
+/* ==========================================================================
+   ADMIN LAYOUT & SPACING SYNCHRONIZATION OVERRIDES
+   Normalizes the outer margins and paddings of all admin pages.
+   ========================================================================== */
+
+.trang-ch-amin {
+  /* Common Design Tokens */
+  --admin-bg: #f8fafc;
+  --admin-radius: 8px;
+  --admin-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+/* Reset any component host paddings to ensure consistent margins */
+.trang-ch-amin .main-content > *:not(app-topbar):not(router-outlet) {
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  align-self: stretch !important;
+  min-height: 0 !important;
+}
+
+/* Ensure consistent outer container page margins (excluding Khuyen Mai and Danh Gia Phan Hoi) */
+.trang-ch-amin .ticket-list-page:not(.khuyenmai-container):not(.danh-gia-phan-hoi-container),
+.trang-ch-amin .management-container,
+.trang-ch-amin .news-page-container,
+.trang-ch-amin .report-container,
+.trang-ch-amin .page-container,
+.trang-ch-amin .container-3 {
+  padding: 12px !important;
+  background: var(--admin-bg) !important;
+  min-height: calc(100vh - 78px) !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+/* Ensure consistent outer card border, radius, shadow, and background (excluding Khuyen Mai and Danh Gia Phan Hoi) */
+.trang-ch-amin .ticket-list-page:not(.khuyenmai-container):not(.danh-gia-phan-hoi-container) .lookup-panel,
+.trang-ch-amin .ticket-list-page:not(.khuyenmai-container):not(.danh-gia-phan-hoi-container) .table-panel,
+.trang-ch-amin .ticket-list-page:not(.khuyenmai-container):not(.danh-gia-phan-hoi-container) .dashboard-card,
+.trang-ch-amin .management-container .header-card-container,
+.trang-ch-amin .management-container .dashboard-card,
+.trang-ch-amin .news-page-container .header-card-container,
+.trang-ch-amin .news-page-container .dashboard-card,
+.trang-ch-amin .report-container .header-card,
+.trang-ch-amin .report-container .filter-panel,
+.trang-ch-amin .report-container .main-dashboard-card,
+.trang-ch-amin .page-container .lookup-panel,
+.trang-ch-amin .page-container .table-panel,
+.trang-ch-amin .container-3 .lookup-panel,
+.trang-ch-amin .container-3 .dashboard-card {
+  border: 1px solid #d9e2ef !important;
+  border-radius: var(--admin-radius) !important;
+  background: #ffffff !important;
+  box-shadow: var(--admin-shadow) !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure consistent card inner padding (excluding Khuyen Mai and Danh Gia Phan Hoi) */
+.trang-ch-amin .ticket-list-page:not(.khuyenmai-container):not(.danh-gia-phan-hoi-container) .lookup-panel,
+.trang-ch-amin .management-container .header-card-container,
+.trang-ch-amin .news-page-container .header-card-container,
+.trang-ch-amin .report-container .header-card,
+.trang-ch-amin .page-container .lookup-panel,
+.trang-ch-amin .container-3 .lookup-panel {
+  padding: 24px 30px !important;
+  margin: 0 !important;
+}

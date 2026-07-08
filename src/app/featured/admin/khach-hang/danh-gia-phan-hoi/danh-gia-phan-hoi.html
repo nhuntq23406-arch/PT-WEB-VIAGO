@@ -1,4 +1,4 @@
-<div class="ticket-list-page">
+<div class="ticket-list-page danh-gia-phan-hoi-container">
   @if (ThongBaoToast(); as t) {
     <div class="toast-message {{ t.LoaiToast === 'thanh-cong' ? 'success' : t.LoaiToast === 'loi' ? 'danger' : 'warning' }}">
       <span class="toast-mark"></span>
@@ -6,7 +6,7 @@
     </div>
   }
 
-  <section class="lookup-panel">
+  <section class="lookup-panel review-header-panel">
     <div class="lookup-heading">
       <div>
         <span class="eyebrow">CSKH sau chuyến</span>
@@ -15,15 +15,11 @@
     </div>
 
     <!-- Rating Insights & Summary Strip section -->
-    <div class="lookup-summary-section" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; margin-bottom: 16px; align-items: stretch;">
+    <div class="lookup-summary-section">
       <div class="summary-strip">
         <div class="summary-item">
           <span>{{ ThongKe().TongSo }}</span>
           <small>Tất cả review</small>
-        </div>
-        <div class="summary-item warning">
-          <span>{{ ThongKeHangDoi().CanTraLoi }}</span>
-          <small>Cần trả lời</small>
         </div>
         <div class="summary-item danger">
           <span>{{ ThongKeHangDoi().DanhGiaThap }}</span>
@@ -232,25 +228,16 @@
         Hiển thị {{ chiSoDauTrang() }}-{{ chiSoCuoiTrang() }} / {{ DanhSachLoc().length }} đánh giá
       </span>
       <div class="pagination-controls">
-        <label>
-          Số dòng
-          <select [ngModel]="soDongMoiTrang()" (ngModelChange)="CapNhatSoDongMoiTrang($event)">
-            <option [value]="8">8</option>
-            <option [value]="12">12</option>
-            <option [value]="20">20</option>
-          </select>
-        </label>
-        <button type="button" class="page-button" [disabled]="trangHopLe() <= 1" (click)="ChuyenTrang(trangHopLe() - 1)">
-          Trước
+        <button type="button" class="page-button" [disabled]="trangHopLe() <= 1" (click)="ChuyenTrang(trangHopLe() - 1)" aria-label="Trang trước">
+          <span class="material-symbols-outlined">chevron_left</span>
         </button>
         @for (page of cacTrangHienThi(); track page) {
           <button type="button" class="page-button" [class.active]="page === trangHopLe()" [disabled]="page > tongTrang()" (click)="ChuyenTrang(page)">
             {{ page }}
           </button>
         }
-        <strong>{{ trangHopLe() }} / {{ tongTrang() }}</strong>
-        <button type="button" class="page-button" [disabled]="trangHopLe() >= tongTrang()" (click)="ChuyenTrang(trangHopLe() + 1)">
-          Sau
+        <button type="button" class="page-button" [disabled]="trangHopLe() >= tongTrang()" (click)="ChuyenTrang(trangHopLe() + 1)" aria-label="Trang sau">
+          <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
     </div>

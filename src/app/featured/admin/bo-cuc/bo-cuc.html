@@ -1,115 +1,229 @@
-<div class="app-container">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="logo-container">
-      <img src="media/admin/logo.png" alt="TXP Logo" class="logo" />
-    </div>
-
-    <nav class="nav-menu">
-      <a routerLink="/admin/trang-chu" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M240-200h120v-240h240v240h120v-360L480-740 240-440v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Z"/>
-        </svg>
-        <span>Trang chủ</span>
-      </a>
-
-      <div class="nav-group">
-        <a routerLink="/admin/quan-ly-ve" routerLinkActive="active" class="nav-item">
-          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-            <path d="M120-240v-80h80v-80q0-50 35-85t85-35h320q50 0 85 35t35 85v80h80v80H120Zm160-80h400v-80q0-17-11.5-28.5T640-440H320q-17 0-28.5 11.5T280-400v80Zm200-240q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z"/>
-          </svg>
-          <span>Quản lý vé</span>
-        </a>
+<div class="admin-style-page">
+  <section class="admin-panel admin-brand-panel">
+    <div class="admin-page-heading">
+      <div>
+        <span class="admin-eyebrow">VIAGO Admin UI Standard</span>
+        <h1>Chuẩn giao diện admin</h1>
+        <p>Trang này gom các chuẩn CSS dùng lại cho tab con: font, màu, nút, form, bảng, badge và spacing.</p>
       </div>
 
-      <a routerLink="/admin/quan-ly-tin-tuc" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80Zm-80 240q-33 0-56.5-23.5T160-320v-480q0-33 23.5-56.5T240-880h480q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H240Zm0-80h480v-480H240v480Zm0 0v-480 480Z"/>
-        </svg>
-        <span>Quản lý tin tức</span>
-      </a>
-
-      <a routerLink="/admin/quan-ly-dieu-hanh" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-120q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280Z"/>
-        </svg>
-        <span>Quản lý điều hành</span>
-      </a>
-
-      <a routerLink="/admin/quan-ly-tai-khoan-khach-hang" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T224-296q64-35 135-51.5t121-16.5q50 0 121 16.5t135 51.5q30 16 47.5 44.5T800-192v32H160Z"/>
-        </svg>
-        <span>Quản lý khách hàng</span>
-      </a>
-
-      <a routerLink="/admin/quan-ly-tai-khoan-nhan-vien" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM240-240q0-42 24-74t64-42q47-15 97-22t95-7q45 0 95 7t97 22q40 10 64 42t24 74v80H240v-80Z"/>
-        </svg>
-        <span>Quản lý nhân viên</span>
-      </a>
-
-      <a routerLink="/admin/quan-ly-chinh-sach" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Z"/>
-        </svg>
-        <span>Quản lý chính sách</span>
-      </a>
-
-      <a routerLink="/admin/quan-ly-tu-khoa-cam" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q108 0 187.5-73.5T758-416L202-416q11 113 90.5 186.5T480-160Zm0-640q-108 0-187.5 73.5T202-544l556 0q-11-113-90.5-186.5T480-800Z"/>
-        </svg>
-        <span>Quản lý từ khóa cấm</span>
-      </a>
-
-      <a routerLink="/admin/bao-cao" routerLinkActive="active" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20" fill="currentColor">
-          <path d="M280-280h80v-280h-80v280Zm160 0h80v-400h-80v400Zm160 0h80v-160h-80v160ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z"/>
-        </svg>
-        <span>Báo cáo</span>
-      </a>
-    </nav>
-
-    <!-- User Profile in Sidebar -->
-    <div class="user-profile">
-      <div class="avatar-container">
-        <div class="avatar-placeholder">NV</div>
-      </div>
-      <div class="user-info">
-        <span class="user-name">Nguyen Van Dieu Phoi</span>
-        <span class="user-role">Nhân viên điều phối</span>
+      <div class="admin-brand-assets">
+        <img src="/asset/img/admin/logoVIAGO.png" alt="VIAGO" class="admin-brand-logo" />
+        <img src="/asset/img/admin/user_avartar.png" alt="Admin avatar" class="admin-avatar" />
       </div>
     </div>
-  </aside>
+  </section>
 
-  <!-- Main Content Area -->
-  <div class="main-layout">
-    <!-- Header -->
-    <header class="header">
-      <div class="header-left">
-        <button class="menu-toggle">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
-            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/>
-          </svg>
+  <section class="admin-panel">
+    <div class="admin-section-heading">
+      <div>
+        <span class="admin-eyebrow">Tokens</span>
+        <h2>Màu sắc chuẩn</h2>
+      </div>
+    </div>
+
+    <div class="token-grid">
+      @for (color of colorTokens; track color.name) {
+        <article class="token-card">
+          <span class="token-swatch" [style.background]="color.value"></span>
+          <div>
+            <strong>{{ color.name }}</strong>
+            <code>{{ color.value }}</code>
+            <p>{{ color.note }}</p>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-section-heading">
+      <div>
+        <span class="admin-eyebrow">Typography</span>
+        <h2>Font và cỡ chữ</h2>
+      </div>
+    </div>
+
+    <div class="type-scale">
+      <div>
+        <span>H1 / Page title</span>
+        <h1>Quản lý dữ liệu</h1>
+        <code>22px / 900 / Inter</code>
+      </div>
+      <div>
+        <span>H2 / Section title</span>
+        <h2>Danh sách bản ghi</h2>
+        <code>18px / 800 / Inter</code>
+      </div>
+      <div>
+        <span>Body</span>
+        <p>Nội dung mô tả, dữ liệu bảng và các đoạn hỗ trợ dùng 13-14px.</p>
+        <code>13-14px / 500-700 / Inter</code>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-section-heading">
+      <div>
+        <span class="admin-eyebrow">Components</span>
+        <h2>Nút, tab, form</h2>
+      </div>
+    </div>
+
+    <div class="component-stack">
+      <div class="admin-actions">
+        <button type="button" class="admin-btn admin-btn-primary">Thêm mới</button>
+        <button type="button" class="admin-btn admin-btn-brand">CTA thương hiệu</button>
+        <button type="button" class="admin-btn admin-btn-secondary">Xuất Excel</button>
+        <button type="button" class="admin-btn admin-btn-danger">Xóa</button>
+        <button type="button" class="admin-icon-btn" aria-label="Làm mới">
+          <span class="material-symbols-outlined">refresh</span>
         </button>
       </div>
 
-      <div class="header-right">
-        <button class="notification-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor">
-            <path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z"/>
-          </svg>
-          <span class="notification-badge"></span>
-        </button>
-        <span class="header-date">{{ currentDateTime() }}</span>
+      <div class="admin-create-banner" role="button" tabindex="0">
+        <span class="admin-create-icon">
+          <span class="material-symbols-outlined">add_circle</span>
+        </span>
+        <span class="admin-create-text">
+          <strong>Thêm lịch trình mới</strong>
+          <span>Chọn tuyến xe, gán tài xế, sắp xếp phương tiện và thời gian chạy.</span>
+        </span>
       </div>
-    </header>
 
-    <!-- Main Dynamic Content -->
-    <main class="content-body">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
+      <div class="admin-summary-strip">
+        <div class="admin-summary-card tone-primary">
+          <strong>225</strong>
+          <span>Tá»•ng lá»‹ch váº­n hÃ nh</span>
+        </div>
+        <div class="admin-summary-card tone-success">
+          <strong>5</strong>
+          <span>Xe Ä‘ang cháº¡y</span>
+        </div>
+        <div class="admin-summary-card tone-primary">
+          <strong>20</strong>
+          <span>TÃ i xáº¿ phÃ¢n bá»•</span>
+        </div>
+        <div class="admin-summary-card tone-brand">
+          <strong>TP.HCM â†” Cáº§n ThÆ¡</strong>
+          <span>Tuyáº¿n Ä‘áº·t nhiá»u nháº¥t</span>
+        </div>
+      </div>
+
+      <div class="admin-tabs">
+        <button type="button" class="admin-tab" [class.active]="activeTab() === 'overview'" (click)="activeTab.set('overview')">Tổng quan</button>
+        <button type="button" class="admin-tab" [class.active]="activeTab() === 'active'" (click)="activeTab.set('active')">Đang hoạt động</button>
+        <button type="button" class="admin-tab" [class.active]="activeTab() === 'archived'" (click)="activeTab.set('archived')">Lưu trữ</button>
+      </div>
+
+      <div class="admin-filter-grid">
+        <label class="admin-field">
+          <span>Tìm kiếm</span>
+          <input type="text" placeholder="Nhập mã, tên, số điện thoại..." />
+        </label>
+        <label class="admin-field">
+          <span>Trạng thái</span>
+          <select>
+            <option>Tất cả</option>
+            <option>Đang hoạt động</option>
+            <option>Chờ xử lý</option>
+          </select>
+        </label>
+        <label class="admin-field">
+          <span>Ngày tạo</span>
+          <input type="date" />
+        </label>
+      </div>
+
+      <div class="admin-pagination-demo">
+        <span class="admin-demo-label">Phân trang chuẩn - 10 dòng/trang</span>
+        <nav class="admin-pagination" aria-label="Phân trang">
+          <button type="button" class="admin-page-btn" aria-label="Trang trước">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button type="button" class="admin-page-btn">1</button>
+          <button type="button" class="admin-page-btn">2</button>
+          <button type="button" class="admin-page-btn active" aria-current="page">3</button>
+          <button type="button" class="admin-page-btn" aria-label="Trang sau">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-section-heading">
+      <div>
+        <span class="admin-eyebrow">Feedback</span>
+        <h2>Toast thông báo</h2>
+      </div>
+    </div>
+
+    <div class="component-stack">
+      <div class="admin-toast success" style="position: static;">
+        <div class="admin-toast-content">
+          <span class="admin-toast-icon material-symbols-outlined">check_circle</span>
+          <span class="admin-toast-message">Thêm dữ liệu thành công.</span>
+        </div>
+        <button type="button" class="admin-toast-close" aria-label="Đóng">×</button>
+      </div>
+
+      <div class="admin-toast error" style="position: static;">
+        <div class="admin-toast-content">
+          <span class="admin-toast-icon material-symbols-outlined">error</span>
+          <span class="admin-toast-message">Không thể lưu thay đổi, vui lòng thử lại.</span>
+        </div>
+        <button type="button" class="admin-toast-close" aria-label="Đóng">×</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="admin-panel admin-table-panel">
+    <div class="admin-table-header">
+      <div>
+        <strong>Bảng dữ liệu chuẩn</strong>
+        <span>Header 12px uppercase, cell 13px, hover nền slate nhạt</span>
+      </div>
+      <button type="button" class="admin-btn admin-btn-secondary">Làm mới</button>
+    </div>
+
+    <div class="admin-table-scroll">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Tên hiển thị</th>
+            <th>Nhóm</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of sampleRows; track row.code) {
+            <tr>
+              <td><strong class="admin-code">{{ row.code }}</strong></td>
+              <td>{{ row.name }}</td>
+              <td>{{ row.group }}</td>
+              <td><span class="admin-badge" [class]="row.tone">{{ row.status }}</span></td>
+              <td>
+                <div class="admin-row-actions">
+                  <button type="button" class="admin-action-btn view" aria-label="Xem chi tiết">
+                    <span class="material-symbols-outlined">visibility</span>
+                  </button>
+                  <button type="button" class="admin-action-btn edit" aria-label="Chỉnh sửa">
+                    <span class="material-symbols-outlined">edit_note</span>
+                  </button>
+                  <button type="button" class="admin-action-btn danger" aria-label="Xóa">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>

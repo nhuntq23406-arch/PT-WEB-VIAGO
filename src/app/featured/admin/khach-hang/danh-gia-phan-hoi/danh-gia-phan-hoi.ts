@@ -71,7 +71,7 @@ export class DanhGiaPhanHoi implements OnInit {
   LocCheDoXuLy = signal<CheDoXuLy>('tat-ca');
   HienDropdownSao = signal(false);
   trangHienTai = signal(1);
-  soDongMoiTrang = signal(8);
+  soDongMoiTrang = signal(10);
 
   // Selection
   DanhGiaDuocChon = signal<DanhGia | null>(null);
@@ -133,7 +133,9 @@ export class DanhGiaPhanHoi implements OnInit {
   });
 
   cacTrangHienThi = computed(() => {
-    return [1, 2, 3];
+    const groupStart = Math.floor((this.trangHopLe() - 1) / 3) * 3 + 1;
+    const groupEnd = Math.min(groupStart + 2, this.tongTrang());
+    return Array.from({ length: groupEnd - groupStart + 1 }, (_, i) => groupStart + i);
   });
 
   ToggleDropdownSao() {

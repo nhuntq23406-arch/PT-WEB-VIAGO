@@ -7,7 +7,7 @@
     </div>
     
     <!-- Action Banner & Create Button Box -->
-    <div class="header-action-banner" (click)="openCreateAction()" title="Nhấp để thêm mới">
+    <button type="button" class="header-action-banner" (click)="openCreateAction()" title="Nhấp để thêm mới">
       <div class="action-icon-circle">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="none" stroke="#0f766e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -22,11 +22,9 @@
         <h3 *ngIf="activeMainTab === 'contract'">Thêm hợp đồng</h3>
         <p>Thiết lập thông tin báo giá, hợp đồng và quản lý yêu cầu khách hàng.</p>
       </div>
-    </div>
-  </div>
-
-  <!-- Premium Stats Overview Cards -->
-  <div class="stats-overview-row">
+    </button>
+    <!-- Premium Stats Overview Cards -->
+    <div class="stats-overview-row">
     <div class="stats-overview-card border-orange">
       <div class="stat-card-content">
         <span class="stat-label">Yêu cầu chờ</span>
@@ -56,6 +54,7 @@
       <div class="stat-card-icon-container green-accent">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
       </div>
+    </div>
     </div>
   </div>
 
@@ -397,102 +396,104 @@
   </div>
 
   <!-- Detail Drawer Sync -->
-  <div class="drawer-overlay" *ngIf="activeDrawer" (click)="closeDrawer()"></div>
+  <div class="drawer-overlay" *ngIf="activeDrawer" [class.open]="activeDrawer" (click)="closeDrawer()"></div>
   <div class="drawer-container custom-scrollbar" [class.open]="activeDrawer">
-    <div class="drawer-header">
-      <div>
-        <h2 class="drawer-title">
-          {{activeDrawer === 'request' ? 'Chi tiết yêu cầu' : (activeDrawer === 'quote' ? 'Chi tiết báo giá' : 'Chi tiết hợp đồng')}}
-        </h2>
-        <span class="drawer-subtitle">Mã số: {{selectedItem?.code}}</span>
+    <ng-container *ngIf="selectedItem">
+      <div class="drawer-header">
+        <div>
+          <h2 class="drawer-title">
+            {{activeDrawer === 'request' ? 'Chi tiết yêu cầu' : (activeDrawer === 'quote' ? 'Chi tiết báo giá' : 'Chi tiết hợp đồng')}}
+          </h2>
+          <span class="drawer-subtitle">Mã số: {{selectedItem?.code}}</span>
+        </div>
+        <button class="btn-close" (click)="closeDrawer()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
-      <button class="btn-close" (click)="closeDrawer()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <div class="drawer-body">
-      <ng-container *ngIf="activeDrawer === 'request'">
-        <div class="drawer-card">
-          <h3 class="drawer-card-title">Thông tin khách hàng</h3>
-          <div class="drawer-grid">
-            <div class="drawer-item"><label>Họ tên</label><span>{{selectedItem.customer}}</span></div>
-            <div class="drawer-item"><label>Số điện thoại</label><span>{{selectedItem.phone}}</span></div>
-            <div class="drawer-item full-width"><label>Email</label><span>{{selectedItem.email}}</span></div>
+  
+      <div class="drawer-body">
+        <ng-container *ngIf="activeDrawer === 'request'">
+          <div class="drawer-card">
+            <h3 class="drawer-card-title">Thông tin khách hàng</h3>
+            <div class="drawer-grid">
+              <div class="drawer-item"><label>Họ tên</label><span>{{selectedItem.customer}}</span></div>
+              <div class="drawer-item"><label>Số điện thoại</label><span>{{selectedItem.phone}}</span></div>
+              <div class="drawer-item full-width"><label>Email</label><span>{{selectedItem.email}}</span></div>
+            </div>
           </div>
-        </div>
-        <div class="drawer-card">
-          <h3 class="drawer-card-title">Thông tin chuyến đi</h3>
-          <div class="drawer-grid">
-            <div class="drawer-item"><label>Điểm đón</label><span>{{selectedItem.pickup}}</span></div>
-            <div class="drawer-item"><label>Điểm đến</label><span>{{selectedItem.destination}}</span></div>
-            <div class="drawer-item"><label>Ngày đi</label><span>{{selectedItem.departure}}</span></div>
-            <div class="drawer-item"><label>Loại xe</label><span>{{selectedItem.vehicleType}}</span></div>
-            <div class="drawer-item"><label>Số xe</label><span>{{selectedItem.vehicles}}</span></div>
-            <div class="drawer-item"><label>Số khách</label><span>{{selectedItem.guests}}</span></div>
-            <div class="drawer-item full-width"><label>Ghi chú</label><span class="text-muted">{{selectedItem.note}}</span></div>
+          <div class="drawer-card">
+            <h3 class="drawer-card-title">Thông tin chuyến đi</h3>
+            <div class="drawer-grid">
+              <div class="drawer-item"><label>Điểm đón</label><span>{{selectedItem.pickup}}</span></div>
+              <div class="drawer-item"><label>Điểm đến</label><span>{{selectedItem.destination}}</span></div>
+              <div class="drawer-item"><label>Ngày đi</label><span>{{selectedItem.departure}}</span></div>
+              <div class="drawer-item"><label>Loại xe</label><span>{{selectedItem.vehicleType}}</span></div>
+              <div class="drawer-item"><label>Số xe</label><span>{{selectedItem.vehicles}}</span></div>
+              <div class="drawer-item"><label>Số khách</label><span>{{selectedItem.guests}}</span></div>
+              <div class="drawer-item full-width"><label>Ghi chú</label><span class="text-muted">{{selectedItem.note}}</span></div>
+            </div>
           </div>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeDrawer === 'quote'">
-        <div class="drawer-card">
-          <h3 class="drawer-card-title">Thông tin chung</h3>
-          <div class="drawer-grid">
-            <div class="drawer-item"><label>Mã yêu cầu</label><span>{{selectedItem.requestCode}}</span></div>
-            <div class="drawer-item"><label>Khách hàng</label><span>{{selectedItem.customer}}</span></div>
-            <div class="drawer-item"><label>Số điện thoại</label><span>{{selectedItem.phone}}</span></div>
+        </ng-container>
+  
+        <ng-container *ngIf="activeDrawer === 'quote'">
+          <div class="drawer-card">
+            <h3 class="drawer-card-title">Thông tin chung</h3>
+            <div class="drawer-grid">
+              <div class="drawer-item"><label>Mã yêu cầu</label><span>{{selectedItem.requestCode}}</span></div>
+              <div class="drawer-item"><label>Khách hàng</label><span>{{selectedItem.customer}}</span></div>
+              <div class="drawer-item"><label>Số điện thoại</label><span>{{selectedItem.phone}}</span></div>
+            </div>
           </div>
-        </div>
-        <div class="drawer-card">
-          <h3 class="drawer-card-title">Chi tiết chi phí</h3>
-          <div class="drawer-price-list">
-            <div class="price-row"><span>Giá thuê cơ bản</span><span class="text-semibold">{{selectedItem.basePrice}}</span></div>
-            <div class="price-row"><span>Phụ phí</span><span class="text-semibold">{{selectedItem.fees}}</span></div>
-            <div class="price-row text-danger"><span>Giảm giá</span><span class="text-semibold">-{{selectedItem.discount}}</span></div>
-            <div class="price-row total"><span>Tổng cộng</span><span class="text-secondary">{{selectedItem.total}}</span></div>
+          <div class="drawer-card">
+            <h3 class="drawer-card-title">Chi tiết chi phí</h3>
+            <div class="drawer-price-list">
+              <div class="price-row"><span>Giá thuê cơ bản</span><span class="text-semibold">{{selectedItem.basePrice}}</span></div>
+              <div class="price-row"><span>Phụ phí</span><span class="text-semibold">{{selectedItem.fees}}</span></div>
+              <div class="price-row text-danger"><span>Giảm giá</span><span class="text-semibold">-{{selectedItem.discount}}</span></div>
+              <div class="price-row total"><span>Tổng cộng</span><span class="text-secondary">{{selectedItem.total}}</span></div>
+            </div>
           </div>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="activeDrawer === 'contract'">
-        <div class="drawer-card">
-          <h3 class="drawer-card-title">Thông tin hợp đồng</h3>
-          <div class="drawer-grid">
-            <div class="drawer-item"><label>Mã báo giá</label><span>{{selectedItem.quoteCode}}</span></div>
-            <div class="drawer-item"><label>Ngày tạo</label><span>{{selectedItem.created}}</span></div>
-            <div class="drawer-item"><label>Trạng thái</label><span class="status-badge status-active">{{selectedItem.status}}</span></div>
+        </ng-container>
+  
+        <ng-container *ngIf="activeDrawer === 'contract'">
+          <div class="drawer-card">
+            <h3 class="drawer-card-title">Thông tin hợp đồng</h3>
+            <div class="drawer-grid">
+              <div class="drawer-item"><label>Mã báo giá</label><span>{{selectedItem.quoteCode}}</span></div>
+              <div class="drawer-item"><label>Ngày tạo</label><span>{{selectedItem.created}}</span></div>
+              <div class="drawer-item"><label>Trạng thái</label><span class="status-badge status-active">{{selectedItem.status}}</span></div>
+            </div>
           </div>
-        </div>
-        <div class="drawer-card">
-          <h3 class="drawer-card-title">Điều khoản & Lịch sử</h3>
-          <div class="drawer-section">
-            <label class="input-mini-label">Điều khoản hợp đồng</label>
-            <ul class="drawer-list">
-              <li *ngFor="let term of selectedItem.terms">{{term}}</li>
-            </ul>
-          </div>
-          <div class="drawer-section mt-16">
-            <label class="input-mini-label">Lịch sử xử lý</label>
-            <div class="drawer-history">
-              <div class="history-step" *ngFor="let step of selectedItem.history; let i = index">
-                <span class="step-circle">{{i+1}}</span>
-                <span class="step-text">{{step}}</span>
+          <div class="drawer-card">
+            <h3 class="drawer-card-title">Điều khoản & Lịch sử</h3>
+            <div class="drawer-section">
+              <label class="input-mini-label">Điều khoản hợp đồng</label>
+              <ul class="drawer-list">
+                <li *ngFor="let term of selectedItem.terms">{{term}}</li>
+              </ul>
+            </div>
+            <div class="drawer-section mt-16">
+              <label class="input-mini-label">Lịch sử xử lý</label>
+              <div class="drawer-history">
+                <div class="history-step" *ngFor="let step of selectedItem.history; let i = index">
+                  <span class="step-circle">{{i+1}}</span>
+                  <span class="step-text">{{step}}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </ng-container>
-    </div>
-
-    <div class="drawer-footer">
-      <button class="btn-cancel" (click)="closeDrawer()">Đóng</button>
-      <button class="btn-save" *ngIf="activeDrawer === 'request'">Tạo báo giá</button>
-      <button class="btn-save" *ngIf="activeDrawer === 'quote'">Chuyển thành hợp đồng</button>
-      <button class="btn-save" *ngIf="activeDrawer === 'contract'">Cập nhật trạng thái</button>
-    </div>
+        </ng-container>
+      </div>
+  
+      <div class="drawer-footer">
+        <button class="btn-cancel" (click)="closeDrawer()">Đóng</button>
+        <button class="btn-save" *ngIf="activeDrawer === 'request'" (click)="createQuoteFromRequest(selectedItem)">Tạo báo giá</button>
+        <button class="btn-save" *ngIf="activeDrawer === 'quote'" (click)="convertQuoteToContract(selectedItem)">Chuyển thành hợp đồng</button>
+        <button class="btn-save" *ngIf="activeDrawer === 'contract'" (click)="updateContractStatus(selectedItem)">Cập nhật trạng thái</button>
+      </div>
+    </ng-container>
   </div>
 </div>

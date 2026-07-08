@@ -811,8 +811,8 @@
   </div>
 
   <!-- ====== MODAL: PRINT TICKET ====== -->
-  <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 print-modal-overlay" *ngIf="showPrintModal && printTicket && currentOrder" (click)="$event.stopPropagation()">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-[480px] overflow-hidden border border-border-divider mx-4 transform transition-all scale-100 duration-300 flex flex-col max-h-[90vh] print-modal-card" (click)="$event.stopPropagation()">
+  <div class="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm flex items-start justify-center overflow-y-auto px-4 py-6 print-modal-overlay" *ngIf="showPrintModal && printTicket && currentOrder" (click)="$event.stopPropagation()">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-[480px] overflow-hidden border border-border-divider mx-4 transform transition-all scale-100 duration-300 flex flex-col print-modal-card" (click)="$event.stopPropagation()">
       <!-- Header -->
       <div class="flex justify-between items-center px-6 py-4 border-b border-border-divider bg-background flex-shrink-0 no-print">
         <h3 class="text-primary text-base font-extrabold uppercase tracking-wide">In vé điện tử</h3>

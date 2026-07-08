@@ -22,7 +22,6 @@
         <p>Chọn tuyến xe, gán tài xế, sắp xếp phương tiện và thời gian chạy.</p>
       </div>
     </div>
-  </div>
 
   <!-- Premium Stats Overview Cards -->
   <div class="stats-overview-row">
@@ -63,6 +62,7 @@
         <span class="stat-trend-indicator text-orange">Tuyến chạy phổ biến nhất</span>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- Main Dashboard Card -->
@@ -232,13 +232,8 @@
               </span>
             </td>
             <td class="col-actions text-center">
-              <button class="btn-icon" title="Chỉnh sửa chi tiết" (click)="openEditModal(trip, $event)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="3" y1="8" x2="13" y2="8"></line>
-                  <line x1="3" y1="13" x2="13" y2="13"></line>
-                  <line x1="3" y1="18" x2="9" y2="18"></line>
-                  <path d="M16 14l4.5-4.5a1.5 1.5 0 0 1 2.1 2.1L18 16.5H16V14z"></path>
-                </svg>
+              <button class="admin-action-btn edit" title="Chỉnh sửa chi tiết" aria-label="Chỉnh sửa chi tiết" (click)="openEditModal(trip, $event)">
+                <span class="material-symbols-outlined">edit_note</span>
               </button>
             </td>
           </tr>
@@ -253,20 +248,17 @@
         {{ currentPage * pageSize > filteredTrips.length ? filteredTrips.length : currentPage * pageSize }} 
         của {{ filteredTrips.length }} lịch trình
       </div>
-      <div style="display: flex; gap: 6px; align-items: center;">
-        <button (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; color: #1e293b; font-weight: bold; transition: all 0.2s;">
-          ‹
+      <div class="pagination-controls">
+        <button class="pagination-btn" (click)="setPage(currentPage - 1)" [disabled]="currentPage === 1" aria-label="Trang trước">
+          <span class="material-symbols-outlined">chevron_left</span>
         </button>
         <ng-container *ngFor="let page of getPaginationItems()">
-          <span *ngIf="page === '...'" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #64748b; font-weight: 700; font-size: 14px;">
-            ...
-          </span>
-          <button *ngIf="page !== '...'" (click)="setPage(page)" [style.background-color]="currentPage === page ? '#2563EB' : 'white'" [style.color]="currentPage === page ? 'white' : '#1e293b'" [style.border-color]="currentPage === page ? '#2563EB' : '#e2e8f0'" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+          <button class="pagination-btn" [class.active]="currentPage === page" (click)="setPage(page)">
             {{ page }}
           </button>
         </ng-container>
-        <button (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; color: #1e293b; font-weight: bold; transition: all 0.2s;">
-          ›
+        <button class="pagination-btn" (click)="setPage(currentPage + 1)" [disabled]="currentPage === totalPages" aria-label="Trang sau">
+          <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
     </div>

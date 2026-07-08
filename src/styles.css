@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap');
 @import "quill/dist/quill.snow.css";
 @import "tailwindcss";
+@import "./app/core/layout/admin-layout-sync.css";
 
 @theme {
   --color-primary: #00236F;

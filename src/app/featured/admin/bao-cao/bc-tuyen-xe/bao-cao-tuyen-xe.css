@@ -14,7 +14,7 @@
 /* ── Container chính ─────────────────────────────────────── */
 .bc-wrap {
   padding: 28px 32px;
-  font-family: "Montserrat-Regular", "Inter", Helvetica, Arial, sans-serif;
+  font-family: "Inter", "Inter", Helvetica, Arial, sans-serif;
   color: #1f2937;
   min-height: 100%;
   box-sizing: border-box;
@@ -37,7 +37,7 @@
   font-weight: 700;
 }
 .bc-title {
-  font-family: "Montserrat-Bold", Helvetica, Arial, sans-serif;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
   font-size: 22px;
   font-weight: 700;
   color: #002664;
@@ -126,7 +126,7 @@
   margin-bottom: 4px;
 }
 .stat-num {
-  font-family: "Montserrat-Bold", Helvetica, Arial, sans-serif;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
   font-size: 18px;
   font-weight: 700;
   line-height: 1.2;
@@ -151,7 +151,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: "Montserrat-Bold", Helvetica, Arial, sans-serif;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: #002664;
@@ -197,7 +197,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   font-size: 13px;
-  font-family: "Montserrat-Regular", Helvetica, Arial, sans-serif;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
   color: #374151;
   background: #f9fafb;
   outline: none;
@@ -234,7 +234,7 @@
   gap: 8px;
   padding: 10px 20px;
   border-radius: 12px;
-  font-family: "Montserrat-Bold", Helvetica;
+  font-family: "Inter", Helvetica;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -288,7 +288,7 @@
   border-bottom: 1px solid #f3f4f6;
 }
 .tp-head h3 {
-  font-family: "Montserrat-Bold", Helvetica;
+  font-family: "Inter", Helvetica;
   font-size: 15px;
   font-weight: 700;
   color: #002664;
@@ -319,7 +319,7 @@
 .report-table th {
   padding: 12px 18px;
   text-align: left;
-  font-family: "Montserrat-Bold", Helvetica, Arial, sans-serif;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: #6b7280;
@@ -423,7 +423,7 @@
   border-bottom: 1px solid #f3f4f6;
 }
 .modal-head h3 {
-  font-family: "Montserrat-Bold", Helvetica;
+  font-family: "Inter", Helvetica;
   font-size: 15px;
   font-weight: 700;
   color: #002664;
@@ -468,7 +468,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   font-size: 13px;
-  font-family: "Montserrat-Regular", Helvetica, Arial, sans-serif;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
   color: #374151;
   background: #f9fafb;
   outline: none;
@@ -501,7 +501,7 @@
   border-radius: 12px;
   background: #fff;
   color: #6b7280;
-  font-family: "Montserrat-Bold", Helvetica;
+  font-family: "Inter", Helvetica;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -515,7 +515,7 @@
   border-radius: 12px;
   background: #00a49f;
   color: #fff;
-  font-family: "Montserrat-Bold", Helvetica;
+  font-family: "Inter", Helvetica;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -530,7 +530,7 @@
   color: #ea580c;
   padding: 10px 18px;
   border-radius: 12px;
-  font-family: "Montserrat-Bold", Helvetica;
+  font-family: "Inter", Helvetica;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -600,7 +600,7 @@
   border: none;
   background: transparent;
   text-align: left;
-  font-family: "Montserrat-Regular", Helvetica, Arial, sans-serif;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
   font-size: 12px;
   font-weight: 600;
   color: #374151;

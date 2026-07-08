@@ -285,24 +285,9 @@ export class QuanLyLichTrinhComponent implements OnInit {
   }
 
   getPaginationItems(): (number | string)[] {
-    const total = this.totalPages;
-    const current = this.currentPage;
-    
-    if (total <= 6) {
-      const pages = [];
-      for (let i = 1; i <= total; i++) {
-        pages.push(i);
-      }
-      return pages;
-    }
-
-    if (current <= 3) {
-      return [1, 2, 3, 4, '...', total - 2, total - 1, total];
-    } else if (current >= total - 2) {
-      return [1, 2, 3, '...', total - 3, total - 2, total - 1, total];
-    } else {
-      return [1, '...', current - 1, current, current + 1, '...', total];
-    }
+    const groupStart = Math.floor((this.currentPage - 1) / 3) * 3 + 1;
+    const groupEnd = Math.min(groupStart + 2, this.totalPages);
+    return Array.from({ length: groupEnd - groupStart + 1 }, (_, i) => groupStart + i);
   }
 
   onMonthChange() {
@@ -528,6 +513,7 @@ export class QuanLyLichTrinhComponent implements OnInit {
         this.allTrips[idx] = this.currentTrip as LichTrinh;
       }
       this.filterTrips();
+      this.addToast('Đã cập nhật lịch trình thành công.', 'success');
       this.triggerCenteredToast('Cập Nhật Lịch Chạy', 'Lịch trình di chuyển của xe đã được đồng bộ.');
     } else {
       const newTrip: LichTrinh = {
@@ -536,6 +522,7 @@ export class QuanLyLichTrinhComponent implements OnInit {
       };
       this.allTrips.push(newTrip);
       this.filterTrips();
+      this.addToast('Đã thêm lịch trình mới thành công.', 'success');
       this.triggerCenteredToast('Tạo Lịch Chạy Mới', 'Lịch trình đã được thêm vào bảng kế hoạch vận hành.');
     }
   }

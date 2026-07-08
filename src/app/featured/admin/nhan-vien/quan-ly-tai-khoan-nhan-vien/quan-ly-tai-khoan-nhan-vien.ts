@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 export class QuanLyTaiKhoanNhanVien implements OnInit {
   activeTab = 'all';
   currentPage = 1;
-  pageSize = 8;
+  pageSize = 10;
 
   get activeCount(): number {
     return this.employees.filter(e => e.status === 'Đang hoạt động').length;
@@ -685,6 +685,26 @@ export class QuanLyTaiKhoanNhanVien implements OnInit {
 
   changePage(page: number) {
     this.currentPage = page;
+  }
+
+  getPaginationItems(): number[] {
+    const total = this.totalPages;
+    const current = this.validCurrentPage;
+    const windowSize = 3;
+    let start = current - Math.floor(windowSize / 2);
+    let end = current + Math.floor(windowSize / 2);
+
+    if (start < 1) {
+      start = 1;
+      end = Math.min(total, windowSize);
+    }
+
+    if (end > total) {
+      end = total;
+      start = Math.max(1, total - windowSize + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
   }
 
   updatePageSize(size: any) {

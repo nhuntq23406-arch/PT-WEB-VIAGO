@@ -44,6 +44,10 @@ export class QuanLyTuyenXeComponent implements OnInit {
   // Route List Data based on prompt specification
   allRoutes: TuyenXe[] = [];
   filteredRoutes: TuyenXe[] = [];
+  paginatedRoutes: TuyenXe[] = [];
+  currentPage = 1;
+  pageSize = 10;
+  totalPages = 1;
 
   // Toast system state
   toasts: ToastMessage[] = [];
@@ -305,6 +309,33 @@ export class QuanLyTuyenXeComponent implements OnInit {
 
       return true;
     });
+    this.currentPage = 1;
+    this.updatePaginatedRoutes();
+  }
+
+  updatePaginatedRoutes() {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredRoutes.length / this.pageSize));
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.paginatedRoutes = this.filteredRoutes.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  setPage(page: number) {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+
+    this.currentPage = page;
+    this.updatePaginatedRoutes();
+  }
+
+  getPaginationItems(): number[] {
+    const groupStart = Math.floor((this.currentPage - 1) / 3) * 3 + 1;
+    const groupEnd = Math.min(groupStart + 2, this.totalPages);
+    return Array.from({ length: groupEnd - groupStart + 1 }, (_, i) => groupStart + i);
   }
 
   clearFilters() {
