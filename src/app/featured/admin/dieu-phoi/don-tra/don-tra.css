@@ -692,6 +692,13 @@
   align-items: center;
 }
 
+.footer-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
 .btn-status-toggle {
   background-color: var(--secondary-light);
   color: var(--secondary);

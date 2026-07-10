@@ -390,15 +390,15 @@
   color: #64748b;
 }
 
-.col-stt { width: 56px; text-align: center; }
-.col-name { width: 170px; }
-.col-role { width: 110px; text-align: center; }
-.col-dob { width: 120px; text-align: center; }
-.col-phone { width: 130px; text-align: center; }
-.col-license { width: 105px; text-align: center; }
-.col-expiry { width: 130px; text-align: center; }
+.col-stt { width: 6%; text-align: center; }
+.col-name { width: 20%; }
+.col-role { width: 12%; text-align: center; }
+.col-dob { width: 13%; text-align: center; }
+.col-phone { width: 15%; text-align: center; }
+.col-license { width: 10%; text-align: center; }
+.col-expiry { width: 13%; text-align: center; }
 .col-status { width: 140px; text-align: center; }
-.col-actions { width: 80px; text-align: center; }
+.col-actions { width: 11%; text-align: center; }
 
 .text-center { text-align: center; }
 .text-semibold { font-weight: 600; color: var(--navy); }
@@ -786,6 +786,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
 }
 
 .btn-status-toggle {

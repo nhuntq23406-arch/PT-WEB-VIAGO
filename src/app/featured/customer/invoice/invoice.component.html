@@ -11,7 +11,7 @@
   </section>
 
   <!-- Main Container -->
-  <div class="max-w-[600px] mx-auto -mt-20 px-margin-mobile md:px-0 relative z-20 mb-20">
+  <div class="max-w-[600px] mx-auto -mt-20 px-margin-mobile md:px-0 relative z-20 mb-8 md:mb-10">
     <div class="bg-surface rounded-xl shadow-lg border border-outline-variant overflow-hidden">
       <!-- Tabs -->
       <div class="invoice-tabs flex border-b border-outline-variant">
@@ -160,8 +160,7 @@
         <!-- Form View -->
         <div class="p-8" *ngIf="viewState === 'form'">
           <div class="text-center mb-8">
-            <h2 class="text-headline-md font-vanh text-primary mb-2">Xác thực Hóa đơn điện tử</h2>
-            <p class="text-on-surface-variant text-body-md">Tải lên tệp hóa đơn định dạng .PDF để kiểm tra tính hợp lệ, tính toàn vẹn và xác minh giá trị pháp lý của hóa đơn điện tử.</p>
+            <p class="text-on-surface-variant text-body-md">Vui lòng tải tệp hóa đơn để kiểm tra tính hợp lệ của hóa đơn điện tử.</p>
           </div>
           <form class="space-y-6" (submit)="onVerifyInvoice()">
             <div class="space-y-2">
@@ -239,29 +238,6 @@
               </button>
             </div>
           </form>
-
-          <!-- Guide and Note -->
-          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 bg-white rounded-lg border border-outline-variant flex items-start gap-4">
-              <span class="material-symbols-outlined text-secondary text-4xl">help_outline</span>
-              <div>
-                <h3 class="font-label-bold text-primary mb-1">Hướng dẫn tra cứu</h3>
-                <ul class="text-caption text-on-surface-variant space-y-1 list-disc pl-4">
-                  <li>Tải file PDF</li>
-                  <li>Nhập mã xác thực</li>
-                  <li>Xác thực hóa đơn</li>
-                  <li>Xem kết quả</li>
-                </ul>
-              </div>
-            </div>
-            <div class="p-4 bg-white rounded-lg border border-outline-variant flex items-start gap-4">
-              <span class="material-symbols-outlined text-secondary text-4xl">warning</span>
-              <div>
-                <h3 class="font-label-bold text-primary mb-1">Lưu ý</h3>
-                <p class="text-caption text-on-surface-variant">Hệ thống chỉ hỗ trợ xác thực các hóa đơn điện tử do ViAGO phát hành.</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Loading View -->
@@ -272,11 +248,9 @@
 
         <!-- Result View -->
         <div class="p-8" *ngIf="viewState === 'result'">
-          <div class="bg-success-light border border-success/30 rounded-lg p-4 mb-6" *ngIf="modalType === 'success'">
-            <p class="text-success-text font-label-bold text-center">Hóa đơn hợp lệ</p>
-          </div>
-          <div class="bg-danger-light border border-danger/30 rounded-lg p-4 mb-6" *ngIf="modalType === 'fail'">
-            <p class="text-danger-text font-label-bold text-center">Hóa đơn không hợp lệ</p>
+          <div class="verify-valid-line mb-6">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span>Hóa đơn điện tử hợp lệ</span>
           </div>
 
           <div class="invoice-preview mb-6 bg-surface-container-low rounded-lg border border-outline-variant p-4 flex justify-center">

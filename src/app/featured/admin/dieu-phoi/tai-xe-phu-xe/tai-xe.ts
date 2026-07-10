@@ -20,6 +20,12 @@ export interface Personnel {
   identityBackImage?: string | null;
 }
 
+const DRIVER_PORTRAIT_IMAGE_URL = 'asset/images/customer/chandungtaixe.jpg';
+const LICENSE_FRONT_IMAGE_URL = 'asset/images/customer/gplxmattruoc.jpg';
+const LICENSE_BACK_IMAGE_URL = 'asset/images/customer/gplxmatsau.jpg';
+const IDENTITY_FRONT_IMAGE_URL = 'asset/images/customer/cccdmattruoc.jpg';
+const IDENTITY_BACK_IMAGE_URL = 'asset/images/customer/cccdmatsau.jpg';
+
 @Component({
   selector: 'app-tai-xe',
   standalone: true,
@@ -69,6 +75,15 @@ export class TaiXeComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.allPersonnel = this.allPersonnel.map(personnel => ({
+      ...personnel,
+      identityNumber: personnel.identityNumber || '079000000000',
+      avatar: DRIVER_PORTRAIT_IMAGE_URL,
+      licenseFrontImage: LICENSE_FRONT_IMAGE_URL,
+      licenseBackImage: LICENSE_BACK_IMAGE_URL,
+      identityFrontImage: IDENTITY_FRONT_IMAGE_URL,
+      identityBackImage: IDENTITY_BACK_IMAGE_URL
+    }));
     this.filterPersonnel();
   }
 

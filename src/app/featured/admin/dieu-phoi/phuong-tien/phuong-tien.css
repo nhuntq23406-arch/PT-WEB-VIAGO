@@ -295,6 +295,7 @@
 .data-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   text-align: left;
 }
 
@@ -383,15 +384,15 @@
   color: #64748b;
 }
 
-.col-stt { width: 60px; text-align: center; }
-.col-name { min-width: 220px; }
-.col-plate { width: 120px; }
-.col-type { width: 140px; }
-.col-seats { width: 80px; text-align: center; }
-.col-expiry { width: 140px; text-align: center; }
-.col-amenities { min-width: 200px; }
+.col-stt { width: 5%; text-align: center; }
+.col-name { width: 22%; }
+.col-plate { width: 12%; }
+.col-type { width: 12%; }
+.col-seats { width: 7%; text-align: center; }
+.col-expiry { width: 13%; text-align: center; }
+.col-amenities { width: 22%; }
 .col-status { width: 150px; text-align: center; }
-.col-actions { width: 80px; text-align: center; }
+.col-actions { width: 7%; text-align: center; }
 
 .text-center { text-align: center; }
 .text-semibold { font-weight: 600; color: var(--navy); }

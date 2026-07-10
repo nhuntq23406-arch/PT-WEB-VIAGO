@@ -9,9 +9,16 @@ export interface Vehicle {
   type: string;
   seats: number;
   registrationExpiry: string;
+  insuranceExpiry?: string;
   amenities: string[];
   status: 'Đang hoạt động' | 'Bảo trì' | 'Đã khóa';
+  registrationImage?: string | null;
+  insuranceImage?: string | null;
+  vehicleImage?: string | null;
 }
+
+const REGISTRATION_IMAGE_URL = 'asset/images/customer/giaydangkiem.jpg';
+const INSURANCE_IMAGE_URL = 'asset/images/customer/baohiemxe.jpg';
 
 @Component({
   selector: 'app-phuong-tien',
@@ -76,6 +83,12 @@ export class PhuongTienComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.allVehicles = this.allVehicles.map(vehicle => ({
+      ...vehicle,
+      insuranceExpiry: vehicle.insuranceExpiry || vehicle.registrationExpiry,
+      registrationImage: REGISTRATION_IMAGE_URL,
+      insuranceImage: INSURANCE_IMAGE_URL
+    }));
     this.filterVehicles();
   }
 
