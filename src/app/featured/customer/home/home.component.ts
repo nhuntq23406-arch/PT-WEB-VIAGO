@@ -437,7 +437,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           const other = r.cities.find(c => this.normalizeCityKey(c) !== depCityNormalized);
           return other ? this.normalizeCityKey(other) : '';
         });
-      this.destinationCities = connected.filter(c => c !== '' && this.allCities.includes(c));
+      this.destinationCities = this.allCities.filter(ac => connected.includes(this.normalizeCityKey(ac)));
     } else {
       this.destinationCities = [...this.allCities];
     }
@@ -451,7 +451,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           const other = r.cities.find(c => this.normalizeCityKey(c) !== destCityNormalized);
           return other ? this.normalizeCityKey(other) : '';
         });
-      this.departureCities = connected.filter(c => c !== '' && this.allCities.includes(c));
+      this.departureCities = this.allCities.filter(ac => connected.includes(this.normalizeCityKey(ac)));
     } else {
       this.departureCities = [...this.allCities];
     }
