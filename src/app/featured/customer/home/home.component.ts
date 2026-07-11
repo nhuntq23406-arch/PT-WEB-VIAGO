@@ -334,6 +334,64 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       if (params['scroll']) {
         this.scrollToPageElement(params['scroll']);
       }
+
+      if (params['autoPayment'] === 'true' || params['step'] === 'payment') {
+        this.tripType = 'one-way';
+        this.searchTripType = 'one-way';
+        this.departure = 'TP. Hồ Chí Minh';
+        this.destination = 'Đà Lạt';
+        this.departureDate = '2026-07-17';
+        this.searchDeparture = 'TP. Hồ Chí Minh';
+        this.searchDestination = 'Đà Lạt';
+        this.searchDepartureDate = '2026-07-17';
+        this.ticketCount = 1;
+        this.searchTicketCount = 1;
+
+        // Mock the selected trip matching the screenshot
+        this.selectedTrip = {
+          id: 'mock-trip-1',
+          depLocation: 'TP. Hồ Chí Minh',
+          arrLocation: 'Đà Lạt',
+          depCity: 'TP. Hồ Chí Minh',
+          arrCity: 'Đà Lạt',
+          depTime: '08:00',
+          arrTime: '15:00',
+          price: 250000,
+          type: 'Cabin 22 chỗ'
+        };
+        this.selectedOutboundTrip = this.selectedTrip;
+
+        this.selectedSeats = ['11A'];
+        this.selectedSeatTypes = { '11A': 'single' };
+        
+        // Apply the promo VIAGO2026 to get the 225,000đ total
+        this.applyPromoCode('VIAGO2026');
+
+        this.passengerName = 'Khách hàng';
+        this.passengerPhone = '0786433457';
+        this.passengerEmail = 'huynh25@gmail.com';
+        this.acceptedTerms = true;
+        
+        this.pickupPoint = '08:00 - Bến xe Miền Đông Mới';
+        this.dropoffPoint = '15:00 - Hồ Xuân Hương';
+
+        this.orderCode = 'VIG' + Math.floor(100000 + Math.random() * 900000);
+        this.ticketCode = 'VE' + Math.floor(100000 + Math.random() * 900000);
+
+        this.showResults = true;
+        this.showPayment = true;
+        this.selectedPaymentMethod = 'momo';
+
+        this.paymentTimeLeft = 600;
+        this.stopPaymentTimer();
+        this.paymentTimerInterval = setInterval(() => {
+          if (this.paymentTimeLeft > 0) {
+            this.paymentTimeLeft--;
+          } else {
+            this.stopPaymentTimer();
+          }
+        }, 1000);
+      }
     });
   }
 
