@@ -6,7 +6,6 @@ import { NewsComponent } from './featured/customer/news/news.component';
 import { NewsDetailComponent } from './featured/customer/news/news-detail/news-detail.component';
 import { ReviewsComponent } from './featured/customer/reviews/reviews.component';
 import { ServicesComponent } from './featured/customer/services/services.component';
-import { AboutComponent } from './featured/customer/about/about.component';
 import { AboutUsComponent } from './featured/customer/about/about-us/about-us.component';
 import { PoliciesComponent } from './featured/customer/about/policies/policies.component';
 import { TermsComponent } from './featured/customer/about/terms/terms.component';
