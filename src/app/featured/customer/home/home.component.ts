@@ -392,6 +392,48 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }, 1000);
       }
+
+      if (params['autoBooking'] === 'true' || params['step'] === 'booking') {
+        this.tripType = 'one-way';
+        this.searchTripType = 'one-way';
+        this.departure = 'TP. Hồ Chí Minh';
+        this.destination = 'Đà Lạt';
+        this.departureDate = '2026-07-17';
+        this.searchDeparture = 'TP. Hồ Chí Minh';
+        this.searchDestination = 'Đà Lạt';
+        this.searchDepartureDate = '2026-07-17';
+        this.ticketCount = 1;
+        this.searchTicketCount = 1;
+
+        // Mock the selected trip matching the screenshot
+        this.selectedTrip = {
+          id: 'mock-trip-1',
+          depLocation: 'TP. Hồ Chí Minh',
+          arrLocation: 'Đà Lạt',
+          depCity: 'TP. Hồ Chí Minh',
+          arrCity: 'Đà Lạt',
+          depTime: '08:00',
+          arrTime: '15:00',
+          price: 250000,
+          type: 'Cabin 22 chỗ'
+        };
+        this.selectedOutboundTrip = this.selectedTrip;
+
+        this.selectedSeats = ['11A'];
+        this.selectedSeatTypes = { '11A': 'single' };
+
+        this.passengerName = '';
+        this.passengerPhone = '';
+        this.passengerEmail = '';
+        this.acceptedTerms = false;
+        
+        this.pickupPoint = '';
+        this.dropoffPoint = '';
+
+        this.showResults = true;
+        this.showPayment = false;
+        this.showSuccessScreen = false;
+      }
     });
   }
 
