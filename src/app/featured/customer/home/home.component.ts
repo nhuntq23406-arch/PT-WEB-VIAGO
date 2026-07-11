@@ -434,6 +434,54 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showPayment = false;
         this.showSuccessScreen = false;
       }
+
+      if (params['autoSuccess'] === 'true' || params['step'] === 'success') {
+        this.tripType = 'one-way';
+        this.searchTripType = 'one-way';
+        this.departure = 'TP. Hồ Chí Minh';
+        this.destination = 'Đà Lạt';
+        this.departureDate = '2026-07-17';
+        this.searchDeparture = 'TP. Hồ Chí Minh';
+        this.searchDestination = 'Đà Lạt';
+        this.searchDepartureDate = '2026-07-17';
+        this.ticketCount = 1;
+        this.searchTicketCount = 1;
+
+        // Mock the selected trip matching the screenshot
+        this.selectedTrip = {
+          id: 'mock-trip-1',
+          depLocation: 'Bến xe Miền Đông Mới',
+          arrLocation: 'Hồ Xuân Hương',
+          depCity: 'TP. Hồ Chí Minh',
+          arrCity: 'Đà Lạt',
+          depTime: '08:00',
+          arrTime: '15:00',
+          price: 250000,
+          type: 'Cabin 22 chỗ'
+        };
+        this.selectedOutboundTrip = this.selectedTrip;
+
+        this.selectedSeats = ['11A'];
+        this.selectedSeatTypes = { '11A': 'single' };
+        
+        // Apply the promo VIAGO2026 to get the 225,000đ total
+        this.applyPromoCode('VIAGO2026');
+
+        this.passengerName = 'Khách hàng';
+        this.passengerPhone = '0786433457';
+        this.passengerEmail = 'huynh25@gmail.com';
+        this.acceptedTerms = true;
+        
+        this.pickupPoint = '08:00 - Bến xe Miền Đông Mới';
+        this.dropoffPoint = '15:00 - Hồ Xuân Hương';
+
+        this.orderCode = 'V10312197';
+        this.ticketCode = 'VE817098';
+
+        this.showResults = true;
+        this.showPayment = false;
+        this.showSuccessScreen = true;
+      }
     });
   }
 
